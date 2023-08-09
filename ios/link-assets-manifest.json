@@ -1,0 +1,41 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/SFProDisplay-Black.otf",
+      "sha1": "89d9387a7ba9407ee3384f0b1e1ce312c4190f25"
+    },
+    {
+      "path": "src/assets/fonts/SFProDisplay-Bold.otf",
+      "sha1": "20817650465bd09f9ed0bf339531b13b78489052"
+    },
+    {
+      "path": "src/assets/fonts/SFProDisplay-Heavy.otf",
+      "sha1": "8ef2033fa8ab551c1382d0b786757aa6cd49e6bf"
+    },
+    {
+      "path": "src/assets/fonts/SFProDisplay-Light.otf",
+      "sha1": "a93f771b7a0a406304b321fd7c7bc79922d70ffd"
+    },
+    {
+      "path": "src/assets/fonts/SFProDisplay-Medium.otf",
+      "sha1": "0ab3d1e22bf8781b2d4ca110319306363c21cd94"
+    },
+    {
+      "path": "src/assets/fonts/SFProDisplay-Regular.otf",
+      "sha1": "c29dda2311e19f638f32c2dffc3c04c7b2ec5bcc"
+    },
+    {
+      "path": "src/assets/fonts/SFProDisplay-Semibold.otf",
+      "sha1": "dabd35822f74a2b233596527300b789de4406c5e"
+    },
+    {
+      "path": "src/assets/fonts/SFProDisplay-Thin.otf",
+      "sha1": "710f40ee65fed9028b457b02766979dac7e605e4"
+    },
+    {
+      "path": "src/assets/fonts/SFProDisplay-Ultralight.otf",
+      "sha1": "5732b9965b1ee72ba631519e9da92bae2429573e"
+    }
+  ]
+}

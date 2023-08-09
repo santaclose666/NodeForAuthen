@@ -1,0 +1,17 @@
+export default {
+  SF_BLACK: 'SF-Black',
+  SF_BOLD: 'SF-Bold',
+  SF_LIGHT: 'SF-Light',
+  SF_ITALIC: 'SF-Italic',
+  SF_REGULAR: 'SF-Regular',
+  SF_THIN: 'SF-Thin',
+  SF_BLACK: 'SFProDisplay-Black',
+  SF_BOLD: 'SFProDisplay-Bold',
+  SF_HEAVY: 'SFProDisplay-Heavy',
+  SF_LIGHT: 'SFProDisplay-Light',
+  SF_MEDIUM: 'SFProDisplay-Medium',
+  SF_REGULAR: 'SFProDisplay-Regular',
+  SF_SEMIBOLD: 'SFProDisplay-Semibold',
+  SF_THIN: 'SFProDisplay-Thin',
+  SF_ULTRALIGHT: 'SFProDisplay-Ultralight',
+};
