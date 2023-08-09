@@ -9,10 +9,10 @@ import {
   StatusBar,
   SafeAreaView,
 } from 'react-native';
-import Images from '../contants/Images';
-import Fonts from '../contants/Fonts';
-import Colors from '../contants/Colors';
-import Dimension from '../contants/Dimension';
+import Images from '../../contants/Images';
+import Fonts from '../../contants/Fonts';
+import Colors from '../../contants/Colors';
+import Dimension from '../../contants/Dimension';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;

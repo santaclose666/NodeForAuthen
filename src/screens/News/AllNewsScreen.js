@@ -12,18 +12,18 @@ import {
 } from 'react-native';
 import {Toast, Box} from 'native-base';
 import unidecode from 'unidecode';
-import Images from '../contants/Images';
-import Fonts from '../contants/Fonts';
-import Colors from '../contants/Colors';
-import Dimension from '../contants/Dimension';
-import Icons from '../contants/Icons';
+import Images from '../../contants/Images';
+import Fonts from '../../contants/Fonts';
+import Colors from '../../contants/Colors';
+import Dimension from '../../contants/Dimension';
+import Icons from '../../contants/Icons';
 
 const AllNewsScreen = ({navigation}) => {
   const [featureIndex, setFeatureIndex] = useState(0);
   const [newsArr, setNewsArr] = useState([
     {
       topic: 'Chính sách',
-      mainImg: require('../assets/images/mainTopic1.png'),
+      mainImg: require('../../assets/images/mainTopic1.png'),
       subImg: null,
       location: 'Tây Nguyên',
       date: '16/06/2011',
@@ -37,8 +37,8 @@ const AllNewsScreen = ({navigation}) => {
     },
     {
       topic: 'Chỉ đạo điều hành',
-      mainImg: require('../assets/images/mainTopic2.png'),
-      subImg: require('../assets/images/subTopic2.png'),
+      mainImg: require('../../assets/images/mainTopic2.png'),
+      subImg: require('../../assets/images/subTopic2.png'),
       location: 'Tây Ninh',
       date: '16/06/2011',
       name: 'Tổng cục Lâm nghiệp: Tổ chức Hội nghị Công tác bảo vệ rừng và phòng cháy, chữa cháy rừng toàn quốc năm 2022 và triển khai nhiệm vụ năm 2023',
@@ -52,8 +52,8 @@ const AllNewsScreen = ({navigation}) => {
     },
     {
       topic: 'Khoa học công nghệ',
-      mainImg: require('../assets/images/mainTopic3.png'),
-      subImg: require('../assets/images/subTopic3.png'),
+      mainImg: require('../../assets/images/mainTopic3.png'),
+      subImg: require('../../assets/images/subTopic3.png'),
       location: 'Tây Tạng',
       date: '16/06/2011',
       name: 'Ứng dụng SMART trong quản lý rừng và đa dạng sinh học tại Việt Nam',
@@ -65,7 +65,7 @@ const AllNewsScreen = ({navigation}) => {
     },
     {
       topic: 'Bảo vệ rừng',
-      mainImg: require('../assets/images/mainTopic4.png'),
+      mainImg: require('../../assets/images/mainTopic4.png'),
       subImg: null,
       location: 'Tây Tiến',
       date: '16/06/2011',
@@ -79,7 +79,7 @@ const AllNewsScreen = ({navigation}) => {
     },
     {
       topic: 'Đa dạng sinh học',
-      mainImg: require('../assets/images/mainTopic5.png'),
+      mainImg: require('../../assets/images/mainTopic5.png'),
       subImg: null,
       location: 'Tây Mỗ',
       date: '16/06/2011',
@@ -93,7 +93,7 @@ const AllNewsScreen = ({navigation}) => {
     },
     {
       topic: 'Dịch vụ môi trường rừng',
-      mainImg: require('../assets/images/mainTopic6.png'),
+      mainImg: require('../../assets/images/mainTopic6.png'),
       subImg: null,
       location: 'Tây Hồ',
       date: '16/06/2011',

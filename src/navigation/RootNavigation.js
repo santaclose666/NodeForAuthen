@@ -2,8 +2,8 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import TabNaviagtor from './BottomTab';
-import LoginScreen from '../screens/LoginScreen';
-import DisplayPDF from '../screens/DisplayPDFScreen';
+import LoginScreen from '../screens/Login/LoginScreen';
+import DisplayPDF from '../screens/Document/DisplayPDFScreen';
 import {useSelector} from 'react-redux';
 
 const Stack = createStackNavigator();

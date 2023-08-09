@@ -1,13 +1,16 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import StaffListScreen from '../screens/StaffListScreen';
-import AllNewsScreen from '../screens/AllNewsScreen';
-import DetailNewsScreen from '../screens/DetailNewsScreen';
-import NotifiScreen from '../screens/NotifiScreens';
-import DetailStaffScreen from '../screens/DetailStaffScreen';
-import HomePageScreen from '../screens/HomePageScreen';
-
-import DocumentListScreen from '../screens/DocumentListScreen';
+import StaffListScreen from '../screens/User/StaffListScreen';
+import AllNewsScreen from '../screens/News/AllNewsScreen';
+import DetailNewsScreen from '../screens/News/DetailNewsScreen';
+import NotifiScreen from '../screens/Notification/NotifiScreens';
+import DetailStaffScreen from '../screens/User/DetailStaffScreen';
+import HomePageScreen from '../screens/Home/HomePageScreen';
+import HistoryApplyLeaveScreen from '../screens/ApplyLeave/HistoryApplyLeaveScreen';
+import DocumentListScreen from '../screens/Document/DocumentListScreen';
+import CreateApplyLeaveScreen from '../screens/ApplyLeave/CreateApplyLeaveScreen';
+import RegisterPlaneScreen from '../screens/TicketManagement/RegisterPlaneScreen';
+import HistoryRegisterTicketScreen from '../screens/TicketManagement/HistoryRegisterTicket';
 
 const Stack = createStackNavigator();
 
@@ -23,7 +26,22 @@ const StactNavigator = () => {
       <Stack.Screen name="DetailStaff" component={DetailStaffScreen} />
       <Stack.Screen name="Notification" component={NotifiScreen} />
       <Stack.Screen name="DocumentList" component={DocumentListScreen} />
-      
+      <Stack.Screen
+        name="HistoryApplyLeave"
+        component={HistoryApplyLeaveScreen}
+      />
+      <Stack.Screen
+        name="RegisterApplyLeave"
+        component={CreateApplyLeaveScreen}
+      />
+      <Stack.Screen
+        name="RegisterPlaneTicket"
+        component={RegisterPlaneScreen}
+      />
+      <Stack.Screen
+        name="HistoryPlaneTicket"
+        component={HistoryRegisterTicketScreen}
+      />
     </Stack.Navigator>
   );
 };

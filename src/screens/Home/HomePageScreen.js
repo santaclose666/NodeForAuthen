@@ -13,18 +13,18 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import {HStack, Spinner} from 'native-base';
-import Images from '../contants/Images';
-import Fonts from '../contants/Fonts';
-import Colors from '../contants/Colors';
-import Dimension from '../contants/Dimension';
+import Images from '../../contants/Images';
+import Fonts from '../../contants/Fonts';
+import Colors from '../../contants/Colors';
+import Dimension from '../../contants/Dimension';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import {
   getVietnameseDayOfWeek,
   getFormattedDate,
   getCoords,
-} from '../utils/serviceFunction';
-import {getAllStaffs} from '../redux/apiRequest';
-import {getToken, notificationListener} from '../utils/firebaseNotifi';
+} from '../../utils/serviceFunction';
+import {getAllStaffs} from '../../redux/apiRequest';
+import {getToken, notificationListener} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
@@ -68,7 +68,7 @@ const HomePageScreen = ({navigation}) => {
   const [newsArr, setNewArr] = useState([
     {
       topic: 'Chính sách',
-      mainImg: require('../assets/images/mainTopic1.png'),
+      mainImg: require('../../assets/images/mainTopic1.png'),
       subImg: null,
       location: 'Tây Nguyên',
       date: '16/06/2011',
@@ -82,8 +82,8 @@ const HomePageScreen = ({navigation}) => {
     },
     {
       topic: 'Chỉ đạo điều hành',
-      mainImg: require('../assets/images/mainTopic2.png'),
-      subImg: require('../assets/images/subTopic2.png'),
+      mainImg: require('../../assets/images/mainTopic2.png'),
+      subImg: require('../../assets/images/subTopic2.png'),
       location: 'Tây Ninh',
       date: '16/06/2011',
       name: 'Tổng cục Lâm nghiệp: Tổ chức Hội nghị Công tác bảo vệ rừng và phòng cháy, chữa cháy rừng toàn quốc năm 2022 và triển khai nhiệm vụ năm 2023',
@@ -97,8 +97,8 @@ const HomePageScreen = ({navigation}) => {
     },
     {
       topic: 'Khoa học công nghệ',
-      mainImg: require('../assets/images/mainTopic3.png'),
-      subImg: require('../assets/images/subTopic3.png'),
+      mainImg: require('../../assets/images/mainTopic3.png'),
+      subImg: require('../../assets/images/subTopic3.png'),
       location: 'Tây Tạng',
       date: '16/06/2011',
       name: 'Ứng dụng SMART trong quản lý rừng và đa dạng sinh học tại Việt Nam',
@@ -268,11 +268,19 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.staff} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Nhân sự</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  navigation.navigate('HistoryPlaneTicket');
+                }}>
                 <Image source={Images.calendar2} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Lịch công tác</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  navigation.navigate('HistoryApplyLeave');
+                }}>
                 <Image source={Images.busy} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Nghỉ phép</Text>
               </TouchableOpacity>

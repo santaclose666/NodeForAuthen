@@ -10,13 +10,13 @@ import {
   FlatList,
 } from 'react-native';
 import unidecode from 'unidecode';
-import Images from '../contants/Images';
+import Images from '../../contants/Images';
 import {ScrollView} from 'react-native-gesture-handler';
-import Icons from '../contants/Icons';
-import Colors from '../contants/Colors';
-import Fonts from '../contants/Fonts';
-import Dimension from '../contants/Dimension';
-import Data from '../utils/Data.json';
+import Icons from '../../contants/Icons';
+import Colors from '../../contants/Colors';
+import Fonts from '../../contants/Fonts';
+import Dimension from '../../contants/Dimension';
+import Data from '../../utils/Data.json';
 
 const baseURL =
   'https://management.ifee.edu.vn/2023_Forestry4.0App/VanBanSoTay/';

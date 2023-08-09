@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import StactNavigator from './Stack';
-import NotifiScreen from '../screens/NotifiScreens';
-import DetailStaffScreen from '../screens/DetailStaffScreen';
+import NotifiScreen from '../screens/Notification/NotifiScreens';
+import DetailStaffScreen from '../screens/User/DetailStaffScreen';
 import {View, Image} from 'react-native';
 import Dimension from '../contants/Dimension';
 import Images from '../contants/Images';
@@ -40,7 +40,7 @@ const TabNaviagtor = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: 'rgba(148,187,233,0.3)',
+          backgroundColor: '#ffffff',
           elevation: 4,
           height: Dimension.setHeight(10),
         },
@@ -59,9 +59,7 @@ const TabNaviagtor = () => {
                   height: Dimension.setHeight(6),
                   width: Dimension.setHeight(6),
                   borderRadius: 50,
-                  backgroundColor: focused
-                    ? item.activeColor
-                    : 'rgba(238,174,202,0.12)',
+                  backgroundColor: focused ? item.activeColor : '#ffffff',
                 }}>
                 <Image
                   source={focused ? item.iconActive : item.iconInactive}

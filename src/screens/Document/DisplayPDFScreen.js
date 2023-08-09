@@ -8,9 +8,9 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Pdf from 'react-native-pdf';
-import Images from '../contants/Images';
-import Dimension from '../contants/Dimension';
-import Colors from '../contants/Colors';
+import Images from '../../contants/Images';
+import Dimension from '../../contants/Dimension';
+import Colors from '../../contants/Colors';
 
 const DisplayPDF = ({navigation, route}) => {
   const {link} = route.params;

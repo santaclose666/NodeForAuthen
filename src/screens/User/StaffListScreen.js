@@ -11,11 +11,11 @@ import {
   SafeAreaView,
 } from 'react-native';
 import unidecode from 'unidecode';
-import Images from '../contants/Images';
-import Fonts from '../contants/Fonts';
-import Colors from '../contants/Colors';
-import Dimension from '../contants/Dimension';
-import Icons from '../contants/Icons';
+import Images from '../../contants/Images';
+import Fonts from '../../contants/Fonts';
+import Colors from '../../contants/Colors';
+import Dimension from '../../contants/Dimension';
+import Icons from '../../contants/Icons';
 import {useSelector} from 'react-redux';
 
 const StaffListScreen = ({navigation}) => {

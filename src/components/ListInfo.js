@@ -6,7 +6,6 @@ import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
 
 const ListInfo = ({info, index}) => {
-  console.log(info);
   const colorText = Colors.INACTIVE_GREY;
   const hrArr = [
     'Phòng tổng hợp',

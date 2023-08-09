@@ -10,19 +10,18 @@ import {
 } from 'react-native';
 import {AlertDialog, Button} from 'native-base';
 import {useSelector} from 'react-redux';
-import Images from '../contants/Images';
-import Fonts from '../contants/Fonts';
-import Colors from '../contants/Colors';
-import Dimension from '../contants/Dimension';
-import ListInfo from '../components/ListInfo';
+import Images from '../../contants/Images';
+import Fonts from '../../contants/Fonts';
+import Colors from '../../contants/Colors';
+import Dimension from '../../contants/Dimension';
+import ListInfo from '../../components/ListInfo';
 import {useDispatch} from 'react-redux';
-import {logoutUser} from '../redux/apiRequest';
+import {logoutUser} from '../../redux/apiRequest';
 
 const DetailStaffScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
   const item = route.params?.item;
   const user = useSelector(state => state.auth.login?.currentUser);
-  const [toggleLogoutBtn, setToggleLogoutBtn] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [workInfo, setWorkInfo] = useState({
     avatar: Images.avatar,
@@ -60,13 +59,7 @@ const DetailStaffScreen = ({navigation, route}) => {
       });
     }
 
-    if (item) {
-      setIndexInfo(1);
-      setToggleLogoutBtn(false);
-    } else {
-      setIndexInfo(0);
-      setToggleLogoutBtn(true);
-    }
+    item ? setIndexInfo(1) : setIndexInfo(0);
   };
 
   const onCloseConfirmOut = () => {
@@ -98,24 +91,18 @@ const DetailStaffScreen = ({navigation, route}) => {
               }}>
               <Image source={Images.back} style={{width: 25, height: 25}} />
             </TouchableOpacity>
-            <View
+            <Text
               style={{
-                justifyContent: 'center',
-                alignItems: 'center',
+                fontFamily: Fonts.SF_BOLD,
+                fontSize: 22,
               }}>
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_BOLD,
-                  fontSize: 22,
-                }}>
-                Thông tin
-              </Text>
-            </View>
+              Thông tin
+            </Text>
             <TouchableOpacity
               onPress={() => {
                 setTogglecConfirmOut(true);
               }}>
-              {toggleLogoutBtn && (
+              {indexInfo === 0 && (
                 <Image source={Images.logout} style={{width: 35, height: 35}} />
               )}
             </TouchableOpacity>
