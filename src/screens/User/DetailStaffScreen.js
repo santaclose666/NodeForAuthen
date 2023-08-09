@@ -197,7 +197,7 @@ const DetailStaffScreen = ({navigation, route}) => {
           }}
           style={{
             borderRadius: 16,
-            backgroundColor: '#85ff73',
+            backgroundColor: '#6ac78c',
             alignSelf: 'center',
             elevation: 6,
           }}>

@@ -13,6 +13,9 @@ import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
 
 const Header = ({title, eventFunc, navigation}) => {
+  const showCreateButton =
+    title === 'Lịch sử nghỉ phép' || title === 'Lịch sử đặt vé';
+
   return (
     <SafeAreaView
       style={{
@@ -33,7 +36,7 @@ const Header = ({title, eventFunc, navigation}) => {
         }}>
         <Image source={Images.back} style={{width: 25, height: 25}} />
       </TouchableOpacity>
-      <View>
+      <View style={{flex: 1, alignItems: 'center'}}>
         <Text
           style={{
             fontFamily: Fonts.SF_BOLD,
@@ -42,16 +45,20 @@ const Header = ({title, eventFunc, navigation}) => {
           {title}
         </Text>
       </View>
-      <View>
-        {title === 'Lịch sử nghỉ phép' && (
-          <TouchableOpacity
-            onPress={() => {
+      {showCreateButton ? (
+        <TouchableOpacity
+          onPress={() => {
+            if (title === 'Lịch sử nghỉ phép') {
               navigation.navigate('RegisterApplyLeave');
-            }}>
-            <Image source={Images.create} style={{width: 30, height: 30}} />
-          </TouchableOpacity>
-        )}
-      </View>
+            } else if (title === 'Lịch sử đặt vé') {
+              navigation.navigate('RegisterPlaneTicket');
+            }
+          }}>
+          <Image source={Images.create} style={{width: 30, height: 30}} />
+        </TouchableOpacity>
+      ) : (
+        <View style={{width: 30}} />
+      )}
     </SafeAreaView>
   );
 };

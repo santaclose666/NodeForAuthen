@@ -17,7 +17,7 @@ import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
+import {PERMISSIONS, request} from 'react-native-permissions';
 import {
   getVietnameseDayOfWeek,
   getFormattedDate,
@@ -30,31 +30,24 @@ import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import LinearGradient from 'react-native-linear-gradient';
 
-async function requestUserPermission() {
-  const authStatus = await messaging().requestPermission();
-  const enabled =
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-  if (enabled) {
-    console.log('Authorization status:', authStatus);
-  }
-}
-
 const requestPermissions = async () => {
   if (Platform.OS === 'android') {
     try {
-      await PermissionsAndroid.request(
+      await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      );
-      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-      );
+      ]);
     } catch (err) {
       console.log(err);
     }
   } else {
-    requestUserPermission();
+    await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then(result => {
+      console.log(result);
+    });
+    const authStatus = await messaging().requestPermission();
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
   }
 };
 
@@ -109,23 +102,13 @@ const HomePageScreen = ({navigation}) => {
       content2: null,
     },
   ]);
+  const weekdays = getVietnameseDayOfWeek();
+  const date = getFormattedDate();
 
   const fetchWeatherData = async () => {
     try {
-      await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then(result => {
-        if ((result = 'granted')) {
-          getCoords().then(result => {
-            setDataWeather(result);
-          });
-        } else {
-          try {
-            const data = getWeatherData(105.805111, 20.9986779);
-            setDataWeather(data);
-          } catch (err) {
-            console.log(err);
-          }
-        }
-      });
+      const coords = await getCoords();
+      setDataWeather(coords);
     } catch (err) {
       console.log(err);
     }
@@ -149,25 +132,12 @@ const HomePageScreen = ({navigation}) => {
       style={styles.container}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}>
-      <SafeAreaView
-        style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        {/* {dataWeather === null ? (
-          <HStack space={8} justifyContent="center" alignItems="center">
-            <Spinner size="lg" />
-          </HStack>
-        ) : (
-          
-        )} */}
+      <SafeAreaView style={{flex: 1}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={false}
           style={styles.container}>
           <StatusBar barStyle="dark-content" backgroundColor="transparent" />
-          {/* <View style={styles.menuBtnContainer}>
-            <TouchableOpacity>
-              <Image source={Images.menu} style={styles.menuBtn} />
-            </TouchableOpacity>
-          </View> */}
           <View style={styles.userInforContainer}>
             <View style={styles.userNameContainer}>
               <Text style={styles.userNameText}>Welcome, {user?.name} </Text>
@@ -183,11 +153,20 @@ const HomePageScreen = ({navigation}) => {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                style={{borderWidth: 0.5, padding: 5, borderRadius: 8}}
+                style={{
+                  padding: 7,
+                  borderRadius: 8,
+                  backgroundColor: '#7bbf8c',
+                }}
                 onPress={() => {
                   navigation.navigate('Login');
                 }}>
-                <Text style={{fontSize: 15, fontWeight: 'bold'}}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: Fonts.SF_SEMIBOLD,
+                    color: '#ffffff',
+                  }}>
                   Đăng nhập
                 </Text>
               </TouchableOpacity>
@@ -202,10 +181,8 @@ const HomePageScreen = ({navigation}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={styles.dayInWeekText}>
-                  {getVietnameseDayOfWeek()}
-                </Text>
-                <Text style={styles.calendarText}>{getFormattedDate()}</Text>
+                <Text style={styles.dayInWeekText}>{weekdays}</Text>
+                <Text style={styles.calendarText}>{date}</Text>
               </View>
             </View>
             <View style={styles.weatherContainer}>
@@ -219,9 +196,15 @@ const HomePageScreen = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <Text style={styles.dayInWeekText}>Thời tiết</Text>
-                <Text style={styles.calendarText}>
-                  {dataWeather?.name} {dataWeather?.temp}°C
-                </Text>
+                {dataWeather === null ? (
+                  <HStack space={8} justifyContent="center" alignItems="center">
+                    <Spinner size="sm" />
+                  </HStack>
+                ) : (
+                  <Text style={styles.calendarText}>
+                    {dataWeather?.name} {dataWeather?.temp}°C
+                  </Text>
+                )}
               </View>
             </View>
           </View>
@@ -342,18 +325,8 @@ const HomePageScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: '#fdfdff',
     flex: 1,
     padding: 3,
-  },
-  menuBtnContainer: {
-    marginTop: Dimension.setHeight(1.5),
-    marginBottom: Dimension.setHeight(2.5),
-    marginHorizontal: 10,
-  },
-  menuBtn: {
-    width: 40,
-    height: 40,
   },
 
   userInforContainer: {
@@ -385,11 +358,12 @@ const styles = StyleSheet.create({
   todayInforContainer: {
     flexDirection: 'row',
     borderRadius: 16,
-    padding: 14,
-    marginVertical: 25,
+    marginVertical: Dimension.setHeight(3),
+    marginHorizontal: Dimension.setWidth(3),
     backgroundColor: '#f5f5f9',
-    marginHorizontal: 18,
     elevation: 5,
+    paddingVertical: Dimension.setHeight(1.8),
+    paddingHorizontal: Dimension.setWidth(1.5),
   },
 
   calendarContainer: {
@@ -468,13 +442,13 @@ const styles = StyleSheet.create({
   newTextContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 18,
+    marginHorizontal: Dimension.setWidth(2.5),
   },
 
   newsText: {
     fontFamily: Fonts.SF_BOLD,
     fontSize: 17,
-    paddingVertical: 5,
+    marginVertical: Dimension.setHeight(0.2),
   },
 
   viewAllText: {
@@ -490,7 +464,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5ff',
     borderColor: Colors.INACTIVE_GREY,
     elevation: 5,
-    marginLeft: Dimension.setWidth(3),
+    marginLeft: Dimension.setWidth(2),
+    marginRight: Dimension.setWidth(0.5),
     width: Dimension.setWidth(71),
     paddingVertical: Dimension.setHeight(1),
     paddingHorizontal: Dimension.setWidth(2),
