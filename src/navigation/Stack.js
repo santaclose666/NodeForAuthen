@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import StaffListScreen from '../screens/User/StaffListScreen';
 import AllNewsScreen from '../screens/News/AllNewsScreen';
 import DetailNewsScreen from '../screens/News/DetailNewsScreen';
@@ -11,6 +11,9 @@ import DocumentListScreen from '../screens/Document/DocumentListScreen';
 import CreateApplyLeaveScreen from '../screens/ApplyLeave/CreateApplyLeaveScreen';
 import RegisterPlaneScreen from '../screens/TicketManagement/RegisterPlaneScreen';
 import HistoryRegisterTicketScreen from '../screens/TicketManagement/HistoryRegisterTicket';
+import CreateWorkSchedule from '../screens/WorkShedule/CreateWorkShedule';
+import HistoryWorkShedule from '../screens/WorkShedule/HistoryWorkSchedule';
+import DetailWorkShedule from '../screens/WorkShedule/DetailWorkShedule';
 
 const Stack = createStackNavigator();
 
@@ -18,7 +21,7 @@ const StactNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName="HomePage"
-      screenOptions={{headerShown: false}}>
+      screenOptions={{ headerShown: false }}>
       <Stack.Screen name="HomePage" component={HomePageScreen} />
       <Stack.Screen name="AllNews" component={AllNewsScreen} />
       <Stack.Screen name="DetailNews" component={DetailNewsScreen} />
@@ -42,6 +45,13 @@ const StactNavigator = () => {
         name="HistoryPlaneTicket"
         component={HistoryRegisterTicketScreen}
       />
+
+      <Stack.Screen
+        name="CreateWorkSchedule"
+        component={CreateWorkSchedule}
+      />
+      <Stack.Screen name="HistoryWorkShedule" component={HistoryWorkShedule} />
+      <Stack.Screen name="DetailWorkShedule" component={DetailWorkShedule} />
     </Stack.Navigator>
   );
 };
