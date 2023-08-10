@@ -14,7 +14,9 @@ import Dimension from '../contants/Dimension';
 
 const Header = ({title, eventFunc, navigation}) => {
   const showCreateButton =
-    title === 'Lịch sử nghỉ phép' || title === 'Lịch sử đặt vé';
+    title === 'Lịch sử nghỉ phép' ||
+    title === 'Lịch sử đặt vé' ||
+    title === 'Lịch sử công tác';
 
   return (
     <SafeAreaView
@@ -52,6 +54,8 @@ const Header = ({title, eventFunc, navigation}) => {
               navigation.navigate('RegisterApplyLeave');
             } else if (title === 'Lịch sử đặt vé') {
               navigation.navigate('RegisterPlaneTicket');
+            } else if (title === 'Lịch sử công tác') {
+              navigation.navigate('CreateWorkSchedule');
             }
           }}>
           <Image source={Images.create} style={{width: 30, height: 30}} />

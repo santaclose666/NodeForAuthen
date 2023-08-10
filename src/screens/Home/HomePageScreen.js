@@ -128,7 +128,7 @@ const HomePageScreen = ({navigation}) => {
 
   return (
     <LinearGradient
-      colors={['rgba(238,174,202,0.1)', 'rgba(148,187,233,0.2)']}
+      colors={['rgba(238,174,202,0.5)', 'rgba(148,187,233,0.5)']}
       style={styles.container}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}>

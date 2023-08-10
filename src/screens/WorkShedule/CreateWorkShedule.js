@@ -77,7 +77,7 @@ const CreateWorkSchedule = ({navigation}) => {
       setToggleDatePicker(false);
       if (checkPick !== 'Chọn ngày') {
         const dayStart = formatDate(date);
-        if (endDay) {
+        if (endDay !== 'Chọn ngày') {
           compareDate(dayStart, endDay)
             ? setStartDay(dayStart)
             : ToastAlert('Ngày bắt đầu không hợp lệ');
@@ -195,14 +195,7 @@ const CreateWorkSchedule = ({navigation}) => {
                 </View>
               </View>
             </TouchableOpacity>
-            {toggleDatePicker && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={new Date()}
-                mode="date"
-                onChange={handlePickDate}
-              />
-            )}
+
             <TouchableOpacity
               onPress={() => {
                 setCheckPick(false);
@@ -365,6 +358,18 @@ const CreateWorkSchedule = ({navigation}) => {
           </View>
 
           <RegisterBtn nameBtn={'Thực hiện'} onEvent={handleRegister} />
+
+          {toggleDatePicker && (
+            <View style={styles.calendarView}>
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={new Date()}
+                mode="date"
+                onChange={handlePickDate}
+                display={Platform.OS === 'ios' ? 'inline' : 'default'}
+              />
+            </View>
+          )}
         </KeyboardAwareScrollView>
       </ScrollView>
     </SafeAreaView>
@@ -464,6 +469,17 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: Dimension.setWidth(1.3),
+  },
+  calendarView: {
+    position: 'absolute',
+    top: '15%',
+    left: '5%',
+    zIndex: 999,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+    padding: 15,
+    borderRadius: 15,
   },
 });
 

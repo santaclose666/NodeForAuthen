@@ -20,7 +20,7 @@ const Stack = createStackNavigator();
 const StactNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="HistoryWorkShedule"
+      initialRouteName="HomePage"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="HomePage" component={HomePageScreen} />
       <Stack.Screen name="AllNews" component={AllNewsScreen} />
