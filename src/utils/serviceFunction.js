@@ -1,5 +1,7 @@
 import Geolocation from 'react-native-geolocation-service';
 import getWeatherData from '../apiService/weatherCurrent';
+import {ToastAlert} from '../components/Toast';
+import moment from 'moment';
 
 export const getVietnameseDayOfWeek = () => {
   const vietnameseDays = [
@@ -56,4 +58,29 @@ export const getCoords = () => {
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
     );
   });
+};
+
+export const formatTime = date => {
+  const hour = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
+  const minute =
+    date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+  const halfDay = hour > 11 ? 'pm' : 'am';
+
+  return `${hour}:${minute} ${halfDay}`;
+};
+
+export const formatDate = date => {
+  const dateFormat = moment(date).format('DD/MM/YYYY');
+  return dateFormat;
+};
+
+export const compareDate = (date1, date2) => {
+  const beforeDate = moment(date1, 'DD/MM/YYYY').startOf('day');
+  const afterDate = moment(date2, 'DD/MM/YYYY').startOf('day');
+  const currentDate = moment(new Date()).startOf('day');
+  if (beforeDate <= afterDate && beforeDate >= currentDate) {
+    return true;
+  } else {
+    return false;
+  }
 };

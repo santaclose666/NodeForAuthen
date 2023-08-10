@@ -12,7 +12,6 @@ import {
 import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
-import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -20,7 +19,13 @@ import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
-import {getCurrentTime} from '../../utils/serviceFunction';
+import {
+  compareDate,
+  formatDate,
+  formatTime,
+  getCurrentTime,
+} from '../../utils/serviceFunction';
+import RegisterBtn from '../../components/RegisterBtn';
 
 const planeCompany = [
   {
@@ -173,29 +178,25 @@ const RegisterPlaneScreen = ({navigation}) => {
   const [timeValue, setTimeValue] = useState(getCurrentTime());
   const [kgNumber, setKgNumber] = useState(0);
 
-  const handlePickDate = (event, selectedDateTime) => {
-    const date = new Date(selectedDateTime);
+  const handlePickDate = (event, date) => {
     if (event.type === 'set') {
       setToggleDatePicker(false);
       if (dateTime === 'date') {
-        const day = date.getUTCDate();
-        const month = date.getUTCMonth() + 1;
-        const year = date.getUTCFullYear();
-        setDateValue(`${day}/${month}/${year}`);
+        const message = 'Ngày khởi hành không hợp lệ';
+        compareDate(new Date(), date)
+          ? setDateValue(formatDate(date))
+          : ToastAlert(message);
       } else {
-        const hour =
-          date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
-        const minute =
-          date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
-        const halfDay = hour < 12 ? 'am' : 'pm';
-        setTimeValue(`${hour}:${minute} ${halfDay}`);
+        setTimeValue(formatTime(date));
       }
     } else {
       setToggleDatePicker(false);
     }
   };
 
-  const handleRegister = () => {};
+  const handleRegister = () => {
+    ToastSuccess('Thành công');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -414,6 +415,7 @@ const RegisterPlaneScreen = ({navigation}) => {
                   testID="dateTimePicker"
                   value={new Date()}
                   mode={dateTime}
+                  display={Platform.OS === 'ios' ? 'inline' : 'default'}
                   onChange={handlePickDate}
                 />
               )}
@@ -529,30 +531,7 @@ const RegisterPlaneScreen = ({navigation}) => {
               }}
             />
           </View>
-          <TouchableOpacity
-            onPress={handleRegister}
-            style={{
-              alignSelf: 'flex-end',
-              marginRight: Dimension.setWidth(3),
-              backgroundColor: '#ff9e57',
-              paddingVertical: Dimension.setHeight(0.8),
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 8,
-              width: Dimension.setWidth(36),
-              height: Dimension.setHeight(6),
-              marginTop: Dimension.setHeight(1),
-              marginBottom: Dimension.setHeight(2),
-            }}>
-            <Text
-              style={{
-                fontSize: 20,
-                fontFamily: Fonts.SF_SEMIBOLD,
-                color: '#ffffff',
-              }}>
-              Đăng kí
-            </Text>
-          </TouchableOpacity>
+          <RegisterBtn onEvent={handleRegister} />
         </KeyboardAwareScrollView>
       </ScrollView>
     </SafeAreaView>

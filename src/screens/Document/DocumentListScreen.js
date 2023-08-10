@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import {
   View,
   Text,
@@ -25,7 +25,7 @@ const DocumentListScreen = ({navigation}) => {
   const [pickFileIndex, setpickFileIndex] = useState(null);
   const [pickOptionIndex, setPickOptionIndex] = useState(0);
   const [input, setInput] = useState('');
-
+  const [subMenuItem, setSubMenuItem] = useState(null);
   const [groupOption, setGroupOption] = useState([
     'Tất cả',
     'Luật',
@@ -36,156 +36,161 @@ const DocumentListScreen = ({navigation}) => {
   ]);
   const [data, setData] = useState(Data);
 
-  const handleSearch = text => {
-    setInput(text);
-    setPickOptionIndex(null);
+  const handleSearch = useCallback(
+    text => {
+      setInput(text);
+      setPickOptionIndex(null);
 
-    const filter = Data.filter(
-      item =>
-        unidecode(item.SoHieu.toLowerCase()).includes(text.toLowerCase()) ||
-        unidecode(item.TrichYeu.toLowerCase()).includes(text.toLowerCase()),
-    );
-    setData(filter);
-  };
+      const filter = Data.filter(
+        item =>
+          unidecode(item.SoHieu.toLowerCase()).includes(text.toLowerCase()) ||
+          unidecode(item.TrichYeu.toLowerCase()).includes(text.toLowerCase()),
+      );
+      setData(filter);
+    },
+    [input],
+  );
 
-  const handlePickOption = (keyWord, index) => {
-    index === 0
-      ? setData(Data)
-      : setData(Data.filter(item => item.LoaiVB === keyWord));
+  const handlePickOption = useCallback(
+    (keyWord, index) => {
+      index === 0
+        ? setData(Data)
+        : setData(Data.filter(item => item.LoaiVB === keyWord));
 
-    setPickOptionIndex(index);
-  };
+      setPickOptionIndex(index);
+    },
+    [pickOptionIndex],
+  );
 
-  const RenderDocument = ({item, index}) => {
+  const handlePress = useCallback(fileName => {
+    navigation.navigate('PDF', {link: baseURL + fileName});
+  }, []);
+
+  const handleMoreInfo = useCallback(
+    (soHieu, ngay, trichYeu, loaiVB, index) => {
+      setSubMenuItem({
+        soHieu: soHieu,
+        ngay: ngay,
+        trichYeu: trichYeu,
+        loaiVB: loaiVB,
+      });
+      pickFileIndex !== index
+        ? setpickFileIndex(index)
+        : setpickFileIndex(null);
+    },
+    [pickFileIndex],
+  );
+
+  const RenderDocument = memo(({item, index}) => {
     return (
-      <View key={index}>
+      <View key={item.ID}>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('PDF', {link: baseURL + item.TenFile})
-          }
-          style={{
-            backgroundColor: '#ffffff',
-            marginBottom: Dimension.setHeight(1.1),
-            marginTop: Dimension.setHeight(1.1),
-            borderRadius: 9,
-            elevation: 4,
-            marginHorizontal: 5,
-            borderWidth: 0.5,
-            borderColor: Colors.INACTIVE_GREY,
-          }}>
+          onPress={() => handlePress(item.TenFile)}
+          style={styles.flatListItemContainer}>
           <View
             style={{
-              paddingTop: Dimension.setHeight(1.6),
-              paddingBottom: Dimension.setHeight(1.2),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginHorizontal: Dimension.setWidth(3),
             }}>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                marginHorizontal: Dimension.setWidth(3),
+                width: '70%',
               }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  width: '70%',
-                }}>
-                <Image
-                  source={Images.pdf}
-                  style={{width: 45, height: 45, marginRight: 5}}
-                />
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 16}}>
-                  {item.SoHieu}
-                </Text>
-              </View>
+              <Image
+                source={Images.pdf}
+                style={{width: 45, height: 45, marginRight: 5}}
+              />
               <Text
-                style={{
-                  fontFamily: Fonts.SF_SEMIBOLD,
-                  fontSize: 15,
-                  color: Colors.INACTIVE_GREY,
-                }}>
-                {item.Ngay}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 16}}>
+                {item.SoHieu}
               </Text>
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                pickFileIndex !== index
-                  ? setpickFileIndex(index)
-                  : setpickFileIndex(null);
-              }}
+            <Text
               style={{
-                marginTop: Dimension.setHeight(1.8),
-                borderTopWidth: 0.5,
-                borderTopColor: Colors.INACTIVE_GREY,
-                marginHorizontal: Dimension.setWidth(8),
+                fontFamily: Fonts.SF_SEMIBOLD,
+                fontSize: 15,
+                color: Colors.INACTIVE_GREY,
               }}>
-              <View
-                style={{
-                  paddingTop: 5,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.SF_REGULAR,
-                    fontSize: 14,
-                    color: Colors.INACTIVE_GREY,
-                  }}>
-                  {pickFileIndex === index ? 'Thu gọn' : 'Chi tiết'}
-                </Text>
-                <Image
-                  source={pickFileIndex === index ? Images.up : Images.down}
-                  style={{
-                    width: 16,
-                    height: 16,
-                    tintColor: Colors.INACTIVE_GREY,
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
+              {item.Ngay}
+            </Text>
           </View>
-        </TouchableOpacity>
-        {pickFileIndex === index && (
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              handleMoreInfo(
+                item.SoHieu,
+                item.Ngay,
+                item.TrichYeu,
+                item.LoaiVB,
+                index,
+              );
+            }}
             style={{
-              marginHorizontal: Dimension.setWidth(5.5),
-              backgroundColor: 'rgba(150, 160, 169, 0.2)',
-              borderRadius: 12,
-              width: Dimension.setWidth(80),
-              marginBottom: Dimension.setHeight(0.6),
+              marginTop: Dimension.setHeight(1.8),
+              borderTopWidth: 0.5,
+              borderTopColor: Colors.INACTIVE_GREY,
+              marginHorizontal: Dimension.setWidth(8),
             }}>
+            <View
+              style={{
+                paddingTop: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_REGULAR,
+                  fontSize: 14,
+                  color: Colors.INACTIVE_GREY,
+                }}>
+                {pickFileIndex === index ? 'Thu gọn' : 'Chi tiết'}
+              </Text>
+              <Image
+                source={pickFileIndex === index ? Images.up : Images.down}
+                style={{
+                  width: 16,
+                  height: 16,
+                  tintColor: Colors.INACTIVE_GREY,
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
+        {pickFileIndex === index && subMenuItem && (
+          <View style={styles.subMenuContainer}>
             <View style={{padding: 10, marginLeft: Dimension.setWidth(3)}}>
               <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
                 <Image source={Images.dot} style={styles.dot} />
                 <Text style={styles.title}>Số hiệu: </Text>
-                <Text style={styles.content}>{item.SoHieu}</Text>
+                <Text style={styles.content}>{subMenuItem.soHieu}</Text>
               </View>
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
                 <Text style={styles.title}>Ngày ban hành: </Text>
-                <Text style={styles.content}>{item.Ngay}</Text>
+                <Text style={styles.content}>{subMenuItem.ngay}</Text>
               </View>
               <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
                 <Image source={Images.dot} style={styles.dot} />
                 <Text style={styles.title}>Trích dẫn: </Text>
-                <Text style={[styles.content]}>{item.TrichYeu}</Text>
+                <Text style={[styles.content]}>{subMenuItem.trichYeu}</Text>
               </View>
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
                 <Text style={styles.title}>Nhóm văn bản: </Text>
-                <Text style={styles.content}>{item.LoaiVB}</Text>
+                <Text style={styles.content}>{subMenuItem.loaiVB}</Text>
               </View>
             </View>
           </View>
         )}
       </View>
     );
-  };
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -268,7 +273,8 @@ const DocumentListScreen = ({navigation}) => {
           renderItem={({item, index}) => (
             <RenderDocument item={item} index={index} />
           )}
-          estimatedItemSize={200}
+          initialNumToRender={10}
+          windowSize={6}
         />
       </View>
     </SafeAreaView>
@@ -327,15 +333,13 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: Fonts.SF_BOLD,
     fontSize: 14,
-    textAlign: 'justify',
   },
 
   content: {
     fontFamily: Fonts.SF_REGULAR,
     fontSize: 14,
     marginLeft: Dimension.setWidth(2),
-    lineHeight: Dimension.setHeight(1.9),
-    textAlign: 'justify',
+    lineHeight: Dimension.setHeight(2),
   },
   searchInput: {
     alignSelf: 'center',
@@ -348,6 +352,27 @@ const styles = StyleSheet.create({
     height: Dimension.setHeight(5.5),
     justifyContent: 'flex-start',
     paddingHorizontal: Dimension.setWidth(3),
+  },
+
+  flatListItemContainer: {
+    backgroundColor: '#ffffff',
+    marginBottom: Dimension.setHeight(1.1),
+    marginTop: Dimension.setHeight(1.1),
+    borderRadius: 9,
+    elevation: 4,
+    marginHorizontal: 5,
+    borderWidth: 0.5,
+    borderColor: Colors.INACTIVE_GREY,
+    paddingTop: Dimension.setHeight(1.6),
+    paddingBottom: Dimension.setHeight(1.2),
+  },
+
+  subMenuContainer: {
+    marginHorizontal: Dimension.setWidth(5.5),
+    backgroundColor: 'rgba(150, 160, 169, 0.2)',
+    borderRadius: 12,
+    width: '86%',
+    marginBottom: Dimension.setHeight(0.6),
   },
 });
 

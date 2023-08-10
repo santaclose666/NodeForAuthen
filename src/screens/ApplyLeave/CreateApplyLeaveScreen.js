@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   StyleSheet,
   SafeAreaView,
   TextInput,
-  Modal,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
@@ -17,9 +16,10 @@ import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
-import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import {compareDate, formatDate} from '../../utils/serviceFunction';
+import RegisterBtn from '../../components/RegisterBtn';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 'Buổi sáng'},
@@ -28,76 +28,28 @@ const numberOfDayOff = [
   {label: 'Nhiều ngày', value: 'Nhiều ngày'},
 ];
 
-const offType = [
-  {label: 'Nghỉ phép ốm', value: 'Nghỉ phép ốm'},
-  {label: 'Nghỉ phép chế độ', value: 'Nghỉ phép chế độ'},
-  {label: 'Nghỉ phép năm', value: 'Nghỉ phép năm'},
-  {label: 'Nghỉ phép cưới', value: 'Nghỉ phép cưới'},
-];
-
 const CreateApplyLeaveScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const [valueNumberOfDay, setValueNumberOfDay] = useState(null);
-  const [valueOffType, setValueOffType] = useState(null);
+  const [offNumber, setOffNumber] = useState(0);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [checkPick, setCheckPick] = useState(null);
-  const [startDay, setStartDay] = useState(moment(date).format('DD-MM-YYYY'));
-  const [endDay, setEndDay] = useState(null);
+  const [startDay, setStartDay] = useState(formatDate(new Date()));
   const [inputDecription, setInputDecription] = useState('');
 
-  const checkStartDate = datePicker => {
-    const currentDate = moment(new Date()).startOf('day');
-    const endDate =
-      endDay !== null
-        ? moment(endDay, 'DD-MM-YYYY').startOf('day')
-        : moment(datePicker).startOf('day');
-
-    const formateStartDate = moment(datePicker).startOf('day');
-    if (formateStartDate < currentDate || formateStartDate > endDate) {
-      const message = 'Ngày bắt đầu không hợp lệ!';
-      ToastAlert(message);
-    } else {
-      const StartDate = moment(datePicker).format('DD-MM-YYYY');
-
-      setStartDay(StartDate);
-    }
-  };
-
-  const checkEndDate = datePicker => {
-    const formatStartDate = moment(startDay, 'DD-MM-YYYY').startOf('day');
-    const formatEndDate = moment(datePicker, 'DD-MM-YYYY').startOf('day');
-
-    if (formatStartDate < formatEndDate) {
-      const EndDate = moment(datePicker).format('DD-MM-YYYY');
-
-      setEndDay(EndDate);
-    } else {
-      const message = 'Ngày kết thúc không hợp lệ!';
-      ToastAlert(message);
-    }
-  };
-
-  const handlePickDate = (event, selectedDate) => {
+  const handlePickDate = (event, date) => {
     if (event.type === 'set') {
       setToggleDatePicker(false);
-      setDate(selectedDate);
-      if (checkPick) {
-        checkStartDate(selectedDate);
-      } else {
-        checkEndDate(selectedDate);
-      }
+      const message = 'Ngày bắt đầu không hợp lệ';
+      compareDate(new Date(), date)
+        ? setStartDay(formatDate(date))
+        : ToastAlert(message);
     } else {
       setToggleDatePicker(false);
     }
   };
 
   const handleRegister = () => {
-    if (
-      valueNumberOfDay === null ||
-      valueOffType === null ||
-      inputDecription === ''
-    ) {
+    if (valueNumberOfDay === null || inputDecription === '') {
       const message = 'Thiếu thông tin!';
       ToastAlert(message);
     } else {
@@ -106,7 +58,6 @@ const CreateApplyLeaveScreen = ({navigation}) => {
 
       const data = {
         reason: inputDecription,
-        type: valueOffType,
         leaveFrom: startDay,
         leaveTo: endDay,
         valueNumberOfDay,
@@ -146,31 +97,6 @@ const CreateApplyLeaveScreen = ({navigation}) => {
           </View>
         </View>
         <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Loại nghỉ phép</Text>
-          <Dropdown
-            style={styles.dropdown}
-            autoScroll={false}
-            showsVerticalScrollIndicator={false}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            containerStyle={styles.containerOptionStyle}
-            iconStyle={styles.iconStyle}
-            itemContainerStyle={styles.itemContainer}
-            itemTextStyle={styles.itemText}
-            fontFamily={Fonts.SF_MEDIUM}
-            activeColor="#eef2feff"
-            data={offType}
-            maxHeight={Dimension.setHeight(23)}
-            labelField="label"
-            valueField="value"
-            placeholder="Chọn loại nghỉ phép"
-            value={valueOffType}
-            onChange={item => {
-              setValueOffType(item.value);
-            }}
-          />
-        </View>
-        <View style={styles.containerEachLine}>
           <Text style={styles.title}>Số ngày nghỉ</Text>
           <Dropdown
             style={styles.dropdown}
@@ -192,55 +118,84 @@ const CreateApplyLeaveScreen = ({navigation}) => {
             value={valueNumberOfDay}
             onChange={item => {
               setValueNumberOfDay(item.value);
-              item.value !== 'Nhiều ngày' ? setEndDay(null) : null;
             }}
           />
         </View>
-        <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Nghỉ từ</Text>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginLeft: Dimension.setWidth(1.6),
-              backgroundColor: '#ffffff',
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                setCheckPick(true);
-                setToggleDatePicker(true);
-              }}
-              style={styles.datePickerContainer}>
-              <Image source={Images.minidate} style={styles.dateImg} />
-              <Text style={styles.dateText}>{startDay}</Text>
-            </TouchableOpacity>
-
-            {valueNumberOfDay === 'Nhiều ngày' && (
-              <>
-                <View
-                  style={{
-                    width: '5%',
-                    borderWidth: 1,
-                    alignSelf: 'center',
-                    marginHorizontal: Dimension.setWidth(3),
-                    borderColor: Colors.INACTIVE_GREY,
-                  }}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setToggleDatePicker(true);
+            }}
+            style={[
+              styles.containerEachLine,
+              {width: '48%', paddingVertical: Dimension.setHeight(1.8)},
+            ]}>
+            <Text style={styles.title}>Nghỉ từ</Text>
+            <View style={styles.dateTimePickerContainer}>
+              <Text style={styles.dateTimeText}>{startDay}</Text>
+              <View
+                style={[
+                  styles.dateTimeImgContainer,
+                  {backgroundColor: '#ff8d6a'},
+                ]}>
+                <Image
+                  source={Images.calendarBlack}
+                  style={styles.dateTimeImg}
                 />
+              </View>
+            </View>
+          </TouchableOpacity>
+          {valueNumberOfDay === 'Nhiều ngày' && (
+            <View
+              style={[
+                styles.containerEachLine,
+                ,
+                {
+                  width: '48%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                },
+              ]}>
+              <Text style={[styles.title, {alignSelf: 'center'}]}>
+                Số ngày nghỉ phép
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
                 <TouchableOpacity
                   onPress={() => {
-                    setCheckPick(false);
-                    setToggleDatePicker(true);
-                  }}
-                  style={styles.datePickerContainer}>
-                  <Image source={Images.minidate} style={styles.dateImg} />
-                  <Text style={styles.dateText}>
-                    {endDay === null ? 'Chọn ngày' : endDay}
-                  </Text>
+                    offNumber !== 0 ? setOffNumber(offNumber - 1) : null;
+                  }}>
+                  <Image
+                    style={{height: 22, width: 22}}
+                    source={Images.minus}
+                  />
                 </TouchableOpacity>
-              </>
-            )}
-          </View>
+                <Text
+                  style={{
+                    marginHorizontal: Dimension.setWidth(3),
+                    fontFamily: Fonts.SF_MEDIUM,
+                    fontSize: 16,
+                  }}>
+                  {offNumber}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setOffNumber(offNumber + 1);
+                  }}>
+                  <Image style={{height: 22, width: 22}} source={Images.plus} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </View>
         <View style={styles.containerEachLine}>
           <Text style={styles.title}>Lý do cụ thể</Text>
@@ -257,36 +212,13 @@ const CreateApplyLeaveScreen = ({navigation}) => {
             onChangeText={e => setInputDecription(e)}
           />
         </View>
-        <TouchableOpacity
-          onPress={handleRegister}
-          style={{
-            alignSelf: 'flex-end',
-            marginRight: Dimension.setWidth(3),
-            backgroundColor: '#ff9e57',
-            paddingVertical: Dimension.setHeight(0.8),
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 8,
-            width: Dimension.setWidth(36),
-            height: Dimension.setHeight(6),
-            marginTop: Dimension.setHeight(1),
-            marginBottom: Dimension.setHeight(2.5),
-          }}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: Fonts.SF_SEMIBOLD,
-              color: '#ffffff',
-            }}>
-            Đăng kí
-          </Text>
-        </TouchableOpacity>
+        <RegisterBtn onEvent={handleRegister} />
 
         {toggleDatePicker && (
           <View style={styles.calendarView}>
             <DateTimePicker
               testID="dateTimePicker"
-              value={date}
+              value={new Date()}
               mode="date"
               onChange={handlePickDate}
               display={Platform.OS === 'ios' ? 'inline' : 'default'}
@@ -392,6 +324,30 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 15,
     borderRadius: 15,
+  },
+
+  dateTimePickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: Dimension.setWidth(1.6),
+  },
+
+  dateTimeImgContainer: {
+    padding: Dimension.setWidth(1.1),
+    borderRadius: 8,
+  },
+
+  dateTimeImg: {
+    height: 17,
+    width: 17,
+    tintColor: '#ffffff',
+  },
+
+  dateTimeText: {
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: 16,
+    lineHeight: Dimension.setHeight(2.2),
   },
 });
 

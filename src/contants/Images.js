@@ -80,6 +80,10 @@ const Images = {
   work: require('../assets/images/work.png'),
   worklocation: require('../assets/images/worklocation.png'),
   registerperson: require('../assets/images/registerperson.png'),
+  vehicles: require('../assets/images/vehicles.png'),
+  vehicleplate: require('../assets/images/vehicleplate.png'),
+  content: require('../assets/images/content.png'),
+  admin: require('../assets/images/admin.png'),
 };
 
 export default Images;
