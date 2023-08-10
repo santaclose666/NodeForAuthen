@@ -92,6 +92,8 @@ const Images = {
   location1: require('../assets/images/location1.png'),
   program: require('../assets/images/program.png'),
   note: require('../assets/images/notes.png'),
+  registerticket: require('../assets/images/registerticket.png'),
+  registervehicle: require('../assets/images/registervehicle.png'),
 };
 
 export default Images;

@@ -128,7 +128,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
                     ellipsizeMode="tail"
                     style={{
                       fontFamily: Fonts.SF_SEMIBOLD,
-                      fontSize: 22,
+                      fontSize: 19,
                       width: '70%',
                     }}>
                     {item.programName}

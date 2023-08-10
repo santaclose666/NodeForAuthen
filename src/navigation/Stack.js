@@ -14,6 +14,7 @@ import RegisterVehicleScreen from '../screens/VehicleManagement/RegisterVehicleS
 import HistoryRegisterVehicleScreen from '../screens/VehicleManagement/HistoryRegisterVehicleScreen';
 import CreateWorkSchedule from '../screens/WorkShedule/CreateWorkShedule';
 import HistoryWorkShedule from '../screens/WorkShedule/HistoryWorkSchedule';
+import HistoryRegisterTicketScreen from '../screens/TicketManagement/HistoryRegisterTicketScreen';
 
 const Stack = createStackNavigator();
 
@@ -43,7 +44,7 @@ const StactNavigator = () => {
       />
       <Stack.Screen
         name="HistoryPlaneTicket"
-        component={HistoryRegisterVehicleScreen}
+        component={HistoryRegisterTicketScreen}
       />
       <Stack.Screen name="RegisterVehicle" component={RegisterVehicleScreen} />
       <Stack.Screen

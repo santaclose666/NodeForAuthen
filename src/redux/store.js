@@ -2,17 +2,9 @@ import {configureStore, combineReducers} from '@reduxjs/toolkit';
 import authReducer from './authSlice';
 import staffReducer from './staffSlice';
 import notifiReducer from './notifiSlice';
+import weatherReducer from './weatherSlice';
 import logger from 'redux-logger';
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from 'redux-persist';
+import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const persistConfig = {
@@ -24,6 +16,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   staffs: staffReducer,
   notifi: notifiReducer,
+  weather: weatherReducer,
 });
 const persistedReducer = persistReducer(
   persistConfig,

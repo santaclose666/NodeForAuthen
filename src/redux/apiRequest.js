@@ -1,6 +1,4 @@
-import React from 'react';
 import axios from 'axios';
-import {Toast, Box, Text} from 'native-base';
 import {
   loginStart,
   loginSuccess,
@@ -11,6 +9,13 @@ import {getStaffStart, getStaffSuccess, getStaffFailed} from './staffSlice';
 import {getNotifiSuccess} from './notifiSlice';
 import {sortByTitle} from '../utils/calculateFunction';
 import {CommonActions} from '@react-navigation/native';
+import {getCoords} from '../utils/serviceFunction';
+import {
+  getWeatherFailed,
+  getWeatherStart,
+  getWeatherSuccess,
+} from './weatherSlice';
+import {ToastWarning} from '../components/Toast';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -27,19 +32,9 @@ export const loginUser = async (user, dispatch, navigation) => {
     dispatch(loginSuccess((await res).data));
 
     if (res.data === 0) {
-      Toast.show({
-        render: () => {
-          return (
-            <Box bg="danger.500" px="2" py="1" rounded="sm" mb={6}>
-              <Text fontSize={17} color="white">
-                Thông tin đăng nhập chưa chính xác!
-              </Text>
-            </Box>
-          );
-        },
-      });
+      const mess = 'Thông tin đăng nhập chưa chính xác!';
+      ToastWarning(mess);
     } else {
-      getAllStaffs(dispatch);
       navigation.dispatch(resetAction);
       navigation.navigate('BottomTab');
     }
@@ -81,4 +76,27 @@ export const logoutUser = (dispatch, navigation) => {
 
 export const getAllNotifi = (data, dispatch) => {
   dispatch(getNotifiSuccess(data));
+};
+
+export const getWeatherData = async dispatch => {
+  const apiKey = '1e52cb7b5a93a86d54181d1fa5724454';
+  getWeatherStart();
+  try {
+    const coords = await getCoords();
+
+    const res = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&appid=${apiKey}`,
+    );
+
+    const data = res.data;
+    const iconCode = data.weather[0].icon;
+    const temp = (data.main.temp - 273.15).toFixed(0);
+    const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`;
+    const name = data.name;
+    const weatherData = {temp, iconUrl, name};
+
+    dispatch(getWeatherSuccess(weatherData));
+  } catch (error) {
+    dispatch(getWeatherFailed());
+  }
 };

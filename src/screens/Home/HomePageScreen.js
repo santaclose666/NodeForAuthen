@@ -21,9 +21,8 @@ import {PERMISSIONS, request} from 'react-native-permissions';
 import {
   getVietnameseDayOfWeek,
   getFormattedDate,
-  getCoords,
 } from '../../utils/serviceFunction';
-import {getAllStaffs} from '../../redux/apiRequest';
+import {getAllStaffs, getWeatherData} from '../../redux/apiRequest';
 import {getToken, notificationListener} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -45,19 +44,20 @@ const requestPermissions = async () => {
     await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then(result => {
       console.log(result);
     });
-    const authStatus = await messaging().requestPermission();
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    // const authStatus = await messaging().requestPermission();
+    // authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    //   authStatus === messaging.AuthorizationStatus.PROVISIONAL;
   }
 };
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const weather = useSelector(state => state.weather.weathers?.data);
   const notifiData = useSelector(
     state => state.notifi.notifications?.allNotifi,
   );
   const dispatch = useDispatch();
-  const [dataWeather, setDataWeather] = useState(null);
+  const [interval, setInTerVal] = useState(null);
   const [newsArr, setNewArr] = useState([
     {
       topic: 'Chính sách',
@@ -105,30 +105,35 @@ const HomePageScreen = ({navigation}) => {
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();
 
-  const fetchWeatherData = async () => {
-    try {
-      const coords = await getCoords();
-      setDataWeather(coords);
-    } catch (err) {
-      console.log(err);
-    }
+  const fetchImportantData = async () => {
+    await getWeatherData();
+    await getAllStaffs(dispatch);
   };
 
-  const notificationHandle = async () => {
-    await requestPermissions();
-    await getAllStaffs(dispatch);
-    await getToken();
-    await notificationListener(notifiData, navigation, dispatch);
-  };
+  // const notificationHandle = async () => {
+  //   await requestPermissions();
+  //   await getToken();
+  //   await notificationListener(notifiData, navigation, dispatch);
+  // };
 
   useEffect(() => {
-    fetchWeatherData();
-    notificationHandle();
-  }, [notifiData]);
+    if (weather) {
+      setInTerVal(
+        setInterval(() => {
+          fetchImportantData();
+        }, 1000 * 60 * 60),
+      );
+    } else {
+      fetchImportantData();
+    }
+    // notificationHandle();
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <LinearGradient
-      colors={['rgba(238,174,202,0.5)', 'rgba(148,187,233,0.5)']}
+      colors={['rgba(238,174,202,1)', 'rgba(148,187,233,1)']}
       style={styles.container}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}>
@@ -187,7 +192,7 @@ const HomePageScreen = ({navigation}) => {
             </View>
             <View style={styles.weatherContainer}>
               <Image
-                source={{uri: dataWeather?.iconUrl}}
+                source={{uri: weather?.iconUrl}}
                 style={styles.weatherImg}
               />
               <View
@@ -196,13 +201,13 @@ const HomePageScreen = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <Text style={styles.dayInWeekText}>Thời tiết</Text>
-                {dataWeather === null ? (
+                {!weather ? (
                   <HStack space={8} justifyContent="center" alignItems="center">
                     <Spinner size="sm" />
                   </HStack>
                 ) : (
                   <Text style={styles.calendarText}>
-                    {dataWeather?.name} {dataWeather?.temp}°C
+                    {weather?.name} {weather?.temp}°C
                   </Text>
                 )}
               </View>
@@ -262,7 +267,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('HistoryPlaneTicket');
+                  navigation.navigate('HistoryApplyLeave');
                 }}>
                 <Image source={Images.busy} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Nghỉ phép</Text>
@@ -270,6 +275,30 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity style={styles.buttonFuc}>
                 <Image source={Images.morebtn} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Thêm</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.btnContainer}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  navigation.navigate('HistoryRegisterVehicle');
+                }}>
+                <Image
+                  source={Images.registervehicle}
+                  style={styles.featureBtn}
+                />
+                <Text style={styles.featureText}>Đăng kí xe</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  navigation.navigate('HistoryPlaneTicket');
+                }}>
+                <Image
+                  source={Images.registerticket}
+                  style={styles.featureBtn}
+                />
+                <Text style={styles.featureText}>Đăng kí vé</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -414,7 +443,6 @@ const styles = StyleSheet.create({
   },
 
   btnContainer: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',

@@ -45,12 +45,7 @@ export const getCoords = () => {
       async position => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-        try {
-          const data = await getWeatherData(latitude, longitude);
-          resolve(data);
-        } catch (err) {
-          reject(err);
-        }
+        resolve({latitude, longitude});
       },
       err => {
         reject(err);

@@ -7,7 +7,7 @@ import {
   TextInput,
   StyleSheet,
   SafeAreaView,
-  FlatList,
+  VirtualizedList,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../../contants/Images';
@@ -25,7 +25,6 @@ const DocumentListScreen = ({navigation}) => {
   const [pickFileIndex, setpickFileIndex] = useState(null);
   const [pickOptionIndex, setPickOptionIndex] = useState(0);
   const [input, setInput] = useState('');
-  const [subMenuItem, setSubMenuItem] = useState(null);
   const [groupOption, setGroupOption] = useState([
     'Tất cả',
     'Luật',
@@ -66,20 +65,7 @@ const DocumentListScreen = ({navigation}) => {
     navigation.navigate('PDF', {link: baseURL + fileName});
   }, []);
 
-  const handleMoreInfo = useCallback(
-    (soHieu, ngay, trichYeu, loaiVB, index) => {
-      setSubMenuItem({
-        soHieu: soHieu,
-        ngay: ngay,
-        trichYeu: trichYeu,
-        loaiVB: loaiVB,
-      });
-      pickFileIndex !== index
-        ? setpickFileIndex(index)
-        : setpickFileIndex(null);
-    },
-    [pickFileIndex],
-  );
+  const handleMoreInfo = useCallback(index => {}, [pickFileIndex]);
 
   const RenderDocument = memo(({item, index}) => {
     return (
@@ -122,13 +108,9 @@ const DocumentListScreen = ({navigation}) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              handleMoreInfo(
-                item.SoHieu,
-                item.Ngay,
-                item.TrichYeu,
-                item.LoaiVB,
-                index,
-              );
+              pickFileIndex !== index
+                ? setpickFileIndex(index)
+                : setpickFileIndex(null);
             }}
             style={{
               marginTop: Dimension.setHeight(1.8),
@@ -162,28 +144,28 @@ const DocumentListScreen = ({navigation}) => {
             </View>
           </TouchableOpacity>
         </TouchableOpacity>
-        {pickFileIndex === index && subMenuItem && (
+        {pickFileIndex === index && (
           <View style={styles.subMenuContainer}>
             <View style={{padding: 10, marginLeft: Dimension.setWidth(3)}}>
               <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
                 <Image source={Images.dot} style={styles.dot} />
                 <Text style={styles.title}>Số hiệu: </Text>
-                <Text style={styles.content}>{subMenuItem.soHieu}</Text>
+                <Text style={styles.content}>{item.SoHieu}</Text>
               </View>
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
                 <Text style={styles.title}>Ngày ban hành: </Text>
-                <Text style={styles.content}>{subMenuItem.ngay}</Text>
+                <Text style={styles.content}>{item.Ngay}</Text>
               </View>
               <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
                 <Image source={Images.dot} style={styles.dot} />
                 <Text style={styles.title}>Trích dẫn: </Text>
-                <Text style={[styles.content]}>{subMenuItem.trichYeu}</Text>
+                <Text style={[styles.content]}>{item.TrichYeu}</Text>
               </View>
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
                 <Text style={styles.title}>Nhóm văn bản: </Text>
-                <Text style={styles.content}>{subMenuItem.loaiVB}</Text>
+                <Text style={styles.content}>{item.LoaiVB}</Text>
               </View>
             </View>
           </View>
@@ -266,15 +248,23 @@ const DocumentListScreen = ({navigation}) => {
           Văn bản, tài liệu
         </Text>
 
-        <FlatList
+        <VirtualizedList
           data={data}
           keyExtractor={item => item.ID.toString()}
           showsVerticalScrollIndicator={false}
           renderItem={({item, index}) => (
             <RenderDocument item={item} index={index} />
           )}
+          getItemCount={() => data.length}
+          getItem={(data, index) => data[index]}
+          getItemLayout={(data, index) => ({
+            length: Dimension.setHeight(13.5),
+            offset: Dimension.setHeight(13.5) * index,
+            index,
+          })}
           initialNumToRender={10}
           windowSize={6}
+          removeClippedSubviews={true}
         />
       </View>
     </SafeAreaView>
@@ -365,6 +355,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.INACTIVE_GREY,
     paddingTop: Dimension.setHeight(1.6),
     paddingBottom: Dimension.setHeight(1.2),
+    height: Dimension.setHeight(13.5),
   },
 
   subMenuContainer: {

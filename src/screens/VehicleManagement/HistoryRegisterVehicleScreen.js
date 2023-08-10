@@ -138,7 +138,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                   }}>
-                  <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 22}}>
+                  <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 19}}>
                     {`${item.actionType} ${item.vehicleType}`}
                   </Text>
                   <View

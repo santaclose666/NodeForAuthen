@@ -12,12 +12,10 @@ import {
 import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
-import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
-import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import {compareDate, formatDate} from '../../utils/serviceFunction';
@@ -57,6 +55,7 @@ const listTenChuongTrinh = [
 ];
 
 const CreateWorkSchedule = ({navigation}) => {
+  const user = useSelector(state => state.auth.login?.currentUser);
   const [luaChon, setLuaChon] = useState(listLuaChon[0].value);
   const [chuongTrinh, setChuongTrinh] = useState(listChuongTrinh[0].value);
   const [tenChuongTrinh, setTenChuongTrinh] = useState(
@@ -75,7 +74,7 @@ const CreateWorkSchedule = ({navigation}) => {
   const handlePickDate = (event, date) => {
     if (event.type === 'set') {
       setToggleDatePicker(false);
-      if (checkPick !== 'Chọn ngày') {
+      if (checkPick) {
         const dayStart = formatDate(date);
         if (endDay !== 'Chọn ngày') {
           compareDate(dayStart, endDay)
@@ -114,6 +113,20 @@ const CreateWorkSchedule = ({navigation}) => {
             paddingTop: Dimension.setHeight(3),
             elevation: 5,
           }}>
+          <View style={styles.containerEachLine}>
+            <Text style={styles.title}>Người đăng kí</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image source={Images.avatar} style={{height: 40, width: 40}} />
+              <Text
+                style={{
+                  marginLeft: Dimension.setWidth(3),
+                  fontSize: 19,
+                  fontFamily: Fonts.SF_SEMIBOLD,
+                }}>
+                {user?.name}
+              </Text>
+            </View>
+          </View>
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Lựa chọn loại</Text>
             <Dropdown

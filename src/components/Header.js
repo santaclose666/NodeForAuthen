@@ -16,7 +16,8 @@ const Header = ({title, eventFunc, navigation}) => {
   const showCreateButton =
     title === 'Lịch sử nghỉ phép' ||
     title === 'Lịch sử đặt vé' ||
-    title === 'Lịch sử công tác';
+    title === 'Lịch sử công tác' ||
+    title === 'Lịch sử đăng kí xe';
 
   return (
     <SafeAreaView
@@ -56,6 +57,8 @@ const Header = ({title, eventFunc, navigation}) => {
               navigation.navigate('RegisterPlaneTicket');
             } else if (title === 'Lịch sử công tác') {
               navigation.navigate('CreateWorkSchedule');
+            } else if (title === 'Lịch sử đăng kí xe') {
+              navigation.navigate('RegisterVehicle');
             }
           }}>
           <Image source={Images.create} style={{width: 30, height: 30}} />
