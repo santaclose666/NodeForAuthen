@@ -254,7 +254,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('HistoryPlaneTicket');
+                  navigation.navigate('HistoryWorkShedule');
                 }}>
                 <Image source={Images.calendar2} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Lịch công tác</Text>
@@ -262,7 +262,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('HistoryApplyLeave');
+                  navigation.navigate('HistoryPlaneTicket');
                 }}>
                 <Image source={Images.busy} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Nghỉ phép</Text>

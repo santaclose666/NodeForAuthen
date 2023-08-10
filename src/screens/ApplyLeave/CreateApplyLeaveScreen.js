@@ -212,7 +212,7 @@ const CreateApplyLeaveScreen = ({navigation}) => {
             onChangeText={e => setInputDecription(e)}
           />
         </View>
-        <RegisterBtn onEvent={handleRegister} />
+        <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
 
         {toggleDatePicker && (
           <View style={styles.calendarView}>

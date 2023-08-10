@@ -531,7 +531,7 @@ const RegisterPlaneScreen = ({navigation}) => {
               }}
             />
           </View>
-          <RegisterBtn onEvent={handleRegister} />
+          <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
         </KeyboardAwareScrollView>
       </ScrollView>
     </SafeAreaView>

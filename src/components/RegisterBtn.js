@@ -3,7 +3,7 @@ import {TouchableOpacity, Text} from 'react-native';
 import Dimension from '../contants/Dimension';
 import Fonts from '../contants/Fonts';
 
-const RegisterBtn = ({onEvent}) => {
+const RegisterBtn = ({nameBtn, onEvent}) => {
   return (
     <TouchableOpacity
       onPress={onEvent}
@@ -26,7 +26,7 @@ const RegisterBtn = ({onEvent}) => {
           fontFamily: Fonts.SF_SEMIBOLD,
           color: '#ffffff',
         }}>
-        Đăng kí
+        {!nameBtn ? 'Đăng kí' : nameBtn}
       </Text>
     </TouchableOpacity>
   );

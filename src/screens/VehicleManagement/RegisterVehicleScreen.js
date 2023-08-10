@@ -256,7 +256,7 @@ const RegisterVehicleScreen = ({navigation}) => {
             />
           </View>
 
-          <RegisterBtn onEvent={handleRegister} />
+          <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
 
           {toggleDatePicker && (
             <DateTimePicker

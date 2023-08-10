@@ -12,13 +12,15 @@ import CreateApplyLeaveScreen from '../screens/ApplyLeave/CreateApplyLeaveScreen
 import RegisterPlaneScreen from '../screens/TicketManagement/RegisterPlaneScreen';
 import RegisterVehicleScreen from '../screens/VehicleManagement/RegisterVehicleScreen';
 import HistoryRegisterVehicleScreen from '../screens/VehicleManagement/HistoryRegisterVehicleScreen';
+import CreateWorkSchedule from '../screens/WorkShedule/CreateWorkShedule';
+import HistoryWorkShedule from '../screens/WorkShedule/HistoryWorkSchedule';
 
 const Stack = createStackNavigator();
 
 const StactNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="HistoryRegisterVehicle"
+      initialRouteName="HistoryWorkShedule"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="HomePage" component={HomePageScreen} />
       <Stack.Screen name="AllNews" component={AllNewsScreen} />
@@ -48,6 +50,8 @@ const StactNavigator = () => {
         name="HistoryRegisterVehicle"
         component={HistoryRegisterVehicleScreen}
       />
+      <Stack.Screen name="CreateWorkSchedule" component={CreateWorkSchedule} />
+      <Stack.Screen name="HistoryWorkShedule" component={HistoryWorkShedule} />
     </Stack.Navigator>
   );
 };
