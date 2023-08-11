@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  TextInput,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -17,16 +18,24 @@ import Header from '../../components/Header';
 import {getAllOnLeaveData} from '../../redux/apiRequest';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
+import Colors from '../../contants/Colors';
 
 const HistoryApplyLeaveScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [commnetInput, setCommentInput] = useState('');
+  const [checkInput, setCheckInput] = useState(null);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     getAllOnLeaveData(user?.id, dispatch);
   }, []);
+
+  const handleCheckItem = index => {
+    selectedItem !== index ? setSelectedItem(index) : setSelectedItem(null);
+  };
 
   const RenderLeaveList = ({item, index}) => {
     const colorStatus =
@@ -45,8 +54,20 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
         : item.status === 1
         ? Images.approve
         : Images.cancel;
+
+    const checkRole = () => {
+      const filterRole = staffs.filter(staff => staff.id === item.id_nhansu)[0];
+
+      return (
+        item.status === 0 &&
+        item.id_nhansu !== user?.id &&
+        ((user?.vitri_ifee === 3 && filterRole.id > 3) ||
+          (user?.vitri_ifee <= 2 && filterRole.id === 3))
+      );
+    };
+
     return (
-      <TouchableOpacity
+      <View
         key={index}
         style={{
           marginHorizontal: Dimension.setWidth(3),
@@ -72,35 +93,38 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
             {item.lydo}
           </Text>
           <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                alignSelf: 'flex-start',
-                paddingVertical: Dimension.setHeight(0.5),
-                paddingHorizontal: Dimension.setWidth(1.4),
-                borderRadius: 8,
-                backgroundColor: bgColorStatus,
-              }}>
-              <Image
-                source={icon}
-                style={{
-                  height: 16,
-                  width: 16,
-                  marginRight: Dimension.setWidth(1),
-                  tintColor: colorStatus,
-                }}
-              />
-              <Text
-                style={{
-                  color: colorStatus,
-                  fontSize: 14,
-                  fontFamily: Fonts.SF_MEDIUM,
-                }}>
-                {status}
-              </Text>
-            </View>
-            {item.status === 0 && (
+            {item.status !== 0 ||
+              (item.id_nhansu === user?.id && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'flex-start',
+                    paddingVertical: Dimension.setHeight(0.5),
+                    paddingHorizontal: Dimension.setWidth(1.4),
+                    borderRadius: 8,
+                    backgroundColor: bgColorStatus,
+                  }}>
+                  <Image
+                    source={icon}
+                    style={{
+                      height: 16,
+                      width: 16,
+                      marginRight: Dimension.setWidth(1),
+                      tintColor: colorStatus,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: colorStatus,
+                      fontSize: 14,
+                      fontFamily: Fonts.SF_MEDIUM,
+                    }}>
+                    {status}
+                  </Text>
+                </View>
+              ))}
+            {checkRole() && (
               <View
                 style={{
                   flexDirection: 'row',
@@ -109,13 +133,21 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
                   width: Dimension.setWidth(17),
                   alignSelf: 'flex-end',
                 }}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCheckInput(true);
+                    handleCheckItem(index);
+                  }}>
                   <Image
                     source={Images.approved}
                     style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCheckInput(false);
+                    handleCheckItem(index);
+                  }}>
                   <Image
                     source={Images.cancelled}
                     style={[styles.approvedIcon, {tintColor: '#f25157'}]}
@@ -157,7 +189,37 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
             <Text style={styles.content}>{changeFormatDate(item.denngay)}</Text>
           </View>
         </View>
-      </TouchableOpacity>
+        {selectedItem === index && (
+          <View
+            style={[
+              styles.containerEachLine,
+              {marginTop: Dimension.setHeight(1.6)},
+            ]}>
+            <Image source={Images.comment} style={styles.iconic} />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '80%',
+              }}>
+              <TextInput
+                placeholder="Viết nhận xét"
+                style={{
+                  fontFamily: Fonts.SF_REGULAR,
+                  color: Colors.INACTIVE_GREY,
+                  width: '85%',
+                  height: Dimension.setHeight(6),
+                  borderBottomWidth: 0.8,
+                }}
+                onChangeText={e => setCommentInput(e)}
+                value={commnetInput}
+              />
+              <Image source={Images.send} style={{width: 25, height: 25}} />
+            </View>
+          </View>
+        )}
+      </View>
     );
   };
 
