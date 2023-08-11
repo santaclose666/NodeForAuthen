@@ -121,7 +121,7 @@ const HomePageScreen = ({navigation}) => {
       setInTerVal(
         setInterval(() => {
           fetchImportantData();
-        }, 1000 * 60 * 60),
+        }, 1600000),
       );
     } else {
       fetchImportantData();

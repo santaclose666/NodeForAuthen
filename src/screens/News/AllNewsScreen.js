@@ -10,7 +10,6 @@ import {
   StatusBar,
   SafeAreaView,
 } from 'react-native';
-import {Toast, Box} from 'native-base';
 import unidecode from 'unidecode';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -143,7 +142,7 @@ const AllNewsScreen = ({navigation}) => {
         <TouchableOpacity
           style={styles.headerContainer}
           onPress={() => {
-            navigation.goBack();
+            navigation.navigate('Home');
           }}>
           <Image style={styles.backImg} source={Images.back} />
         </TouchableOpacity>

@@ -7,10 +7,7 @@ import {
   StyleSheet,
   TextInput,
   StatusBar,
-  SafeAreaView,
-  Platform,
 } from 'react-native';
-import {Toast, Box} from 'native-base';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';

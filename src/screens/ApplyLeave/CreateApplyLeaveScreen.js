@@ -22,16 +22,16 @@ import {compareDate, formatDate} from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
 
 const numberOfDayOff = [
-  {label: 'Buổi sáng', value: 'Buổi sáng'},
-  {label: 'Buổi chiều', value: 'Buổi chiều'},
-  {label: '1 ngày', value: '1 ngày'},
+  {label: 'Buổi sáng', value: 0.5},
+  {label: 'Buổi chiều', value: 0.5},
+  {label: '1 ngày', value: 1},
   {label: 'Nhiều ngày', value: 'Nhiều ngày'},
 ];
 
 const CreateApplyLeaveScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const [valueNumberOfDay, setValueNumberOfDay] = useState(null);
-  const [offNumber, setOffNumber] = useState(0);
+  const [offNumber, setOffNumber] = useState(2);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [startDay, setStartDay] = useState(formatDate(new Date()));
   const [inputDecription, setInputDecription] = useState('');
@@ -53,17 +53,17 @@ const CreateApplyLeaveScreen = ({navigation}) => {
       const message = 'Thiếu thông tin!';
       ToastAlert(message);
     } else {
-      const message = 'Đăng kí thành công';
-      ToastSuccess(message);
-
       const data = {
         reason: inputDecription,
         leaveFrom: startDay,
-        leaveTo: endDay,
-        valueNumberOfDay,
+        numberOffDay:
+          numberOfDayOff === 'Nhiều ngày' ? offNumber : numberOfDayOff,
       };
+
+      const message = 'Đăng kí thành công';
+      ToastSuccess(message);
       setTimeout(() => {
-        navigation.navigate('HistoryApplyLeave', {data});
+        navigation.navigate('HistoryApplyLeave');
       }, 1111);
     }
   };

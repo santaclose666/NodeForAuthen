@@ -65,8 +65,6 @@ const DocumentListScreen = ({navigation}) => {
     navigation.navigate('PDF', {link: baseURL + fileName});
   }, []);
 
-  const handleMoreInfo = useCallback(index => {}, [pickFileIndex]);
-
   const RenderDocument = memo(({item, index}) => {
     return (
       <View key={item.ID}>

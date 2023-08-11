@@ -1,8 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import StaffListScreen from '../screens/User/StaffListScreen';
-import AllNewsScreen from '../screens/News/AllNewsScreen';
-import DetailNewsScreen from '../screens/News/DetailNewsScreen';
 import NotifiScreen from '../screens/Notification/NotifiScreens';
 import DetailStaffScreen from '../screens/User/DetailStaffScreen';
 import HomePageScreen from '../screens/Home/HomePageScreen';
@@ -24,8 +22,6 @@ const StactNavigator = () => {
       initialRouteName="HomePage"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="HomePage" component={HomePageScreen} />
-      <Stack.Screen name="AllNews" component={AllNewsScreen} />
-      <Stack.Screen name="DetailNews" component={DetailNewsScreen} />
       <Stack.Screen name="StaffList" component={StaffListScreen} />
       <Stack.Screen name="DetailStaff" component={DetailStaffScreen} />
       <Stack.Screen name="Notification" component={NotifiScreen} />

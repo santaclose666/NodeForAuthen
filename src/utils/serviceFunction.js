@@ -67,6 +67,11 @@ export const formatDate = date => {
   return dateFormat;
 };
 
+export const changeFormatDate = date => {
+  const formatDate = moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
+  return formatDate;
+};
+
 export const compareDate = (date1, date2) => {
   const beforeDate = moment(date1, 'DD/MM/YYYY').startOf('day');
   const afterDate = moment(date2, 'DD/MM/YYYY').startOf('day');

@@ -16,6 +16,11 @@ import {
   getWeatherSuccess,
 } from './weatherSlice';
 import {ToastWarning} from '../components/Toast';
+import {
+  getOnLeaveFailed,
+  getOnLeaveStart,
+  getOnLeaveSuccess,
+} from './onLeaveSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -98,5 +103,20 @@ export const getWeatherData = async dispatch => {
     dispatch(getWeatherSuccess(weatherData));
   } catch (error) {
     dispatch(getWeatherFailed());
+  }
+};
+
+export const getAllOnLeaveData = async (id, dispatch) => {
+  dispatch(getOnLeaveStart());
+  try {
+    const res =
+      await axios.get(`https://management.ifee.edu.vn/api/nghiphep/danhsach/${id}
+    `);
+
+    const data = res.data;
+
+    dispatch(getOnLeaveSuccess(data));
+  } catch (error) {
+    dispatch(getOnLeaveFailed());
   }
 };

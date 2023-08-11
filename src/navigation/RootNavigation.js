@@ -4,12 +4,11 @@ import {createStackNavigator} from '@react-navigation/stack';
 import TabNaviagtor from './BottomTab';
 import LoginScreen from '../screens/Login/LoginScreen';
 import DisplayPDF from '../screens/Document/DisplayPDFScreen';
-import {useSelector} from 'react-redux';
+import DetailNewsScreen from '../screens/News/DetailNewsScreen';
 
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
-  const user = useSelector(state => state.auth.login?.currentUser);
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -18,6 +17,7 @@ const RootNavigator = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="BottomTab" component={TabNaviagtor} />
         <Stack.Screen name="PDF" component={DisplayPDF} />
+        <Stack.Screen name="DetailNews" component={DetailNewsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

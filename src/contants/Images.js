@@ -94,6 +94,11 @@ const Images = {
   note: require('../assets/images/notes.png'),
   registerticket: require('../assets/images/registerticket.png'),
   registervehicle: require('../assets/images/registervehicle.png'),
+  news1: require('../assets/images/news1.png'),
+  news2: require('../assets/images/news2.png'),
+  motorbike: require('../assets/images/motorbike.png'),
+  approved: require('../assets/images/approved.png'),
+  cancelled: require('../assets/images/cancelled.png'),
 };
 
 export default Images;

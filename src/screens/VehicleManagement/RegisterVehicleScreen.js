@@ -22,6 +22,7 @@ import {
   formatTime,
   getCurrentTime,
   compareDate,
+  formatDate,
 } from '../../utils/serviceFunction';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import RegisterBtn from '../../components/RegisterBtn';
@@ -46,12 +47,8 @@ const RegisterVehicleScreen = ({navigation}) => {
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [dateTime, setDateTime] = useState(null);
   const [vehicleValue, setVehicleValue] = useState(typeVehicle[0].value);
-  const [dateStart, setDateStart] = useState(
-    moment(new Date()).format('DD/MM/YYYY'),
-  );
-  const [receiveDate, setReceiveDate] = useState(
-    moment(new Date()).format('DD/MM/YYYY'),
-  );
+  const [dateStart, setDateStart] = useState(formatDate(new Date()));
+  const [receiveDate, setReceiveDate] = useState(formatDate(new Date()));
   const [receiveTime, setReceiveTime] = useState(getCurrentTime());
   const [check, setCheck] = useState(null);
   const [placeInput, setPlaceInput] = useState('');
@@ -62,14 +59,14 @@ const RegisterVehicleScreen = ({navigation}) => {
     if (event.type === 'set') {
       setToggleDatePicker(false);
       if (check === 'startDate') {
-        const startDate = moment(date).format('DD/MM/YYYY');
+        const startDate = formatDate(date);
         compareDate(receiveDate, startDate)
           ? setDateStart(startDate)
           : ToastAlert(message);
       } else if (check === 'receiveTime') {
         setReceiveTime(formatTime(date));
       } else {
-        const dateReceive = moment(date).format('DD/MM/YYYY');
+        const dateReceive = formatDate(date);
         compareDate(dateReceive, dateStart)
           ? setReceiveDate(dateReceive)
           : ToastAlert(message);
@@ -154,7 +151,11 @@ const RegisterVehicleScreen = ({navigation}) => {
               renderLeftIcon={() => {
                 return (
                   <Image
-                    source={Images.vehicles}
+                    source={
+                      vehicleValue === 'WIGO'
+                        ? Images.vehicles
+                        : Images.motorbike
+                    }
                     style={styles.leftIconDropdown}
                   />
                 );

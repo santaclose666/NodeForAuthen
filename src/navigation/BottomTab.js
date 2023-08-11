@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import StactNavigator from './Stack';
 import NotifiScreen from '../screens/Notification/NotifiScreens';
-import DetailStaffScreen from '../screens/User/DetailStaffScreen';
+import AllNewsScreen from '../screens/News/AllNewsScreen';
 import {View, Image} from 'react-native';
 import Dimension from '../contants/Dimension';
 import Images from '../contants/Images';
@@ -26,10 +26,10 @@ const TabNaviagtor = () => {
       activeColor: '#63c05f',
     },
     {
-      name: 'User',
-      component: DetailStaffScreen,
-      iconInactive: Images.user2,
-      iconActive: Images.userActive,
+      name: 'AllNews',
+      component: AllNewsScreen,
+      iconInactive: Images.news1,
+      iconActive: Images.news2,
       activeColor: '#ffba00',
     },
   ]);
