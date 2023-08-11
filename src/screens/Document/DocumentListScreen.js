@@ -258,8 +258,8 @@ const DocumentListScreen = ({navigation}) => {
           getItemCount={() => data.length}
           getItem={(data, index) => data[index]}
           getItemLayout={(data, index) => ({
-            length: Dimension.setHeight(13.5),
-            offset: Dimension.setHeight(13.5) * index,
+            length: Dimension.setHeight(14),
+            offset: Dimension.setHeight(14) * index,
             index,
           })}
           initialNumToRender={10}
@@ -355,7 +355,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.INACTIVE_GREY,
     paddingTop: Dimension.setHeight(1.6),
     paddingBottom: Dimension.setHeight(1.2),
-    height: Dimension.setHeight(13.5),
   },
 
   subMenuContainer: {

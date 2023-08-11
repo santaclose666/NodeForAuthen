@@ -80,7 +80,7 @@ export const getAllNotifi = (data, dispatch) => {
 
 export const getWeatherData = async dispatch => {
   const apiKey = '1e52cb7b5a93a86d54181d1fa5724454';
-  getWeatherStart();
+  dispatch(getWeatherStart());
   try {
     const coords = await getCoords();
 

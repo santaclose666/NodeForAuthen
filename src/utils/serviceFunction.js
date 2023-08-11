@@ -1,6 +1,4 @@
 import Geolocation from 'react-native-geolocation-service';
-import getWeatherData from '../apiService/weatherCurrent';
-import {ToastAlert} from '../components/Toast';
 import moment from 'moment';
 
 export const getVietnameseDayOfWeek = () => {

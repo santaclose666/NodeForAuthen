@@ -2,14 +2,6 @@ import {getAllNotifi} from '../redux/apiRequest';
 import {getCurrentTime} from './serviceFunction';
 import messaging from '@react-native-firebase/messaging';
 
-async function requestUserPermission() {
-  const authorizationStatus = await messaging().requestPermission();
-
-  if (authorizationStatus) {
-    console.log('Permission status:', authorizationStatus);
-  }
-}
-
 export const saveNotification = async (notifiData, remoteMessage, dispatch) => {
   if (remoteMessage) {
     const newObj = remoteMessage.data;

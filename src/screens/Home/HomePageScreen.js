@@ -44,9 +44,9 @@ const requestPermissions = async () => {
     await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then(result => {
       console.log(result);
     });
-    // const authStatus = await messaging().requestPermission();
-    // authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    //   authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    const authStatus = await messaging().requestPermission();
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
   }
 };
 
@@ -106,15 +106,15 @@ const HomePageScreen = ({navigation}) => {
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
-    await getWeatherData();
+    await requestPermissions();
     await getAllStaffs(dispatch);
+    await getWeatherData(dispatch);
   };
 
-  // const notificationHandle = async () => {
-  //   await requestPermissions();
-  //   await getToken();
-  //   await notificationListener(notifiData, navigation, dispatch);
-  // };
+  const notificationHandle = async () => {
+    await getToken();
+    await notificationListener(notifiData, navigation, dispatch);
+  };
 
   useEffect(() => {
     if (weather) {
@@ -126,7 +126,8 @@ const HomePageScreen = ({navigation}) => {
     } else {
       fetchImportantData();
     }
-    // notificationHandle();
+
+    notificationHandle();
 
     return () => clearInterval(interval);
   }, []);

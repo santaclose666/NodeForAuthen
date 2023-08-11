@@ -18,6 +18,7 @@ import Dimension from '../../contants/Dimension';
 import {loginUser} from '../../redux/apiRequest';
 import {useDispatch} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {ToastAlert} from '../../components/Toast';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -30,17 +31,8 @@ const LoginScreen = ({navigation}) => {
       const data = {email, password};
       loginUser(data, dispatch, navigation);
     } else {
-      Toast.show({
-        render: () => {
-          return (
-            <Box bg="blue.400" px="2" py="1" rounded="sm" mb={6}>
-              <Text style={{fontSize: 17, color: 'white'}}>
-                Vui lòng nhập đầy đủ thông tin!
-              </Text>
-            </Box>
-          );
-        },
-      });
+      const mess = 'Vui lòng nhập đầy đủ thông tin!';
+      ToastAlert(mess);
     }
   };
 
