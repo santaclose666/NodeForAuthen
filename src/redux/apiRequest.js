@@ -123,14 +123,11 @@ export const getAllOnLeaveData = async (id, dispatch) => {
 
 export const resolveLeaveRequest = async data => {
   try {
-    const res = await axios.post(
+    console.log('resolve', data);
+    await axios.post(
       `https://management.ifee.edu.vn/api/nghiphep/duyet/${data.id_nghiphep}`,
       {id_user: data.id_user, nhanxet: data.nhanxet},
     );
-
-    if (res.data === 1) {
-      getAllOnLeaveData();
-    }
   } catch (error) {
     console.log(error);
   }
@@ -138,14 +135,11 @@ export const resolveLeaveRequest = async data => {
 
 export const rejectLeaveRequest = async data => {
   try {
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/nghiphep/duyet/${data.id_nghiphep}`,
-      {id_user: data.id_user, nhanxet: data.lydo},
+    console.log('reject', data);
+    await axios.post(
+      `https://management.ifee.edu.vn/api/nghiphep/tuchoi/${data.id_nghiphep}`,
+      {id_user: data.id_user, lydo: data.lydo},
     );
-
-    if (res.data === 1) {
-      getAllOnLeaveData();
-    }
   } catch (error) {
     console.log(error);
   }

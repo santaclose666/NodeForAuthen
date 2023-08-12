@@ -15,11 +15,16 @@ import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
-import {getAllOnLeaveData} from '../../redux/apiRequest';
+import {
+  getAllOnLeaveData,
+  rejectLeaveRequest,
+  resolveLeaveRequest,
+} from '../../redux/apiRequest';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
 import Modal from 'react-native-modal';
 import Colors from '../../contants/Colors';
+import {ToastWarning} from '../../components/Toast';
 
 const HistoryApplyLeaveScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -31,11 +36,12 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
   const [checkInput, setCheckInput] = useState(null);
   const [toggleModal, setToggleModal] = useState(false);
   const [inputHeight, setInputHeight] = useState(Dimension.setHeight(6));
+  const [refreshComponent, setRefreshComponent] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     getAllOnLeaveData(user?.id, dispatch);
-  }, []);
+  }, [refreshComponent]);
 
   const handlePickItem = item => {
     setSelectedItem(item);
@@ -44,6 +50,34 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
 
   const handleHeightChange = height => {
     setInputHeight(height);
+  };
+
+  const handleSend = () => {
+    const importantData = {
+      id_nghiphep: selectedItem.id,
+      id_user: user?.id,
+    };
+    if (!checkInput && reasonCancel !== null && selectedItem !== null) {
+      const data = {
+        ...importantData,
+        lydo: reasonCancel,
+      };
+      rejectLeaveRequest(data);
+      setToggleModal(false);
+      setReasonCancel(null);
+      setRefreshComponent(!refreshComponent);
+    } else if (checkInput && selectedItem !== null) {
+      const data = {
+        ...importantData,
+        nhanxet: commnetInput,
+      };
+      resolveLeaveRequest(data);
+      setToggleModal(false);
+      setCommentInput(null);
+      setRefreshComponent(!refreshComponent);
+    } else {
+      ToastWarning('Nhập đầy đủ lý do');
+    }
   };
 
   const RenderLeaveList = ({item, index}) => {
@@ -298,7 +332,8 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
                 handleHeightChange(e.nativeEvent.contentSize.height);
               }}
             />
-            <View
+            <TouchableOpacity
+              onPress={handleSend}
               style={{
                 backgroundColor: '#d9eafa',
                 padding: 6,
@@ -308,7 +343,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
                 justifyContent: 'center',
               }}>
               <Image source={Images.send} style={{width: 25, height: 25}} />
-            </View>
+            </TouchableOpacity>
           </View>
           <TouchableOpacity
             onPress={() => setToggleModal(false)}
