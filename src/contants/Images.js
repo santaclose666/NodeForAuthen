@@ -71,6 +71,7 @@ const Images = {
   approve: require('../assets/images/approve.png'),
   plus: require('../assets/images/plus.png'),
   minus: require('../assets/images/minus.png'),
+  minusclose: require('../assets/images/minusclose.png'),
   takeoff: require('../assets/images/takeoff.png'),
   landing: require('../assets/images/landing.png'),
   time: require('../assets/images/time.png'),
