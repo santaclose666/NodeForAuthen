@@ -106,6 +106,17 @@ export const getWeatherData = async dispatch => {
   }
 };
 
+export const registerOnLeave = async data => {
+  try {
+    await axios.post(
+      ` https://management.ifee.edu.vn/api/nghiphep/reg/${data.id_user}`,
+      {tungay: data.tungay, tong: data.tong, lydo: data.lydo},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getAllOnLeaveData = async (id, dispatch) => {
   dispatch(getOnLeaveStart());
   try {
