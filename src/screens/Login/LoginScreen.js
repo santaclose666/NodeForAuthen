@@ -35,6 +35,9 @@ const LoginScreen = ({navigation}) => {
 
   return (
     <KeyboardAwareScrollView
+      enableAutomaticScroll={true}
+      enableResetScrollToCoords={true}
+      enableOnAndroid={true}
       behavior="padding"
       style={{flex: 1, backgroundColor: '#ffffff'}}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" />

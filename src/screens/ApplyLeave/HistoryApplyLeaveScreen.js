@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  TextInput,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -14,19 +15,70 @@ import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
-import {getAllOnLeaveData} from '../../redux/apiRequest';
+import {
+  getAllOnLeaveData,
+  rejectLeaveRequest,
+  resolveLeaveRequest,
+} from '../../redux/apiRequest';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
+import Modal from 'react-native-modal';
+import Colors from '../../contants/Colors';
+import {ToastWarning} from '../../components/Toast';
 
 const HistoryApplyLeaveScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [commnetInput, setCommentInput] = useState(null);
+  const [reasonCancel, setReasonCancel] = useState(null);
+  const [checkInput, setCheckInput] = useState(null);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [inputHeight, setInputHeight] = useState(Dimension.setHeight(6));
+  const [refreshComponent, setRefreshComponent] = useState(false);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     getAllOnLeaveData(user?.id, dispatch);
-  }, []);
+  }, [refreshComponent]);
+
+  const handlePickItem = item => {
+    setSelectedItem(item);
+    setToggleModal(true);
+  };
+
+  const handleHeightChange = height => {
+    setInputHeight(height);
+  };
+
+  const handleSend = () => {
+    const importantData = {
+      id_nghiphep: selectedItem.id,
+      id_user: user?.id,
+    };
+    if (!checkInput && reasonCancel !== null && selectedItem !== null) {
+      const data = {
+        ...importantData,
+        lydo: reasonCancel,
+      };
+      rejectLeaveRequest(data);
+      setToggleModal(false);
+      setReasonCancel(null);
+      setRefreshComponent(!refreshComponent);
+    } else if (checkInput && selectedItem !== null) {
+      const data = {
+        ...importantData,
+        nhanxet: commnetInput,
+      };
+      resolveLeaveRequest(data);
+      setToggleModal(false);
+      setCommentInput(null);
+      setRefreshComponent(!refreshComponent);
+    } else {
+      ToastWarning('Nhập đầy đủ lý do');
+    }
+  };
 
   const RenderLeaveList = ({item, index}) => {
     const colorStatus =
@@ -45,8 +97,20 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
         : item.status === 1
         ? Images.approve
         : Images.cancel;
+
+    const checkRole = () => {
+      const filterRole = staffs.filter(staff => staff.id === item.id_nhansu)[0];
+
+      return (
+        item.status === 0 &&
+        item.id_nhansu !== user?.id &&
+        ((user?.vitri_ifee === 3 && filterRole.id > 3) ||
+          (user?.vitri_ifee <= 2 && filterRole.id === 3))
+      );
+    };
+
     return (
-      <TouchableOpacity
+      <View
         key={index}
         style={{
           marginHorizontal: Dimension.setWidth(3),
@@ -72,35 +136,37 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
             {item.lydo}
           </Text>
           <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                alignSelf: 'flex-start',
-                paddingVertical: Dimension.setHeight(0.5),
-                paddingHorizontal: Dimension.setWidth(1.4),
-                borderRadius: 8,
-                backgroundColor: bgColorStatus,
-              }}>
-              <Image
-                source={icon}
+            {(item.status !== 0 || item.id_nhansu === user?.id) && (
+              <View
                 style={{
-                  height: 16,
-                  width: 16,
-                  marginRight: Dimension.setWidth(1),
-                  tintColor: colorStatus,
-                }}
-              />
-              <Text
-                style={{
-                  color: colorStatus,
-                  fontSize: 14,
-                  fontFamily: Fonts.SF_MEDIUM,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  alignSelf: 'flex-start',
+                  paddingVertical: Dimension.setHeight(0.5),
+                  paddingHorizontal: Dimension.setWidth(1.4),
+                  borderRadius: 8,
+                  backgroundColor: bgColorStatus,
                 }}>
-                {status}
-              </Text>
-            </View>
-            {item.status === 0 && (
+                <Image
+                  source={icon}
+                  style={{
+                    height: 16,
+                    width: 16,
+                    marginRight: Dimension.setWidth(1),
+                    tintColor: colorStatus,
+                  }}
+                />
+                <Text
+                  style={{
+                    color: colorStatus,
+                    fontSize: 14,
+                    fontFamily: Fonts.SF_MEDIUM,
+                  }}>
+                  {status}
+                </Text>
+              </View>
+            )}
+            {checkRole() && (
               <View
                 style={{
                   flexDirection: 'row',
@@ -109,13 +175,21 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
                   width: Dimension.setWidth(17),
                   alignSelf: 'flex-end',
                 }}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCheckInput(true);
+                    handlePickItem(item);
+                  }}>
                   <Image
                     source={Images.approved}
                     style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCheckInput(false);
+                    handlePickItem(item);
+                  }}>
                   <Image
                     source={Images.cancelled}
                     style={[styles.approvedIcon, {tintColor: '#f25157'}]}
@@ -139,11 +213,15 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
           <Text style={styles.title}>Họ tên: </Text>
           <Text style={styles.content}>{item.hoten}</Text>
         </View>
-        <View style={styles.containerEachLine}>
-          <Image source={Images.avatar} style={styles.iconic} />
-          <Text style={styles.title}>Người duyệt: </Text>
-          <Text style={styles.content}>{item.nguoiduyet}</Text>
-        </View>
+        {item.status !== 0 && (
+          <View style={styles.containerEachLine}>
+            <Image source={Images.avatar} style={styles.iconic} />
+            <Text style={styles.title}>
+              {item.status !== 2 ? 'Người duyệt:' : 'Từ chối bởi:'}{' '}
+            </Text>
+            <Text style={styles.content}>{item.nguoiduyet}</Text>
+          </View>
+        )}
         <View
           style={{
             flexDirection: 'row',
@@ -157,7 +235,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
             <Text style={styles.content}>{changeFormatDate(item.denngay)}</Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 
@@ -176,6 +254,110 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
         windowSize={6}
         removeClippedSubviews={true}
       />
+
+      <Modal
+        isVisible={toggleModal}
+        animationIn="fadeInUp"
+        animationInTiming={500}
+        animationOut="fadeOutDown"
+        animationOutTiming={400}
+        avoidKeyboard={true}>
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            alignSelf: 'center',
+            backgroundColor: checkInput ? '#def8ed' : '#f9dfe0',
+            width: Dimension.setWidth(85),
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 14,
+            paddingHorizontal: Dimension.setWidth(3),
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginVertical: Dimension.setHeight(1),
+              borderBottomWidth: 0.8,
+              borderBlockColor: Colors.INACTIVE_GREY,
+              width: '100%',
+            }}>
+            <Text
+              style={{
+                fontFamily: Fonts.SF_BOLD,
+                fontSize: 20,
+                color: checkInput ? '#57b85d' : '#f25157',
+              }}>
+              {checkInput ? 'Phê duyệt' : 'Từ chối'}
+            </Text>
+          </View>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+            }}>
+            <Image source={Images.avatar} style={{height: 55, width: 55}} />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: 18,
+                fontFamily: Fonts.SF_SEMIBOLD,
+              }}>
+              {selectedItem?.hoten}
+            </Text>
+          </View>
+          <View style={styles.containerEachLine}>
+            <Image source={Images.comment} style={styles.iconic} />
+            <TextInput
+              multiline={true}
+              placeholder={
+                checkInput ? 'Nhận xét (Không bắt buộc)' : 'Lý do từ chối'
+              }
+              style={{
+                backgroundColor: '#ffffff',
+                paddingHorizontal: Dimension.setWidth(2),
+                borderRadius: 10,
+                fontFamily: Fonts.SF_REGULAR,
+                width: '70%',
+                height: inputHeight,
+              }}
+              onChangeText={e =>
+                checkInput ? setCommentInput(e) : setReasonCancel(e)
+              }
+              value={checkInput ? commnetInput : reasonCancel}
+              onContentSizeChange={e => {
+                handleHeightChange(e.nativeEvent.contentSize.height);
+              }}
+            />
+            <TouchableOpacity
+              onPress={handleSend}
+              style={{
+                backgroundColor: '#d9eafa',
+                padding: 6,
+                marginLeft: Dimension.setWidth(1.6),
+                borderRadius: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Image source={Images.send} style={{width: 25, height: 25}} />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => setToggleModal(false)}
+            style={{position: 'absolute', right: '5%', top: '5%'}}>
+            <Image
+              source={Images.minusclose}
+              style={{
+                width: 25,
+                height: 25,
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -183,6 +365,8 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#b6c987',
   },
 

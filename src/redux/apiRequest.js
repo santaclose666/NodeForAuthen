@@ -109,14 +109,38 @@ export const getWeatherData = async dispatch => {
 export const getAllOnLeaveData = async (id, dispatch) => {
   dispatch(getOnLeaveStart());
   try {
-    const res =
-      await axios.get(`https://management.ifee.edu.vn/api/nghiphep/danhsach/${id}
-    `);
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/nghiphep/danhsach/${id}`,
+    );
 
     const data = res.data;
 
     dispatch(getOnLeaveSuccess(data));
   } catch (error) {
     dispatch(getOnLeaveFailed());
+  }
+};
+
+export const resolveLeaveRequest = async data => {
+  try {
+    console.log('resolve', data);
+    await axios.post(
+      `https://management.ifee.edu.vn/api/nghiphep/duyet/${data.id_nghiphep}`,
+      {id_user: data.id_user, nhanxet: data.nhanxet},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const rejectLeaveRequest = async data => {
+  try {
+    console.log('reject', data);
+    await axios.post(
+      `https://management.ifee.edu.vn/api/nghiphep/tuchoi/${data.id_nghiphep}`,
+      {id_user: data.id_user, lydo: data.lydo},
+    );
+  } catch (error) {
+    console.log(error);
   }
 };
