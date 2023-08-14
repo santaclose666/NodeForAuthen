@@ -16,6 +16,9 @@ import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {
+  adjustOnLeave,
+  approveAdjustOnLeave,
+  cancelAdjustOnLeave,
   getAllOnLeaveData,
   rejectLeaveRequest,
   resolveLeaveRequest,
@@ -24,6 +27,7 @@ import {
   changeFormatDate,
   formatDate,
   compareDate,
+  formatDateToPost,
 } from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
 import Modal from 'react-native-modal';
@@ -45,11 +49,12 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [inputHeight, setInputHeight] = useState(Dimension.setHeight(6));
   const [datePicker, setDatePicker] = useState(formatDate(new Date()));
+  const [reasonCancelAdjust, setReasonCancelAdjust] = useState(null);
+  const [toggleCancelAdjust, setToggleCancelAdjust] = useState(false);
   const [refreshComponent, setRefreshComponent] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('component is rerender');
     getAllOnLeaveData(user?.id, dispatch);
   }, [refreshComponent, refresh]);
 
@@ -58,11 +63,12 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     setToggleApproveModal(true);
   };
 
-  const handleHeightChange = height => {
-    setInputHeight(height);
+  const handleNonAdjust = (check, item) => {
+    setCheckInput(check);
+    handlePickItem(item);
   };
 
-  const handleSend = () => {
+  const handleSendNonAdjust = () => {
     const importantData = {
       id_nghiphep: selectedItem.id,
       id_user: user?.id,
@@ -73,18 +79,18 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         lydo: reasonCancel,
       };
       rejectLeaveRequest(data);
-      setToggleApproveModal(false);
       setReasonCancel(null);
       setRefreshComponent(!refreshComponent);
+      setToggleApproveModal(false);
     } else if (checkInput && selectedItem !== null) {
       const data = {
         ...importantData,
         nhanxet: commnetInput,
       };
       resolveLeaveRequest(data);
-      setToggleApproveModal(false);
       setCommentInput(null);
       setRefreshComponent(!refreshComponent);
+      setToggleApproveModal(false);
     } else {
       ToastWarning('Nhập đầy đủ lý do');
     }
@@ -94,12 +100,48 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     if (event.type === 'set') {
       setToggleDatePicker(false);
       const message = 'Ngày điều chỉnh không hợp lệ';
-      console.log(date);
       compareDate(new Date(), date)
         ? setDatePicker(formatDate(date))
         : ToastAlert(message);
     } else {
       setToggleDatePicker(false);
+    }
+  };
+
+  const handleAdjust = () => {
+    const data = {
+      id_nghiphep: selectedItem.id,
+      ngay_dc: formatDateToPost(datePicker),
+    };
+
+    adjustOnLeave(data);
+    setDatePicker(formatDate(new Date()));
+    setRefreshComponent(!refreshComponent);
+    setToggleEditModal(false);
+  };
+
+  const handleApproveAdjust = id_nghiphep => {
+    approveAdjustOnLeave(id_nghiphep);
+    setRefreshComponent(!refreshComponent);
+  };
+
+  const handleToggleCancel = item => {
+    setSelectedItem(item);
+    setToggleCancelAdjust(true);
+  };
+
+  const handleCancelAdjust = () => {
+    if (reasonCancelAdjust) {
+      const data = {
+        id_nghiphep: selectedItem.id,
+        lydo: reasonCancelAdjust,
+      };
+
+      cancelAdjustOnLeave(data);
+      setRefreshComponent(!refreshComponent);
+      setToggleCancelAdjust(false);
+    } else {
+      ToastWarning('Thiếu thông tin');
     }
   };
 
@@ -121,14 +163,39 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         ? Images.approve
         : Images.cancel;
 
+    const colorAdjustStatus =
+      item.yc_update === 1
+        ? '#f9a86a'
+        : item.yc_update === 2
+        ? '#57b85d'
+        : '#f25157';
+    const bgColorAdjustStatus =
+      item.yc_update === 1
+        ? '#fef4eb'
+        : item.yc_update === 2
+        ? '#def8ed'
+        : '#f9dfe0';
+    const adjustStatus =
+      item.yc_update === 1
+        ? 'Chờ duyệt đ/c'
+        : item.yc_update === 2
+        ? 'Đã phê duyệt đ/c'
+        : 'Từ chối duyệt đ/c';
+    const iconAdjust =
+      item.yc_update === 1
+        ? Images.pending
+        : item.yc_update === 2
+        ? Images.approve
+        : Images.cancel;
+
     const checkRole = () => {
       const filterRole = staffs.filter(staff => staff.id === item.id_nhansu)[0];
 
       return (
-        item.status === 0 &&
+        ((item.yc_update === 0 && item.status === 0) || item.yc_update === 1) &&
         item.id_nhansu !== user?.id &&
-        ((user?.vitri_ifee === 3 && filterRole.id > 3) ||
-          (user?.vitri_ifee <= 2 && filterRole.id === 3))
+        ((user?.vitri_ifee === 3 && filterRole.vitri_ifee > 3) ||
+          (user?.vitri_ifee <= 2 && filterRole.vitri_ifee === 3))
       );
     };
 
@@ -136,93 +203,93 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       <View
         key={index}
         style={{
-          marginHorizontal: Dimension.setWidth(3),
+          marginHorizontal: Dimension.setWidth(3.5),
           marginBottom: Dimension.setHeight(2),
           backgroundColor: '#ffffff',
           elevation: 5,
           borderRadius: 15,
           paddingHorizontal: Dimension.setWidth(5),
-          paddingVertical: Dimension.setHeight(2),
+          paddingTop: Dimension.setHeight(2),
+          paddingBottom: Dimension.setHeight(0.6),
         }}>
-        <View
+        <Text
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            fontFamily: Fonts.SF_SEMIBOLD,
+            fontSize: 19,
+            width: '60%',
           }}>
-          <Text
-            style={{
-              fontFamily: Fonts.SF_SEMIBOLD,
-              fontSize: 19,
-              width: '60%',
-            }}>
-            {item.lydo}
-          </Text>
-          <View>
-            {(item.status !== 0 ||
-              user?.vitri_ifee >= 3 ||
-              item.id_nhansu === user?.id) && (
-              <View
+          {item.lydo}
+        </Text>
+        <View style={{position: 'absolute', right: '5%', top: '7%'}}>
+          {(item.status !== 0 ||
+            user?.vitri_ifee > 3 ||
+            item.id_nhansu === user?.id) && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                alignSelf: 'flex-start',
+                paddingVertical: Dimension.setHeight(0.5),
+                paddingHorizontal: Dimension.setWidth(1.4),
+                borderRadius: 8,
+                backgroundColor:
+                  item.yc_update === 0 ? bgColorStatus : bgColorAdjustStatus,
+                marginBottom: Dimension.setHeight(0.6),
+              }}>
+              <Image
+                source={item.yc_update === 0 ? icon : iconAdjust}
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'flex-start',
-                  paddingVertical: Dimension.setHeight(0.5),
-                  paddingHorizontal: Dimension.setWidth(1.4),
-                  borderRadius: 8,
-                  backgroundColor: bgColorStatus,
+                  height: 16,
+                  width: 16,
+                  marginRight: Dimension.setWidth(1),
+                  tintColor:
+                    item.yc_update === 0 ? colorStatus : colorAdjustStatus,
+                }}
+              />
+              <Text
+                style={{
+                  color: item.yc_update === 0 ? colorStatus : colorAdjustStatus,
+                  fontSize: 14,
+                  fontFamily: Fonts.SF_MEDIUM,
+                }}>
+                {item.yc_update === 0 ? status : adjustStatus}
+              </Text>
+            </View>
+          )}
+          {checkRole() && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: Dimension.setWidth(17),
+                alignSelf: 'center',
+                zIndex: 9999,
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  item.yc_update === 0
+                    ? handleNonAdjust(true, item)
+                    : handleApproveAdjust(item.id);
                 }}>
                 <Image
-                  source={icon}
-                  style={{
-                    height: 16,
-                    width: 16,
-                    marginRight: Dimension.setWidth(1),
-                    tintColor: colorStatus,
-                  }}
+                  source={Images.approved}
+                  style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
                 />
-                <Text
-                  style={{
-                    color: colorStatus,
-                    fontSize: 14,
-                    fontFamily: Fonts.SF_MEDIUM,
-                  }}>
-                  {status}
-                </Text>
-              </View>
-            )}
-            {checkRole() && (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: Dimension.setWidth(17),
-                  alignSelf: 'flex-end',
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  item.yc_update === 0
+                    ? handleNonAdjust(false, item)
+                    : handleToggleCancel(item);
                 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setCheckInput(true);
-                    handlePickItem(item);
-                  }}>
-                  <Image
-                    source={Images.approved}
-                    style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setCheckInput(false);
-                    handlePickItem(item);
-                  }}>
-                  <Image
-                    source={Images.cancelled}
-                    style={[styles.approvedIcon, {tintColor: '#f25157'}]}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
+                <Image
+                  source={Images.cancelled}
+                  style={[styles.approvedIcon, {tintColor: '#f25157'}]}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         <Text
           style={{
@@ -251,6 +318,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            marginBottom: Dimension.setHeight(1.3),
           }}>
           <Image source={Images.leaveDate} style={styles.iconic} />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -258,30 +326,39 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
             <Text style={styles.content}>{changeFormatDate(item.tungay)}</Text>
             <Separation />
             <Text style={styles.content}>{changeFormatDate(item.denngay)}</Text>
-            {item.status === 1 && item.id_nhansu === user?.id && (
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedItem(item);
-                  setToggleEditModal(true);
-                }}
-                style={{
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  marginLeft: Dimension.setWidth(1.5),
-                }}>
-                <Image
-                  source={Images.adjust}
-                  style={{
-                    height: 25,
-                    width: 25,
-                    marginRight: Dimension.setWidth(1),
+            {item.yc_update === 0 &&
+              item.status === 1 &&
+              item.id_nhansu === user?.id && (
+                <TouchableOpacity
+                  onPress={() => {
+                    setSelectedItem(item);
+                    setToggleEditModal(true);
                   }}
-                />
-              </TouchableOpacity>
-            )}
+                  style={{
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    marginLeft: Dimension.setWidth(1.5),
+                  }}>
+                  <Image
+                    source={Images.adjust}
+                    style={{
+                      height: 25,
+                      width: 25,
+                      marginRight: Dimension.setWidth(1),
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
           </View>
         </View>
+        {item.ngay_dc && (
+          <View style={styles.containerEachLine}>
+            <Image source={Images.leaveDate} style={styles.iconic} />
+            <Text style={styles.title}>Ngày điều chỉnh: </Text>
+            <Text style={styles.content}>{changeFormatDate(item.ngay_dc)}</Text>
+          </View>
+        )}
       </View>
     );
   };
@@ -291,6 +368,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       <Header title="Lịch sử nghỉ phép" navigation={navigation} />
 
       <FlatList
+        showsVerticalScrollIndicator={false}
         style={{flex: 1, marginTop: Dimension.setHeight(2)}}
         data={leaveData}
         keyExtractor={(_, index) => index.toString()}
@@ -305,9 +383,9 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       <Modal
         isVisible={toggleApproveModal}
         animationIn="fadeInUp"
-        animationInTiming={500}
+        animationInTiming={100}
         animationOut="fadeOutDown"
-        animationOutTiming={400}
+        animationOutTiming={100}
         avoidKeyboard={true}>
         <View
           style={{
@@ -376,11 +454,11 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               }
               value={checkInput ? commnetInput : reasonCancel}
               onContentSizeChange={e => {
-                handleHeightChange(e.nativeEvent.contentSize.height);
+                setInputHeight(e.nativeEvent.contentSize.height);
               }}
             />
             <TouchableOpacity
-              onPress={handleSend}
+              onPress={handleSendNonAdjust}
               style={{
                 backgroundColor: '#d9eafa',
                 padding: 6,
@@ -395,13 +473,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
           <TouchableOpacity
             onPress={() => setToggleApproveModal(false)}
             style={{position: 'absolute', right: '5%', top: '5%'}}>
-            <Image
-              source={Images.minusclose}
-              style={{
-                width: 25,
-                height: 25,
-              }}
-            />
+            <Image source={Images.minusclose} style={styles.btnModal} />
           </TouchableOpacity>
         </View>
       </Modal>
@@ -409,9 +481,9 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       <Modal
         isVisible={toggleEditModal}
         animationIn="fadeInUp"
-        animationInTiming={500}
+        animationInTiming={100}
         animationOut="fadeOutDown"
-        animationOutTiming={400}
+        animationOutTiming={100}
         avoidKeyboard={true}>
         <View
           style={{
@@ -491,7 +563,19 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               </TouchableOpacity>
             </View>
           </View>
-          <View
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              left: '5%',
+              top: '5%',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+            onPress={() => setToggleEditModal(false)}>
+            <Image source={Images.minusclose} style={styles.btnModal} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleAdjust}
             style={{
               position: 'absolute',
               right: '5%',
@@ -499,19 +583,8 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <TouchableOpacity onPress={() => setToggleEditModal(false)}>
-              <Image
-                source={Images.minusclose}
-                style={{
-                  width: 25,
-                  height: 25,
-                }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={{marginLeft: Dimension.setWidth(1)}}>
-              <Image source={Images.confirm} style={{width: 25, height: 25}} />
-            </TouchableOpacity>
-          </View>
+            <Image source={Images.confirm} style={styles.btnModal} />
+          </TouchableOpacity>
         </View>
 
         {toggleDatePicker && (
@@ -526,6 +599,100 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
           </View>
         )}
       </Modal>
+
+      <Modal
+        isVisible={toggleCancelAdjust}
+        animationIn="fadeInUp"
+        animationInTiming={100}
+        animationOut="fadeOutDown"
+        animationOutTiming={100}
+        avoidKeyboard={true}>
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            alignSelf: 'center',
+            backgroundColor: '#f9dfe0',
+            width: Dimension.setWidth(85),
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 14,
+            paddingHorizontal: Dimension.setWidth(3),
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginVertical: Dimension.setHeight(1),
+              borderBottomWidth: 0.8,
+              borderBlockColor: Colors.INACTIVE_GREY,
+              width: '100%',
+            }}>
+            <Text
+              style={{
+                fontFamily: Fonts.SF_BOLD,
+                fontSize: 20,
+                color: '#f25157',
+              }}>
+              Từ chối
+            </Text>
+          </View>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+            }}>
+            <Image source={Images.avatar} style={{height: 55, width: 55}} />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: 18,
+                fontFamily: Fonts.SF_SEMIBOLD,
+              }}>
+              {selectedItem?.hoten}
+            </Text>
+          </View>
+          <View style={styles.containerEachLine}>
+            <Image source={Images.comment} style={styles.iconic} />
+            <TextInput
+              multiline={true}
+              placeholder="Lý do từ chối đ/c"
+              style={{
+                backgroundColor: '#ffffff',
+                paddingHorizontal: Dimension.setWidth(2),
+                borderRadius: 10,
+                fontFamily: Fonts.SF_REGULAR,
+                width: '70%',
+                height: inputHeight,
+              }}
+              onChangeText={e => setReasonCancelAdjust(e)}
+              value={reasonCancelAdjust}
+              onContentSizeChange={e => {
+                setInputHeight(e.nativeEvent.contentSize.height);
+              }}
+            />
+            <TouchableOpacity
+              onPress={handleCancelAdjust}
+              style={{
+                backgroundColor: '#d9eafa',
+                padding: 6,
+                marginLeft: Dimension.setWidth(1.6),
+                borderRadius: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Image source={Images.send} style={{width: 25, height: 25}} />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => setToggleCancelAdjust(false)}
+            style={{position: 'absolute', right: '5%', top: '5%'}}>
+            <Image source={Images.minusclose} style={styles.btnModal} />
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -533,8 +700,6 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#b6c987',
   },
 
@@ -623,6 +788,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 15,
     borderRadius: 15,
+  },
+
+  btnModal: {
+    width: 28,
+    height: 28,
   },
 });
 
