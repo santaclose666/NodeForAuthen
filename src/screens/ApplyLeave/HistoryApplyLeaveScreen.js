@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -52,6 +53,26 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const [reasonCancelAdjust, setReasonCancelAdjust] = useState(null);
   const [toggleCancelAdjust, setToggleCancelAdjust] = useState(false);
   const [refreshComponent, setRefreshComponent] = useState(false);
+  const [approveArr, setApproveArr] = useState([
+    {
+      title: 'Chờ duyệt',
+      color: '#f9a86a',
+      bgColor: '#fef4eb',
+      icon: Images.pending,
+    },
+    {
+      title: 'Đã duyệt',
+      color: '#57b85d',
+      bgColor: '#def8ed',
+      icon: Images.approve,
+    },
+    {
+      title: 'Hủy bỏ',
+      color: '#f25157',
+      bgColor: '#f9dfe0',
+      icon: Images.cancel,
+    },
+  ]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -192,10 +213,12 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       const filterRole = staffs.filter(staff => staff.id === item.id_nhansu)[0];
 
       return (
-        ((item.yc_update === 0 && item.status === 0) || item.yc_update === 1) &&
-        item.id_nhansu !== user?.id &&
-        ((user?.vitri_ifee === 3 && filterRole.vitri_ifee > 3) ||
-          (user?.vitri_ifee <= 2 && filterRole.vitri_ifee === 3))
+        (((item.yc_update === 0 && item.status === 0) ||
+          item.yc_update === 1) &&
+          item.id_nhansu !== user?.id &&
+          user?.vitri_ifee === 3 &&
+          filterRole.vitri_ifee > 3) ||
+        user?.vitri_ifee === 1
       );
     };
 
@@ -366,6 +389,37 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Lịch sử nghỉ phép" navigation={navigation} />
+
+      <View
+        style={{
+          borderBottomWidth: 0.8,
+          borderBlockColor: Colors.INACTIVE_GREY,
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          flexDirection: 'row',
+        }}>
+        {approveArr.map((item, index) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                console.log(index);
+              }}
+              key={index}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingTop: Dimension.setHeight(2.2),
+                paddingBottom: Dimension.setHeight(1.5),
+                paddingHorizontal: Dimension.setWidth(3),
+                width: '33.3%',
+              }}>
+              <Image source={item.icon} style={{height: 25, width: 25}} />
+              <Text>{item.title}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
 
       <FlatList
         showsVerticalScrollIndicator={false}
