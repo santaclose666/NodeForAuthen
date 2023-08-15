@@ -18,8 +18,13 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
-import {compareDate, formatDate} from '../../utils/serviceFunction';
+import {
+  compareDate,
+  formatDate,
+  formatDateToPost,
+} from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
+import {registerOnLeave} from '../../redux/apiRequest';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 0.5},
@@ -54,17 +59,19 @@ const CreateApplyLeaveScreen = ({navigation}) => {
       ToastAlert(message);
     } else {
       const data = {
-        reason: inputDecription,
-        leaveFrom: startDay,
-        numberOffDay:
-          numberOfDayOff === 'Nhiều ngày' ? offNumber : numberOfDayOff,
+        id_user: user?.id,
+        lydo: inputDecription,
+        tungay: formatDateToPost(startDay),
+        tong: valueNumberOfDay === 'Nhiều ngày' ? offNumber : valueNumberOfDay,
       };
+
+      registerOnLeave(data);
 
       const message = 'Đăng kí thành công';
       ToastSuccess(message);
       setTimeout(() => {
-        navigation.navigate('HistoryApplyLeave');
-      }, 1111);
+        navigation.navigate('HistoryApplyLeave', {refresh: true});
+      }, 2000);
     }
   };
 
@@ -72,7 +79,10 @@ const CreateApplyLeaveScreen = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <Header title="Đăng kí nghỉ phép" navigation={navigation} />
       <KeyboardAwareScrollView
-        keyboardShouldPersistTaps="handled"
+        enableAutomaticScroll={true}
+        enableResetScrollToCoords={true}
+        enableOnAndroid={true}
+        behavior="padding"
         contentContainerStyle={{
           backgroundColor: '#fbfbfd',
           borderRadius: 12,

@@ -15,6 +15,8 @@ const Images = {
   back: require('../assets/images/back.png'),
   weather: require('../assets/images/weather.png'),
   menu: require('../assets/images/menu.png'),
+  confirm: require('../assets/images/confirm.png'),
+  adjust: require('../assets/images/adjust.png'),
   test1: require('../assets/images/nhatho.png'),
   test2: require('../assets/images/langBac.png'),
   test3: require('../assets/images/temple1.png'),

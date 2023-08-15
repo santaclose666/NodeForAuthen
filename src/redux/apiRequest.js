@@ -106,6 +106,17 @@ export const getWeatherData = async dispatch => {
   }
 };
 
+export const registerOnLeave = async data => {
+  try {
+    await axios.post(
+      ` https://management.ifee.edu.vn/api/nghiphep/reg/${data.id_user}`,
+      {tungay: data.tungay, tong: data.tong, lydo: data.lydo},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getAllOnLeaveData = async (id, dispatch) => {
   dispatch(getOnLeaveStart());
   try {
@@ -139,6 +150,39 @@ export const rejectLeaveRequest = async data => {
     await axios.post(
       `https://management.ifee.edu.vn/api/nghiphep/tuchoi/${data.id_nghiphep}`,
       {id_user: data.id_user, lydo: data.lydo},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const adjustOnLeave = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/nghiphep/ycdieuchinh/${data.id_nghiphep}`,
+      {ngay_dc: data.ngay_dc},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const approveAdjustOnLeave = async id_nghiphep => {
+  try {
+    await axios.get(`https://management.ifee.edu.vn/api/nghiphep/duyetdc/${id_nghiphep}
+    `);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelAdjustOnLeave = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/nghiphep/tuchoidc/${data.id_nghiphep}`,
+      {
+        lydo: data.lydo,
+      },
     );
   } catch (error) {
     console.log(error);
