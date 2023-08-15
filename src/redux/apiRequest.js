@@ -124,7 +124,9 @@ export const getAllOnLeaveData = async (id, dispatch) => {
       `https://management.ifee.edu.vn/api/nghiphep/danhsach/${id}`,
     );
 
-    const data = res.data;
+    const data = res.data.sort((a, b) => {
+      return b.id - a.id;
+    });
 
     dispatch(getOnLeaveSuccess(data));
   } catch (error) {

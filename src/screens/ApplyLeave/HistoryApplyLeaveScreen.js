@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
-  ScrollView,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -53,31 +52,42 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const [reasonCancelAdjust, setReasonCancelAdjust] = useState(null);
   const [toggleCancelAdjust, setToggleCancelAdjust] = useState(false);
   const [refreshComponent, setRefreshComponent] = useState(false);
-  const [approveArr, setApproveArr] = useState([
+  const approveArr = [
+    {
+      title: 'Tất cả',
+      color: '#618cf2',
+      bgColor: 'rgba(254, 244, 235, 0.3)',
+      icon: Images.all,
+    },
     {
       title: 'Chờ duyệt',
-      color: '#f9a86a',
-      bgColor: '#fef4eb',
+      color: '#f0b263',
+      bgColor: 'rgba(254, 244, 235, 0.3)',
       icon: Images.pending,
     },
     {
       title: 'Đã duyệt',
       color: '#57b85d',
-      bgColor: '#def8ed',
+      bgColor: 'rgba(222, 248, 237, 0.3)',
       icon: Images.approve,
     },
     {
       title: 'Hủy bỏ',
       color: '#f25157',
-      bgColor: '#f9dfe0',
+      bgColor: 'rgba(249, 223, 224, 0.3)',
       icon: Images.cancel,
     },
-  ]);
+  ];
+  const [indexPicker, setIndexPicker] = useState(0);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getAllOnLeaveData(user?.id, dispatch);
-  }, [refreshComponent, refresh]);
+    handleGetAllLeaveData();
+  }, [refreshComponent, refresh, handleGetAllLeaveData]);
+
+  const handleGetAllLeaveData = async () => {
+    await getAllOnLeaveData(user?.id, dispatch);
+  };
 
   const handlePickItem = item => {
     setSelectedItem(item);
@@ -138,6 +148,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     adjustOnLeave(data);
     setDatePicker(formatDate(new Date()));
     setRefreshComponent(!refreshComponent);
+
     setToggleEditModal(false);
   };
 
@@ -160,13 +171,44 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
 
       cancelAdjustOnLeave(data);
       setRefreshComponent(!refreshComponent);
+
       setToggleCancelAdjust(false);
     } else {
       ToastWarning('Thiếu thông tin');
     }
   };
 
-  const RenderLeaveList = ({item, index}) => {
+  const handlePickOption = useCallback(
+    index => {
+      setIndexPicker(index);
+    },
+    [indexPicker],
+  );
+
+  const handleFilter = index => {
+    switch (index) {
+      case 0:
+        return leaveData;
+      case 1:
+        return leaveData.filter(
+          item => item.status === 0 || item.yc_update === 1,
+        );
+      case 2:
+        return leaveData.filter(
+          item =>
+            (item.status === 1 &&
+              item.yc_update !== 1 &&
+              item.yc_update !== 3) ||
+            item.yc_update === 2,
+        );
+      case 3:
+        return leaveData.filter(
+          item => item.status === 2 || item.yc_update === 3,
+        );
+    }
+  };
+
+  const RenderLeaveList = ({item}) => {
     const colorStatus =
       item.status === 0 ? '#f9a86a' : item.status === 1 ? '#57b85d' : '#f25157';
     const bgColorStatus =
@@ -218,13 +260,13 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
           item.id_nhansu !== user?.id &&
           user?.vitri_ifee === 3 &&
           filterRole.vitri_ifee > 3) ||
-        user?.vitri_ifee === 1
+        (user?.vitri_ifee === 1 && (item.status === 0 || item.yc_update === 1))
       );
     };
 
     return (
       <View
-        key={index}
+        key={item.id}
         style={{
           marginHorizontal: Dimension.setWidth(3.5),
           marginBottom: Dimension.setHeight(2),
@@ -257,7 +299,6 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                 borderRadius: 8,
                 backgroundColor:
                   item.yc_update === 0 ? bgColorStatus : bgColorAdjustStatus,
-                marginBottom: Dimension.setHeight(0.6),
               }}>
               <Image
                 source={item.yc_update === 0 ? icon : iconAdjust}
@@ -316,12 +357,12 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         </View>
         <Text
           style={{
-            fontSize: 16,
+            fontSize: 15,
             fontFamily: Fonts.SF_REGULAR,
-            color: '#747476',
+            color: Colors.INACTIVE_GREY,
             marginBottom: Dimension.setHeight(0.8),
           }}>
-          {item.nam}
+          ID: {item.id}
         </Text>
         <View style={styles.containerEachLine}>
           <Image source={Images.avatar} style={styles.iconic} />
@@ -392,19 +433,18 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
 
       <View
         style={{
-          borderBottomWidth: 0.8,
+          borderBottomWidth: 0.6,
           borderBlockColor: Colors.INACTIVE_GREY,
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
           width: '100%',
+          height: Dimension.setHeight(10),
           flexDirection: 'row',
         }}>
         {approveArr.map((item, index) => {
           return (
             <TouchableOpacity
-              onPress={() => {
-                console.log(index);
-              }}
+              onPress={() => handlePickOption(index)}
               key={index}
               style={{
                 alignItems: 'center',
@@ -412,27 +452,59 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                 paddingTop: Dimension.setHeight(2.2),
                 paddingBottom: Dimension.setHeight(1.5),
                 paddingHorizontal: Dimension.setWidth(3),
-                width: '33.3%',
+                height: '100%',
+                borderBottomWidth: indexPicker === index ? 1.6 : null,
+                borderBlockColor: indexPicker === index ? item.color : null,
               }}>
-              <Image source={item.icon} style={{height: 25, width: 25}} />
-              <Text>{item.title}</Text>
+              <Image
+                source={item.icon}
+                style={{
+                  height: 25,
+                  width: 25,
+                  tintColor: indexPicker === index ? item.color : '#edf2ed',
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: 16,
+                  color: indexPicker === index ? item.color : '#edf2ed',
+                }}>
+                {item.title}
+              </Text>
             </TouchableOpacity>
           );
         })}
       </View>
 
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        style={{flex: 1, marginTop: Dimension.setHeight(2)}}
-        data={leaveData}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({item, index}) => (
-          <RenderLeaveList item={item} index={index} />
-        )}
-        initialNumToRender={6}
-        windowSize={6}
-        removeClippedSubviews={true}
-      />
+      {handleFilter(indexPicker).length !== 0 ? (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          style={{
+            flex: 1,
+            paddingTop: Dimension.setHeight(3),
+          }}
+          data={handleFilter(indexPicker)}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({item}) => <RenderLeaveList item={item} />}
+          initialNumToRender={6}
+          windowSize={6}
+          removeClippedSubviews={true}
+          refreshing={true}
+          extraData={leaveData}
+        />
+      ) : (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: Fonts.SF_MEDIUM,
+              color: Colors.INACTIVE_GREY,
+            }}>
+            Không có dữ liệu nào được tìm thấy
+          </Text>
+        </View>
+      )}
 
       <Modal
         isVisible={toggleApproveModal}

@@ -40,6 +40,7 @@ const Images = {
   edit: require('../assets/images/edit.png'),
   username: require('../assets/images/username.png'),
   user: require('../assets/images/user.png'),
+  all: require('../assets/images/all.png'),
   user2: require('../assets/images/user2.png'),
   userActive: require('../assets/images/user-active.png'),
   email: require('../assets/images/email.png'),

@@ -69,9 +69,8 @@ const CreateApplyLeaveScreen = ({navigation}) => {
 
       const message = 'Đăng kí thành công';
       ToastSuccess(message);
-      setTimeout(() => {
-        navigation.navigate('HistoryApplyLeave', {refresh: true});
-      }, 2000);
+
+      navigation.navigate('HistoryApplyLeave', {refresh: true});
     }
   };
 

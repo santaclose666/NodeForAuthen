@@ -25,8 +25,8 @@ const Header = ({title, eventFunc, navigation}) => {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginHorizontal: Dimension.setWidth(3),
-        marginTop: Dimension.setHeight(1.5),
+        paddingVertical: Dimension.setHeight(1),
+        paddingHorizontal: Dimension.setWidth(2),
         backgroundColor: 'rgba(254, 254, 254, 0)',
       }}>
       <StatusBar
