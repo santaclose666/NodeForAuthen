@@ -63,19 +63,19 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       title: 'Chờ duyệt',
       color: '#f0b263',
       bgColor: 'rgba(254, 244, 235, 0.3)',
-      icon: Images.pending,
+      icon: Images.pending1,
     },
     {
       title: 'Đã duyệt',
       color: '#57b85d',
       bgColor: 'rgba(222, 248, 237, 0.3)',
-      icon: Images.approve,
+      icon: Images.approved1,
     },
     {
       title: 'Hủy bỏ',
       color: '#f25157',
       bgColor: 'rgba(249, 223, 224, 0.3)',
-      icon: Images.cancel,
+      icon: Images.cancelled,
     },
   ];
   const [indexPicker, setIndexPicker] = useState(0);
@@ -185,28 +185,31 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     [indexPicker],
   );
 
-  const handleFilter = index => {
-    switch (index) {
-      case 0:
-        return leaveData;
-      case 1:
-        return leaveData.filter(
-          item => item.status === 0 || item.yc_update === 1,
-        );
-      case 2:
-        return leaveData.filter(
-          item =>
-            (item.status === 1 &&
-              item.yc_update !== 1 &&
-              item.yc_update !== 3) ||
-            item.yc_update === 2,
-        );
-      case 3:
-        return leaveData.filter(
-          item => item.status === 2 || item.yc_update === 3,
-        );
-    }
-  };
+  const handleFilter = useCallback(
+    index => {
+      switch (index) {
+        case 0:
+          return leaveData;
+        case 1:
+          return leaveData.filter(
+            item => item.status === 0 || item.yc_update === 1,
+          );
+        case 2:
+          return leaveData.filter(
+            item =>
+              (item.status === 1 &&
+                item.yc_update !== 1 &&
+                item.yc_update !== 3) ||
+              item.yc_update === 2,
+          );
+        case 3:
+          return leaveData.filter(
+            item => item.status === 2 || item.yc_update === 3,
+          );
+      }
+    },
+    [leaveData],
+  );
 
   const RenderLeaveList = ({item}) => {
     const colorStatus =
@@ -251,7 +254,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         ? Images.approve
         : Images.cancel;
 
-    const checkRole = () => {
+    const checkRole = useCallback(() => {
       const filterRole = staffs.filter(staff => staff.id === item.id_nhansu)[0];
 
       return (
@@ -262,7 +265,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
           filterRole.vitri_ifee > 3) ||
         (user?.vitri_ifee === 1 && (item.status === 0 || item.yc_update === 1))
       );
-    };
+    }, []);
 
     return (
       <View
