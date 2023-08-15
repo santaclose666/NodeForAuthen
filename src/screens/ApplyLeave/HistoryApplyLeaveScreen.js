@@ -286,9 +286,10 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
           {item.lydo}
         </Text>
         <View style={{position: 'absolute', right: '5%', top: '7%'}}>
-          {(item.status !== 0 ||
+          {((item.status !== 0 && item.yc_update !== 1) ||
             user?.vitri_ifee > 3 ||
-            item.id_nhansu === user?.id) && (
+            item.id_nhansu === user?.id ||
+            user?.id === 1) && (
             <View
               style={{
                 flexDirection: 'row',
