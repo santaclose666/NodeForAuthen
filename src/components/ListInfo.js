@@ -7,22 +7,14 @@ import Dimension from '../contants/Dimension';
 
 const ListInfo = ({info, index}) => {
   const colorText = Colors.INACTIVE_GREY;
-  const hrArr = [
-    'Phòng tổng hợp',
-    'Bộ môn công nghệ môi trường',
-    'Bộ môn sinh thái phát triển rừng',
-    'Bộ môn ứng dụng viễn thám',
-    'TT Nghiên cứu bảo tồn động vật hoang dã',
-    'Phòng nghiên cứu và phát triển',
-  ];
-  const filterBomon = hrArr[info?.hr - 2];
+
   const role =
     info?.role === 1 ? 'Admin' : info?.role === 2 ? 'Manager' : 'User';
   return (
     <View style={styles.container}>
       {index === 0 ? (
         <View style={styles.avatarContainer}>
-          <Image style={styles.avatarImg} source={info?.avatar} />
+          <Image style={styles.avatarImg} src={info?.avatar} />
           <Text style={styles.fullNameText}>{info?.fullName}</Text>
         </View>
       ) : (
@@ -38,7 +30,9 @@ const ListInfo = ({info, index}) => {
               bottom: Dimension.setHeight(6.6),
               margin: 'auto',
             }}>
-            <Image style={styles.avatarIfee} source={info?.avatar} />
+            <View style={styles.avtContainer}>
+              <Image style={styles.avatarIfee} src={info?.avatar} />
+            </View>
             <View
               style={{
                 alignItems: 'center',
@@ -85,7 +79,7 @@ const ListInfo = ({info, index}) => {
           />
           <View style={styles.textContainer}>
             <Text style={[styles.titleText, {color: colorText}]}>Bộ phận</Text>
-            <Text style={styles.contentText}>{filterBomon}</Text>
+            <Text style={styles.contentText}>{info?.hr}</Text>
           </View>
         </View>
         <View style={styles.wrap}>
@@ -117,7 +111,7 @@ const ListInfo = ({info, index}) => {
             <Text style={[styles.titleText, {color: colorText}]}>
               Số điện thoại
             </Text>
-            <Text style={styles.contentText}>{info?.phone}</Text>
+            <Text style={styles.contentText}>0{info?.phone}</Text>
           </View>
         </View>
       </ScrollView>

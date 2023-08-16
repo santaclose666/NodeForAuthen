@@ -51,6 +51,7 @@ const requestPermissions = async () => {
 };
 
 const HomePageScreen = ({navigation}) => {
+  const mainURl = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
   const notifiData = useSelector(
@@ -117,6 +118,7 @@ const HomePageScreen = ({navigation}) => {
   };
 
   useEffect(() => {
+    console.log(mainURl + user?.path);
     if (weather) {
       setInTerVal(
         setInterval(() => {
@@ -146,7 +148,7 @@ const HomePageScreen = ({navigation}) => {
           <StatusBar barStyle="dark-content" backgroundColor="transparent" />
           <View style={styles.userInforContainer}>
             <View style={styles.userNameContainer}>
-              <Text style={styles.userNameText}>Welcome, {user?.name} </Text>
+              <Text style={styles.userNameText}>Welcome, {user?.hoten} </Text>
               <Text style={styles.companyText}>Forestry 4.0</Text>
             </View>
             {user ? (
@@ -155,7 +157,10 @@ const HomePageScreen = ({navigation}) => {
                   navigation.navigate('DetailStaff');
                 }}
                 style={styles.avatarUserContainer}>
-                <Image source={Images.avatar} style={styles.avatarUserImg} />
+                <Image
+                  src={`${mainURl + user?.path}`}
+                  style={styles.avatarUserImg}
+                />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -378,6 +383,13 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_BOLD,
     lineHeight: Dimension.setHeight(3.3),
     color: '#388a60',
+  },
+
+  avatarUserContainer: {
+    borderWidth: 1,
+    borderRadius: 50,
+    padding: 1,
+    borderColor: '#268fbe',
   },
 
   avatarUserImg: {

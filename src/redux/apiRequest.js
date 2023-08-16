@@ -7,7 +7,6 @@ import {
 } from './authSlice';
 import {getStaffStart, getStaffSuccess, getStaffFailed} from './staffSlice';
 import {getNotifiSuccess} from './notifiSlice';
-import {sortByTitle} from '../utils/calculateFunction';
 import {CommonActions} from '@react-navigation/native';
 import {getCoords} from '../utils/serviceFunction';
 import {
@@ -21,17 +20,19 @@ import {
   getOnLeaveStart,
   getOnLeaveSuccess,
 } from './onLeaveSlice';
+import {getWorkFailed, getWorkStart, getWorkSuccess} from './workSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
   routes: [{name: 'Home'}],
 });
 
+/////////////////////  USER DATA  ////////////////////
 export const loginUser = async (user, dispatch, navigation) => {
   dispatch(loginStart());
   try {
     const res = await axios.post(
-      'https://management.ifee.edu.vn/api/login',
+      'https://forestry.ifee.edu.vn/api/login',
       user,
     );
     dispatch(loginSuccess((await res).data));
@@ -49,40 +50,38 @@ export const loginUser = async (user, dispatch, navigation) => {
   }
 };
 
-export const getAllStaffs = async dispatch => {
-  dispatch(getStaffStart());
-  try {
-    const res = await axios.get('https://management.ifee.edu.vn/api/staff/all');
-
-    const data = res.data.filter(item => item.chucdanh !== null);
-    const titleOrder = [
-      'Viện trưởng',
-      'Phó Viện trưởng',
-      'Giám đốc',
-      'Phó giám đốc',
-      'Trưởng phòng',
-      'Phó trưởng phòng',
-      'Phụ trách kế toán',
-      'Văn thư',
-      'Ngiên cứu viên',
-    ];
-
-    dispatch(getStaffSuccess(sortByTitle(data, titleOrder)));
-  } catch (err) {
-    dispatch(getStaffFailed());
-  }
-};
-
 export const logoutUser = (dispatch, navigation) => {
   dispatch(logoutSuccess());
   navigation.dispatch(resetAction);
   navigation.navigate('BottomTab');
 };
 
+/////////////////////  STAFFS DATA  ////////////////////
+export const getAllStaffs = async dispatch => {
+  dispatch(getStaffStart());
+  try {
+    const res = await axios.get('https://forestry.ifee.edu.vn/api/staff/all');
+
+    const data = res.data;
+
+    dispatch(
+      getStaffSuccess(
+        data.sort((a, b) => {
+          return a.id - b.id;
+        }),
+      ),
+    );
+  } catch (err) {
+    dispatch(getStaffFailed());
+  }
+};
+
+/////////////////////  NOTIFICATION DATA  ////////////////////
 export const getAllNotifi = (data, dispatch) => {
   dispatch(getNotifiSuccess(data));
 };
 
+/////////////////////  WEATHERS DATA  ////////////////////
 export const getWeatherData = async dispatch => {
   const apiKey = '1e52cb7b5a93a86d54181d1fa5724454';
   dispatch(getWeatherStart());
@@ -106,6 +105,7 @@ export const getWeatherData = async dispatch => {
   }
 };
 
+/////////////////////  ON LEAVE DATA  ////////////////////
 export const registerOnLeave = async data => {
   try {
     await axios.post(
@@ -188,5 +188,23 @@ export const cancelAdjustOnLeave = async data => {
     );
   } catch (error) {
     console.log(error);
+  }
+};
+
+/////////////////////  WORK SCHEDULE DATA  ////////////////////
+export const getAllWorkName = async dispatch => {
+  dispatch(getWorkStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/lichcongtac/reg`,
+    );
+
+    const data = res.data.sort((a, b) => {
+      return b.id - a.id;
+    });
+
+    dispatch(getWorkSuccess(data));
+  } catch (error) {
+    dispatch(getWorkFailed());
   }
 };
