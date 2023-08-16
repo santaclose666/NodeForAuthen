@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -17,54 +17,68 @@ import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
 import {useSelector} from 'react-redux';
+import {Dropdown} from 'react-native-element-dropdown';
+
+const typeStaff = [{value: 'XMG'}, {value: 'VST'}];
 
 const StaffListScreen = ({navigation}) => {
-  const [input, setInput] = useState('');
-  const [allStaff, setAllStaff] = useState([]);
-  const [staffGroup, setStaffGroup] = useState([
+  const mainURL = 'https://forestry.ifee.edu.vn/';
+  const [typeStaffValue, setTypeStaffValue] = useState(typeStaff[0].value);
+  const [input, setInput] = useState(null);
+  const [allStaff, setAllStaff] = useState(null);
+  const XMGGroup = [
     'Tất cả',
-    'Banh lãnh đạo', //id 2, 5
-    'TH', //2 phòng tổng hợp
-    'CNMT', //3 bộ môn công nghệ môi trường
-    'ST&PRT', //4 bộ môn sinh thái phát triển rừng
-    'UDVT', //5 bộ môn ứng dụng viễn thám
-    'TTDV', //6 trung tâm nghiên cứu bảo tồn động vật hoang dã
-    'R&D', //7 phòng nghiên cứu và phát triển
-  ]);
+    'Ban Giám đốc',
+    'Tổng hợp',
+    'Kỹ thuật',
+    'RnD',
+    'Kinh doanh',
+    'Đào tạo',
+  ];
+  const VSTGroup = ['Tất cả', 'CNMT', 'STPTR', 'UDVT', 'TTDV'];
   const [selectId, setSelectId] = useState(0);
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
 
-  const handleSearch = text => {
+  const handleSearch = (text, typeStaffValue) => {
     setInput(text);
-    setSelectId(null);
+    if (text.length > 0) {
+      setSelectId(null);
 
-    const data = staffs.filter(item =>
-      unidecode(item.name.toLowerCase()).includes(text.toLowerCase()),
-    );
+      const data = handlePickUnit(typeStaffValue);
 
-    setAllStaff(data);
-  };
+      const dataFilter = data.filter(item =>
+        unidecode(item.hoten.toLowerCase()).includes(text.toLowerCase()),
+      );
 
-  const handleFilter = index => {
-    setSelectId(index);
-
-    if (index === 0) {
-      setAllStaff(staffs);
+      setAllStaff(dataFilter);
     } else {
-      const data =
-        index === 1
-          ? staffs.filter(item => item.id === 2 || item.id === 5)
-          : staffs.filter(item => item.id_bomon === index);
-
-      setAllStaff(data);
+      setAllStaff(null);
     }
   };
 
-  useEffect(() => {
-    if (staffs) {
-      setAllStaff(staffs);
+  const handlePickOption = index => {
+    setAllStaff(null);
+    setInput(null);
+    setSelectId(index);
+  };
+
+  const handlePickUnit = useCallback(typeStaffValue => {
+    const data = staffs.filter(item => item.tendonvi === typeStaffValue);
+    return data;
+  }, []);
+
+  const handleFilter = useCallback((index, typeStaffValue) => {
+    const data = handlePickUnit(typeStaffValue);
+    if (index === 0) {
+      return data;
+    } else {
+      return data.filter(
+        item =>
+          item.tenphong ===
+          (typeStaffValue === 'XMG' ? XMGGroup[index] : VSTGroup[index]),
+      );
     }
-  }, [staffs]);
+  }, []);
 
   const RenderStaffs = useCallback(
     ({item, index}) => {
@@ -79,9 +93,11 @@ const StaffListScreen = ({navigation}) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             borderRadius: 12,
-            marginBottom: Dimension.setHeight(1.5),
-            borderBottomWidth: 1,
             borderColor: Colors.INACTIVE_GREY,
+            backgroundColor: index % 2 === 0 ? '#f8f7fc' : '#ffffff',
+            paddingHorizontal: Dimension.setWidth(1),
+            paddingVertical: Dimension.setHeight(1),
+            elevation: 10,
           }}>
           <View
             style={{
@@ -93,10 +109,11 @@ const StaffListScreen = ({navigation}) => {
               maxWidth: Dimension.setWidth(60),
             }}>
             <Image
-              source={Images.avatar}
+              src={`${mainURL + item.path}`}
               style={{
                 width: 50,
                 height: 50,
+                borderRadius: 50,
                 marginRight: Dimension.setWidth(3),
               }}
             />
@@ -107,7 +124,7 @@ const StaffListScreen = ({navigation}) => {
                   fontSize: 19,
                   lineHeight: Dimension.setHeight(3.8),
                 }}>
-                {item.name}
+                {item.hoten}
               </Text>
               <Text
                 numberOfLines={1}
@@ -166,12 +183,13 @@ const StaffListScreen = ({navigation}) => {
         <View style={styles.searchInput}>
           <Icons.Feather name="search" size={25} color={Colors.INACTIVE_GREY} />
           <TextInput
-            onChangeText={e => handleSearch(e)}
+            onChangeText={e => handleSearch(e, typeStaffValue)}
             value={input}
             placeholder="Tìm kiếm nhân sự"
             style={{
               fontFamily: Fonts.SF_REGULAR,
               marginLeft: Dimension.setWidth(3),
+              width: '80%',
             }}
           />
         </View>
@@ -192,14 +210,15 @@ const StaffListScreen = ({navigation}) => {
           </Text>
         </View>
         <FlatList
-          data={staffGroup}
+          data={typeStaffValue === 'XMG' ? XMGGroup : VSTGroup}
           keyExtractor={(_, index) => index}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
+          extraData={staffs}
           renderItem={({item, index}) => {
             return (
               <TouchableOpacity
-                onPress={() => handleFilter(index)}
+                onPress={() => handlePickOption(index)}
                 key={index}
                 style={{marginRight: Dimension.setWidth(4)}}>
                 <Text
@@ -222,13 +241,35 @@ const StaffListScreen = ({navigation}) => {
           style={{
             fontFamily: Fonts.SF_SEMIBOLD,
             fontSize: 20,
+            marginRight: Dimension.setWidth(2),
           }}>
           Danh sách nhân sự
         </Text>
+        <Dropdown
+          style={styles.dropdown}
+          showsVerticalScrollIndicator={false}
+          selectedTextStyle={{
+            color: typeStaffValue === 'XMG' ? '#8cdeb0' : '#5e8ee8',
+            fontSize: 18,
+          }}
+          containerStyle={styles.containerOptionStyle}
+          itemContainerStyle={styles.itemContainer}
+          itemTextStyle={{lineHeight: Dimension.setHeight(2), color: '#57575a'}}
+          fontFamily={Fonts.SF_MEDIUM}
+          activeColor="#eef2feff"
+          maxHeight={Dimension.setHeight(23)}
+          labelField="value"
+          valueField="value"
+          data={typeStaff}
+          value={typeStaffValue}
+          onChange={item => {
+            setSelectId(0);
+            setTypeStaffValue(item.value);
+          }}
+        />
       </View>
       <FlatList
-        style={{marginHorizontal: Dimension.setWidth(2)}}
-        data={allStaff}
+        data={allStaff ? allStaff : handleFilter(selectId, typeStaffValue)}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({item, index}) => (
           <RenderStaffs item={item} index={index} />
@@ -286,7 +327,20 @@ const styles = StyleSheet.create({
   },
 
   staffListContainer: {
-    marginHorizontal: Dimension.setWidth(4),
+    marginLeft: Dimension.setWidth(4),
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Dimension.setHeight(1),
+  },
+
+  dropdown: {
+    width: Dimension.setWidth(15),
+  },
+  containerOptionStyle: {
+    borderRadius: 12,
+    backgroundColor: '#f6f6f8ff',
+    width: Dimension.setWidth(30),
+    alignSelf: 'center',
   },
 });
 

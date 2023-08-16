@@ -4,6 +4,7 @@ import staffReducer from './staffSlice';
 import notifiReducer from './notifiSlice';
 import weatherReducer from './weatherSlice';
 import onLeaveReducer from './onLeaveSlice';
+import workReducer from './workSlice';
 import logger from 'redux-logger';
 import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   notifi: notifiReducer,
   weather: weatherReducer,
   onLeave: onLeaveReducer,
+  work: workReducer,
 });
 const persistedReducer = persistReducer(
   persistConfig,

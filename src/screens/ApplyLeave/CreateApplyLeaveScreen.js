@@ -34,6 +34,7 @@ const numberOfDayOff = [
 ];
 
 const CreateApplyLeaveScreen = ({navigation}) => {
+  const mainURL = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const [valueNumberOfDay, setValueNumberOfDay] = useState(null);
   const [offNumber, setOffNumber] = useState(2);
@@ -94,14 +95,17 @@ const CreateApplyLeaveScreen = ({navigation}) => {
         <View style={styles.containerEachLine}>
           <Text style={styles.title}>Người đăng kí</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image source={Images.avatar} style={{height: 40, width: 40}} />
+            <Image
+              src={mainURL + user?.path}
+              style={{height: 40, width: 40, borderRadius: 50}}
+            />
             <Text
               style={{
                 marginLeft: Dimension.setWidth(3),
                 fontSize: 19,
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
-              {user?.name}
+              {user?.hoten}
             </Text>
           </View>
         </View>
@@ -317,12 +321,7 @@ const styles = StyleSheet.create({
     lineHeight: Dimension.setHeight(2),
     color: '#57575a',
   },
-  pickTimeHolder: {
-    flex: 1,
-    width: '90%',
-    justifyContent: 'center',
-    alignSelf: 'center',
-  },
+
   calendarView: {
     position: 'absolute',
     top: '25%',

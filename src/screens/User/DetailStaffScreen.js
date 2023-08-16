@@ -17,23 +17,24 @@ import Dimension from '../../contants/Dimension';
 import ListInfo from '../../components/ListInfo';
 import {useDispatch} from 'react-redux';
 import {logoutUser} from '../../redux/apiRequest';
+import {changeFormatDate} from '../../utils/serviceFunction';
 
 const DetailStaffScreen = ({navigation, route}) => {
+  const mainURL = 'https://forestry.ifee.edu.vn/';
   const dispatch = useDispatch();
   const item = route.params?.item;
   const user = useSelector(state => state.auth.login?.currentUser);
   const [userInfo, setUserInfo] = useState(null);
   const [workInfo, setWorkInfo] = useState({
-    avatar: Images.avatar,
-    fullName: item?.name,
+    avatar: mainURL + item?.path,
+    fullName: item?.hoten,
     email: item?.email,
     role: item?.quyentruycap,
     position: item?.chucdanh,
-    phone: null,
-    hr: item?.id_bomon,
-    birthday: item?.namsinh,
+    phone: item?.sdt,
+    hr: item?.tenphong,
+    birthday: changeFormatDate(item?.ngaysinh),
   });
-  const [infoScreen, setInfoScreen] = useState(['User', 'IFEE']);
   const [indexInfo, setIndexInfo] = useState(0);
   const bgColor = indexInfo === 0 ? '#ffffff' : 'rgba(133, 229, 211, 0.8)';
   const [toggleConfirmOut, setTogglecConfirmOut] = useState(false);
@@ -47,15 +48,15 @@ const DetailStaffScreen = ({navigation, route}) => {
   const handleCheck = () => {
     if (user) {
       setUserInfo({
-        avatar: Images.avatar,
-        fullName: user?.name,
+        avatar: mainURL + user?.path,
+        fullName: user?.hoten,
         role: user?.quyentruycap,
         userName: user?.username,
         position: user?.chucdanh,
         email: user?.email,
-        phone: user?.phone,
-        hr: user?.id_bomon,
-        birthday: user?.namsinh,
+        phone: user?.sdt,
+        hr: user?.tenphong,
+        birthday: changeFormatDate(user?.ngaysinh),
       });
     }
 
@@ -149,40 +150,7 @@ const DetailStaffScreen = ({navigation, route}) => {
               </AlertDialog.Content>
             </AlertDialog>
           </View>
-          {/* <View style={styles.optionInfoContainer}>
-        {infoScreen.map((item, index) => {
-          const bdColor =
-            indexInfo === index ? '#16202c' : 'rgba(255, 255, 255, 0)';
-          const textColor =
-            indexInfo === index ? '#ffffff' : Colors.INACTIVE_GREY;
-          const checkIndex =
-            indexInfo === 0 ? {marginLeft: 6} : {marginRight: -6};
-          return (
-            <TouchableOpacity
-              key={index}
-              onPress={() => setIndexInfo(index)}
-              style={{
-                width: '50%',
-                height: '100%',
-                backgroundColor: bdColor,
-                borderRadius: 32,
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '80%',
-                ...checkIndex,
-              }}>
-              <Text
-                style={{
-                  color: textColor,
-                  fontFamily: Fonts.SF_BLACK,
-                  fontSize: 17,
-                }}>
-                {item}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View> */}
+
           <View style={{flex: 1}}>
             <ListInfo
               info={indexInfo === 0 ? userInfo : workInfo}

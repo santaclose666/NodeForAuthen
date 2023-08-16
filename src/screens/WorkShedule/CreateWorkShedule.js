@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -18,58 +18,69 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
-import {compareDate, formatDate} from '../../utils/serviceFunction';
+import {
+  compareDate,
+  formatDate,
+  formatDateToPost,
+} from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
+import {useDispatch} from 'react-redux';
+import {getAllWorkName} from '../../redux/apiRequest';
 
-const listLuaChon = [
+const optionData = [
   {
     label: 'Lịch công tác',
     value: 'Lịch công tác',
   },
+];
+
+const workData = [
+  {
+    label: 'Chọn từ danh sách',
+    value: 1,
+  },
   {
     label: 'Khác',
-    value: 'Khác',
-  },
-];
-
-const listChuongTrinh = [
-  {
-    label: 'Chương trình 1',
-    value: 'Chương trình 1',
-  },
-  {
-    label: 'Chương trình 2',
-    value: 'Chương trình 2',
-  },
-];
-
-const listTenChuongTrinh = [
-  {
-    label: 'Tên chương trình 1',
-    value: 'Tên chương trình 1',
-  },
-  {
-    label: 'Tên chương trình 2',
-    value: 'Tên chương trình 2',
+    value: 2,
   },
 ];
 
 const CreateWorkSchedule = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const [luaChon, setLuaChon] = useState(listLuaChon[0].value);
-  const [chuongTrinh, setChuongTrinh] = useState(listChuongTrinh[0].value);
-  const [tenChuongTrinh, setTenChuongTrinh] = useState(
-    listTenChuongTrinh[0].value,
-  );
-  const [inputDiaDiem, setInputDiaDiem] = useState('');
-  const [inputNoiDung, setInputNoiDung] = useState('');
-  const [inputDauMoi, setInputDauMoi] = useState('');
-  const [inputThanhPhan, setInputThanhPhan] = useState('');
-  const [inputGhiChu, setInputGhiChu] = useState('');
+  const workNameData = useSelector(state => state.work.works?.data);
+  const [optionValue, setOptionValue] = useState(optionData[0].value);
+  const [workValue, setWorkValue] = useState(workData[0].value);
+  const [workNameValue, setWorkNameValue] = useState('');
+  const [placeInput, setPlaceInput] = useState('');
+  const [contentInput, setContentInput] = useState('');
+  const [clueInput, setClueInput] = useState('');
+  const [componentInput, setComponentInput] = useState('');
+  const [noteInput, setNoteInput] = useState('');
+  const [ortherWorkInput, setOrtherWorkInput] = useState('');
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [checkPick, setCheckPick] = useState(null);
   const [startDay, setStartDay] = useState(formatDate(new Date()));
   const [endDay, setEndDay] = useState('Chọn ngày');
+  const [apiCall, setApiCall] = useState(null);
+  const dispatch = useDispatch();
+
+  const fetchWorkNameData = async () => {
+    await getAllWorkName(dispatch);
+  };
+
+  useEffect(() => {
+    if (workNameData) {
+      setApiCall(
+        setInterval(() => {
+          fetchWorkNameData();
+        }, 3000000),
+      );
+    } else {
+      fetchWorkNameData();
+    }
+
+    return () => clearInterval(apiCall);
+  }, []);
 
   const handlePickDate = (event, date) => {
     if (event.type === 'set') {
@@ -95,7 +106,35 @@ const CreateWorkSchedule = ({navigation}) => {
   };
 
   const handleRegister = () => {
-    ToastSuccess('Thành công');
+    const data = {
+      id_user: user?.id,
+      tungay: formatDateToPost(startDay),
+      denngay: formatDateToPost(endDay),
+      diadiem: placeInput,
+      noidung: contentInput,
+      daumoi: clueInput,
+      thanhphan: componentInput,
+      ghichu: noteInput,
+      op_tenchuongtrinh: workValue,
+      op1_tenchuongtrinh: ortherWorkInput ? ortherWorkInput : workNameValue,
+    };
+    console.log(clueInput.length);
+
+    if (
+      endDay !== 'Chọn ngày' &&
+      placeInput.length !== 0 &&
+      contentInput.length !== 0 &&
+      clueInput.length !== 0 &&
+      componentInput.length !== 0 &&
+      noteInput.length !== 0 &&
+      workValue === 2
+        ? ortherWorkInput.length !== 0
+        : workNameValue.length !== 0
+    ) {
+      ToastSuccess('Đăng kí lịch công tác thành công');
+    } else {
+      ToastAlert('Thiếu thông tin!');
+    }
   };
 
   return (
@@ -142,20 +181,17 @@ const CreateWorkSchedule = ({navigation}) => {
               fontFamily={Fonts.SF_MEDIUM}
               renderLeftIcon={() => {
                 return (
-                  <Image
-                    source={Images.select}
-                    style={styles.leftIconDropdown}
-                  />
+                  <Image source={Images.work} style={styles.leftIconDropdown} />
                 );
               }}
               activeColor="#eef2feff"
-              data={listLuaChon}
+              data={optionData}
               maxHeight={Dimension.setHeight(30)}
               labelField="label"
               valueField="value"
-              value={luaChon}
+              value={optionValue}
               onChange={item => {
-                setLuaChon(item.value);
+                setOptionValue(item.value);
               }}
             />
           </View>
@@ -171,8 +207,8 @@ const CreateWorkSchedule = ({navigation}) => {
                 fontSize: 16,
               }}
               placeholder="Nhập địa điểm"
-              value={inputDiaDiem}
-              onChangeText={e => setInputDiaDiem(e)}
+              value={placeInput}
+              onChangeText={e => setPlaceInput(e)}
             />
           </View>
 
@@ -251,40 +287,58 @@ const CreateWorkSchedule = ({navigation}) => {
               itemTextStyle={styles.itemText}
               fontFamily={Fonts.SF_MEDIUM}
               activeColor="#eef2feff"
-              data={listChuongTrinh}
+              data={workData}
               maxHeight={Dimension.setHeight(30)}
               labelField="label"
               valueField="value"
-              value={chuongTrinh}
+              value={workValue}
               onChange={item => {
-                setChuongTrinh(item.value);
+                setWorkValue(item.value);
               }}
             />
           </View>
 
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Tên chương trình</Text>
-            <Dropdown
-              style={styles.dropdown}
-              autoScroll={false}
-              showsVerticalScrollIndicator={false}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              containerStyle={styles.containerOptionStyle}
-              iconStyle={styles.iconStyle}
-              itemContainerStyle={styles.itemContainer}
-              itemTextStyle={styles.itemText}
-              fontFamily={Fonts.SF_MEDIUM}
-              activeColor="#eef2feff"
-              data={listTenChuongTrinh}
-              maxHeight={Dimension.setHeight(30)}
-              labelField="label"
-              valueField="value"
-              value={tenChuongTrinh}
-              onChange={item => {
-                setTenChuongTrinh(item.value);
-              }}
-            />
+            {workValue === 2 ? (
+              <TextInput
+                style={{
+                  borderBottomWidth: 0.6,
+                  borderBottomColor: 'gray',
+                  marginHorizontal: Dimension.setWidth(1.6),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: 16,
+                }}
+                placeholder="Nhập tên chương trình"
+                value={ortherWorkInput}
+                onChangeText={e => setOrtherWorkInput(e)}
+              />
+            ) : (
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                placeholder="Chọn chương trình"
+                search
+                searchPlaceholder="Tìm kiếm"
+                activeColor="#eef2feff"
+                data={workNameData}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="tenhd"
+                valueField="tenhd"
+                value={workNameValue}
+                onChange={item => {
+                  setWorkNameValue(item.id);
+                }}
+              />
+            )}
           </View>
 
           <View style={styles.containerEachLine}>
@@ -298,8 +352,8 @@ const CreateWorkSchedule = ({navigation}) => {
                 fontSize: 16,
               }}
               placeholder="Nhập nội dung"
-              value={inputNoiDung}
-              onChangeText={e => setInputNoiDung(e)}
+              value={contentInput}
+              onChangeText={e => setContentInput(e)}
             />
           </View>
 
@@ -309,13 +363,7 @@ const CreateWorkSchedule = ({navigation}) => {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <View
-              style={[
-                styles.containerEachLine,
-                {
-                  width: '48%',
-                },
-              ]}>
+            <View style={[styles.containerEachLine, {width: '48%'}]}>
               <Text style={styles.title}>Đầu mối</Text>
               <TextInput
                 style={{
@@ -326,8 +374,8 @@ const CreateWorkSchedule = ({navigation}) => {
                   fontFamily: Fonts.SF_MEDIUM,
                   fontSize: 16,
                 }}
-                value={inputDauMoi}
-                onChangeText={e => setInputDauMoi(e)}
+                value={clueInput}
+                onChangeText={e => setClueInput(e)}
               />
             </View>
 
@@ -348,8 +396,8 @@ const CreateWorkSchedule = ({navigation}) => {
                   fontFamily: Fonts.SF_MEDIUM,
                   fontSize: 16,
                 }}
-                value={inputThanhPhan}
-                onChangeText={e => setInputThanhPhan(e)}
+                value={componentInput}
+                onChangeText={e => setComponentInput(e)}
               />
             </View>
           </View>
@@ -365,8 +413,8 @@ const CreateWorkSchedule = ({navigation}) => {
                 fontSize: 16,
               }}
               placeholder="Ghi chú"
-              value={inputGhiChu}
-              onChangeText={e => setInputGhiChu(e)}
+              value={noteInput}
+              onChangeText={e => setNoteInput(e)}
             />
           </View>
 

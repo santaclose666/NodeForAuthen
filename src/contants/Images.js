@@ -60,6 +60,8 @@ const Images = {
   staff: require('../assets/images/leader.png'),
   calendar2: require('../assets/images/calendar2.png'),
   busy: require('../assets/images/busy.png'),
+  pending1: require('../assets/images/pending1.png'),
+  approved1: require('../assets/images/approved1.png'),
   logout: require('../assets/images/logout.png'),
   login: require('../assets/images/login.png'),
   year: require('../assets/images/year.png'),

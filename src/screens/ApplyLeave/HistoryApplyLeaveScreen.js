@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, memo} from 'react';
 import {
   View,
   Text,
@@ -38,7 +38,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
-  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
   const refresh = route?.params?.refresh;
   const [selectedItem, setSelectedItem] = useState(null);
   const [commnetInput, setCommentInput] = useState(null);
@@ -63,19 +62,19 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       title: 'Chờ duyệt',
       color: '#f0b263',
       bgColor: 'rgba(254, 244, 235, 0.3)',
-      icon: Images.pending,
+      icon: Images.pending1,
     },
     {
       title: 'Đã duyệt',
       color: '#57b85d',
       bgColor: 'rgba(222, 248, 237, 0.3)',
-      icon: Images.approve,
+      icon: Images.approved1,
     },
     {
       title: 'Hủy bỏ',
       color: '#f25157',
       bgColor: 'rgba(249, 223, 224, 0.3)',
-      icon: Images.cancel,
+      icon: Images.cancelled,
     },
   ];
   const [indexPicker, setIndexPicker] = useState(0);
@@ -127,7 +126,12 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     }
   };
 
-  const handlePickDate = (event, date) => {
+  const handleToggleAdjust = useCallback(item => {
+    setSelectedItem(item);
+    setToggleEditModal(true);
+  }, []);
+
+  const handlePickDate = useCallback((event, date) => {
     if (event.type === 'set') {
       setToggleDatePicker(false);
       const message = 'Ngày điều chỉnh không hợp lệ';
@@ -137,7 +141,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     } else {
       setToggleDatePicker(false);
     }
-  };
+  }, []);
 
   const handleAdjust = () => {
     const data = {
@@ -157,10 +161,10 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     setRefreshComponent(!refreshComponent);
   };
 
-  const handleToggleCancel = item => {
+  const handleToggleCancel = useCallback(item => {
     setSelectedItem(item);
     setToggleCancelAdjust(true);
-  };
+  }, []);
 
   const handleCancelAdjust = () => {
     if (reasonCancelAdjust) {
@@ -185,30 +189,33 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     [indexPicker],
   );
 
-  const handleFilter = index => {
-    switch (index) {
-      case 0:
-        return leaveData;
-      case 1:
-        return leaveData.filter(
-          item => item.status === 0 || item.yc_update === 1,
-        );
-      case 2:
-        return leaveData.filter(
-          item =>
-            (item.status === 1 &&
-              item.yc_update !== 1 &&
-              item.yc_update !== 3) ||
-            item.yc_update === 2,
-        );
-      case 3:
-        return leaveData.filter(
-          item => item.status === 2 || item.yc_update === 3,
-        );
-    }
-  };
+  const handleFilter = useCallback(
+    index => {
+      switch (index) {
+        case 0:
+          return leaveData;
+        case 1:
+          return leaveData.filter(
+            item => item.status === 0 || item.yc_update === 1,
+          );
+        case 2:
+          return leaveData.filter(
+            item =>
+              (item.status === 1 &&
+                item.yc_update !== 1 &&
+                item.yc_update !== 3) ||
+              item.yc_update === 2,
+          );
+        case 3:
+          return leaveData.filter(
+            item => item.status === 2 || item.yc_update === 3,
+          );
+      }
+    },
+    [leaveData],
+  );
 
-  const RenderLeaveList = ({item}) => {
+  const RenderLeaveList = memo(({item}) => {
     const colorStatus =
       item.status === 0 ? '#f9a86a' : item.status === 1 ? '#57b85d' : '#f25157';
     const bgColorStatus =
@@ -252,14 +259,12 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         : Images.cancel;
 
     const checkRole = () => {
-      const filterRole = staffs.filter(staff => staff.id === item.id_nhansu)[0];
-
       return (
         (((item.yc_update === 0 && item.status === 0) ||
           item.yc_update === 1) &&
           item.id_nhansu !== user?.id &&
           user?.vitri_ifee === 3 &&
-          filterRole.vitri_ifee > 3) ||
+          item.vitri_ifee > 3) ||
         (user?.vitri_ifee === 1 && (item.status === 0 || item.yc_update === 1))
       );
     };
@@ -396,21 +401,18 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               item.id_nhansu === user?.id && (
                 <TouchableOpacity
                   onPress={() => {
-                    setSelectedItem(item);
-                    setToggleEditModal(true);
+                    handleToggleAdjust(item);
                   }}
                   style={{
                     alignItems: 'center',
                     alignSelf: 'center',
                     justifyContent: 'center',
-                    marginLeft: Dimension.setWidth(1.5),
                   }}>
                   <Image
                     source={Images.adjust}
                     style={{
                       height: 25,
                       width: 25,
-                      marginRight: Dimension.setWidth(1),
                     }}
                   />
                 </TouchableOpacity>
@@ -426,7 +428,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         )}
       </View>
     );
-  };
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -478,7 +480,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         })}
       </View>
 
-      {handleFilter(indexPicker).length !== 0 ? (
+      {handleFilter(indexPicker)?.length !== 0 ? (
         <FlatList
           showsVerticalScrollIndicator={false}
           style={{
@@ -608,9 +610,9 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       <Modal
         isVisible={toggleEditModal}
         animationIn="fadeInUp"
-        animationInTiming={100}
+        animationInTiming={1}
         animationOut="fadeOutDown"
-        animationOutTiming={100}
+        animationOutTiming={1}
         avoidKeyboard={true}>
         <View
           style={{
@@ -657,7 +659,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                 fontSize: 18,
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
-              {user?.name}
+              {user?.hoten}
             </Text>
           </View>
           <View style={styles.lineContainerModal}>
