@@ -88,7 +88,9 @@ const ListInfo = ({info, index}) => {
             source={Images.year}
           />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {color: colorText}]}>Năm sinh</Text>
+            <Text style={[styles.titleText, {color: colorText}]}>
+              Sinh nhật
+            </Text>
             <Text style={styles.contentText}>{info?.birthday}</Text>
           </View>
         </View>

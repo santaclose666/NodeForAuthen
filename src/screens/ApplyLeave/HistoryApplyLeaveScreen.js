@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, memo} from 'react';
 import {
   View,
   Text,
@@ -215,239 +215,220 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     [leaveData],
   );
 
-  const RenderLeaveList = useCallback(
-    ({item}) => {
-      const colorStatus =
-        item.status === 0
-          ? '#f9a86a'
-          : item.status === 1
-          ? '#57b85d'
-          : '#f25157';
-      const bgColorStatus =
-        item.status === 0
-          ? '#fef4eb'
-          : item.status === 1
-          ? '#def8ed'
-          : '#f9dfe0';
-      const status =
-        item.status === 0
-          ? 'Chờ phê duyệt'
-          : item.status === 1
-          ? 'Đã phê duyệt'
-          : 'Từ chối';
-      const icon =
-        item.status === 0
-          ? Images.pending
-          : item.status === 1
-          ? Images.approve
-          : Images.cancel;
+  const RenderLeaveList = memo(({item}) => {
+    const colorStatus =
+      item.status === 0 ? '#f9a86a' : item.status === 1 ? '#57b85d' : '#f25157';
+    const bgColorStatus =
+      item.status === 0 ? '#fef4eb' : item.status === 1 ? '#def8ed' : '#f9dfe0';
+    const status =
+      item.status === 0
+        ? 'Chờ phê duyệt'
+        : item.status === 1
+        ? 'Đã phê duyệt'
+        : 'Từ chối';
+    const icon =
+      item.status === 0
+        ? Images.pending
+        : item.status === 1
+        ? Images.approve
+        : Images.cancel;
 
-      const colorAdjustStatus =
-        item.yc_update === 1
-          ? '#f9a86a'
-          : item.yc_update === 2
-          ? '#57b85d'
-          : '#f25157';
-      const bgColorAdjustStatus =
-        item.yc_update === 1
-          ? '#fef4eb'
-          : item.yc_update === 2
-          ? '#def8ed'
-          : '#f9dfe0';
-      const adjustStatus =
-        item.yc_update === 1
-          ? 'Chờ duyệt đ/c'
-          : item.yc_update === 2
-          ? 'Đã phê duyệt đ/c'
-          : 'Từ chối duyệt đ/c';
-      const iconAdjust =
-        item.yc_update === 1
-          ? Images.pending
-          : item.yc_update === 2
-          ? Images.approve
-          : Images.cancel;
+    const colorAdjustStatus =
+      item.yc_update === 1
+        ? '#f9a86a'
+        : item.yc_update === 2
+        ? '#57b85d'
+        : '#f25157';
+    const bgColorAdjustStatus =
+      item.yc_update === 1
+        ? '#fef4eb'
+        : item.yc_update === 2
+        ? '#def8ed'
+        : '#f9dfe0';
+    const adjustStatus =
+      item.yc_update === 1
+        ? 'Chờ duyệt đ/c'
+        : item.yc_update === 2
+        ? 'Đã phê duyệt đ/c'
+        : 'Từ chối duyệt đ/c';
+    const iconAdjust =
+      item.yc_update === 1
+        ? Images.pending
+        : item.yc_update === 2
+        ? Images.approve
+        : Images.cancel;
 
-      const checkRole = () => {
-        return (
-          (((item.yc_update === 0 && item.status === 0) ||
-            item.yc_update === 1) &&
-            item.id_nhansu !== user?.id &&
-            user?.vitri_ifee === 3 &&
-            item.vitri_ifee > 3) ||
-          (user?.vitri_ifee === 1 &&
-            (item.status === 0 || item.yc_update === 1))
-        );
-      };
-
+    const checkRole = () => {
       return (
-        <View
-          key={item.id}
+        (((item.yc_update === 0 && item.status === 0) ||
+          item.yc_update === 1) &&
+          item.id_nhansu !== user?.id &&
+          user?.vitri_ifee === 3 &&
+          item.vitri_ifee > 3) ||
+        (user?.vitri_ifee === 1 && (item.status === 0 || item.yc_update === 1))
+      );
+    };
+
+    return (
+      <View
+        key={item.id}
+        style={{
+          marginHorizontal: Dimension.setWidth(3.5),
+          marginBottom: Dimension.setHeight(2),
+          backgroundColor: '#ffffff',
+          elevation: 5,
+          borderRadius: 15,
+          paddingHorizontal: Dimension.setWidth(5),
+          paddingTop: Dimension.setHeight(2),
+          paddingBottom: Dimension.setHeight(0.6),
+        }}>
+        <Text
           style={{
-            marginHorizontal: Dimension.setWidth(3.5),
-            marginBottom: Dimension.setHeight(2),
-            backgroundColor: '#ffffff',
-            elevation: 5,
-            borderRadius: 15,
-            paddingHorizontal: Dimension.setWidth(5),
-            paddingTop: Dimension.setHeight(2),
-            paddingBottom: Dimension.setHeight(0.6),
+            fontFamily: Fonts.SF_SEMIBOLD,
+            fontSize: 19,
+            width: '60%',
           }}>
-          <Text
-            style={{
-              fontFamily: Fonts.SF_SEMIBOLD,
-              fontSize: 19,
-              width: '60%',
-            }}>
-            {item.lydo}
-          </Text>
-          <View style={{position: 'absolute', right: '5%', top: '7%'}}>
-            {((item.status !== 0 && item.yc_update !== 1) ||
-              user?.vitri_ifee > 3 ||
-              item.id_nhansu === user?.id ||
-              user?.id === 1) && (
-              <View
+          {item.lydo}
+        </Text>
+        <View style={{position: 'absolute', right: '5%', top: '7%'}}>
+          {((item.status !== 0 && item.yc_update !== 1) ||
+            user?.vitri_ifee > 3 ||
+            item.id_nhansu === user?.id ||
+            user?.id === 1) && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                alignSelf: 'flex-start',
+                paddingVertical: Dimension.setHeight(0.5),
+                paddingHorizontal: Dimension.setWidth(1.4),
+                borderRadius: 8,
+                backgroundColor:
+                  item.yc_update === 0 ? bgColorStatus : bgColorAdjustStatus,
+              }}>
+              <Image
+                source={item.yc_update === 0 ? icon : iconAdjust}
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'flex-start',
-                  paddingVertical: Dimension.setHeight(0.5),
-                  paddingHorizontal: Dimension.setWidth(1.4),
-                  borderRadius: 8,
-                  backgroundColor:
-                    item.yc_update === 0 ? bgColorStatus : bgColorAdjustStatus,
-                }}>
-                <Image
-                  source={item.yc_update === 0 ? icon : iconAdjust}
-                  style={{
-                    height: 16,
-                    width: 16,
-                    marginRight: Dimension.setWidth(1),
-                    tintColor:
-                      item.yc_update === 0 ? colorStatus : colorAdjustStatus,
-                  }}
-                />
-                <Text
-                  style={{
-                    color:
-                      item.yc_update === 0 ? colorStatus : colorAdjustStatus,
-                    fontSize: 14,
-                    fontFamily: Fonts.SF_MEDIUM,
-                  }}>
-                  {item.yc_update === 0 ? status : adjustStatus}
-                </Text>
-              </View>
-            )}
-            {checkRole() && (
-              <View
+                  height: 16,
+                  width: 16,
+                  marginRight: Dimension.setWidth(1),
+                  tintColor:
+                    item.yc_update === 0 ? colorStatus : colorAdjustStatus,
+                }}
+              />
+              <Text
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: Dimension.setWidth(17),
-                  alignSelf: 'center',
-                  zIndex: 9999,
+                  color: item.yc_update === 0 ? colorStatus : colorAdjustStatus,
+                  fontSize: 14,
+                  fontFamily: Fonts.SF_MEDIUM,
                 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    item.yc_update === 0
-                      ? handleNonAdjust(true, item)
-                      : handleApproveAdjust(item.id);
-                  }}>
-                  <Image
-                    source={Images.approved}
-                    style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    item.yc_update === 0
-                      ? handleNonAdjust(false, item)
-                      : handleToggleCancel(item);
-                  }}>
-                  <Image
-                    source={Images.cancelled}
-                    style={[styles.approvedIcon, {tintColor: '#f25157'}]}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: Fonts.SF_REGULAR,
-              color: Colors.INACTIVE_GREY,
-              marginBottom: Dimension.setHeight(0.8),
-            }}>
-            ID: {item.id}
-          </Text>
-          <View style={styles.containerEachLine}>
-            <Image source={Images.avatar} style={styles.iconic} />
-            <Text style={styles.title}>Họ tên: </Text>
-            <Text style={styles.content}>{item.hoten}</Text>
-          </View>
-          {item.status !== 0 && (
-            <View style={styles.containerEachLine}>
-              <Image source={Images.avatar} style={styles.iconic} />
-              <Text style={styles.title}>
-                {item.status !== 2 ? 'Người duyệt:' : 'Từ chối bởi:'}{' '}
+                {item.yc_update === 0 ? status : adjustStatus}
               </Text>
-              <Text style={styles.content}>{item.nguoiduyet}</Text>
             </View>
           )}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginBottom: Dimension.setHeight(1.3),
-            }}>
-            <Image source={Images.leaveDate} style={styles.iconic} />
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={styles.title}>Nghỉ từ: </Text>
-              <Text style={styles.content}>
-                {changeFormatDate(item.tungay)}
-              </Text>
-              <Separation />
-              <Text style={styles.content}>
-                {changeFormatDate(item.denngay)}
-              </Text>
-              {item.yc_update === 0 &&
-                item.status === 1 &&
-                item.id_nhansu === user?.id && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleToggleAdjust(item);
-                    }}
-                    style={{
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Image
-                      source={Images.adjust}
-                      style={{
-                        height: 25,
-                        width: 25,
-                      }}
-                    />
-                  </TouchableOpacity>
-                )}
-            </View>
-          </View>
-          {item.ngay_dc && (
-            <View style={styles.containerEachLine}>
-              <Image source={Images.leaveDate} style={styles.iconic} />
-              <Text style={styles.title}>Ngày điều chỉnh: </Text>
-              <Text style={styles.content}>
-                {changeFormatDate(item.ngay_dc)}
-              </Text>
+          {checkRole() && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: Dimension.setWidth(17),
+                alignSelf: 'center',
+                zIndex: 9999,
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  item.yc_update === 0
+                    ? handleNonAdjust(true, item)
+                    : handleApproveAdjust(item.id);
+                }}>
+                <Image
+                  source={Images.approved}
+                  style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  item.yc_update === 0
+                    ? handleNonAdjust(false, item)
+                    : handleToggleCancel(item);
+                }}>
+                <Image
+                  source={Images.cancelled}
+                  style={[styles.approvedIcon, {tintColor: '#f25157'}]}
+                />
+              </TouchableOpacity>
             </View>
           )}
         </View>
-      );
-    },
-    [leaveData],
-  );
+        <Text
+          style={{
+            fontSize: 15,
+            fontFamily: Fonts.SF_REGULAR,
+            color: Colors.INACTIVE_GREY,
+            marginBottom: Dimension.setHeight(0.8),
+          }}>
+          ID: {item.id}
+        </Text>
+        <View style={styles.containerEachLine}>
+          <Image source={Images.avatar} style={styles.iconic} />
+          <Text style={styles.title}>Họ tên: </Text>
+          <Text style={styles.content}>{item.hoten}</Text>
+        </View>
+        {item.status !== 0 && (
+          <View style={styles.containerEachLine}>
+            <Image source={Images.avatar} style={styles.iconic} />
+            <Text style={styles.title}>
+              {item.status !== 2 ? 'Người duyệt:' : 'Từ chối bởi:'}{' '}
+            </Text>
+            <Text style={styles.content}>{item.nguoiduyet}</Text>
+          </View>
+        )}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: Dimension.setHeight(1.3),
+          }}>
+          <Image source={Images.leaveDate} style={styles.iconic} />
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.title}>Nghỉ từ: </Text>
+            <Text style={styles.content}>{changeFormatDate(item.tungay)}</Text>
+            <Separation />
+            <Text style={styles.content}>{changeFormatDate(item.denngay)}</Text>
+            {item.yc_update === 0 &&
+              item.status === 1 &&
+              item.id_nhansu === user?.id && (
+                <TouchableOpacity
+                  onPress={() => {
+                    handleToggleAdjust(item);
+                  }}
+                  style={{
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={Images.adjust}
+                    style={{
+                      height: 25,
+                      width: 25,
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+          </View>
+        </View>
+        {item.ngay_dc && (
+          <View style={styles.containerEachLine}>
+            <Image source={Images.leaveDate} style={styles.iconic} />
+            <Text style={styles.title}>Ngày điều chỉnh: </Text>
+            <Text style={styles.content}>{changeFormatDate(item.ngay_dc)}</Text>
+          </View>
+        )}
+      </View>
+    );
+  });
 
   return (
     <SafeAreaView style={styles.container}>
