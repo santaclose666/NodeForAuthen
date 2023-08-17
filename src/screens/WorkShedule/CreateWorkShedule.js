@@ -25,7 +25,7 @@ import {
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
 import {useDispatch} from 'react-redux';
-import {getAllWorkName} from '../../redux/apiRequest';
+import {getAllWorkName, registerWorkSchedule} from '../../redux/apiRequest';
 
 const optionData = [
   {
@@ -60,7 +60,7 @@ const CreateWorkSchedule = ({navigation}) => {
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [checkPick, setCheckPick] = useState(null);
   const [startDay, setStartDay] = useState(formatDate(new Date()));
-  const [endDay, setEndDay] = useState('Chọn ngày');
+  const [endDay, setEndDay] = useState(null);
   const [apiCall, setApiCall] = useState(null);
   const dispatch = useDispatch();
 
@@ -69,14 +69,14 @@ const CreateWorkSchedule = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (workNameData) {
+    if (workNameData === null) {
+      fetchWorkNameData();
+    } else {
       setApiCall(
         setInterval(() => {
           fetchWorkNameData();
         }, 3000000),
       );
-    } else {
-      fetchWorkNameData();
     }
 
     return () => clearInterval(apiCall);
@@ -116,22 +116,22 @@ const CreateWorkSchedule = ({navigation}) => {
       thanhphan: componentInput,
       ghichu: noteInput,
       op_tenchuongtrinh: workValue,
-      op1_tenchuongtrinh: ortherWorkInput ? ortherWorkInput : workNameValue,
+      op1_tenchuongtrinh: workNameValue,
+      op2_tenchuongtrinh: ortherWorkInput,
     };
-    console.log(clueInput.length);
 
     if (
-      endDay !== 'Chọn ngày' &&
-      placeInput.length !== 0 &&
-      contentInput.length !== 0 &&
-      clueInput.length !== 0 &&
-      componentInput.length !== 0 &&
-      noteInput.length !== 0 &&
-      workValue === 2
-        ? ortherWorkInput.length !== 0
-        : workNameValue.length !== 0
+      endDay !== null &&
+      placeInput !== '' &&
+      contentInput !== '' &&
+      clueInput !== '' &&
+      componentInput !== '' &&
+      noteInput !== '' &&
+      (workValue === 2 ? ortherWorkInput !== '' : workNameValue !== '')
     ) {
+      // registerWorkSchedule(data);
       ToastSuccess('Đăng kí lịch công tác thành công');
+      navigation.navigate('HistoryWorkShedule');
     } else {
       ToastAlert('Thiếu thông tin!');
     }
@@ -162,7 +162,7 @@ const CreateWorkSchedule = ({navigation}) => {
                   fontSize: 19,
                   fontFamily: Fonts.SF_SEMIBOLD,
                 }}>
-                {user?.name}
+                {user?.hoten}
               </Text>
             </View>
           </View>
@@ -258,7 +258,9 @@ const CreateWorkSchedule = ({navigation}) => {
               ]}>
               <Text style={styles.title}>Đến ngày</Text>
               <View style={styles.dateTimePickerContainer}>
-                <Text style={styles.dateTimeText}>{endDay}</Text>
+                <Text style={styles.dateTimeText}>
+                  {endDay ? endDay : 'Chọn ngày'}
+                </Text>
                 <View
                   style={[
                     styles.dateTimeImgContainer,
@@ -300,20 +302,7 @@ const CreateWorkSchedule = ({navigation}) => {
 
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Tên chương trình</Text>
-            {workValue === 2 ? (
-              <TextInput
-                style={{
-                  borderBottomWidth: 0.6,
-                  borderBottomColor: 'gray',
-                  marginHorizontal: Dimension.setWidth(1.6),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  fontSize: 16,
-                }}
-                placeholder="Nhập tên chương trình"
-                value={ortherWorkInput}
-                onChangeText={e => setOrtherWorkInput(e)}
-              />
-            ) : (
+            {workValue === 1 && workNameData ? (
               <Dropdown
                 style={styles.dropdown}
                 autoScroll={false}
@@ -330,13 +319,26 @@ const CreateWorkSchedule = ({navigation}) => {
                 searchPlaceholder="Tìm kiếm"
                 activeColor="#eef2feff"
                 data={workNameData}
-                maxHeight={Dimension.setHeight(30)}
+                maxHeight={Dimension.setHeight(40)}
                 labelField="tenhd"
-                valueField="tenhd"
+                valueField="id"
                 value={workNameValue}
                 onChange={item => {
                   setWorkNameValue(item.id);
                 }}
+              />
+            ) : (
+              <TextInput
+                style={{
+                  borderBottomWidth: 0.6,
+                  borderBottomColor: 'gray',
+                  marginHorizontal: Dimension.setWidth(1.6),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: 16,
+                }}
+                placeholder="Nhập tên chương trình"
+                value={ortherWorkInput}
+                onChangeText={e => setOrtherWorkInput(e)}
               />
             )}
           </View>

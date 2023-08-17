@@ -87,3 +87,10 @@ export const compareDate = (date1, date2) => {
     return false;
   }
 };
+
+export const formatTimeToPost = time => {
+  const parseTime = moment(time, 'HH:mm a');
+  const formatTime = parseTime.format('HH:mm:ss');
+
+  return formatTime;
+};

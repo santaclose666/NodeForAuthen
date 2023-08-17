@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
   },
 
   dropdown: {
-    width: Dimension.setWidth(15),
+    width: Dimension.setWidth(20),
   },
   containerOptionStyle: {
     borderRadius: 12,

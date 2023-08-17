@@ -34,6 +34,7 @@ import Modal from 'react-native-modal';
 import Colors from '../../contants/Colors';
 import {ToastWarning, ToastAlert} from '../../components/Toast';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {ApproveCancelModal} from '../../components/Modal';
 
 const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -46,7 +47,6 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const [toggleApproveModal, setToggleApproveModal] = useState(false);
   const [toggleEditModal, setToggleEditModal] = useState(false);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
-  const [inputHeight, setInputHeight] = useState(Dimension.setHeight(6));
   const [datePicker, setDatePicker] = useState(formatDate(new Date()));
   const [reasonCancelAdjust, setReasonCancelAdjust] = useState(null);
   const [toggleCancelAdjust, setToggleCancelAdjust] = useState(false);
@@ -269,6 +269,15 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       );
     };
 
+    const checkStatus = () => {
+      return (
+        (item.status !== 0 && item.yc_update !== 1) ||
+        user?.vitri_ifee > 3 ||
+        item.id_nhansu === user?.id ||
+        (user?.id === 1 && item.status !== 0 && item.yc_update !== 1)
+      );
+    };
+
     return (
       <View
         key={item.id}
@@ -285,16 +294,13 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         <Text
           style={{
             fontFamily: Fonts.SF_SEMIBOLD,
-            fontSize: 19,
+            fontSize: 18,
             width: '60%',
           }}>
           {item.lydo}
         </Text>
         <View style={{position: 'absolute', right: '5%', top: '7%'}}>
-          {((item.status !== 0 && item.yc_update !== 1) ||
-            user?.vitri_ifee > 3 ||
-            item.id_nhansu === user?.id ||
-            user?.id === 1) && (
+          {checkStatus() && (
             <View
               style={{
                 flexDirection: 'row',
@@ -509,7 +515,19 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         </View>
       )}
 
-      <Modal
+      <ApproveCancelModal
+        toggleApproveModal={toggleApproveModal}
+        setToggleApproveModal={setToggleApproveModal}
+        checkInput={checkInput}
+        selectedItem={selectedItem}
+        commnetInput={commnetInput}
+        setCommentInput={setCommentInput}
+        reasonCancel={reasonCancel}
+        setReasonCancel={setReasonCancel}
+        eventFunc={handleSendNonAdjust}
+      />
+
+      {/* <Modal
         isVisible={toggleApproveModal}
         animationIn="fadeInUp"
         animationInTiming={100}
@@ -536,6 +554,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               borderBottomWidth: 0.8,
               borderBlockColor: Colors.INACTIVE_GREY,
               width: '100%',
+              height: Dimension.setHeight(5),
             }}>
             <Text
               style={{
@@ -576,15 +595,13 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                 borderRadius: 10,
                 fontFamily: Fonts.SF_REGULAR,
                 width: '70%',
-                height: inputHeight,
+                height: Dimension.setHeight(6),
+                maxHeight: Dimension.setHeight(9),
               }}
               onChangeText={e =>
                 checkInput ? setCommentInput(e) : setReasonCancel(e)
               }
               value={checkInput ? commnetInput : reasonCancel}
-              onContentSizeChange={e => {
-                setInputHeight(e.nativeEvent.contentSize.height);
-              }}
             />
             <TouchableOpacity
               onPress={handleSendNonAdjust}
@@ -605,7 +622,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
             <Image source={Images.minusclose} style={styles.btnModal} />
           </TouchableOpacity>
         </View>
-      </Modal>
+      </Modal> */}
 
       <Modal
         isVisible={toggleEditModal}
@@ -794,13 +811,11 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                 borderRadius: 10,
                 fontFamily: Fonts.SF_REGULAR,
                 width: '70%',
-                height: inputHeight,
+                height: Dimension.setHeight(6),
+                maxHeight: Dimension.setHeight(9),
               }}
               onChangeText={e => setReasonCancelAdjust(e)}
               value={reasonCancelAdjust}
-              onContentSizeChange={e => {
-                setInputHeight(e.nativeEvent.contentSize.height);
-              }}
             />
             <TouchableOpacity
               onPress={handleCancelAdjust}

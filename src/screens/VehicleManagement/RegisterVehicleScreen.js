@@ -123,7 +123,7 @@ const RegisterVehicleScreen = ({navigation}) => {
                   fontSize: 19,
                   fontFamily: Fonts.SF_SEMIBOLD,
                 }}>
-                {user?.name}
+                {user?.hoten}
               </Text>
             </View>
           </View>
