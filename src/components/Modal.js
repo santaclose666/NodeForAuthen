@@ -13,6 +13,7 @@ import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
 import {useSelector} from 'react-redux';
+import {mainURL} from '../contants/Variable';
 
 export const ApproveCancelModal = ({
   screenName,
@@ -26,7 +27,6 @@ export const ApproveCancelModal = ({
   setReasonCancel,
   eventFunc,
 }) => {
-  const mainURL = 'https://forestry.ifee.edu.vn/';
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
   const avatar = staffs.filter(
     item => item.id === selectedItem?.id_nhansu && item.tendonvi === 'VST',

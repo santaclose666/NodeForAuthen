@@ -23,6 +23,7 @@ import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
 import {getVehicleData} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const HistoryRegisterVehicleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -45,7 +46,6 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const bottomSheetModalRef = useRef(null);
   const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
-  const mainURL = 'https://forestry.ifee.edu.vn/';
 
   const approveArr = [
     {

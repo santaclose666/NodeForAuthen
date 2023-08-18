@@ -26,7 +26,8 @@ import {
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
 import {registerOnLeave} from '../../redux/apiRequest';
-import {calendarView, shadowIOS} from '../../contants/propsIOS';
+import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 0.5},
@@ -36,7 +37,6 @@ const numberOfDayOff = [
 ];
 
 const CreateApplyLeaveScreen = ({navigation}) => {
-  const mainURL = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const [valueNumberOfDay, setValueNumberOfDay] = useState(null);
   const [offNumber, setOffNumber] = useState(2);
@@ -315,10 +315,6 @@ const styles = StyleSheet.create({
   itemText: {
     lineHeight: Dimension.setHeight(2),
     color: '#57575a',
-  },
-
-  calendarView: {
-    ...calendarView,
   },
 
   dateTimePickerContainer: {

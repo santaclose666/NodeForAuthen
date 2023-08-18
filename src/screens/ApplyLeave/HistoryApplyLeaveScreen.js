@@ -35,10 +35,10 @@ import Colors from '../../contants/Colors';
 import {ToastWarning, ToastAlert} from '../../components/Toast';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ApproveCancelModal} from '../../components/Modal';
-import {calendarView, shadowIOS} from '../../contants/propsIOS';
+import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const HistoryApplyLeaveScreen = ({navigation, route}) => {
-  const mainURL = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
   const refresh = route?.params?.refresh;
@@ -822,10 +822,6 @@ const styles = StyleSheet.create({
     height: 17,
     width: 17,
     tintColor: '#ffffff',
-  },
-
-  calendarView: {
-    ...calendarView,
   },
 
   btnModal: {

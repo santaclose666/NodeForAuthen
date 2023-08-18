@@ -19,11 +19,11 @@ import Icons from '../../contants/Icons';
 import {useSelector} from 'react-redux';
 import {Dropdown} from 'react-native-element-dropdown';
 import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const typeStaff = [{value: 'XMG'}, {value: 'VST'}];
 
 const StaffListScreen = ({navigation}) => {
-  const mainURL = 'https://forestry.ifee.edu.vn/';
   const [typeStaffValue, setTypeStaffValue] = useState(typeStaff[0].value);
   const [input, setInput] = useState(null);
   const [allStaff, setAllStaff] = useState(null);

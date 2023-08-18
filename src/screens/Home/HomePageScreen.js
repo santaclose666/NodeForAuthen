@@ -29,6 +29,7 @@ import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import LinearGradient from 'react-native-linear-gradient';
 import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const requestPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -52,7 +53,6 @@ const requestPermissions = async () => {
 };
 
 const HomePageScreen = ({navigation}) => {
-  const mainURl = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
   const notifiData = useSelector(
@@ -119,7 +119,6 @@ const HomePageScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    console.log(mainURl + user?.path);
     if (weather) {
       setInTerVal(
         setInterval(() => {
@@ -159,7 +158,7 @@ const HomePageScreen = ({navigation}) => {
                 }}
                 style={styles.avatarUserContainer}>
                 <Image
-                  src={`${mainURl + user?.path}`}
+                  src={`${mainURL + user?.path}`}
                   style={styles.avatarUserImg}
                 />
               </TouchableOpacity>

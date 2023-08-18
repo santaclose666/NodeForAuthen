@@ -30,6 +30,7 @@ import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import RegisterBtn from '../../components/RegisterBtn';
 import {registerVehicle} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const RegisterVehicleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -45,8 +46,6 @@ const RegisterVehicleScreen = ({navigation}) => {
   const [check, setCheck] = useState(null);
   const [placeInput, setPlaceInput] = useState('');
   const [contentInput, setContentInput] = useState('');
-
-  const mainURL = 'https://forestry.ifee.edu.vn/';
 
   const handlePickDate = (event, date) => {
     const message = 'Ngày được chọn không hợp lệ!';
@@ -425,18 +424,6 @@ const styles = StyleSheet.create({
     marginRight: Dimension.setWidth(1.3),
   },
   nocar: {fontSize: 16, fontWeight: 'bold', color: 'red'},
-  calendarView: {
-    position: 'absolute',
-    top: '25%',
-    left: '5%',
-    zIndex: 999,
-    backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
-    padding: 15,
-    borderRadius: 15,
-    width: '95%',
-  },
 });
 
 export default RegisterVehicleScreen;

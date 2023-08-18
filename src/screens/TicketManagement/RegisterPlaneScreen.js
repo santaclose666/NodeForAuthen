@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   TextInput,
   ScrollView,
-  Platform,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
@@ -30,7 +29,8 @@ import {
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
 import {registerPlaneTicket} from '../../redux/apiRequest';
-import {calendarView, shadowIOS} from '../../contants/propsIOS';
+import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const planeCompany = [
   {
@@ -239,7 +239,10 @@ const RegisterPlaneScreen = ({navigation}) => {
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Người đăng kí</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={Images.avatar} style={{height: 40, width: 40}} />
+              <Image
+                src={mainURL + user?.path}
+                style={{height: 40, width: 40}}
+              />
               <Text
                 style={{
                   marginLeft: Dimension.setWidth(3),
@@ -670,10 +673,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: Dimension.setWidth(1.3),
-  },
-
-  calendarView: {
-    ...calendarView,
   },
 });
 
