@@ -16,37 +16,27 @@ import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
-import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   formatTime,
   getCurrentTime,
   compareDate,
   formatDate,
+  formatTimeToPost,
+  formatDateToPost,
 } from '../../utils/serviceFunction';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import RegisterBtn from '../../components/RegisterBtn';
-
-const typeVehicle = [
-  {
-    label: 'WIGO',
-    value: 'WIGO',
-  },
-  {
-    label: 'Honda WAVE - Biển số: 29X1-897.78',
-    value: 'Honda WAVE - Biển số: 29X1-897.78',
-  },
-  {
-    label: 'Honda WAVE - Biển số: 29X1-902.14',
-    value: 'Honda WAVE - Biển số: 29X1-902.14',
-  },
-];
+import {registerVehicle} from '../../redux/apiRequest';
 
 const RegisterVehicleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const typeVehicle = useSelector(
+    state => state.vehicle?.vehicle?.data.khadung,
+  );
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [dateTime, setDateTime] = useState(null);
-  const [vehicleValue, setVehicleValue] = useState(typeVehicle[0].value);
+  const [vehicleValue, setVehicleValue] = useState(typeVehicle[0].id);
   const [dateStart, setDateStart] = useState(formatDate(new Date()));
   const [receiveDate, setReceiveDate] = useState(formatDate(new Date()));
   const [receiveTime, setReceiveTime] = useState(getCurrentTime());
@@ -54,20 +44,25 @@ const RegisterVehicleScreen = ({navigation}) => {
   const [placeInput, setPlaceInput] = useState('');
   const [contentInput, setContentInput] = useState('');
 
+  const mainURL = 'https://forestry.ifee.edu.vn/';
+
   const handlePickDate = (event, date) => {
-    const message = 'Ngày nhận xe không hợp lệ!';
+    const message = 'Ngày được chọn không hợp lệ!';
     if (event.type === 'set') {
       setToggleDatePicker(false);
       if (check === 'startDate') {
         const startDate = formatDate(date);
-        compareDate(receiveDate, startDate)
-          ? setDateStart(startDate)
-          : ToastAlert(message);
+        if (compareDate(formatDate(new Date()), startDate)) {
+          setDateStart(startDate);
+          setReceiveDate(startDate);
+        } else {
+          ToastAlert(message);
+        }
       } else if (check === 'receiveTime') {
         setReceiveTime(formatTime(date));
       } else {
         const dateReceive = formatDate(date);
-        compareDate(dateReceive, dateStart)
+        compareDate(dateStart, dateReceive)
           ? setReceiveDate(dateReceive)
           : ToastAlert(message);
       }
@@ -95,7 +90,16 @@ const RegisterVehicleScreen = ({navigation}) => {
   };
 
   const handleRegister = () => {
-    ToastSuccess('Thành công');
+    const data = {
+      id_user: user.id,
+      loaixe: vehicleValue,
+      ngaydi: formatDateToPost(dateStart),
+      noiden: placeInput,
+      noidung: contentInput,
+      gionhan: formatTimeToPost(receiveTime),
+      ngaynhan: formatDateToPost(receiveDate),
+    };
+    registerVehicle(data);
   };
 
   return (
@@ -116,54 +120,61 @@ const RegisterVehicleScreen = ({navigation}) => {
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Người đăng kí</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={Images.avatar} style={{height: 40, width: 40}} />
+              <Image
+                src={mainURL + user?.path}
+                style={{height: 40, width: 40}}
+              />
               <Text
                 style={{
                   marginLeft: Dimension.setWidth(3),
                   fontSize: 19,
                   fontFamily: Fonts.SF_SEMIBOLD,
                 }}>
-                {user?.name}
+                {user?.hoten}
               </Text>
             </View>
           </View>
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Loại xe</Text>
-            <Dropdown
-              style={styles.dropdown}
-              autoScroll={false}
-              showsVerticalScrollIndicator={false}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              containerStyle={styles.containerOptionStyle}
-              imageStyle={styles.imageStyle}
-              iconStyle={styles.iconStyle}
-              itemContainerStyle={styles.itemContainer}
-              itemTextStyle={styles.itemText}
-              fontFamily={Fonts.SF_MEDIUM}
-              activeColor="#eef2feff"
-              data={typeVehicle}
-              maxHeight={Dimension.setHeight(30)}
-              labelField="label"
-              valueField="value"
-              imageField="image"
-              value={vehicleValue}
-              renderLeftIcon={() => {
-                return (
-                  <Image
-                    source={
-                      vehicleValue === 'WIGO'
-                        ? Images.vehicles
-                        : Images.motorbike
-                    }
-                    style={styles.leftIconDropdown}
-                  />
-                );
-              }}
-              onChange={item => {
-                setVehicleValue(item.value);
-              }}
-            />
+            {typeVehicle.lenght == 0 ? (
+              <Text style={styles.nocar}>
+                Hiện tại đang không còn xe khả dụng
+              </Text>
+            ) : (
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                imageStyle={styles.imageStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                data={typeVehicle}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="loaixe"
+                valueField="id"
+                imageField="image"
+                value={vehicleValue}
+                renderLeftIcon={() => {
+                  return (
+                    <Image
+                      source={
+                        vehicleValue < 3 ? Images.vehicles : Images.motorbike
+                      }
+                      style={styles.leftIconDropdown}
+                    />
+                  );
+                }}
+                onChange={item => {
+                  setVehicleValue(item.id);
+                }}
+              />
+            )}
           </View>
           <TouchableOpacity
             onPress={handlePickStartDate}
@@ -257,16 +268,35 @@ const RegisterVehicleScreen = ({navigation}) => {
             />
           </View>
 
-          <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
+          {typeVehicle.lenght != 0 && (
+            <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
+          )}
 
           {toggleDatePicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={new Date()}
-              mode={dateTime}
-              display={Platform.OS === 'ios' ? 'inline' : 'default'}
-              onChange={handlePickDate}
-            />
+            <TouchableOpacity
+              style={{
+                width: '100%',
+                height: '100%',
+                zIndex: 997,
+                position: 'absolute',
+              }}
+              onPress={() => {
+                setToggleDatePicker(false);
+                handlePickDate({type: 'set'}, new Date());
+              }}>
+              <View style={styles.calendarView}>
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={new Date()}
+                  mode={dateTime}
+                  display={Platform.OS === 'ios' ? 'inline' : 'default'}
+                  textColor="light"
+                  themeVariant="light"
+                  style={{}}
+                  onChange={handlePickDate}
+                />
+              </View>
+            </TouchableOpacity>
           )}
         </KeyboardAwareScrollView>
       </ScrollView>
@@ -367,6 +397,19 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: Dimension.setWidth(1.3),
+  },
+  nocar: {fontSize: 16, fontWeight: 'bold', color: 'red'},
+  calendarView: {
+    position: 'absolute',
+    top: '25%',
+    left: '5%',
+    zIndex: 999,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+    padding: 15,
+    borderRadius: 15,
+    width: '95%',
   },
 });
 

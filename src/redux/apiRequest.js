@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {formToJSON} from 'axios';
 import {
   loginStart,
   loginSuccess,
@@ -20,7 +20,14 @@ import {
   getOnLeaveStart,
   getOnLeaveSuccess,
 } from './onLeaveSlice';
+
+import {
+  getVehicleStart,
+  getVehicleSuccess,
+  getVehicleFailed,
+} from './vehicleSlice';
 import {getWorkFailed, getWorkStart, getWorkSuccess} from './workSlice';
+import {ToastAlert, ToastSuccess} from '../components/Toast';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -206,5 +213,41 @@ export const getAllWorkName = async dispatch => {
     dispatch(getWorkSuccess(data));
   } catch (error) {
     dispatch(getWorkFailed());
+  }
+};
+
+/////////////////////  VEHIOCLE SCHEDULE DATA  ////////////////////
+
+export const getVehicleData = async (dispatch, id) => {
+  dispatch(getVehicleStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/xe/danhsach/${id}`,
+    );
+
+    dispatch(getVehicleSuccess(res.data));
+  } catch (error) {
+    dispatch(getVehicleFailed());
+  }
+};
+
+export const registerVehicle = async data => {
+  try {
+    console.log(data);
+    await axios.post(
+      `https://management.ifee.edu.vn/api/xe/reg/${data.id_user}`,
+      {
+        loaixe: data.loaixe,
+        ngaydi: data.ngaydi,
+        noiden: data.noiden,
+        noidung: data.noidung,
+        gionhan: data.gionhan,
+        ngaynhan: data.ngaynhan,
+      },
+    );
+    ToastSuccess('Thành công');
+  } catch (error) {
+    ToastAlert('Gửi đề nghị thất bại!');
+    console.log(error);
   }
 };
