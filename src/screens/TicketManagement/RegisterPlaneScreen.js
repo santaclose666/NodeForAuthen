@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,16 +9,16 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import { ToastAlert, ToastSuccess } from '../../components/Toast';
 import {
   compareDate,
   formatDate,
@@ -28,7 +28,7 @@ import {
   getCurrentTime,
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
-import {registerPlaneTicket} from '../../redux/apiRequest';
+import { registerPlaneTicket } from '../../redux/apiRequest';
 
 const planeCompany = [
   {
@@ -159,12 +159,12 @@ const airplane = [
   },
 ];
 
-const RegisterPlaneScreen = ({navigation}) => {
+const RegisterPlaneScreen = ({ navigation }) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
   const data = staffs.filter(item => item.tendonvi === 'VST');
   const allStaffs = data.map(item => {
-    return {label: item.hoten, value: item.id};
+    return { label: item.hoten, value: item.id };
   });
   const [multiStaff, setMultiStaff] = useState([]);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
@@ -216,7 +216,7 @@ const RegisterPlaneScreen = ({navigation}) => {
     if (multiStaff.length !== 0 && workName.length !== 0) {
       ToastSuccess('Đăng kí thành công');
       registerPlaneTicket(data);
-      navigation.navigate('HistoryPlaneTicket', {refresh: true});
+      navigation.navigate('HistoryPlaneTicket', { refresh: true });
     } else {
       ToastAlert('Thiếu thông tin!');
     }
@@ -239,8 +239,8 @@ const RegisterPlaneScreen = ({navigation}) => {
           }}>
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Người đăng kí</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={Images.avatar} style={{height: 40, width: 40}} />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image source={Images.avatar} style={{ height: 40, width: 40 }} />
               <Text
                 style={{
                   marginLeft: Dimension.setWidth(3),
@@ -260,6 +260,7 @@ const RegisterPlaneScreen = ({navigation}) => {
                 marginHorizontal: Dimension.setWidth(1.6),
                 fontFamily: Fonts.SF_MEDIUM,
                 fontSize: 16,
+                height: Dimension.setHeight(5)
               }}
               placeholder="Nhập tên chương trình"
               value={workName}
@@ -276,7 +277,7 @@ const RegisterPlaneScreen = ({navigation}) => {
               selectedStyle={styles.selectedStyle}
               selectedTextStyle={[
                 styles.selectedTextStyle,
-                {fontSize: 13, lineHeight: Dimension.setHeight(1.8)},
+                { fontSize: 13, lineHeight: Dimension.setHeight(1.8) },
               ]}
               containerStyle={styles.containerOptionStyle}
               iconStyle={styles.iconStyle}
@@ -326,7 +327,7 @@ const RegisterPlaneScreen = ({navigation}) => {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <View style={[styles.containerEachLine, {width: '54%'}]}>
+            <View style={[styles.containerEachLine, { width: '54%' }]}>
               <Text style={styles.title}>Hãng bay</Text>
               <Dropdown
                 style={styles.dropdown}
@@ -360,7 +361,7 @@ const RegisterPlaneScreen = ({navigation}) => {
                 }}
               />
             </View>
-            <View style={[styles.containerEachLine, {width: '44%'}]}>
+            <View style={[styles.containerEachLine, { width: '44%' }]}>
               <Text style={styles.title}>Hạng vé</Text>
               <Dropdown
                 style={styles.dropdown}
@@ -399,7 +400,7 @@ const RegisterPlaneScreen = ({navigation}) => {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <View style={{width: '52%'}}>
+            <View style={{ width: '52%' }}>
               <TouchableOpacity
                 onPress={() => {
                   setDateTime('date');
@@ -419,7 +420,7 @@ const RegisterPlaneScreen = ({navigation}) => {
                   <View
                     style={[
                       styles.dateTimeImgContainer,
-                      {backgroundColor: '#dbd265'},
+                      { backgroundColor: '#dbd265' },
                     ]}>
                     <Image
                       source={Images.calendarBlack}
@@ -435,7 +436,7 @@ const RegisterPlaneScreen = ({navigation}) => {
                 }}
                 style={[
                   styles.containerEachLine,
-                  {width: '100%', paddingVertical: Dimension.setHeight(1)},
+                  { width: '100%', paddingVertical: Dimension.setHeight(1) },
                 ]}>
                 <Text style={styles.title}>Thời gian</Text>
                 <View style={styles.dateTimePickerContainer}>
@@ -443,7 +444,7 @@ const RegisterPlaneScreen = ({navigation}) => {
                   <View
                     style={[
                       styles.dateTimeImgContainer,
-                      {backgroundColor: '#96d1d9'},
+                      { backgroundColor: '#96d1d9' },
                     ]}>
                     <Image source={Images.time} style={styles.dateTimeImg} />
                   </View>
@@ -470,7 +471,7 @@ const RegisterPlaneScreen = ({navigation}) => {
                   justifyContent: 'center',
                 },
               ]}>
-              <Text style={[styles.title, {alignSelf: 'center'}]}>
+              <Text style={[styles.title, { alignSelf: 'center' }]}>
                 Cân nặng kí gửi
               </Text>
               <View
@@ -484,7 +485,7 @@ const RegisterPlaneScreen = ({navigation}) => {
                     kgNumber !== 0 ? setKgNumber(kgNumber - 1) : null;
                   }}>
                   <Image
-                    style={{height: 22, width: 22}}
+                    style={{ height: 22, width: 22 }}
                     source={Images.minus}
                   />
                 </TouchableOpacity>
@@ -500,7 +501,7 @@ const RegisterPlaneScreen = ({navigation}) => {
                   onPress={() => {
                     setKgNumber(kgNumber + 2);
                   }}>
-                  <Image style={{height: 22, width: 22}} source={Images.plus} />
+                  <Image style={{ height: 22, width: 22 }} source={Images.plus} />
                 </TouchableOpacity>
               </View>
             </View>

@@ -1,16 +1,16 @@
 import React from 'react';
-import {View, Text, Image} from 'react-native';
+import { View, Text, Image } from 'react-native';
 import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 
-const StatusUI = ({status, colorStatus, bgColorStatus, icon}) => {
+const StatusUI = ({ status, colorStatus, bgColorStatus, icon }) => {
   return (
     <View
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: Dimension.setHeight(0.5),
-        paddingHorizontal: Dimension.setWidth(1.4),
+        paddingVertical: Dimension.setHeight(0.6),
+        paddingHorizontal: Dimension.setWidth(1.5),
         borderRadius: 8,
         backgroundColor: bgColorStatus,
         zIndex: 999,
