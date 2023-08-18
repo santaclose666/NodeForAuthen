@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, memo} from 'react';
 import {
   View,
   Text,
@@ -33,9 +33,12 @@ import Separation from '../../components/Separation';
 import Modal from 'react-native-modal';
 import Colors from '../../contants/Colors';
 import {ToastWarning, ToastAlert} from '../../components/Toast';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {ApproveCancelModal} from '../../components/Modal';
+import {calendarView, shadowIOS} from '../../contants/propsIOS';
 
 const HistoryApplyLeaveScreen = ({navigation, route}) => {
+  const mainURL = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
   const refresh = route?.params?.refresh;
@@ -46,7 +49,6 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const [toggleApproveModal, setToggleApproveModal] = useState(false);
   const [toggleEditModal, setToggleEditModal] = useState(false);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
-  const [inputHeight, setInputHeight] = useState(Dimension.setHeight(6));
   const [datePicker, setDatePicker] = useState(formatDate(new Date()));
   const [reasonCancelAdjust, setReasonCancelAdjust] = useState(null);
   const [toggleCancelAdjust, setToggleCancelAdjust] = useState(false);
@@ -131,16 +133,12 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     setToggleEditModal(true);
   }, []);
 
-  const handlePickDate = useCallback((event, date) => {
-    if (event.type === 'set') {
-      setToggleDatePicker(false);
-      const message = 'Ngày điều chỉnh không hợp lệ';
-      compareDate(new Date(), date)
-        ? setDatePicker(formatDate(date))
-        : ToastAlert(message);
-    } else {
-      setToggleDatePicker(false);
-    }
+  const handlePickDate = useCallback(date => {
+    setToggleDatePicker(false);
+    const message = 'Ngày điều chỉnh không hợp lệ';
+    compareDate(new Date(), date)
+      ? setDatePicker(formatDate(date))
+      : ToastAlert(message);
   }, []);
 
   const handleAdjust = () => {
@@ -215,239 +213,227 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     [leaveData],
   );
 
-  const RenderLeaveList = useCallback(
-    ({item}) => {
-      const colorStatus =
-        item.status === 0
-          ? '#f9a86a'
-          : item.status === 1
-          ? '#57b85d'
-          : '#f25157';
-      const bgColorStatus =
-        item.status === 0
-          ? '#fef4eb'
-          : item.status === 1
-          ? '#def8ed'
-          : '#f9dfe0';
-      const status =
-        item.status === 0
-          ? 'Chờ phê duyệt'
-          : item.status === 1
-          ? 'Đã phê duyệt'
-          : 'Từ chối';
-      const icon =
-        item.status === 0
-          ? Images.pending
-          : item.status === 1
-          ? Images.approve
-          : Images.cancel;
+  const RenderLeaveList = memo(({item}) => {
+    const colorStatus =
+      item.status === 0 ? '#f9a86a' : item.status === 1 ? '#57b85d' : '#f25157';
+    const bgColorStatus =
+      item.status === 0 ? '#fef4eb' : item.status === 1 ? '#def8ed' : '#f9dfe0';
+    const status =
+      item.status === 0
+        ? 'Chờ phê duyệt'
+        : item.status === 1
+        ? 'Đã phê duyệt'
+        : 'Từ chối';
+    const icon =
+      item.status === 0
+        ? Images.pending
+        : item.status === 1
+        ? Images.approve
+        : Images.cancel;
 
-      const colorAdjustStatus =
-        item.yc_update === 1
-          ? '#f9a86a'
-          : item.yc_update === 2
-          ? '#57b85d'
-          : '#f25157';
-      const bgColorAdjustStatus =
-        item.yc_update === 1
-          ? '#fef4eb'
-          : item.yc_update === 2
-          ? '#def8ed'
-          : '#f9dfe0';
-      const adjustStatus =
-        item.yc_update === 1
-          ? 'Chờ duyệt đ/c'
-          : item.yc_update === 2
-          ? 'Đã phê duyệt đ/c'
-          : 'Từ chối duyệt đ/c';
-      const iconAdjust =
-        item.yc_update === 1
-          ? Images.pending
-          : item.yc_update === 2
-          ? Images.approve
-          : Images.cancel;
+    const colorAdjustStatus =
+      item.yc_update === 1
+        ? '#f9a86a'
+        : item.yc_update === 2
+        ? '#57b85d'
+        : '#f25157';
+    const bgColorAdjustStatus =
+      item.yc_update === 1
+        ? '#fef4eb'
+        : item.yc_update === 2
+        ? '#def8ed'
+        : '#f9dfe0';
+    const adjustStatus =
+      item.yc_update === 1
+        ? 'Chờ duyệt đ/c'
+        : item.yc_update === 2
+        ? 'Đã phê duyệt đ/c'
+        : 'Từ chối duyệt đ/c';
+    const iconAdjust =
+      item.yc_update === 1
+        ? Images.pending
+        : item.yc_update === 2
+        ? Images.approve
+        : Images.cancel;
 
-      const checkRole = () => {
-        return (
-          (((item.yc_update === 0 && item.status === 0) ||
-            item.yc_update === 1) &&
-            item.id_nhansu !== user?.id &&
-            user?.vitri_ifee === 3 &&
-            item.vitri_ifee > 3) ||
-          (user?.vitri_ifee === 1 &&
-            (item.status === 0 || item.yc_update === 1))
-        );
-      };
-
+    const checkRole = () => {
       return (
-        <View
-          key={item.id}
+        (((item.yc_update === 0 && item.status === 0) ||
+          item.yc_update === 1) &&
+          item.id_nhansu !== user?.id &&
+          user?.vitri_ifee === 3 &&
+          item.vitri_ifee > 3) ||
+        (user?.vitri_ifee === 1 && (item.status === 0 || item.yc_update === 1))
+      );
+    };
+
+    const checkStatus = () => {
+      return (
+        (item.status !== 0 && item.yc_update !== 1) ||
+        user?.vitri_ifee > 3 ||
+        item.id_nhansu === user?.id ||
+        (user?.id === 1 && item.status !== 0 && item.yc_update !== 1)
+      );
+    };
+
+    return (
+      <View
+        key={item.id}
+        style={{
+          marginHorizontal: Dimension.setWidth(3.5),
+          marginBottom: Dimension.setHeight(2),
+          backgroundColor: '#ffffff',
+          elevation: 5,
+          ...shadowIOS,
+          borderRadius: 15,
+          paddingHorizontal: Dimension.setWidth(5),
+          paddingTop: Dimension.setHeight(2),
+          paddingBottom: Dimension.setHeight(0.6),
+        }}>
+        <Text
           style={{
-            marginHorizontal: Dimension.setWidth(3.5),
-            marginBottom: Dimension.setHeight(2),
-            backgroundColor: '#ffffff',
-            elevation: 5,
-            borderRadius: 15,
-            paddingHorizontal: Dimension.setWidth(5),
-            paddingTop: Dimension.setHeight(2),
-            paddingBottom: Dimension.setHeight(0.6),
+            fontFamily: Fonts.SF_SEMIBOLD,
+            fontSize: 18,
+            width: '60%',
           }}>
-          <Text
-            style={{
-              fontFamily: Fonts.SF_SEMIBOLD,
-              fontSize: 19,
-              width: '60%',
-            }}>
-            {item.lydo}
-          </Text>
-          <View style={{position: 'absolute', right: '5%', top: '7%'}}>
-            {((item.status !== 0 && item.yc_update !== 1) ||
-              user?.vitri_ifee > 3 ||
-              item.id_nhansu === user?.id ||
-              user?.id === 1) && (
-              <View
+          {item.lydo}
+        </Text>
+        <View style={{position: 'absolute', right: '5%', top: '7%'}}>
+          {checkStatus() && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                alignSelf: 'flex-start',
+                paddingVertical: Dimension.setHeight(0.5),
+                paddingHorizontal: Dimension.setWidth(1.4),
+                borderRadius: 8,
+                backgroundColor:
+                  item.yc_update === 0 ? bgColorStatus : bgColorAdjustStatus,
+              }}>
+              <Image
+                source={item.yc_update === 0 ? icon : iconAdjust}
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'flex-start',
-                  paddingVertical: Dimension.setHeight(0.5),
-                  paddingHorizontal: Dimension.setWidth(1.4),
-                  borderRadius: 8,
-                  backgroundColor:
-                    item.yc_update === 0 ? bgColorStatus : bgColorAdjustStatus,
-                }}>
-                <Image
-                  source={item.yc_update === 0 ? icon : iconAdjust}
-                  style={{
-                    height: 16,
-                    width: 16,
-                    marginRight: Dimension.setWidth(1),
-                    tintColor:
-                      item.yc_update === 0 ? colorStatus : colorAdjustStatus,
-                  }}
-                />
-                <Text
-                  style={{
-                    color:
-                      item.yc_update === 0 ? colorStatus : colorAdjustStatus,
-                    fontSize: 14,
-                    fontFamily: Fonts.SF_MEDIUM,
-                  }}>
-                  {item.yc_update === 0 ? status : adjustStatus}
-                </Text>
-              </View>
-            )}
-            {checkRole() && (
-              <View
+                  height: 16,
+                  width: 16,
+                  marginRight: Dimension.setWidth(1),
+                  tintColor:
+                    item.yc_update === 0 ? colorStatus : colorAdjustStatus,
+                }}
+              />
+              <Text
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: Dimension.setWidth(17),
-                  alignSelf: 'center',
-                  zIndex: 9999,
+                  color: item.yc_update === 0 ? colorStatus : colorAdjustStatus,
+                  fontSize: 14,
+                  fontFamily: Fonts.SF_MEDIUM,
                 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    item.yc_update === 0
-                      ? handleNonAdjust(true, item)
-                      : handleApproveAdjust(item.id);
-                  }}>
-                  <Image
-                    source={Images.approved}
-                    style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    item.yc_update === 0
-                      ? handleNonAdjust(false, item)
-                      : handleToggleCancel(item);
-                  }}>
-                  <Image
-                    source={Images.cancelled}
-                    style={[styles.approvedIcon, {tintColor: '#f25157'}]}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: Fonts.SF_REGULAR,
-              color: Colors.INACTIVE_GREY,
-              marginBottom: Dimension.setHeight(0.8),
-            }}>
-            ID: {item.id}
-          </Text>
-          <View style={styles.containerEachLine}>
-            <Image source={Images.avatar} style={styles.iconic} />
-            <Text style={styles.title}>Họ tên: </Text>
-            <Text style={styles.content}>{item.hoten}</Text>
-          </View>
-          {item.status !== 0 && (
-            <View style={styles.containerEachLine}>
-              <Image source={Images.avatar} style={styles.iconic} />
-              <Text style={styles.title}>
-                {item.status !== 2 ? 'Người duyệt:' : 'Từ chối bởi:'}{' '}
+                {item.yc_update === 0 ? status : adjustStatus}
               </Text>
-              <Text style={styles.content}>{item.nguoiduyet}</Text>
             </View>
           )}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginBottom: Dimension.setHeight(1.3),
-            }}>
-            <Image source={Images.leaveDate} style={styles.iconic} />
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={styles.title}>Nghỉ từ: </Text>
-              <Text style={styles.content}>
-                {changeFormatDate(item.tungay)}
-              </Text>
-              <Separation />
-              <Text style={styles.content}>
-                {changeFormatDate(item.denngay)}
-              </Text>
-              {item.yc_update === 0 &&
-                item.status === 1 &&
-                item.id_nhansu === user?.id && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleToggleAdjust(item);
-                    }}
-                    style={{
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Image
-                      source={Images.adjust}
-                      style={{
-                        height: 25,
-                        width: 25,
-                      }}
-                    />
-                  </TouchableOpacity>
-                )}
-            </View>
-          </View>
-          {item.ngay_dc && (
-            <View style={styles.containerEachLine}>
-              <Image source={Images.leaveDate} style={styles.iconic} />
-              <Text style={styles.title}>Ngày điều chỉnh: </Text>
-              <Text style={styles.content}>
-                {changeFormatDate(item.ngay_dc)}
-              </Text>
+          {checkRole() && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: Dimension.setWidth(17),
+                alignSelf: 'center',
+                zIndex: 9999,
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  item.yc_update === 0
+                    ? handleNonAdjust(true, item)
+                    : handleApproveAdjust(item.id);
+                }}>
+                <Image
+                  source={Images.approved}
+                  style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  item.yc_update === 0
+                    ? handleNonAdjust(false, item)
+                    : handleToggleCancel(item);
+                }}>
+                <Image
+                  source={Images.cancelled}
+                  style={[styles.approvedIcon, {tintColor: '#f25157'}]}
+                />
+              </TouchableOpacity>
             </View>
           )}
         </View>
-      );
-    },
-    [leaveData],
-  );
+        <Text
+          style={{
+            fontSize: 15,
+            fontFamily: Fonts.SF_REGULAR,
+            color: Colors.INACTIVE_GREY,
+            marginBottom: Dimension.setHeight(0.8),
+          }}>
+          ID: {item.id}
+        </Text>
+        <View style={styles.containerEachLine}>
+          <Image source={Images.avatar} style={styles.iconic} />
+          <Text style={styles.title}>Họ tên: </Text>
+          <Text style={styles.content}>{item.hoten}</Text>
+        </View>
+        {item.status !== 0 && (
+          <View style={styles.containerEachLine}>
+            <Image source={Images.avatar} style={styles.iconic} />
+            <Text style={styles.title}>
+              {item.status !== 2 ? 'Người duyệt:' : 'Từ chối bởi:'}{' '}
+            </Text>
+            <Text style={styles.content}>{item.nguoiduyet}</Text>
+          </View>
+        )}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: Dimension.setHeight(1.3),
+          }}>
+          <Image source={Images.leaveDate} style={styles.iconic} />
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.title}>Nghỉ từ: </Text>
+            <Text style={styles.content}>{changeFormatDate(item.tungay)}</Text>
+            <Separation />
+            <Text style={styles.content}>{changeFormatDate(item.denngay)}</Text>
+            {item.yc_update === 0 &&
+              item.status === 1 &&
+              item.id_nhansu === user?.id && (
+                <TouchableOpacity
+                  onPress={() => {
+                    handleToggleAdjust(item);
+                  }}
+                  style={{
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={Images.adjust}
+                    style={{
+                      height: 25,
+                      width: 25,
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+          </View>
+        </View>
+        {item.ngay_dc && (
+          <View style={styles.containerEachLine}>
+            <Image source={Images.leaveDate} style={styles.iconic} />
+            <Text style={styles.title}>Ngày điều chỉnh: </Text>
+            <Text style={styles.content}>{changeFormatDate(item.ngay_dc)}</Text>
+          </View>
+        )}
+      </View>
+    );
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -528,103 +514,18 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         </View>
       )}
 
-      <Modal
-        isVisible={toggleApproveModal}
-        animationIn="fadeInUp"
-        animationInTiming={100}
-        animationOut="fadeOutDown"
-        animationOutTiming={100}
-        avoidKeyboard={true}>
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            alignSelf: 'center',
-            backgroundColor: checkInput ? '#def8ed' : '#f9dfe0',
-            width: Dimension.setWidth(85),
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 14,
-            paddingHorizontal: Dimension.setWidth(3),
-          }}>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginVertical: Dimension.setHeight(1),
-              borderBottomWidth: 0.8,
-              borderBlockColor: Colors.INACTIVE_GREY,
-              width: '100%',
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.SF_BOLD,
-                fontSize: 20,
-                color: checkInput ? '#57b85d' : '#f25157',
-              }}>
-              {checkInput ? 'Phê duyệt' : 'Từ chối'}
-            </Text>
-          </View>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingVertical: Dimension.setHeight(1.5),
-              paddingHorizontal: Dimension.setWidth(3),
-            }}>
-            <Image source={Images.avatar} style={{height: 55, width: 55}} />
-            <Text
-              style={{
-                marginLeft: Dimension.setWidth(3),
-                fontSize: 18,
-                fontFamily: Fonts.SF_SEMIBOLD,
-              }}>
-              {selectedItem?.hoten}
-            </Text>
-          </View>
-          <View style={styles.containerEachLine}>
-            <Image source={Images.comment} style={styles.iconic} />
-            <TextInput
-              multiline={true}
-              placeholder={
-                checkInput ? 'Nhận xét (Không bắt buộc)' : 'Lý do từ chối'
-              }
-              style={{
-                backgroundColor: '#ffffff',
-                paddingHorizontal: Dimension.setWidth(2),
-                borderRadius: 10,
-                fontFamily: Fonts.SF_REGULAR,
-                width: '70%',
-                height: inputHeight,
-              }}
-              onChangeText={e =>
-                checkInput ? setCommentInput(e) : setReasonCancel(e)
-              }
-              value={checkInput ? commnetInput : reasonCancel}
-              onContentSizeChange={e => {
-                setInputHeight(e.nativeEvent.contentSize.height);
-              }}
-            />
-            <TouchableOpacity
-              onPress={handleSendNonAdjust}
-              style={{
-                backgroundColor: '#d9eafa',
-                padding: 6,
-                marginLeft: Dimension.setWidth(1.6),
-                borderRadius: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Image source={Images.send} style={{width: 25, height: 25}} />
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            onPress={() => setToggleApproveModal(false)}
-            style={{position: 'absolute', right: '5%', top: '5%'}}>
-            <Image source={Images.minusclose} style={styles.btnModal} />
-          </TouchableOpacity>
-        </View>
-      </Modal>
+      <ApproveCancelModal
+        screenName={'registerOnleave'}
+        toggleApproveModal={toggleApproveModal}
+        setToggleApproveModal={setToggleApproveModal}
+        checkInput={checkInput}
+        selectedItem={selectedItem}
+        commnetInput={commnetInput}
+        setCommentInput={setCommentInput}
+        reasonCancel={reasonCancel}
+        setReasonCancel={setReasonCancel}
+        eventFunc={handleSendNonAdjust}
+      />
 
       <Modal
         isVisible={toggleEditModal}
@@ -654,6 +555,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               borderBottomWidth: 0.8,
               borderBlockColor: Colors.INACTIVE_GREY,
               width: '100%',
+              height: Dimension.setHeight(4),
             }}>
             <Text
               style={{
@@ -671,7 +573,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               paddingVertical: Dimension.setHeight(1.5),
               paddingHorizontal: Dimension.setWidth(3),
             }}>
-            <Image source={Images.avatar} style={{height: 55, width: 55}} />
+            <Image src={mainURL + user?.path} style={{height: 55, width: 55}} />
             <Text
               style={{
                 marginLeft: Dimension.setWidth(3),
@@ -734,18 +636,14 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
             <Image source={Images.confirm} style={styles.btnModal} />
           </TouchableOpacity>
         </View>
-
-        {toggleDatePicker && (
-          <View style={styles.calendarView}>
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={new Date()}
-              mode="date"
-              onChange={handlePickDate}
-              display={Platform.OS === 'ios' ? 'inline' : 'default'}
-            />
-          </View>
-        )}
+        <DateTimePickerModal
+          isVisible={toggleDatePicker}
+          mode="date"
+          onConfirm={handlePickDate}
+          onCancel={() => {
+            setToggleDatePicker(false);
+          }}
+        />
       </Modal>
 
       <Modal
@@ -813,13 +711,11 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                 borderRadius: 10,
                 fontFamily: Fonts.SF_REGULAR,
                 width: '70%',
-                height: inputHeight,
+                height: Dimension.setHeight(6),
+                maxHeight: Dimension.setHeight(9),
               }}
               onChangeText={e => setReasonCancelAdjust(e)}
               value={reasonCancelAdjust}
-              onContentSizeChange={e => {
-                setInputHeight(e.nativeEvent.contentSize.height);
-              }}
             />
             <TouchableOpacity
               onPress={handleCancelAdjust}
@@ -865,6 +761,7 @@ const styles = StyleSheet.create({
   iconic: {
     height: 33,
     width: 33,
+    borderRadius: 50,
     marginRight: Dimension.setWidth(2),
   },
 
@@ -906,6 +803,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Dimension.setWidth(2.2),
     paddingVertical: Dimension.setHeight(0.8),
     elevation: 5,
+    ...shadowIOS,
     width: Dimension.setWidth(35),
   },
 
@@ -927,15 +825,7 @@ const styles = StyleSheet.create({
   },
 
   calendarView: {
-    position: 'absolute',
-    top: '25%',
-    left: '5%',
-    zIndex: 999,
-    backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
-    padding: 15,
-    borderRadius: 15,
+    ...calendarView,
   },
 
   btnModal: {

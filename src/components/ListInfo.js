@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
+import {shadowIOS} from '../contants/propsIOS';
 
 const ListInfo = ({info, index}) => {
   const colorText = Colors.INACTIVE_GREY;
@@ -88,7 +89,9 @@ const ListInfo = ({info, index}) => {
             source={Images.year}
           />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {color: colorText}]}>Năm sinh</Text>
+            <Text style={[styles.titleText, {color: colorText}]}>
+              Sinh nhật
+            </Text>
             <Text style={styles.contentText}>{info?.birthday}</Text>
           </View>
         </View>
@@ -150,6 +153,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(10),
     marginTop: Dimension.setHeight(8),
     elevation: 5,
+    ...shadowIOS,
   },
 
   avatarIfee: {
@@ -191,6 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: '100%',
     elevation: 6,
+    ...shadowIOS,
     borderTopWidth: 0.6,
     borderLeftWidth: 0.6,
     borderRightWidth: 0.6,

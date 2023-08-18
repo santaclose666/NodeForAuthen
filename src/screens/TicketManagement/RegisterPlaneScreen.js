@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TextInput,
   ScrollView,
+  Platform,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
@@ -17,15 +18,19 @@ import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import moment from 'moment';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import {
   compareDate,
   formatDate,
+  formatDateToPost,
   formatTime,
+  formatTimeToPost,
   getCurrentTime,
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
+import {registerPlaneTicket} from '../../redux/apiRequest';
+import {calendarView, shadowIOS} from '../../contants/propsIOS';
 
 const planeCompany = [
   {
@@ -159,8 +164,9 @@ const airplane = [
 const RegisterPlaneScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
-  const allStaffs = staffs.map(item => {
-    return {label: item.name, value: item.name};
+  const data = staffs.filter(item => item.tendonvi === 'VST');
+  const allStaffs = data.map(item => {
+    return {label: item.hoten, value: item.id};
   });
   const [multiStaff, setMultiStaff] = useState([]);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
@@ -170,7 +176,8 @@ const RegisterPlaneScreen = ({navigation}) => {
   const [ticketTypeValue, setTicketTypeValue] = useState(ticketType[0].value);
   const [fromValue, setFromValue] = useState(airplane[0].value);
   const [toValue, setToValue] = useState(airplane[1].value);
-  const [input, setInput] = useState('');
+  const [workName, setWorkName] = useState('');
+  const [outSidePerson, setOutSidePerson] = useState(null);
   const [dateTime, setDateTime] = useState('date');
   const [dateValue, setDateValue] = useState(
     moment(new Date()).format('DD/MM/YYYY'),
@@ -178,24 +185,39 @@ const RegisterPlaneScreen = ({navigation}) => {
   const [timeValue, setTimeValue] = useState(getCurrentTime());
   const [kgNumber, setKgNumber] = useState(0);
 
-  const handlePickDate = (event, date) => {
-    if (event.type === 'set') {
-      setToggleDatePicker(false);
-      if (dateTime === 'date') {
-        const message = 'Ngày khởi hành không hợp lệ';
-        compareDate(new Date(), date)
-          ? setDateValue(formatDate(date))
-          : ToastAlert(message);
-      } else {
-        setTimeValue(formatTime(date));
-      }
+  const handlePickDate = date => {
+    if (dateTime === 'date') {
+      const message = 'Ngày khởi hành không hợp lệ';
+      compareDate(new Date(), date)
+        ? setDateValue(formatDate(date))
+        : ToastAlert(message);
     } else {
-      setToggleDatePicker(false);
+      setTimeValue(formatTime(date));
     }
+    setToggleDatePicker(false);
   };
 
   const handleRegister = () => {
-    ToastSuccess('Thành công');
+    const data = {
+      id_user: user?.id,
+      ds_ns: multiStaff,
+      ngoaivien: outSidePerson,
+      chuongtrinh: workName,
+      hangbay: planeCompanyValue,
+      sanbaydi: fromValue,
+      sanbayden: toValue,
+      ngaydi: `${formatDateToPost(dateValue)} ${formatTimeToPost(timeValue)}`,
+      hangve: ticketTypeValue,
+      kygui: kgNumber,
+    };
+
+    if (multiStaff.length !== 0 && workName.length !== 0) {
+      ToastSuccess('Đăng kí thành công');
+      registerPlaneTicket(data);
+      navigation.navigate('HistoryPlaneTicket', {refresh: true});
+    } else {
+      ToastAlert('Thiếu thông tin!');
+    }
   };
 
   return (
@@ -212,6 +234,7 @@ const RegisterPlaneScreen = ({navigation}) => {
             paddingHorizontal: Dimension.setWidth(3),
             paddingTop: Dimension.setHeight(3),
             elevation: 5,
+            ...shadowIOS,
           }}>
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Người đăng kí</Text>
@@ -223,9 +246,25 @@ const RegisterPlaneScreen = ({navigation}) => {
                   fontSize: 19,
                   fontFamily: Fonts.SF_SEMIBOLD,
                 }}>
-                {user?.name}
+                {user?.hoten}
               </Text>
             </View>
+          </View>
+          <View style={styles.containerEachLine}>
+            <Text style={styles.title}>Tên chương trình</Text>
+            <TextInput
+              style={{
+                borderBottomWidth: 0.6,
+                borderBottomColor: 'gray',
+                marginHorizontal: Dimension.setWidth(1.6),
+                fontFamily: Fonts.SF_MEDIUM,
+                fontSize: 16,
+                height: Dimension.setHeight(5),
+              }}
+              placeholder="Nhập tên chương trình"
+              value={workName}
+              onChangeText={e => setWorkName(e)}
+            />
           </View>
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Người công tác</Text>
@@ -275,10 +314,11 @@ const RegisterPlaneScreen = ({navigation}) => {
                 marginHorizontal: Dimension.setWidth(1.6),
                 fontFamily: Fonts.SF_MEDIUM,
                 fontSize: 16,
+                height: Dimension.setHeight(5),
               }}
               placeholder="ex: Người 1, người 2"
-              value={input}
-              onChangeText={e => setInput(e)}
+              value={outSidePerson}
+              onChangeText={e => setOutSidePerson(e)}
             />
           </View>
           <View
@@ -410,15 +450,14 @@ const RegisterPlaneScreen = ({navigation}) => {
                   </View>
                 </View>
               </TouchableOpacity>
-              {toggleDatePicker && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={new Date()}
-                  mode={dateTime}
-                  display={Platform.OS === 'ios' ? 'inline' : 'default'}
-                  onChange={handlePickDate}
-                />
-              )}
+              <DateTimePickerModal
+                isVisible={toggleDatePicker}
+                mode={dateTime}
+                onConfirm={handlePickDate}
+                onCancel={() => {
+                  setToggleDatePicker(false);
+                }}
+              />
             </View>
             <View
               style={[
@@ -631,6 +670,10 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: Dimension.setWidth(1.3),
+  },
+
+  calendarView: {
+    ...calendarView,
   },
 });
 

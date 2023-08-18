@@ -13,6 +13,7 @@ import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
@@ -117,6 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     elevation: 10,
+    ...shadowIOS,
   },
 
   contentDetailContainer: {
@@ -130,6 +132,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.8,
     borderColor: Colors.INACTIVE_GREY,
     elevation: 5,
+    ...shadowIOS,
   },
 
   titleContainer: {

@@ -18,6 +18,7 @@ import ListInfo from '../../components/ListInfo';
 import {useDispatch} from 'react-redux';
 import {logoutUser} from '../../redux/apiRequest';
 import {changeFormatDate} from '../../utils/serviceFunction';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const DetailStaffScreen = ({navigation, route}) => {
   const mainURL = 'https://forestry.ifee.edu.vn/';
@@ -168,6 +169,7 @@ const DetailStaffScreen = ({navigation, route}) => {
             backgroundColor: '#6ac78c',
             alignSelf: 'center',
             elevation: 6,
+            ...shadowIOS,
           }}>
           <Text
             style={{

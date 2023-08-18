@@ -22,7 +22,7 @@ import {useDispatch} from 'react-redux';
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
 import {getVehicleData} from '../../redux/apiRequest';
-import {background} from 'native-base/lib/typescript/theme/styled-system';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const HistoryRegisterVehicleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -233,6 +233,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   marginBottom: Dimension.setHeight(2),
                   backgroundColor: '#ffffff',
                   elevation: 5,
+                  ...shadowIOS,
                   borderRadius: 15,
                   paddingHorizontal: Dimension.setWidth(5),
                   paddingVertical: Dimension.setHeight(2),
@@ -544,6 +545,7 @@ const styles = StyleSheet.create({
     paddingBottom: Dimension.setHeight(1),
     paddingHorizontal: Dimension.setWidth(3),
     elevation: 5,
+    ...shadowIOS,
   },
 
   titleBottomSheet: {

@@ -17,74 +17,86 @@ import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
-import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
+import {
+  approvePlaneTicket,
+  cancelPlaneTicket,
+  getAllPlaneData,
+} from '../../redux/apiRequest';
+import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
+import StatusUI from '../../components/StatusUI';
+import {ApproveCancelModal} from '../../components/Modal';
+import {ToastWarning} from '../../components/Toast';
+import {shadowIOS} from '../../contants/propsIOS';
 
-const HistoryRegisterTicketScreen = ({navigation}) => {
-  const [registationTicketData, setRegistationTicketData] = useState([
-    {
-      workName: 'Điều tra rừng Cà Mau',
-      registerPerson: 'Phạm Quang Dương',
-      insidePerson: 'Lê Ngọc Trọng',
-      outsidePerson: 'Hoàng Văn Huy',
-      planeCompany: 'Vietnam Airline',
-      typeTicket: 'Phổ thông',
-      baggage: '40KG',
-      startPlace: 'Hồ Chí Minh (SGN), Sân bay QT Tân Sơn Nhất',
-      endPlace: 'Cà Mau (CAH), Sân bay Cà Mau',
-      startDate: '08-08-2023',
-      startTime: '13:00 pm',
-      status: 'Pending',
-    },
-    {
-      workName: 'Thiết kế giao diện',
-      registerPerson: 'Phạm Quang Dương',
-      insidePerson: 'Lê Hữu Cường',
-      outsidePerson: 'Nguyễn Vũ Thuật',
-      planeCompany: 'Vietnam Airline',
-      typeTicket: 'Thương gia',
-      baggage: '20KG',
-      startPlace: 'Hồ Chí Minh (SGN), Sân bay QT Tân Sơn Nhất',
-      endPlace: 'Hà Nội (CAH), Sân bay Cà Mau',
-      startDate: '16-06-2023',
-      startTime: '15:00 pm',
-      status: 'Approved',
-    },
-    {
-      workName: 'Thiết kế giao diện',
-      registerPerson: 'Phạm Quang Dương',
-      insidePerson: 'Nguyễn Hữu A',
-      outsidePerson: 'Nguyễn Vũ B',
-      planeCompany: 'Vietnam Airline',
-      typeTicket: 'VIP',
-      baggage: '20KG',
-      startPlace: 'Hồ Chí Minh (SGN), Sân bay QT Tân Sơn Nhất',
-      endPlace: 'Hà Nội (CAH), Sân bay Cà Mau',
-      startDate: '16-06-2023',
-      startTime: '15:00 pm',
-      status: 'Cancelled',
-    },
-  ]);
+const HistoryRegisterTicketScreen = ({navigation, route}) => {
+  const refresh = route?.params?.refresh;
+  const user = useSelector(state => state.auth.login?.currentUser);
+  const ticketPlaneData = useSelector(
+    state => state.ticketPlane.ticketPlane?.data,
+  );
+  const dispatch = useDispatch();
   const [selectedItem, setSelectedItem] = useState(null);
-  const [rerender, setRerender] = useState(false);
+  const [rerenderBottomSheet, setRerenderBottomSheet] = useState(false);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [checkInput, setCheckInput] = useState(null);
+  const [commentInput, setCommentInput] = useState('');
+  const [reasonCancel, setReasonCancel] = useState('');
+  const [refreshComponent, setRefreshComponent] = useState(false);
 
   const bottomSheetModalRef = useRef(null);
 
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
   const handlePresentModalPress = useCallback(() => {
-    setRerender(true);
+    setRerenderBottomSheet(true);
   }, [selectedItem]);
   const handleSheetChanges = useCallback(index => {
     console.log('handleSheetChanges', index);
   }, []);
 
-  useEffect(() => {
-    if (rerender) {
-      bottomSheetModalRef.current?.present();
-      setRerender(false);
+  const fetchPlaneData = async () => {
+    await getAllPlaneData(dispatch);
+  };
+
+  const handleApprove = useCallback(item => {
+    setSelectedItem(item);
+    setCheckInput(true);
+    setToggleModal(true);
+  }, []);
+
+  const handleCancel = useCallback(item => {
+    setSelectedItem(item);
+    setCheckInput(false);
+    setToggleModal(true);
+  }, []);
+
+  const handleApproveCancel = () => {
+    const data = {
+      id_dulieu: selectedItem.id,
+      noidung: checkInput ? commentInput : reasonCancel,
+    };
+    if (
+      (commentInput.length !== 0 || reasonCancel.length !== 0) &&
+      selectedItem !== null
+    ) {
+      checkInput ? approvePlaneTicket(data) : cancelPlaneTicket(data);
+      setRefreshComponent(!refreshComponent);
+      setToggleModal(false);
+    } else {
+      ToastWarning('Nhập đầy đủ thông tin');
     }
-  }, [rerender, selectedItem]);
+  };
+
+  useEffect(() => {
+    fetchPlaneData();
+
+    if (rerenderBottomSheet) {
+      bottomSheetModalRef.current?.present();
+      setRerenderBottomSheet(false);
+    }
+  }, [rerenderBottomSheet, refreshComponent, refresh]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -93,25 +105,55 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{flex: 1, marginTop: Dimension.setHeight(2)}}>
-          {registationTicketData.map((item, index) => {
+          {ticketPlaneData?.map((item, index) => {
             const colorStatus =
-              item.status === 'Pending'
+              item.status === 0
                 ? '#f9a86a'
-                : item.status === 'Approved'
+                : item.status === 1
                 ? '#57b85d'
                 : '#f25157';
             const bgColorStatus =
-              item.status === 'Pending'
+              item.status === 0
                 ? '#fef4eb'
-                : item.status === 'Approved'
+                : item.status === 1
                 ? '#def8ed'
                 : '#f9dfe0';
-            const indexString = item.endPlace.indexOf('(');
-            const filterPlace = item.endPlace.slice(0, indexString);
-            const indexStartPlace = item.startPlace.indexOf('Sân');
-            const filterStartPlace = item.startPlace.slice(indexStartPlace);
-            const indexEndPlace = item.endPlace.indexOf('Sân');
-            const filterEndPlace = item.endPlace.slice(indexEndPlace);
+            const status =
+              item.status === 0
+                ? 'Chờ phê duyệt'
+                : item.status === 1
+                ? 'Đã phê duyệt'
+                : 'Đã hủy';
+            const icon =
+              item.status === 0
+                ? Images.pending
+                : item.status === 1
+                ? Images.approve
+                : Images.cancel;
+            const indexString = item.sanbayden.indexOf('(');
+            const filterPlace = item.sanbayden.slice(0, indexString);
+            const indexStartPlace = item.sanbaydi.indexOf('Sân');
+            const filterStartPlace = item.sanbaydi.slice(indexStartPlace);
+            const indexEndPlace = item.sanbayden.indexOf('Sân');
+            const filterEndPlace = item.sanbayden.slice(indexEndPlace);
+
+            const checktStatus = () => {
+              return (
+                (item.status !== 0 &&
+                  (user?.id_ht === 1 ||
+                    user?.id_ht === 20 ||
+                    user?.id_ht === 28)) ||
+                (user?.id_ht !== 1 && user?.id_ht !== 20 && user?.id_ht !== 28)
+              );
+            };
+
+            const checkRole = () => {
+              return (
+                item.status === 0 &&
+                (user?.id_ht === 1 || user?.id_ht === 20 || user?.id_ht === 28)
+              );
+            };
+
             return (
               <TouchableOpacity
                 onPress={() => {
@@ -131,6 +173,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                   marginBottom: Dimension.setHeight(2),
                   backgroundColor: '#ffffff',
                   elevation: 5,
+                  ...shadowIOS,
                   borderRadius: 15,
                   paddingHorizontal: Dimension.setWidth(5),
                   paddingVertical: Dimension.setHeight(2),
@@ -140,44 +183,53 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+                    width: '66%',
                   }}>
-                  <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 19}}>
-                    {item.workName}
+                  <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18}}>
+                    {item.chuongtrinh}
                   </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      paddingVertical: Dimension.setHeight(0.5),
-                      paddingHorizontal: Dimension.setWidth(1.4),
-                      borderRadius: 8,
-                      backgroundColor: bgColorStatus,
-                    }}>
-                    <Image
-                      source={
-                        item.status === 'Pending'
-                          ? Images.pending
-                          : item.status === 'Approved'
-                          ? Images.approve
-                          : Images.cancel
-                      }
-                      style={{
-                        height: 16,
-                        width: 16,
-                        marginRight: Dimension.setWidth(1),
-                        tintColor: colorStatus,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        color: colorStatus,
-                        fontSize: 14,
-                        fontFamily: Fonts.SF_MEDIUM,
-                      }}>
-                      {item.status}
-                    </Text>
-                  </View>
                 </View>
+                <View style={{position: 'absolute', right: '5%', top: '7%'}}>
+                  {checktStatus() && (
+                    <StatusUI
+                      status={status}
+                      colorStatus={colorStatus}
+                      bgColorStatus={bgColorStatus}
+                      icon={icon}
+                    />
+                  )}
+                  {checkRole() && (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: Dimension.setWidth(17),
+                        alignSelf: 'center',
+                        zIndex: 9999,
+                      }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          handleApprove(item);
+                        }}>
+                        <Image
+                          source={Images.approved}
+                          style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => {
+                          handleCancel(item);
+                        }}>
+                        <Image
+                          source={Images.cancelled}
+                          style={[styles.approvedIcon, {tintColor: '#f25157'}]}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+
                 <Text
                   style={{
                     fontSize: 16,
@@ -189,21 +241,33 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                 </Text>
                 <View style={styles.containerEachLine}>
                   <Image source={Images.insideperson} style={styles.Iconic} />
-                  <Text style={styles.title}>Trong viện: </Text>
-                  <Text style={styles.content}>{item.insidePerson}</Text>
+                  <Text
+                    style={[
+                      styles.title,
+                      {alignSelf: 'flex-start', width: '90%'},
+                    ]}>
+                    Trong viện:{' '}
+                    <Text style={styles.content}>
+                      {item.trongvien.map((item, index) => {
+                        return <Text key={index}>{item.hoten}, </Text>;
+                      })}
+                    </Text>
+                  </Text>
                 </View>
                 <View style={styles.containerEachLine}>
                   <Image source={Images.outsideperson} style={styles.Iconic} />
                   <Text style={styles.title}>Ngoài viện: </Text>
-                  <Text style={styles.content}>{item.outsidePerson}</Text>
+                  <Text style={styles.content}>
+                    {item.ngoaivien.map((item, index) => {
+                      return <Text key={index}>{item}</Text>;
+                    })}
+                  </Text>
                 </View>
 
                 <View style={styles.containerEachLine}>
                   <Image source={Images.datetime} style={styles.Iconic} />
                   <Text style={styles.title}>Thời gian:{'  '}</Text>
-                  <Text style={styles.content}>{item.startTime}</Text>
-                  <Separation />
-                  <Text style={styles.content}>{item.startDate}</Text>
+                  <Text style={styles.content}>{item.ngaydi}</Text>
                 </View>
               </TouchableOpacity>
             );
@@ -246,14 +310,16 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      width: '66%',
+                      width: '90%',
                     }}>
-                    <Text style={styles.title}>Tên chương trình:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.workName}
+                    <Text style={styles.title}>
+                      Tên chương trình:{'  '}
+                      <Text
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.chuongtrinh}
+                      </Text>
                     </Text>
                   </View>
                 </View>
@@ -288,25 +354,24 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.registerPerson}
+                      {selectedItem.name_user}
                     </Text>
                   </View>
                 </View>
                 <View style={styles.containerEachLine}>
                   <Image source={Images.insideperson} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Người trong viện:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.insidePerson}
+                  <Text
+                    style={[
+                      styles.title,
+                      {alignSelf: 'flex-start', width: '90%'},
+                    ]}>
+                    Người trong viện:{' '}
+                    <Text style={styles.content}>
+                      {selectedItem.trongvien.map((item, index) => {
+                        return <Text key={index}>{item.hoten}, </Text>;
+                      })}
                     </Text>
-                  </View>
+                  </Text>
                 </View>
                 <View style={styles.containerEachLine}>
                   <Image source={Images.outsideperson} style={styles.Iconic} />
@@ -320,7 +385,9 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.outsidePerson}
+                      {selectedItem.ngoaivien.map((item, index) => {
+                        return <Text key={index}>{item}</Text>;
+                      })}
                     </Text>
                   </View>
                 </View>
@@ -341,7 +408,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.planeCompany}
+                      {selectedItem.hangbay}
                     </Text>
                   </View>
                 </View>
@@ -357,7 +424,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.typeTicket}
+                      {selectedItem.hangve}
                     </Text>
                   </View>
                 </View>
@@ -373,7 +440,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.baggage}
+                      {selectedItem.kygui}KG
                     </Text>
                   </View>
                 </View>
@@ -417,9 +484,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                       width: '66%',
                     }}>
                     <Text style={styles.title}>Khởi hành lúc:{'  '}</Text>
-                    <Text style={styles.content}>{selectedItem.startTime}</Text>
-                    <Separation />
-                    <Text style={styles.content}>{selectedItem.startDate}</Text>
+                    <Text style={styles.content}>{selectedItem.ngaydi}</Text>
                   </View>
                 </View>
               </View>
@@ -427,6 +492,18 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
           </BottomSheetModal>
         )}
       </BottomSheetModalProvider>
+      <ApproveCancelModal
+        screenName={'registerVehicalAndTicket'}
+        toggleApproveModal={toggleModal}
+        setToggleApproveModal={setToggleModal}
+        checkInput={checkInput}
+        selectedItem={selectedItem}
+        commnetInput={commentInput}
+        setCommentInput={setCommentInput}
+        reasonCancel={reasonCancel}
+        setReasonCancel={setReasonCancel}
+        eventFunc={handleApproveCancel}
+      />
     </SafeAreaView>
   );
 };
@@ -470,6 +547,7 @@ const styles = StyleSheet.create({
     paddingBottom: Dimension.setHeight(1),
     paddingHorizontal: Dimension.setWidth(3),
     elevation: 5,
+    ...shadowIOS,
   },
 
   titleBottomSheet: {
@@ -478,6 +556,11 @@ const styles = StyleSheet.create({
     color: '#8bc7bc',
     lineHeight: Dimension.setHeight(2.2),
     marginBottom: Dimension.setHeight(1.6),
+  },
+
+  approvedIcon: {
+    width: 30,
+    height: 30,
   },
 });
 

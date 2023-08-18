@@ -18,6 +18,7 @@ import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
 import {useSelector} from 'react-redux';
 import {Dropdown} from 'react-native-element-dropdown';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const typeStaff = [{value: 'XMG'}, {value: 'VST'}];
 
@@ -35,7 +36,7 @@ const StaffListScreen = ({navigation}) => {
     'Kinh doanh',
     'Đào tạo',
   ];
-  const VSTGroup = ['Tất cả', 'CNMT', 'STPTR', 'UDVT', 'TTDV'];
+  const IFEEGroup = ['Tất cả', 'CNMT', 'STPTR', 'UDVT', 'TTDV'];
   const [selectId, setSelectId] = useState(0);
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
 
@@ -75,7 +76,7 @@ const StaffListScreen = ({navigation}) => {
       return data.filter(
         item =>
           item.tenphong ===
-          (typeStaffValue === 'XMG' ? XMGGroup[index] : VSTGroup[index]),
+          (typeStaffValue === 'XMG' ? XMGGroup[index] : IFEEGroup[index]),
       );
     }
   }, []);
@@ -98,6 +99,7 @@ const StaffListScreen = ({navigation}) => {
             paddingHorizontal: Dimension.setWidth(1),
             paddingVertical: Dimension.setHeight(1),
             elevation: 10,
+            ...shadowIOS,
           }}>
           <View
             style={{
@@ -210,7 +212,7 @@ const StaffListScreen = ({navigation}) => {
           </Text>
         </View>
         <FlatList
-          data={typeStaffValue === 'XMG' ? XMGGroup : VSTGroup}
+          data={typeStaffValue === 'XMG' ? XMGGroup : IFEEGroup}
           keyExtractor={(_, index) => index}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -334,7 +336,7 @@ const styles = StyleSheet.create({
   },
 
   dropdown: {
-    width: Dimension.setWidth(15),
+    width: Dimension.setWidth(20),
   },
   containerOptionStyle: {
     borderRadius: 12,

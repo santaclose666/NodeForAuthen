@@ -7,6 +7,7 @@ import {
   StyleSheet,
   SafeAreaView,
   TextInput,
+  Platform,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
@@ -16,7 +17,7 @@ import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import {
   compareDate,
@@ -25,6 +26,7 @@ import {
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
 import {registerOnLeave} from '../../redux/apiRequest';
+import {calendarView, shadowIOS} from '../../contants/propsIOS';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 0.5},
@@ -42,16 +44,12 @@ const CreateApplyLeaveScreen = ({navigation}) => {
   const [startDay, setStartDay] = useState(formatDate(new Date()));
   const [inputDecription, setInputDecription] = useState('');
 
-  const handlePickDate = (event, date) => {
-    if (event.type === 'set') {
-      setToggleDatePicker(false);
-      const message = 'Ngày bắt đầu không hợp lệ';
-      compareDate(new Date(), date)
-        ? setStartDay(formatDate(date))
-        : ToastAlert(message);
-    } else {
-      setToggleDatePicker(false);
-    }
+  const handlePickDate = date => {
+    setToggleDatePicker(false);
+    const message = 'Ngày bắt đầu không hợp lệ';
+    compareDate(new Date(), date)
+      ? setStartDay(formatDate(date))
+      : ToastAlert(message);
   };
 
   const handleRegister = () => {
@@ -91,6 +89,7 @@ const CreateApplyLeaveScreen = ({navigation}) => {
           paddingHorizontal: Dimension.setWidth(4),
           paddingTop: Dimension.setHeight(3),
           elevation: 5,
+          ...shadowIOS,
         }}>
         <View style={styles.containerEachLine}>
           <Text style={styles.title}>Người đăng kí</Text>
@@ -163,6 +162,14 @@ const CreateApplyLeaveScreen = ({navigation}) => {
               </View>
             </View>
           </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={toggleDatePicker}
+            mode="date"
+            onConfirm={handlePickDate}
+            onCancel={() => {
+              setToggleDatePicker(false);
+            }}
+          />
           {valueNumberOfDay === 'Nhiều ngày' && (
             <View
               style={[
@@ -226,18 +233,6 @@ const CreateApplyLeaveScreen = ({navigation}) => {
           />
         </View>
         <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
-
-        {toggleDatePicker && (
-          <View style={styles.calendarView}>
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={new Date()}
-              mode="date"
-              onChange={handlePickDate}
-              display={Platform.OS === 'ios' ? 'inline' : 'default'}
-            />
-          </View>
-        )}
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
@@ -323,15 +318,7 @@ const styles = StyleSheet.create({
   },
 
   calendarView: {
-    position: 'absolute',
-    top: '25%',
-    left: '5%',
-    zIndex: 999,
-    backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
-    padding: 15,
-    borderRadius: 15,
+    ...calendarView,
   },
 
   dateTimePickerContainer: {

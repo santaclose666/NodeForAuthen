@@ -28,6 +28,11 @@ import {
 } from './vehicleSlice';
 import {getWorkFailed, getWorkStart, getWorkSuccess} from './workSlice';
 import {ToastAlert, ToastSuccess} from '../components/Toast';
+import {
+  getTicketPlaneFailed,
+  getTicketPlaneStart,
+  getTicketPlaneSuccess,
+} from './ticketSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -248,6 +253,95 @@ export const registerVehicle = async data => {
     ToastSuccess('Thành công');
   } catch (error) {
     ToastAlert('Gửi đề nghị thất bại!');
+  }
+};
+
+export const registerWorkSchedule = async data => {
+  try {
+    const op1 = data.op1_tenchuongtrinh;
+    const op2 = data.op2_tenchuongtrinh;
+    const checkOpp =
+      data.op_tenchuongtrinh === 1
+        ? {op1_tenchuongtrinh: op1}
+        : {op2_tenchuongtrinh: op2};
+
+    await axios.post(`https://management.ifee.edu.vn/api/lichcongtac/reg`, {
+      id_user: data.id_user,
+      tungay: data.tungay,
+      denngay: data.denngay,
+      diadiem: data.diadiem,
+      noidung: data.noidung,
+      daumoi: data.daumoi,
+      thanhphan: data.thanhphan,
+      ghichu: data.ghichu,
+      op_tenchuongtrinh: data.op_tenchuongtrinh,
+      ...checkOpp,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  REGISTER PLANE DATA  ////////////////////
+
+export const registerPlaneTicket = async data => {
+  try {
+    console.log(data);
+    await axios.post(
+      `https://management.ifee.edu.vn/api/vemaybay/reg/${data.id_user}`,
+      {
+        ds_ns: data.ds_ns,
+        ngoaivien: data.ngoaivien,
+        chuongtrinh: data.chuongtrinh,
+        hangbay: data.hangbay,
+        sanbaydi: data.sanbaydi,
+        sanbayden: data.sanbayden,
+        ngaydi: data.ngaydi,
+        hangve: data.hangve,
+        kygui: data.kygui,
+      },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllPlaneData = async dispatch => {
+  dispatch(getTicketPlaneStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/vemaybay/danhsach`,
+    );
+
+    const data = res.data.data;
+    dispatch(getTicketPlaneSuccess(data));
+  } catch (error) {
+    dispatch(getTicketPlaneFailed());
+  }
+};
+
+export const approvePlaneTicket = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/vemaybay/pheduyet/${data.id_dulieu}`,
+      {
+        noidung: data.noidung,
+      },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelPlaneTicket = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/vemaybay/tuchoi/${data.id_dulieu}`,
+      {
+        noidung: data.noidung,
+      },
+    );
+  } catch (error) {
     console.log(error);
   }
 };
