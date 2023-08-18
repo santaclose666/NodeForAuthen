@@ -164,7 +164,7 @@ const RegisterPlaneScreen = ({navigation}) => {
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
   const data = staffs.filter(item => item.tendonvi === 'VST');
   const allStaffs = data.map(item => {
-    return {label: item.hoten, value: item.hoten};
+    return {label: item.hoten, value: item.id};
   });
   const [multiStaff, setMultiStaff] = useState([]);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
@@ -201,6 +201,7 @@ const RegisterPlaneScreen = ({navigation}) => {
 
   const handleRegister = () => {
     const data = {
+      id_user: user?.id,
       ds_ns: multiStaff,
       ngoaivien: outSidePerson,
       chuongtrinh: workName,
@@ -214,8 +215,8 @@ const RegisterPlaneScreen = ({navigation}) => {
 
     if (multiStaff.length !== 0 && workName.length !== 0) {
       ToastSuccess('Đăng kí thành công');
-      // registerPlaneTicket(data);
-      navigation.navigate('HistoryPlaneTicket');
+      registerPlaneTicket(data);
+      navigation.navigate('HistoryPlaneTicket', {refresh: true});
     } else {
       ToastAlert('Thiếu thông tin!');
     }

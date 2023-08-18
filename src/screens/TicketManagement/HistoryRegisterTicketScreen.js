@@ -18,22 +18,30 @@ import {
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import Colors from '../../contants/Colors';
-import {getAllPlaneData} from '../../redux/apiRequest';
+import {
+  approvePlaneTicket,
+  cancelPlaneTicket,
+  getAllPlaneData,
+} from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
+import StatusUI from '../../components/StatusUI';
+import {ApproveCancelModal} from '../../components/Modal';
+import {ToastWarning} from '../../components/Toast';
 
-const HistoryRegisterTicketScreen = ({navigation}) => {
+const HistoryRegisterTicketScreen = ({navigation, route}) => {
+  const refresh = route?.params?.refresh;
   const user = useSelector(state => state.auth.login?.currentUser);
   const ticketPlaneData = useSelector(
     state => state.ticketPlane.ticketPlane?.data,
   );
   const dispatch = useDispatch();
   const [selectedItem, setSelectedItem] = useState(null);
-  const [rerender, setRerender] = useState(false);
+  const [rerenderBottomSheet, setRerenderBottomSheet] = useState(false);
   const [toggleModal, setToggleModal] = useState(false);
   const [checkInput, setCheckInput] = useState(null);
-  const [commentInput, setCommentInput] = useState(null);
-  const [reasonCancel, setReasonCancel] = useState(null);
+  const [commentInput, setCommentInput] = useState('');
+  const [reasonCancel, setReasonCancel] = useState('');
   const [refreshComponent, setRefreshComponent] = useState(false);
 
   const bottomSheetModalRef = useRef(null);
@@ -41,7 +49,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
   const handlePresentModalPress = useCallback(() => {
-    setRerender(true);
+    setRerenderBottomSheet(true);
   }, [selectedItem]);
   const handleSheetChanges = useCallback(index => {
     console.log('handleSheetChanges', index);
@@ -51,17 +59,43 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
     await getAllPlaneData(dispatch);
   };
 
-  const handleApproveCancel = () => {};
+  const handleApprove = useCallback(item => {
+    setSelectedItem(item);
+    setCheckInput(true);
+    setToggleModal(true);
+  }, []);
+
+  const handleCancel = useCallback(item => {
+    setSelectedItem(item);
+    setCheckInput(false);
+    setToggleModal(true);
+  }, []);
+
+  const handleApproveCancel = () => {
+    const data = {
+      id_dulieu: selectedItem.id,
+      noidung: checkInput ? commentInput : reasonCancel,
+    };
+    if (
+      (commentInput.length !== 0 || reasonCancel.length !== 0) &&
+      selectedItem !== null
+    ) {
+      checkInput ? approvePlaneTicket(data) : cancelPlaneTicket(data);
+      setRefreshComponent(!refreshComponent);
+      setToggleModal(false);
+    } else {
+      ToastWarning('Nhập đầy đủ thông tin');
+    }
+  };
 
   useEffect(() => {
     fetchPlaneData();
-    console.log(ticketPlaneData);
 
-    if (rerender) {
+    if (rerenderBottomSheet) {
       bottomSheetModalRef.current?.present();
-      setRerender(false);
+      setRerenderBottomSheet(false);
     }
-  }, [rerender, selectedItem]);
+  }, [rerenderBottomSheet, refreshComponent, refresh]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -70,7 +104,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{flex: 1, marginTop: Dimension.setHeight(2)}}>
-          {ticketPlaneData.map((item, index) => {
+          {ticketPlaneData?.map((item, index) => {
             const colorStatus =
               item.status === 0
                 ? '#f9a86a'
@@ -89,7 +123,12 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                 : item.status === 1
                 ? 'Đã phê duyệt'
                 : 'Đã hủy';
-
+            const icon =
+              item.status === 0
+                ? Images.pending
+                : item.status === 1
+                ? Images.approve
+                : Images.cancel;
             const indexString = item.sanbayden.indexOf('(');
             const filterPlace = item.sanbayden.slice(0, indexString);
             const indexStartPlace = item.sanbaydi.indexOf('Sân');
@@ -150,40 +189,12 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                 </View>
                 <View style={{position: 'absolute', right: '5%', top: '7%'}}>
                   {checktStatus() && (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingVertical: Dimension.setHeight(0.5),
-                        paddingHorizontal: Dimension.setWidth(1.4),
-                        borderRadius: 8,
-                        backgroundColor: bgColorStatus,
-                        zIndex: 999,
-                      }}>
-                      <Image
-                        source={
-                          item.status === 0
-                            ? Images.pending
-                            : item.status === 1
-                            ? Images.approve
-                            : Images.cancel
-                        }
-                        style={{
-                          height: 16,
-                          width: 16,
-                          marginRight: Dimension.setWidth(1),
-                          tintColor: colorStatus,
-                        }}
-                      />
-                      <Text
-                        style={{
-                          color: colorStatus,
-                          fontSize: 14,
-                          fontFamily: Fonts.SF_MEDIUM,
-                        }}>
-                        {status}
-                      </Text>
-                    </View>
+                    <StatusUI
+                      status={status}
+                      colorStatus={colorStatus}
+                      bgColorStatus={bgColorStatus}
+                      icon={icon}
+                    />
                   )}
                   {checkRole() && (
                     <View
@@ -197,9 +208,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                       }}>
                       <TouchableOpacity
                         onPress={() => {
-                          item.yc_update === 0
-                            ? handleNonAdjust(true, item)
-                            : handleApproveAdjust(item.id);
+                          handleApprove(item);
                         }}>
                         <Image
                           source={Images.approved}
@@ -208,9 +217,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={() => {
-                          item.yc_update === 0
-                            ? handleNonAdjust(false, item)
-                            : handleToggleCancel(item);
+                          handleCancel(item);
                         }}>
                         <Image
                           source={Images.cancelled}
@@ -483,6 +490,18 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
           </BottomSheetModal>
         )}
       </BottomSheetModalProvider>
+      <ApproveCancelModal
+        screenName={'registerVehicalAndTicket'}
+        toggleApproveModal={toggleModal}
+        setToggleApproveModal={setToggleModal}
+        checkInput={checkInput}
+        selectedItem={selectedItem}
+        commnetInput={commentInput}
+        setCommentInput={setCommentInput}
+        reasonCancel={reasonCancel}
+        setReasonCancel={setReasonCancel}
+        eventFunc={handleApproveCancel}
+      />
     </SafeAreaView>
   );
 };

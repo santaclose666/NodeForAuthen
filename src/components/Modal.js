@@ -15,6 +15,7 @@ import Colors from '../contants/Colors';
 import {useSelector} from 'react-redux';
 
 export const ApproveCancelModal = ({
+  screenName,
   toggleApproveModal,
   setToggleApproveModal,
   checkInput,
@@ -27,7 +28,7 @@ export const ApproveCancelModal = ({
 }) => {
   const mainURL = 'https://forestry.ifee.edu.vn/';
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
-  const user = staffs.filter(
+  const avatar = staffs.filter(
     item => item.id === selectedItem?.id_nhansu && item.tendonvi === 'VST',
   );
 
@@ -70,26 +71,52 @@ export const ApproveCancelModal = ({
             {checkInput ? 'Phê duyệt' : 'Từ chối'}
           </Text>
         </View>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingVertical: Dimension.setHeight(1.5),
-            paddingHorizontal: Dimension.setWidth(3),
-          }}>
-          <Image
-            src={mainURL + user[0]?.path}
-            style={{height: 55, width: 55}}
-          />
-          <Text
+        {screenName === 'registerOnleave' && (
+          <View
             style={{
-              marginLeft: Dimension.setWidth(3),
-              fontSize: 18,
-              fontFamily: Fonts.SF_SEMIBOLD,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
             }}>
-            {selectedItem?.hoten}
-          </Text>
-        </View>
+            <Image
+              src={mainURL + avatar[0]?.path}
+              style={{height: 55, width: 55}}
+            />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: 18,
+                fontFamily: Fonts.SF_SEMIBOLD,
+              }}>
+              {selectedItem?.hoten}
+            </Text>
+          </View>
+        )}
+        {screenName === 'registerVehicalAndTicket' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image
+              source={Images.workSchedule}
+              style={{height: 55, width: 55}}
+            />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: 18,
+                fontFamily: Fonts.SF_SEMIBOLD,
+              }}>
+              {selectedItem?.chuongtrinh}
+            </Text>
+          </View>
+        )}
+
         <View style={styles.containerEachLine}>
           <Image source={Images.comment} style={styles.iconic} />
           <TextInput

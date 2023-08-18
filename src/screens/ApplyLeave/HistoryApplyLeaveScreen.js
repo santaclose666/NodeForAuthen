@@ -37,6 +37,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {ApproveCancelModal} from '../../components/Modal';
 
 const HistoryApplyLeaveScreen = ({navigation, route}) => {
+  const mainURL = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
   const refresh = route?.params?.refresh;
@@ -516,6 +517,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       )}
 
       <ApproveCancelModal
+        screenName={'registerOnleave'}
         toggleApproveModal={toggleApproveModal}
         setToggleApproveModal={setToggleApproveModal}
         checkInput={checkInput}
@@ -526,103 +528,6 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         setReasonCancel={setReasonCancel}
         eventFunc={handleSendNonAdjust}
       />
-
-      {/* <Modal
-        isVisible={toggleApproveModal}
-        animationIn="fadeInUp"
-        animationInTiming={100}
-        animationOut="fadeOutDown"
-        animationOutTiming={100}
-        avoidKeyboard={true}>
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            alignSelf: 'center',
-            backgroundColor: checkInput ? '#def8ed' : '#f9dfe0',
-            width: Dimension.setWidth(85),
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 14,
-            paddingHorizontal: Dimension.setWidth(3),
-          }}>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginVertical: Dimension.setHeight(1),
-              borderBottomWidth: 0.8,
-              borderBlockColor: Colors.INACTIVE_GREY,
-              width: '100%',
-              height: Dimension.setHeight(5),
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.SF_BOLD,
-                fontSize: 20,
-                color: checkInput ? '#57b85d' : '#f25157',
-              }}>
-              {checkInput ? 'Phê duyệt' : 'Từ chối'}
-            </Text>
-          </View>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingVertical: Dimension.setHeight(1.5),
-              paddingHorizontal: Dimension.setWidth(3),
-            }}>
-            <Image source={Images.avatar} style={{height: 55, width: 55}} />
-            <Text
-              style={{
-                marginLeft: Dimension.setWidth(3),
-                fontSize: 18,
-                fontFamily: Fonts.SF_SEMIBOLD,
-              }}>
-              {selectedItem?.hoten}
-            </Text>
-          </View>
-          <View style={styles.containerEachLine}>
-            <Image source={Images.comment} style={styles.iconic} />
-            <TextInput
-              multiline={true}
-              placeholder={
-                checkInput ? 'Nhận xét (Không bắt buộc)' : 'Lý do từ chối'
-              }
-              style={{
-                backgroundColor: '#ffffff',
-                paddingHorizontal: Dimension.setWidth(2),
-                borderRadius: 10,
-                fontFamily: Fonts.SF_REGULAR,
-                width: '70%',
-                height: Dimension.setHeight(6),
-                maxHeight: Dimension.setHeight(9),
-              }}
-              onChangeText={e =>
-                checkInput ? setCommentInput(e) : setReasonCancel(e)
-              }
-              value={checkInput ? commnetInput : reasonCancel}
-            />
-            <TouchableOpacity
-              onPress={handleSendNonAdjust}
-              style={{
-                backgroundColor: '#d9eafa',
-                padding: 6,
-                marginLeft: Dimension.setWidth(1.6),
-                borderRadius: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Image source={Images.send} style={{width: 25, height: 25}} />
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            onPress={() => setToggleApproveModal(false)}
-            style={{position: 'absolute', right: '5%', top: '5%'}}>
-            <Image source={Images.minusclose} style={styles.btnModal} />
-          </TouchableOpacity>
-        </View>
-      </Modal> */}
 
       <Modal
         isVisible={toggleEditModal}
@@ -669,7 +574,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               paddingVertical: Dimension.setHeight(1.5),
               paddingHorizontal: Dimension.setWidth(3),
             }}>
-            <Image source={Images.avatar} style={{height: 55, width: 55}} />
+            <Image src={mainURL + user?.path} style={{height: 55, width: 55}} />
             <Text
               style={{
                 marginLeft: Dimension.setWidth(3),
@@ -861,6 +766,7 @@ const styles = StyleSheet.create({
   iconic: {
     height: 33,
     width: 33,
+    borderRadius: 50,
     marginRight: Dimension.setWidth(2),
   },
 

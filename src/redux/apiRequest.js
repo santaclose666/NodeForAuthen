@@ -244,6 +244,7 @@ export const registerWorkSchedule = async data => {
 
 export const registerPlaneTicket = async data => {
   try {
+    console.log(data);
     await axios.post(
       `https://management.ifee.edu.vn/api/vemaybay/reg/${data.id_user}`,
       {
@@ -274,5 +275,31 @@ export const getAllPlaneData = async dispatch => {
     dispatch(getTicketPlaneSuccess(data));
   } catch (error) {
     dispatch(getTicketPlaneFailed());
+  }
+};
+
+export const approvePlaneTicket = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/vemaybay/pheduyet/${data.id_dulieu}`,
+      {
+        noidung: data.noidung,
+      },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelPlaneTicket = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/vemaybay/tuchoi/${data.id_dulieu}`,
+      {
+        noidung: data.noidung,
+      },
+    );
+  } catch (error) {
+    console.log(error);
   }
 };
