@@ -91,6 +91,7 @@ const CreateApplyLeaveScreen = ({navigation}) => {
           paddingHorizontal: Dimension.setWidth(4),
           paddingTop: Dimension.setHeight(3),
           elevation: 5,
+          ...shadowIOS,
         }}>
         <View style={styles.containerEachLine}>
           <Text style={styles.title}>Người đăng kí</Text>

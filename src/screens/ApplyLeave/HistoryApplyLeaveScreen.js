@@ -35,6 +35,7 @@ import Colors from '../../contants/Colors';
 import {ToastWarning, ToastAlert} from '../../components/Toast';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {ApproveCancelModal} from '../../components/Modal';
+import {shadowIOS} from '../../contants/ShadowIOS';
 
 const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const mainURL = 'https://forestry.ifee.edu.vn/';
@@ -287,6 +288,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
           marginBottom: Dimension.setHeight(2),
           backgroundColor: '#ffffff',
           elevation: 5,
+          ...shadowIOS,
           borderRadius: 15,
           paddingHorizontal: Dimension.setWidth(5),
           paddingTop: Dimension.setHeight(2),
@@ -808,6 +810,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Dimension.setWidth(2.2),
     paddingVertical: Dimension.setHeight(0.8),
     elevation: 5,
+    ...shadowIOS,
     width: Dimension.setWidth(35),
   },
 

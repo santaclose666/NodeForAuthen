@@ -18,6 +18,7 @@ import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
 import {useSelector} from 'react-redux';
 import {Dropdown} from 'react-native-element-dropdown';
+import {shadowIOS} from '../../contants/ShadowIOS';
 
 const typeStaff = [{value: 'XMG'}, {value: 'VST'}];
 
@@ -38,7 +39,6 @@ const StaffListScreen = ({navigation}) => {
   const IFEEGroup = ['Tất cả', 'CNMT', 'STPTR', 'UDVT', 'TTDV'];
   const [selectId, setSelectId] = useState(0);
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
-  
 
   const handleSearch = (text, typeStaffValue) => {
     setInput(text);
@@ -99,6 +99,7 @@ const StaffListScreen = ({navigation}) => {
             paddingHorizontal: Dimension.setWidth(1),
             paddingVertical: Dimension.setHeight(1),
             elevation: 10,
+            ...shadowIOS,
           }}>
           <View
             style={{

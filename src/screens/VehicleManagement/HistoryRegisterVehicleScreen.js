@@ -19,6 +19,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
+import {shadowIOS} from '../../contants/ShadowIOS';
 
 const HistoryRegisterVehicleScreen = ({navigation}) => {
   const [registationTicketData, setRegistationTicketData] = useState([
@@ -128,6 +129,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   marginBottom: Dimension.setHeight(2),
                   backgroundColor: '#ffffff',
                   elevation: 5,
+                  ...shadowIOS,
                   borderRadius: 15,
                   paddingHorizontal: Dimension.setWidth(5),
                   paddingVertical: Dimension.setHeight(2),
@@ -402,6 +404,7 @@ const styles = StyleSheet.create({
     paddingBottom: Dimension.setHeight(1),
     paddingHorizontal: Dimension.setWidth(3),
     elevation: 5,
+    ...shadowIOS,
   },
 
   titleBottomSheet: {

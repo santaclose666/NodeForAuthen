@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,13 @@ import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import { loginUser } from '../../redux/apiRequest';
-import { useDispatch } from 'react-redux';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { ToastAlert } from '../../components/Toast';
+import {loginUser} from '../../redux/apiRequest';
+import {useDispatch} from 'react-redux';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {ToastAlert} from '../../components/Toast';
+import {shadowIOS} from '../../contants/ShadowIOS';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = () => {
     if (email !== '' && password !== '') {
-      const data = { email, password };
+      const data = {email, password};
       loginUser(data, dispatch, navigation);
     } else {
       const mess = 'Vui lòng nhập đầy đủ thông tin!';
@@ -39,13 +40,13 @@ const LoginScreen = ({ navigation }) => {
       enableResetScrollToCoords={true}
       enableOnAndroid={true}
       behavior="padding"
-      style={{ flex: 1, backgroundColor: '#ffffff' }}>
+      style={{flex: 1, backgroundColor: '#ffffff'}}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <View style={styles.themeContainer}>
         <TouchableOpacity
           style={styles.headerBtn}
           onPress={() => navigation.goBack()}>
-          <Image source={Images.back} style={{ width: 20, height: 20 }} />
+          <Image source={Images.back} style={{width: 20, height: 20}} />
         </TouchableOpacity>
         <Image
           source={Images.loginTheme}
@@ -53,7 +54,7 @@ const LoginScreen = ({ navigation }) => {
           style={{
             width: Dimension.setWidth(90),
             height: Dimension.setHeight(36),
-            transform: [{ rotate: '-4deg' }],
+            transform: [{rotate: '-4deg'}],
           }}
         />
       </View>
@@ -77,8 +78,8 @@ const LoginScreen = ({ navigation }) => {
               borderBottomWidth: 1,
               borderBottomColor: Colors.INACTIVE_GREY,
               marginBottom: Dimension.setHeight(0.8),
-              width: "95%",
-              alignSelf: 'center'
+              width: '95%',
+              alignSelf: 'center',
             }}>
             <View style={styles.inputContainer}>
               <Image
@@ -105,8 +106,8 @@ const LoginScreen = ({ navigation }) => {
             style={{
               borderBottomWidth: 1,
               borderBottomColor: Colors.INACTIVE_GREY,
-              width: "95%",
-              alignSelf: 'center'
+              width: '95%',
+              alignSelf: 'center',
             }}>
             <View
               style={{
@@ -146,7 +147,7 @@ const LoginScreen = ({ navigation }) => {
                 }}>
                 <Image
                   source={checkShowHide === true ? Images.eye : Images.noEye}
-                  style={{ width: 22, height: 22 }}
+                  style={{width: 22, height: 22}}
                 />
               </TouchableOpacity>
             </View>
@@ -163,6 +164,7 @@ const LoginScreen = ({ navigation }) => {
             borderRadius: 10,
             paddingVertical: Dimension.setHeight(1.6),
             elevation: 5,
+            ...shadowIOS,
           }}>
           <Text
             style={{
@@ -214,6 +216,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: Colors.INACTIVE_GREY,
     elevation: 4,
+    ...shadowIOS,
   },
 
   viewIconContainer: {
@@ -223,7 +226,8 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'rgba(120, 255,100, 1)',
     borderRadius: 12,
-    elevation: 10,
+    elevation: 6,
+    ...shadowIOS,
     alignSelf: 'flex-start',
     marginLeft: 15,
     marginTop: Dimension.setHeight(2),

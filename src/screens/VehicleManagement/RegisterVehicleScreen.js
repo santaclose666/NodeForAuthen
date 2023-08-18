@@ -26,6 +26,7 @@ import {
 } from '../../utils/serviceFunction';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import RegisterBtn from '../../components/RegisterBtn';
+import {shadowIOS} from '../../contants/ShadowIOS';
 
 const typeVehicle = [
   {
@@ -112,6 +113,7 @@ const RegisterVehicleScreen = ({navigation}) => {
             paddingHorizontal: Dimension.setWidth(3),
             paddingTop: Dimension.setHeight(3),
             elevation: 5,
+            ...shadowIOS,
           }}>
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Người đăng kí</Text>

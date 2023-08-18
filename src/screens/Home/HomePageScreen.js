@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -12,22 +12,23 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import { HStack, Spinner } from 'native-base';
+import {HStack, Spinner} from 'native-base';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import { PERMISSIONS, request } from 'react-native-permissions';
+import {PERMISSIONS, request} from 'react-native-permissions';
 import {
   getVietnameseDayOfWeek,
   getFormattedDate,
 } from '../../utils/serviceFunction';
-import { getAllStaffs, getWeatherData } from '../../redux/apiRequest';
-import { getToken, notificationListener } from '../../utils/firebaseNotifi';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import {getAllStaffs, getWeatherData} from '../../redux/apiRequest';
+import {getToken, notificationListener} from '../../utils/firebaseNotifi';
+import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import LinearGradient from 'react-native-linear-gradient';
+import {shadowIOS} from '../../contants/ShadowIOS';
 
 const requestPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -50,7 +51,7 @@ const requestPermissions = async () => {
   }
 };
 
-const HomePageScreen = ({ navigation }) => {
+const HomePageScreen = ({navigation}) => {
   const mainURl = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
@@ -138,9 +139,9 @@ const HomePageScreen = ({ navigation }) => {
     <LinearGradient
       colors={['rgba(238,174,202,1)', 'rgba(148,187,233,1)']}
       style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}>
-      <SafeAreaView style={{ flex: 1 }}>
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView style={{flex: 1}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={false}
@@ -168,7 +169,7 @@ const HomePageScreen = ({ navigation }) => {
                   padding: 7,
                   borderRadius: 8,
                   backgroundColor: '#7bbf8c',
-                  paddingVertical: Dimension.setHeight(1.1)
+                  paddingVertical: Dimension.setHeight(1.1),
                 }}
                 onPress={() => {
                   navigation.navigate('Login');
@@ -199,7 +200,7 @@ const HomePageScreen = ({ navigation }) => {
             </View>
             <View style={styles.weatherContainer}>
               <Image
-                source={{ uri: weather?.iconUrl }}
+                source={{uri: weather?.iconUrl}}
                 style={styles.weatherImg}
               />
               <View
@@ -322,16 +323,16 @@ const HomePageScreen = ({ navigation }) => {
             data={newsArr}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item, index }) => {
+            renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('DetailNews', { item: item });
+                    navigation.navigate('DetailNews', {item: item});
                   }}
                   key={index}
                   style={styles.newsContainer}>
                   <View
-                    style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    style={{justifyContent: 'center', alignItems: 'center'}}>
                     <Image
                       source={item.mainImg}
                       resizeMode="cover"
@@ -405,6 +406,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(3),
     backgroundColor: '#f5f5f9',
     elevation: 5,
+    ...shadowIOS,
     paddingVertical: Dimension.setHeight(1.8),
     paddingHorizontal: Dimension.setWidth(1.5),
   },
@@ -506,6 +508,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5ff',
     borderColor: Colors.INACTIVE_GREY,
     elevation: 5,
+    ...shadowIOS,
     marginLeft: Dimension.setWidth(2),
     marginRight: Dimension.setWidth(0.5),
     width: Dimension.setWidth(71),
