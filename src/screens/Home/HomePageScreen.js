@@ -28,6 +28,7 @@ import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import LinearGradient from 'react-native-linear-gradient';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const requestPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -168,6 +169,7 @@ const HomePageScreen = ({navigation}) => {
                   padding: 7,
                   borderRadius: 8,
                   backgroundColor: '#7bbf8c',
+                  paddingVertical: Dimension.setHeight(1.1),
                 }}
                 onPress={() => {
                   navigation.navigate('Login');
@@ -404,6 +406,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(3),
     backgroundColor: '#f5f5f9',
     elevation: 5,
+    ...shadowIOS,
     paddingVertical: Dimension.setHeight(1.8),
     paddingHorizontal: Dimension.setWidth(1.5),
   },
@@ -505,6 +508,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5ff',
     borderColor: Colors.INACTIVE_GREY,
     elevation: 5,
+    ...shadowIOS,
     marginLeft: Dimension.setWidth(2),
     marginRight: Dimension.setWidth(0.5),
     width: Dimension.setWidth(71),

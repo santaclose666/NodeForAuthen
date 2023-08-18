@@ -16,6 +16,7 @@ import {loginUser} from '../../redux/apiRequest';
 import {useDispatch} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ToastAlert} from '../../components/Toast';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -77,6 +78,8 @@ const LoginScreen = ({navigation}) => {
               borderBottomWidth: 1,
               borderBottomColor: Colors.INACTIVE_GREY,
               marginBottom: Dimension.setHeight(0.8),
+              width: '95%',
+              alignSelf: 'center',
             }}>
             <View style={styles.inputContainer}>
               <Image
@@ -103,6 +106,8 @@ const LoginScreen = ({navigation}) => {
             style={{
               borderBottomWidth: 1,
               borderBottomColor: Colors.INACTIVE_GREY,
+              width: '95%',
+              alignSelf: 'center',
             }}>
             <View
               style={{
@@ -157,8 +162,9 @@ const LoginScreen = ({navigation}) => {
             borderColor: Colors.INACTIVE_GREY,
             backgroundColor: 'rgba(120, 255,100, 1)',
             borderRadius: 10,
-            paddingVertical: Dimension.setHeight(1.2),
+            paddingVertical: Dimension.setHeight(1.6),
             elevation: 5,
+            ...shadowIOS,
           }}>
           <Text
             style={{
@@ -210,6 +216,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: Colors.INACTIVE_GREY,
     elevation: 4,
+    ...shadowIOS,
   },
 
   viewIconContainer: {
@@ -219,7 +226,8 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'rgba(120, 255,100, 1)',
     borderRadius: 12,
-    elevation: 10,
+    elevation: 6,
+    ...shadowIOS,
     alignSelf: 'flex-start',
     marginLeft: 15,
     marginTop: Dimension.setHeight(2),

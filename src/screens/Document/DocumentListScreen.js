@@ -17,6 +17,7 @@ import Colors from '../../contants/Colors';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Data from '../../utils/Data.json';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const baseURL =
   'https://management.ifee.edu.vn/2023_Forestry4.0App/VanBanSoTay/';
@@ -289,6 +290,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(2),
     backgroundColor: '#ffffff',
     elevation: 4,
+    ...shadowIOS,
     borderRadius: 8,
     borderWidth: 1,
     height: 30,
@@ -348,6 +350,7 @@ const styles = StyleSheet.create({
     marginTop: Dimension.setHeight(1.1),
     borderRadius: 9,
     elevation: 4,
+    ...shadowIOS,
     marginHorizontal: 5,
     borderWidth: 0.5,
     borderColor: Colors.INACTIVE_GREY,

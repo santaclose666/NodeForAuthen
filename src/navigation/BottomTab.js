@@ -6,6 +6,7 @@ import AllNewsScreen from '../screens/News/AllNewsScreen';
 import {View, Image} from 'react-native';
 import Dimension from '../contants/Dimension';
 import Images from '../contants/Images';
+import {shadowIOS} from '../contants/propsIOS';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,6 +43,7 @@ const TabNaviagtor = () => {
         tabBarStyle: {
           backgroundColor: '#ffffff',
           elevation: 4,
+          ...shadowIOS,
           height: Dimension.setHeight(10),
         },
       }}>
