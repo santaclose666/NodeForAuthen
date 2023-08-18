@@ -28,7 +28,7 @@ import {useDispatch} from 'react-redux';
 import StatusUI from '../../components/StatusUI';
 import {ApproveCancelModal} from '../../components/Modal';
 import {ToastWarning} from '../../components/Toast';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const HistoryRegisterTicketScreen = ({navigation, route}) => {
   const refresh = route?.params?.refresh;

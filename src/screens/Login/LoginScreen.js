@@ -16,7 +16,7 @@ import {loginUser} from '../../redux/apiRequest';
 import {useDispatch} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ToastAlert} from '../../components/Toast';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();

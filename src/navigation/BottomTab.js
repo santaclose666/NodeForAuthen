@@ -6,7 +6,7 @@ import AllNewsScreen from '../screens/News/AllNewsScreen';
 import {View, Image} from 'react-native';
 import Dimension from '../contants/Dimension';
 import Images from '../contants/Images';
-import { shadowIOS } from '../contants/ShadowIOS';
+import {shadowIOS} from '../contants/propsIOS';
 
 const Tab = createBottomTabNavigator();
 

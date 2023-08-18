@@ -17,7 +17,7 @@ import Colors from '../../contants/Colors';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Data from '../../utils/Data.json';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const baseURL =
   'https://management.ifee.edu.vn/2023_Forestry4.0App/VanBanSoTay/';

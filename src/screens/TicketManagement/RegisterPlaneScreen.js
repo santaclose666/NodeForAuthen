@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TextInput,
   ScrollView,
+  Platform,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
@@ -17,7 +18,7 @@ import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import moment from 'moment';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import {
   compareDate,
@@ -29,7 +30,7 @@ import {
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
 import {registerPlaneTicket} from '../../redux/apiRequest';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {calendarView, shadowIOS} from '../../contants/propsIOS';
 
 const planeCompany = [
   {
@@ -184,20 +185,16 @@ const RegisterPlaneScreen = ({navigation}) => {
   const [timeValue, setTimeValue] = useState(getCurrentTime());
   const [kgNumber, setKgNumber] = useState(0);
 
-  const handlePickDate = (event, date) => {
-    if (event.type === 'set') {
-      setToggleDatePicker(false);
-      if (dateTime === 'date') {
-        const message = 'Ngày khởi hành không hợp lệ';
-        compareDate(new Date(), date)
-          ? setDateValue(formatDate(date))
-          : ToastAlert(message);
-      } else {
-        setTimeValue(formatTime(date));
-      }
+  const handlePickDate = date => {
+    if (dateTime === 'date') {
+      const message = 'Ngày khởi hành không hợp lệ';
+      compareDate(new Date(), date)
+        ? setDateValue(formatDate(date))
+        : ToastAlert(message);
     } else {
-      setToggleDatePicker(false);
+      setTimeValue(formatTime(date));
     }
+    setToggleDatePicker(false);
   };
 
   const handleRegister = () => {
@@ -317,6 +314,7 @@ const RegisterPlaneScreen = ({navigation}) => {
                 marginHorizontal: Dimension.setWidth(1.6),
                 fontFamily: Fonts.SF_MEDIUM,
                 fontSize: 16,
+                height: Dimension.setHeight(5),
               }}
               placeholder="ex: Người 1, người 2"
               value={outSidePerson}
@@ -452,15 +450,14 @@ const RegisterPlaneScreen = ({navigation}) => {
                   </View>
                 </View>
               </TouchableOpacity>
-              {toggleDatePicker && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={new Date()}
-                  mode={dateTime}
-                  display={Platform.OS === 'ios' ? 'inline' : 'default'}
-                  onChange={handlePickDate}
-                />
-              )}
+              <DateTimePickerModal
+                isVisible={toggleDatePicker}
+                mode={dateTime}
+                onConfirm={handlePickDate}
+                onCancel={() => {
+                  setToggleDatePicker(false);
+                }}
+              />
             </View>
             <View
               style={[
@@ -673,6 +670,10 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: Dimension.setWidth(1.3),
+  },
+
+  calendarView: {
+    ...calendarView,
   },
 });
 

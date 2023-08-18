@@ -4,7 +4,7 @@ import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
-import {shadowIOS} from '../contants/ShadowIOS';
+import {shadowIOS} from '../contants/propsIOS';
 
 const ListInfo = ({info, index}) => {
   const colorText = Colors.INACTIVE_GREY;

@@ -33,9 +33,9 @@ import Separation from '../../components/Separation';
 import Modal from 'react-native-modal';
 import Colors from '../../contants/Colors';
 import {ToastWarning, ToastAlert} from '../../components/Toast';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ApproveCancelModal} from '../../components/Modal';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {calendarView, shadowIOS} from '../../contants/propsIOS';
 
 const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const mainURL = 'https://forestry.ifee.edu.vn/';
@@ -133,16 +133,12 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     setToggleEditModal(true);
   }, []);
 
-  const handlePickDate = useCallback((event, date) => {
-    if (event.type === 'set') {
-      setToggleDatePicker(false);
-      const message = 'Ngày điều chỉnh không hợp lệ';
-      compareDate(new Date(), date)
-        ? setDatePicker(formatDate(date))
-        : ToastAlert(message);
-    } else {
-      setToggleDatePicker(false);
-    }
+  const handlePickDate = useCallback(date => {
+    setToggleDatePicker(false);
+    const message = 'Ngày điều chỉnh không hợp lệ';
+    compareDate(new Date(), date)
+      ? setDatePicker(formatDate(date))
+      : ToastAlert(message);
   }, []);
 
   const handleAdjust = () => {
@@ -559,6 +555,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               borderBottomWidth: 0.8,
               borderBlockColor: Colors.INACTIVE_GREY,
               width: '100%',
+              height: Dimension.setHeight(4),
             }}>
             <Text
               style={{
@@ -639,18 +636,14 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
             <Image source={Images.confirm} style={styles.btnModal} />
           </TouchableOpacity>
         </View>
-
-        {toggleDatePicker && (
-          <View style={styles.calendarView}>
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={new Date()}
-              mode="date"
-              onChange={handlePickDate}
-              display={Platform.OS === 'ios' ? 'inline' : 'default'}
-            />
-          </View>
-        )}
+        <DateTimePickerModal
+          isVisible={toggleDatePicker}
+          mode="date"
+          onConfirm={handlePickDate}
+          onCancel={() => {
+            setToggleDatePicker(false);
+          }}
+        />
       </Modal>
 
       <Modal
@@ -832,15 +825,7 @@ const styles = StyleSheet.create({
   },
 
   calendarView: {
-    position: 'absolute',
-    top: '25%',
-    left: '5%',
-    zIndex: 999,
-    backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
-    padding: 15,
-    borderRadius: 15,
+    ...calendarView,
   },
 
   btnModal: {

@@ -16,7 +16,7 @@ import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const AllNewsScreen = ({navigation}) => {
   const [featureIndex, setFeatureIndex] = useState(0);

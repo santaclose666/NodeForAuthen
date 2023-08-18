@@ -19,7 +19,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const HistoryWorkShedule = ({navigation, route}) => {
   const [workSheduleData, setWorkSheduleData] = useState([

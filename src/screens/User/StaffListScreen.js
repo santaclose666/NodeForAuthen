@@ -18,7 +18,7 @@ import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
 import {useSelector} from 'react-redux';
 import {Dropdown} from 'react-native-element-dropdown';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const typeStaff = [{value: 'XMG'}, {value: 'VST'}];
 

@@ -16,7 +16,7 @@ import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import {
   compareDate,
@@ -26,7 +26,7 @@ import {
 import RegisterBtn from '../../components/RegisterBtn';
 import {useDispatch} from 'react-redux';
 import {getAllWorkName, registerWorkSchedule} from '../../redux/apiRequest';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {calendarView, shadowIOS} from '../../contants/propsIOS';
 
 const optionData = [
   {
@@ -83,26 +83,25 @@ const CreateWorkSchedule = ({navigation}) => {
     return () => clearInterval(apiCall);
   }, []);
 
-  const handlePickDate = (event, date) => {
-    if (event.type === 'set') {
-      setToggleDatePicker(false);
-      if (checkPick) {
-        const dayStart = formatDate(date);
-        if (endDay !== 'Chọn ngày') {
-          compareDate(dayStart, endDay)
-            ? setStartDay(dayStart)
-            : ToastAlert('Ngày bắt đầu không hợp lệ');
-        } else {
-          setStartDay(dayStart);
-        }
+  const handlePickDate = date => {
+    setToggleDatePicker(false);
+    console.log(date);
+    if (checkPick) {
+      const dayStart = formatDate(date);
+      if (endDay !== null) {
+        compareDate(date, endDay)
+          ? setStartDay(dayStart)
+          : ToastAlert('Ngày bắt đầu không hợp lệ');
       } else {
-        const dayEnd = formatDate(date);
-        compareDate(startDay, dayEnd)
-          ? setEndDay(dayEnd)
-          : ToastAlert('Ngày kết thúc không hợp lệ');
+        compareDate(new Date(), date)
+          ? setStartDay(dayStart)
+          : ToastAlert('Ngày bắt đầu không hợp lệ');
       }
     } else {
-      setToggleDatePicker(false);
+      const dayEnd = formatDate(date);
+      compareDate(startDay, date)
+        ? setEndDay(dayEnd)
+        : ToastAlert('Ngày kết thúc không hợp lệ');
     }
   };
 
@@ -201,13 +200,7 @@ const CreateWorkSchedule = ({navigation}) => {
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Địa điểm</Text>
             <TextInput
-              style={{
-                borderBottomWidth: 0.6,
-                borderBottomColor: 'gray',
-                marginHorizontal: Dimension.setWidth(1.6),
-                fontFamily: Fonts.SF_MEDIUM,
-                fontSize: 16,
-              }}
+              style={styles.inputText}
               placeholder="Nhập địa điểm"
               value={placeInput}
               onChangeText={e => setPlaceInput(e)}
@@ -276,7 +269,14 @@ const CreateWorkSchedule = ({navigation}) => {
               </View>
             </TouchableOpacity>
           </View>
-
+          <DateTimePickerModal
+            isVisible={toggleDatePicker}
+            mode="date"
+            onConfirm={handlePickDate}
+            onCancel={() => {
+              setToggleDatePicker(false);
+            }}
+          />
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Thuộc chương trình</Text>
             <Dropdown
@@ -331,13 +331,7 @@ const CreateWorkSchedule = ({navigation}) => {
               />
             ) : (
               <TextInput
-                style={{
-                  borderBottomWidth: 0.6,
-                  borderBottomColor: 'gray',
-                  marginHorizontal: Dimension.setWidth(1.6),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  fontSize: 16,
-                }}
+                style={styles.inputText}
                 placeholder="Nhập tên chương trình"
                 value={ortherWorkInput}
                 onChangeText={e => setOrtherWorkInput(e)}
@@ -348,13 +342,7 @@ const CreateWorkSchedule = ({navigation}) => {
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Nội dung</Text>
             <TextInput
-              style={{
-                borderBottomWidth: 0.6,
-                borderBottomColor: 'gray',
-                marginHorizontal: Dimension.setWidth(1.6),
-                fontFamily: Fonts.SF_MEDIUM,
-                fontSize: 16,
-              }}
+              style={styles.inputText}
               placeholder="Nhập nội dung"
               value={contentInput}
               onChangeText={e => setContentInput(e)}
@@ -370,14 +358,7 @@ const CreateWorkSchedule = ({navigation}) => {
             <View style={[styles.containerEachLine, {width: '48%'}]}>
               <Text style={styles.title}>Đầu mối</Text>
               <TextInput
-                style={{
-                  height: Dimension.setHeight(5.3),
-                  borderBottomWidth: 0.6,
-                  borderBottomColor: 'gray',
-                  marginHorizontal: Dimension.setWidth(1.6),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  fontSize: 16,
-                }}
+                style={styles.inputText}
                 value={clueInput}
                 onChangeText={e => setClueInput(e)}
               />
@@ -392,14 +373,7 @@ const CreateWorkSchedule = ({navigation}) => {
               ]}>
               <Text style={styles.title}>Thành phần</Text>
               <TextInput
-                style={{
-                  height: Dimension.setHeight(5.3),
-                  borderBottomWidth: 0.6,
-                  borderBottomColor: 'gray',
-                  marginHorizontal: Dimension.setWidth(1.6),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  fontSize: 16,
-                }}
+                style={styles.inputText}
                 value={componentInput}
                 onChangeText={e => setComponentInput(e)}
               />
@@ -409,13 +383,7 @@ const CreateWorkSchedule = ({navigation}) => {
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Ghi chú</Text>
             <TextInput
-              style={{
-                borderBottomWidth: 0.6,
-                borderBottomColor: 'gray',
-                marginHorizontal: Dimension.setWidth(1.6),
-                fontFamily: Fonts.SF_MEDIUM,
-                fontSize: 16,
-              }}
+              style={styles.inputText}
               placeholder="Ghi chú"
               value={noteInput}
               onChangeText={e => setNoteInput(e)}
@@ -423,18 +391,6 @@ const CreateWorkSchedule = ({navigation}) => {
           </View>
 
           <RegisterBtn nameBtn={'Thực hiện'} onEvent={handleRegister} />
-
-          {toggleDatePicker && (
-            <View style={styles.calendarView}>
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={new Date()}
-                mode="date"
-                onChange={handlePickDate}
-                display={Platform.OS === 'ios' ? 'inline' : 'default'}
-              />
-            </View>
-          )}
         </KeyboardAwareScrollView>
       </ScrollView>
     </SafeAreaView>
@@ -489,6 +445,15 @@ const styles = StyleSheet.create({
     lineHeight: Dimension.setHeight(2.2),
   },
 
+  inputText: {
+    borderBottomWidth: 0.6,
+    borderBottomColor: 'gray',
+    marginHorizontal: Dimension.setWidth(1.6),
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: 16,
+    height: Dimension.setHeight(5),
+  },
+
   dropdown: {
     height: Dimension.setHeight(4.5),
     marginHorizontal: Dimension.setWidth(1.6),
@@ -536,15 +501,7 @@ const styles = StyleSheet.create({
     marginRight: Dimension.setWidth(1.3),
   },
   calendarView: {
-    position: 'absolute',
-    top: '15%',
-    left: '5%',
-    zIndex: 999,
-    backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
-    padding: 15,
-    borderRadius: 15,
+    ...calendarView,
   },
 });
 

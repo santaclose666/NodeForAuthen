@@ -18,7 +18,7 @@ import ListInfo from '../../components/ListInfo';
 import {useDispatch} from 'react-redux';
 import {logoutUser} from '../../redux/apiRequest';
 import {changeFormatDate} from '../../utils/serviceFunction';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const DetailStaffScreen = ({navigation, route}) => {
   const mainURL = 'https://forestry.ifee.edu.vn/';

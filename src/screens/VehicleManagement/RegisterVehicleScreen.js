@@ -16,8 +16,7 @@ import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
-import moment from 'moment';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {
   formatTime,
   getCurrentTime,
@@ -26,7 +25,7 @@ import {
 } from '../../utils/serviceFunction';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import RegisterBtn from '../../components/RegisterBtn';
-import {shadowIOS} from '../../contants/ShadowIOS';
+import {shadowIOS} from '../../contants/propsIOS';
 
 const typeVehicle = [
   {
@@ -55,25 +54,21 @@ const RegisterVehicleScreen = ({navigation}) => {
   const [placeInput, setPlaceInput] = useState('');
   const [contentInput, setContentInput] = useState('');
 
-  const handlePickDate = (event, date) => {
+  const handlePickDate = date => {
     const message = 'Ngày nhận xe không hợp lệ!';
-    if (event.type === 'set') {
-      setToggleDatePicker(false);
-      if (check === 'startDate') {
-        const startDate = formatDate(date);
-        compareDate(receiveDate, startDate)
-          ? setDateStart(startDate)
-          : ToastAlert(message);
-      } else if (check === 'receiveTime') {
-        setReceiveTime(formatTime(date));
-      } else {
-        const dateReceive = formatDate(date);
-        compareDate(dateReceive, dateStart)
-          ? setReceiveDate(dateReceive)
-          : ToastAlert(message);
-      }
+    setToggleDatePicker(false);
+    if (check === 'startDate') {
+      const startDate = formatDate(date);
+      compareDate(receiveDate, startDate)
+        ? setDateStart(startDate)
+        : ToastAlert(message);
+    } else if (check === 'receiveTime') {
+      setReceiveTime(formatTime(date));
     } else {
-      setToggleDatePicker(false);
+      const dateReceive = formatDate(date);
+      compareDate(dateReceive, dateStart)
+        ? setReceiveDate(dateReceive)
+        : ToastAlert(message);
     }
   };
 
@@ -224,6 +219,14 @@ const RegisterVehicleScreen = ({navigation}) => {
                 </View>
               </View>
             </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={toggleDatePicker}
+              mode={dateTime}
+              onConfirm={handlePickDate}
+              onCancel={() => {
+                setToggleDatePicker(false);
+              }}
+            />
           </View>
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Nơi đến</Text>
@@ -235,6 +238,7 @@ const RegisterVehicleScreen = ({navigation}) => {
                 marginHorizontal: Dimension.setWidth(1.6),
                 fontFamily: Fonts.SF_MEDIUM,
                 fontSize: 16,
+                height: Dimension.setHeight(6),
               }}
               value={placeInput}
               onChangeText={e => setPlaceInput(e)}
@@ -243,16 +247,15 @@ const RegisterVehicleScreen = ({navigation}) => {
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Nội dung công tác</Text>
             <TextInput
-              placeholder="Nhập nội dung"
-              editable
               multiline
-              numberOfLines={3}
+              placeholder="Nội dung công tác"
               style={{
                 borderBottomWidth: 0.6,
                 borderBottomColor: 'gray',
                 marginHorizontal: Dimension.setWidth(1.6),
                 fontFamily: Fonts.SF_MEDIUM,
                 fontSize: 16,
+                height: Dimension.setHeight(5),
               }}
               value={contentInput}
               onChangeText={e => setContentInput(e)}
@@ -260,16 +263,6 @@ const RegisterVehicleScreen = ({navigation}) => {
           </View>
 
           <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
-
-          {toggleDatePicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={new Date()}
-              mode={dateTime}
-              display={Platform.OS === 'ios' ? 'inline' : 'default'}
-              onChange={handlePickDate}
-            />
-          )}
         </KeyboardAwareScrollView>
       </ScrollView>
     </SafeAreaView>
