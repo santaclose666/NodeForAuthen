@@ -17,67 +17,62 @@ import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
+import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
+import {getVehicleData} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 
 const HistoryRegisterVehicleScreen = ({navigation}) => {
-  const [registationTicketData, setRegistationTicketData] = useState([
-    {
-      actionType: 'Mượn xe',
-      vehicleType: 'WIGO',
-      numberPlates: null,
-      registerPerson: 'Phạm Quang Dương',
-      approveBy: 'Admin',
-      approveDate: '28-02-2023',
-      startDate: '08-08-2023',
-      endDate: '05-05-2023',
-      content: 'Tập huấn phần mềm Cháy - Chi cục kiểm lầm Hà Giang',
-      status: 'Pending',
-    },
-    {
-      actionType: 'Trả xe',
-      vehicleType: 'WIGO',
-      numberPlates: null,
-      registerPerson: 'Lê Hữu Cường',
-      approveBy: 'Admin',
-      approveDate: '28-02-2023',
-      startDate: '03-03-2023',
-      endDate: '05-05-2023',
-      content: 'Kiểm tra, sửa chữa server. - Nâng cấp, thay SSD IMac',
-      status: 'Approved',
-    },
-    {
-      actionType: 'Mượn xe',
-      vehicleType: 'Wave',
-      numberPlates: '29X1-897.78',
-      registerPerson: 'Nguyễn Vũ Thuật',
-      approveBy: 'Admin',
-      approveDate: '28-02-2023',
-      startDate: '08-08-2023',
-      endDate: '05-05-2023',
-      content: 'Triển khai lắp biển nhiệm vụ Số hóa cây xanh Thành cổ Sơn Tây',
-      status: 'Cancelled',
-    },
-    {
-      actionType: 'Trả xe',
-      vehicleType: 'Wave',
-      numberPlates: '29X1-902.14',
-      registerPerson: 'Phạm Quang Dương',
-      approveBy: 'Admin',
-      approveDate: '28-02-2023',
-      startDate: '03-03-2023',
-      endDate: '05-05-2023',
-      content: 'Chuyển đồ, thiết bị',
-      status: 'Approved',
-    },
-  ]);
+  const user = useSelector(state => state.auth.login?.currentUser);
+  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
+  const [registedVehicleData, setRegistedVehicleData] = useState([]);
+
+  const waitRequest = useSelector(
+    state => state.vehicle?.vehicle?.data.data_pheduyet,
+  );
+  const processedRequest = useSelector(
+    state => state.vehicle?.vehicle?.data.data_dapheduyet,
+  );
+  const [usingVehicle, setsingVehicle] = useState([]);
+  const [rejectVehicle, setRejectVehicle] = useState([]);
+  const [doneVehicle, setDoneVehicle] = useState([]);
+
   const [selectedItem, setSelectedItem] = useState(null);
   const [rerender, setRerender] = useState(false);
-
+  const [indexPicker, setIndexPicker] = useState(0);
   const bottomSheetModalRef = useRef(null);
-
+  const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
+  const mainURL = 'https://forestry.ifee.edu.vn/';
+
+  const approveArr = [
+    {
+      title: 'Chờ duyệt',
+      color: '#f0b263',
+      bgColor: 'rgba(254, 244, 235, 0.3)',
+      icon: Images.pending1,
+    },
+    {
+      title: 'Sử dụng',
+      color: '#57b85d',
+      bgColor: 'rgba(222, 248, 237, 0.3)',
+      icon: Images.job,
+    },
+    {
+      title: 'Từ chối',
+      color: '#f25157',
+      bgColor: 'rgba(249, 223, 224, 0.3)',
+      icon: Images.cancelled,
+    },
+    {
+      title: 'Đã trả',
+      color: '#618cf2',
+      bgColor: 'rgba(254, 244, 235, 0.3)',
+      icon: Images.approved1,
+    },
+  ];
 
   const handlePresentModalPress = useCallback(() => {
     setRerender(true);
@@ -86,7 +81,73 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     console.log('handleSheetChanges', index);
   }, []);
 
+  const getAllData = async => {
+    getVehicleData(dispatch, user.id);
+  };
+
+  const classifiedData = () => {
+    var usingVehicleArr = [];
+    var rejectVehicleArr = [];
+    var doneVehicleArr = [];
+    for (let i = 0; i < processedRequest.length; i++) {
+      if (processedRequest[i].pheduyet == '0') {
+        rejectVehicleArr.push(processedRequest[i]);
+      } else if (processedRequest[i].pheduyet == '1') {
+        if (processedRequest[i].km_nhan > 0) {
+          doneVehicleArr.push(processedRequest[i]);
+        } else {
+          usingVehicleArr.push(processedRequest[i]);
+        }
+      }
+    }
+    setsingVehicle(usingVehicleArr);
+    setRejectVehicle(rejectVehicleArr);
+    setDoneVehicle(doneVehicleArr);
+  };
+
+  const getUserParth = id => {
+    for (let i = 0; i < staffs.length; i++) {
+      if (staffs[i].id === id) {
+        console.log(staffs[i].path);
+        return staffs[i].path;
+      }
+    }
+  };
+
+  const getStaffByID = id => {
+    for (let i = 0; i < staffs.length; i++) {
+      if (staffs[i].id === id) {
+        console.log(staffs[i].hoten);
+        return staffs[i].hoten;
+      }
+    }
+  };
+
+  const handlePickOption = useCallback(
+    index => {
+      setIndexPicker(index);
+      switch (index) {
+        case 0:
+          setRegistedVehicleData(waitRequest);
+          break;
+        case 1:
+          setRegistedVehicleData(usingVehicle);
+          break;
+        case 2:
+          setRegistedVehicleData(rejectVehicle);
+          break;
+        case 3:
+          setRegistedVehicleData(doneVehicle);
+          break;
+      }
+    },
+    [indexPicker],
+  );
+
   useEffect(() => {
+    getAllData();
+    classifiedData();
+    setRegistedVehicleData(waitRequest);
     if (rerender) {
       bottomSheetModalRef.current?.present();
       setRerender(false);
@@ -96,21 +157,64 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Lịch sử đăng kí xe" navigation={navigation} />
+      <View
+        style={{
+          flex: 0.1,
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+        }}>
+        {approveArr.map((item, index) => {
+          return (
+            <TouchableOpacity
+              onPress={() => handlePickOption(index)}
+              key={index}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingTop: Dimension.setHeight(2.2),
+                paddingBottom: Dimension.setHeight(1.5),
+                paddingHorizontal: Dimension.setWidth(3),
+                height: '100%',
+                borderBottomWidth: indexPicker === index ? 1.6 : null,
+                borderBlockColor: indexPicker === index ? item.color : null,
+              }}>
+              <Image
+                source={item.icon}
+                style={{
+                  padding: 5,
+                  height: 25,
+                  width: 25,
+                  tintColor: indexPicker === index ? item.color : '#edf2ed',
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: 16,
+                  color: indexPicker === index ? item.color : '#edf2ed',
+                }}>
+                {item.title}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+
       <BottomSheetModalProvider>
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{flex: 1, marginTop: Dimension.setHeight(2)}}>
-          {registationTicketData.map((item, index) => {
+          {registedVehicleData.map((item, index) => {
             const colorStatus =
-              item.status === 'Pending'
+              item.pheduyet === null
                 ? '#f9a86a'
-                : item.status === 'Approved'
+                : item.pheduyet === '1'
                 ? '#57b85d'
                 : '#f25157';
             const bgColorStatus =
-              item.status === 'Pending'
+              item.pheduyet === null
                 ? '#fef4eb'
-                : item.status === 'Approved'
+                : item.pheduyet === '1'
                 ? '#def8ed'
                 : '#f9dfe0';
             return (
@@ -141,7 +245,23 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                     justifyContent: 'space-between',
                   }}>
                   <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 19}}>
-                    {`${item.actionType} ${item.vehicleType}`}
+                    {`${item.loaixe}: ${item.noidung}`}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    padding: 5,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontFamily: Fonts.SF_MEDIUM,
+                      color: '#747476',
+                      marginBottom: Dimension.setHeight(0.8),
+                    }}>
+                    {item.noiden ? item.noiden : 'Không xác định'}
                   </Text>
                   <View
                     style={{
@@ -154,9 +274,9 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                     }}>
                     <Image
                       source={
-                        item.status === 'Pending'
+                        item.pheduyet === null
                           ? Images.pending
-                          : item.status === 'Approved'
+                          : item.pheduyet === '1'
                           ? Images.approve
                           : Images.cancel
                       }
@@ -173,32 +293,59 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                         fontSize: 14,
                         fontFamily: Fonts.SF_MEDIUM,
                       }}>
-                      {item.status}
+                      {item.pheduyet === '1'
+                        ? 'Phê duyệt'
+                        : item.pheduyet === '0'
+                        ? 'Từ chối'
+                        : 'Chờ phê duyệt'}
                     </Text>
                   </View>
                 </View>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: Fonts.SF_MEDIUM,
-                    color: '#747476',
-                    marginBottom: Dimension.setHeight(0.8),
-                  }}>
-                  {item.numberPlates ? item.numberPlates : 'Không xác định'}
-                </Text>
+
                 <View style={styles.containerEachLine}>
-                  <Image source={Images.registerperson} style={styles.Iconic} />
+                  <Image
+                    src={
+                      user != null
+                        ? `${mainURL + getUserParth(item.id_user)}`
+                        : Images.registerperson
+                    }
+                    style={styles.Iconic}
+                  />
                   <Text style={styles.title}>Đăng kí: </Text>
-                  <Text style={styles.content}>{item.registerPerson}</Text>
+                  <Text style={styles.content}>{item.hoten}</Text>
                 </View>
 
                 <View style={styles.containerEachLine}>
                   <Image source={Images.datetime} style={styles.Iconic} />
                   <Text style={styles.title}>Mượn từ:{'  '}</Text>
-                  <Text style={styles.content}>{item.startDate}</Text>
+                  <Text style={styles.content}>{item.ngaydi}</Text>
                   <Separation />
-                  <Text style={styles.content}>{item.endDate}</Text>
+                  <Text style={styles.content}>{item.ngayve}</Text>
                 </View>
+                {(user?.id == 2 || user?.id == 8) && item.pheduyet == null && (
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      onPress={() => {}}
+                      style={[
+                        styles.buttonItem,
+                        {backgroundColor: 'rgba(0, 181, 32, 0.32)'},
+                      ]}>
+                      <Text style={{color: 'rgba(0, 84, 15, 1)'}}>
+                        Phê duyệt
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {}}
+                      style={[
+                        styles.buttonItem,
+                        {backgroundColor: 'rgba(233, 0, 0, 0.32)'},
+                      ]}>
+                      <Text style={{color: 'rgba(233, 0, 0, 0.9)'}}>
+                        Từ chối
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </TouchableOpacity>
             );
           })}
@@ -247,7 +394,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.vehicleType}
+                      {selectedItem.loaixe}
                     </Text>
                   </View>
                 </View>
@@ -258,14 +405,12 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       flexDirection: 'row',
                       width: '66%',
                     }}>
-                    <Text style={styles.title}>Biển số:{'  '}</Text>
+                    <Text style={styles.title}>Km Giao:{'  '}</Text>
                     <Text
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.numberPlates
-                        ? selectedItem.numberPlates
-                        : 'Không xác định'}
+                      {selectedItem.km_giao}
                     </Text>
                   </View>
                 </View>
@@ -277,9 +422,9 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       width: '66%',
                     }}>
                     <Text style={styles.title}>Mượn từ:{'  '}</Text>
-                    <Text style={styles.content}>{selectedItem.startDate}</Text>
+                    <Text style={styles.content}>{selectedItem.ngaydi}</Text>
                     <Separation />
-                    <Text style={styles.content}>{selectedItem.endDate}</Text>
+                    <Text style={styles.content}>{selectedItem.ngayve}</Text>
                   </View>
                 </View>
                 <View style={styles.containerEachLine}>
@@ -294,7 +439,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.content}
+                      {selectedItem.noidung}
                     </Text>
                   </View>
                 </View>
@@ -315,7 +460,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.registerPerson}
+                      {selectedItem.hoten}
                     </Text>
                   </View>
                 </View>
@@ -331,7 +476,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.approveBy}
+                      {getStaffByID(selectedItem.id_nguoiduyet)}
                     </Text>
                   </View>
                 </View>
@@ -347,11 +492,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.status === 'Approved'
-                        ? selectedItem.approveDate
-                        : selectedItem.status === 'Pending'
-                        ? 'Đang chờ duyệt'
-                        : 'Bị hủy bỏ'}
+                      {selectedItem.ngayduyet}
                     </Text>
                   </View>
                 </View>
@@ -413,6 +554,20 @@ const styles = StyleSheet.create({
     color: '#8bc7bc',
     lineHeight: Dimension.setHeight(2.2),
     marginBottom: Dimension.setHeight(1.6),
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  buttonItem: {
+    borderColor: 'black',
+    borderWidth: 0.25,
+    paddingHorizontal: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 15,
+    height: Dimension.setHeight(3.5),
   },
 });
 

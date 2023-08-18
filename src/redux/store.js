@@ -5,6 +5,7 @@ import notifiReducer from './notifiSlice';
 import weatherReducer from './weatherSlice';
 import onLeaveReducer from './onLeaveSlice';
 import workReducer from './workSlice';
+import vehicleReducer from './vehicleSlice';
 import ticketReducer from './ticketSlice';
 import logger from 'redux-logger';
 import {persistStore, persistReducer} from 'redux-persist';
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   weather: weatherReducer,
   onLeave: onLeaveReducer,
   work: workReducer,
+  vehicle: vehicleReducer,
   ticketPlane: ticketReducer,
 });
 const persistedReducer = persistReducer(

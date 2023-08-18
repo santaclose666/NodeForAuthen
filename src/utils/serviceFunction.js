@@ -77,11 +77,20 @@ export const formatDateToPost = date => {
   return postFormat;
 };
 
+export const formatTimeToPost = time => {
+  const parseTime = moment(time, 'HH:mm a');
+  const formatTime = parseTime.format('HH:mm:ss');
+
+  return formatTime;
+};
+
 export const compareDate = (date1, date2) => {
   const beforeDate = moment(date1, 'DD/MM/YYYY').startOf('day');
   const afterDate = moment(date2, 'DD/MM/YYYY').startOf('day');
-  const currentDate = moment(new Date()).startOf('day');
-  if (beforeDate <= afterDate && beforeDate >= currentDate) {
+
+  console.log(beforeDate, afterDate);
+
+  if (beforeDate <= afterDate) {
     return true;
   } else {
     return false;
