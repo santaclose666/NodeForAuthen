@@ -21,6 +21,7 @@ export const ApproveCancelModal = ({
   setToggleApproveModal,
   checkInput,
   selectedItem,
+  setSelectedItem,
   commnetInput,
   setCommentInput,
   reasonCancel,
@@ -150,7 +151,10 @@ export const ApproveCancelModal = ({
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          onPress={() => setToggleApproveModal(false)}
+          onPress={() => {
+            setSelectedItem(null);
+            setToggleApproveModal(false);
+          }}
           style={{position: 'absolute', right: '5%', top: '5%'}}>
           <Image source={Images.minusclose} style={styles.btnModal} />
         </TouchableOpacity>

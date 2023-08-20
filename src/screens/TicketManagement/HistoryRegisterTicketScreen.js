@@ -1,12 +1,20 @@
-import React, {useRef, useState, useCallback, useMemo, useEffect} from 'react';
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  memo,
+  useLayoutEffect,
+} from 'react';
 import {
   View,
   Text,
   Image,
   StyleSheet,
   SafeAreaView,
-  ScrollView,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -38,39 +46,92 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
   );
   const dispatch = useDispatch();
   const [selectedItem, setSelectedItem] = useState(null);
-  const [rerenderBottomSheet, setRerenderBottomSheet] = useState(false);
   const [toggleModal, setToggleModal] = useState(false);
   const [checkInput, setCheckInput] = useState(null);
   const [commentInput, setCommentInput] = useState('');
   const [reasonCancel, setReasonCancel] = useState('');
   const [refreshComponent, setRefreshComponent] = useState(false);
-
+  const approveArr = [
+    {
+      title: 'Tất cả',
+      color: '#618cf2',
+      bgColor: 'rgba(254, 244, 235, 0.3)',
+      icon: Images.all,
+    },
+    {
+      title: 'Chờ duyệt',
+      color: '#f0b263',
+      bgColor: 'rgba(254, 244, 235, 0.3)',
+      icon: Images.pending1,
+    },
+    {
+      title: 'Đã duyệt',
+      color: '#57b85d',
+      bgColor: 'rgba(222, 248, 237, 0.3)',
+      icon: Images.approved1,
+    },
+    {
+      title: 'Hủy bỏ',
+      color: '#f25157',
+      bgColor: 'rgba(249, 223, 224, 0.3)',
+      icon: Images.cancelled,
+    },
+  ];
+  const [indexPicker, setIndexPicker] = useState(0);
   const bottomSheetModalRef = useRef(null);
-
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
+  const handleBottomSheet = useCallback(
+    (
+      item,
+      colorStatus,
+      bgColorStatus,
+      filterPlace,
+      filterStartPlace,
+      filterEndPlace,
+    ) => {
+      setSelectedItem({
+        ...item,
+        colorStatus,
+        bgColorStatus,
+        filterPlace,
+        filterStartPlace,
+        filterEndPlace,
+      });
+      setTimeout(() => {
+        handlePresentModalPress();
+      });
+    },
+    [selectedItem],
+  );
+
   const handlePresentModalPress = useCallback(() => {
-    setRerenderBottomSheet(true);
-  }, [selectedItem]);
+    bottomSheetModalRef.current?.present();
+  }, []);
+
   const handleSheetChanges = useCallback(index => {
-    console.log('handleSheetChanges', index);
+    if (index < 0) {
+      setSelectedItem(null);
+    }
   }, []);
 
-  const fetchPlaneData = async () => {
-    await getAllPlaneData(dispatch);
-  };
+  const handleApprove = useCallback(
+    item => {
+      setSelectedItem(item);
+      setCheckInput(true);
+      setToggleModal(true);
+    },
+    [selectedItem],
+  );
 
-  const handleApprove = useCallback(item => {
-    setSelectedItem(item);
-    setCheckInput(true);
-    setToggleModal(true);
-  }, []);
-
-  const handleCancel = useCallback(item => {
-    setSelectedItem(item);
-    setCheckInput(false);
-    setToggleModal(true);
-  }, []);
+  const handleCancel = useCallback(
+    item => {
+      setSelectedItem(item);
+      setCheckInput(false);
+      setToggleModal(true);
+    },
+    [selectedItem],
+  );
 
   const handleApproveCancel = () => {
     const data = {
@@ -89,190 +150,271 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
     }
   };
 
-  useEffect(() => {
-    fetchPlaneData();
+  const handlePickOption = useCallback(
+    index => {
+      setIndexPicker(index);
+    },
+    [indexPicker],
+  );
 
-    if (rerenderBottomSheet) {
-      bottomSheetModalRef.current?.present();
-      setRerenderBottomSheet(false);
-    }
-  }, [rerenderBottomSheet, refreshComponent, refresh]);
+  const handleFilter = useCallback(
+    index => {
+      switch (index) {
+        case 0:
+          return ticketPlaneData;
+        case 1:
+          return ticketPlaneData.filter(item => item.status === 0);
+        case 2:
+          return ticketPlaneData.filter(item => item.status === 1);
+        case 3:
+          return ticketPlaneData.filter(item => item.status === 2);
+      }
+    },
+    [ticketPlaneData],
+  );
+
+  const fetchPlaneData = async () => {
+    await getAllPlaneData(dispatch);
+  };
+
+  useLayoutEffect(() => {
+    fetchPlaneData();
+  }, [refreshComponent, refresh]);
+
+  const RenderTicketData = memo(({item, index}) => {
+    const colorStatus =
+      item.status === 0 ? '#f9a86a' : item.status === 1 ? '#57b85d' : '#f25157';
+    const bgColorStatus =
+      item.status === 0 ? '#fef4eb' : item.status === 1 ? '#def8ed' : '#f9dfe0';
+    const status =
+      item.status === 0
+        ? 'Chờ phê duyệt'
+        : item.status === 1
+        ? 'Đã phê duyệt'
+        : 'Đã hủy';
+    const icon =
+      item.status === 0
+        ? Images.pending
+        : item.status === 1
+        ? Images.approve
+        : Images.cancel;
+    const indexString = item.sanbayden.indexOf('(');
+    const filterPlace = item.sanbayden.slice(0, indexString);
+    const indexStartPlace = item.sanbaydi.indexOf('Sân');
+    const filterStartPlace = item.sanbaydi.slice(indexStartPlace);
+    const indexEndPlace = item.sanbayden.indexOf('Sân');
+    const filterEndPlace = item.sanbayden.slice(indexEndPlace);
+
+    const checktStatus = () => {
+      return (
+        (item.status !== 0 &&
+          (user?.id_ht === 1 || user?.id_ht === 20 || user?.id_ht === 28)) ||
+        (user?.id_ht !== 1 && user?.id_ht !== 20 && user?.id_ht !== 28)
+      );
+    };
+
+    const checkRole = () => {
+      return (
+        item.status === 0 &&
+        (user?.id_ht === 1 || user?.id_ht === 20 || user?.id_ht === 28)
+      );
+    };
+
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          handleBottomSheet(
+            item,
+            colorStatus,
+            bgColorStatus,
+            filterPlace,
+            filterStartPlace,
+            filterEndPlace,
+          );
+        }}
+        key={index}
+        style={{
+          marginHorizontal: Dimension.setWidth(3),
+          marginBottom: Dimension.setHeight(2),
+          backgroundColor: '#ffffff',
+          elevation: 5,
+          ...shadowIOS,
+          borderRadius: 15,
+          paddingHorizontal: Dimension.setWidth(5),
+          paddingVertical: Dimension.setHeight(2),
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '66%',
+          }}>
+          <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18}}>
+            {item.chuongtrinh}
+          </Text>
+        </View>
+        <View style={{position: 'absolute', right: '5%', top: '7%'}}>
+          {checktStatus() && (
+            <StatusUI
+              status={status}
+              colorStatus={colorStatus}
+              bgColorStatus={bgColorStatus}
+              icon={icon}
+            />
+          )}
+          {checkRole() && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: Dimension.setWidth(17),
+                alignSelf: 'center',
+                zIndex: 9999,
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  handleApprove(item);
+                }}>
+                <Image
+                  source={Images.approved}
+                  style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  handleCancel(item);
+                }}>
+                <Image
+                  source={Images.cancelled}
+                  style={[styles.approvedIcon, {tintColor: '#f25157'}]}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: Fonts.SF_MEDIUM,
+            color: '#747476',
+            marginBottom: Dimension.setHeight(0.8),
+          }}>
+          {filterPlace}
+        </Text>
+        <View style={styles.containerEachLine}>
+          <Image source={Images.insideperson} style={styles.Iconic} />
+          <Text style={[styles.title, {alignSelf: 'flex-start', width: '90%'}]}>
+            Trong viện:{' '}
+            <Text style={styles.content}>
+              {item.trongvien.map((item, index) => {
+                return <Text key={index}>{item.hoten}, </Text>;
+              })}
+            </Text>
+          </Text>
+        </View>
+        <View style={styles.containerEachLine}>
+          <Image source={Images.outsideperson} style={styles.Iconic} />
+          <Text style={styles.title}>Ngoài viện: </Text>
+          <Text style={styles.content}>
+            {item.ngoaivien.map((item, index) => {
+              return <Text key={index}>{item}</Text>;
+            })}
+          </Text>
+        </View>
+
+        <View style={styles.containerEachLine}>
+          <Image source={Images.datetime} style={styles.Iconic} />
+          <Text style={styles.title}>Thời gian:{'  '}</Text>
+          <Text style={styles.content}>{item.ngaydi}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  });
 
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Lịch sử đặt vé" navigation={navigation} />
       <BottomSheetModalProvider>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{flex: 1, marginTop: Dimension.setHeight(2)}}>
-          {ticketPlaneData?.map((item, index) => {
-            const colorStatus =
-              item.status === 0
-                ? '#f9a86a'
-                : item.status === 1
-                ? '#57b85d'
-                : '#f25157';
-            const bgColorStatus =
-              item.status === 0
-                ? '#fef4eb'
-                : item.status === 1
-                ? '#def8ed'
-                : '#f9dfe0';
-            const status =
-              item.status === 0
-                ? 'Chờ phê duyệt'
-                : item.status === 1
-                ? 'Đã phê duyệt'
-                : 'Đã hủy';
-            const icon =
-              item.status === 0
-                ? Images.pending
-                : item.status === 1
-                ? Images.approve
-                : Images.cancel;
-            const indexString = item.sanbayden.indexOf('(');
-            const filterPlace = item.sanbayden.slice(0, indexString);
-            const indexStartPlace = item.sanbaydi.indexOf('Sân');
-            const filterStartPlace = item.sanbaydi.slice(indexStartPlace);
-            const indexEndPlace = item.sanbayden.indexOf('Sân');
-            const filterEndPlace = item.sanbayden.slice(indexEndPlace);
-
-            const checktStatus = () => {
-              return (
-                (item.status !== 0 &&
-                  (user?.id_ht === 1 ||
-                    user?.id_ht === 20 ||
-                    user?.id_ht === 28)) ||
-                (user?.id_ht !== 1 && user?.id_ht !== 20 && user?.id_ht !== 28)
-              );
-            };
-
-            const checkRole = () => {
-              return (
-                item.status === 0 &&
-                (user?.id_ht === 1 || user?.id_ht === 20 || user?.id_ht === 28)
-              );
-            };
-
+        <View
+          style={{
+            borderBottomWidth: 0.6,
+            borderBlockColor: Colors.INACTIVE_GREY,
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            width: '100%',
+            height: Dimension.setHeight(10),
+            flexDirection: 'row',
+          }}>
+          {approveArr.map((item, index) => {
             return (
               <TouchableOpacity
-                onPress={() => {
-                  setSelectedItem({
-                    ...item,
-                    colorStatus: colorStatus,
-                    bgColorStatus: bgColorStatus,
-                    filterPlace: filterPlace,
-                    filterStartPlace: filterStartPlace,
-                    filterEndPlace: filterEndPlace,
-                  });
-                  handlePresentModalPress();
-                }}
+                onPress={() => handlePickOption(index)}
                 key={index}
                 style={{
-                  marginHorizontal: Dimension.setWidth(3),
-                  marginBottom: Dimension.setHeight(2),
-                  backgroundColor: '#ffffff',
-                  elevation: 5,
-                  ...shadowIOS,
-                  borderRadius: 15,
-                  paddingHorizontal: Dimension.setWidth(5),
-                  paddingVertical: Dimension.setHeight(2),
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingTop: Dimension.setHeight(2.2),
+                  paddingBottom: Dimension.setHeight(1.5),
+                  paddingHorizontal: Dimension.setWidth(3),
+                  height: '100%',
+                  borderBottomWidth: indexPicker === index ? 1.6 : null,
+                  borderBlockColor: indexPicker === index ? item.color : null,
                 }}>
-                <View
+                <Image
+                  source={item.icon}
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '66%',
-                  }}>
-                  <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18}}>
-                    {item.chuongtrinh}
-                  </Text>
-                </View>
-                <View style={{position: 'absolute', right: '5%', top: '7%'}}>
-                  {checktStatus() && (
-                    <StatusUI
-                      status={status}
-                      colorStatus={colorStatus}
-                      bgColorStatus={bgColorStatus}
-                      icon={icon}
-                    />
-                  )}
-                  {checkRole() && (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        width: Dimension.setWidth(17),
-                        alignSelf: 'center',
-                        zIndex: 9999,
-                      }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          handleApprove(item);
-                        }}>
-                        <Image
-                          source={Images.approved}
-                          style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => {
-                          handleCancel(item);
-                        }}>
-                        <Image
-                          source={Images.cancelled}
-                          style={[styles.approvedIcon, {tintColor: '#f25157'}]}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </View>
-
+                    height: 25,
+                    width: 25,
+                    tintColor: indexPicker === index ? item.color : '#edf2ed',
+                  }}
+                />
                 <Text
                   style={{
-                    fontSize: 16,
                     fontFamily: Fonts.SF_MEDIUM,
-                    color: '#747476',
-                    marginBottom: Dimension.setHeight(0.8),
+                    fontSize: 16,
+                    color: indexPicker === index ? item.color : '#edf2ed',
                   }}>
-                  {filterPlace}
+                  {item.title}
                 </Text>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.insideperson} style={styles.Iconic} />
-                  <Text
-                    style={[
-                      styles.title,
-                      {alignSelf: 'flex-start', width: '90%'},
-                    ]}>
-                    Trong viện:{' '}
-                    <Text style={styles.content}>
-                      {item.trongvien.map((item, index) => {
-                        return <Text key={index}>{item.hoten}, </Text>;
-                      })}
-                    </Text>
-                  </Text>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.outsideperson} style={styles.Iconic} />
-                  <Text style={styles.title}>Ngoài viện: </Text>
-                  <Text style={styles.content}>
-                    {item.ngoaivien.map((item, index) => {
-                      return <Text key={index}>{item}</Text>;
-                    })}
-                  </Text>
-                </View>
-
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.datetime} style={styles.Iconic} />
-                  <Text style={styles.title}>Thời gian:{'  '}</Text>
-                  <Text style={styles.content}>{item.ngaydi}</Text>
-                </View>
               </TouchableOpacity>
             );
           })}
-        </ScrollView>
+        </View>
+
+        {handleFilter(indexPicker)?.length !== 0 ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            style={{
+              flex: 1,
+              paddingTop: Dimension.setHeight(3),
+            }}
+            data={handleFilter(indexPicker)}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <RenderTicketData item={item} index={index} />
+            )}
+            initialNumToRender={6}
+            windowSize={6}
+            removeClippedSubviews={true}
+            refreshing={true}
+            extraData={ticketPlaneData}
+          />
+        ) : (
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontFamily: Fonts.SF_MEDIUM,
+                color: Colors.INACTIVE_GREY,
+              }}>
+              Không có dữ liệu nào được tìm thấy
+            </Text>
+          </View>
+        )}
         {selectedItem && (
           <BottomSheetModal
             backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
@@ -367,7 +509,7 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
                     ]}>
                     Người trong viện:{' '}
                     <Text style={styles.content}>
-                      {selectedItem.trongvien.map((item, index) => {
+                      {selectedItem.trongvien?.map((item, index) => {
                         return <Text key={index}>{item.hoten}, </Text>;
                       })}
                     </Text>
@@ -385,7 +527,7 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.ngoaivien.map((item, index) => {
+                      {selectedItem.ngoaivien?.map((item, index) => {
                         return <Text key={index}>{item}</Text>;
                       })}
                     </Text>
@@ -498,6 +640,7 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
         setToggleApproveModal={setToggleModal}
         checkInput={checkInput}
         selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
         commnetInput={commentInput}
         setCommentInput={setCommentInput}
         reasonCancel={reasonCancel}

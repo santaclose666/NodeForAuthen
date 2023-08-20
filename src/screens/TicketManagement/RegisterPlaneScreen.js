@@ -184,6 +184,7 @@ const RegisterPlaneScreen = ({navigation}) => {
   );
   const [timeValue, setTimeValue] = useState(getCurrentTime());
   const [kgNumber, setKgNumber] = useState(0);
+  
 
   const handlePickDate = date => {
     if (dateTime === 'date') {
