@@ -26,7 +26,7 @@ import {
   formatTimeToPost,
   formatDateToPost,
 } from '../../utils/serviceFunction';
-import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import {ToastAlert} from '../../components/Toast';
 import RegisterBtn from '../../components/RegisterBtn';
 import {registerVehicle} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
@@ -349,7 +349,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 15,
     color: '#8bc7bc',
-    lineHeight: Dimension.setHeight(2.2),
     marginBottom: Dimension.setHeight(1),
   },
 
@@ -374,7 +373,6 @@ const styles = StyleSheet.create({
   dateTimeText: {
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 16,
-    lineHeight: Dimension.setHeight(2.2),
   },
 
   dropdown: {
@@ -393,7 +391,6 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     color: '#277aaeff',
     fontSize: 15,
-    lineHeight: Dimension.setHeight(2),
   },
   imageStyle: {
     width: 24,
@@ -414,7 +411,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   itemText: {
-    lineHeight: Dimension.setHeight(2),
     color: '#57575a',
     fontSize: 14,
   },

@@ -3,7 +3,6 @@ import React, {
   useState,
   useCallback,
   useMemo,
-  useEffect,
   memo,
   useLayoutEffect,
 } from 'react';
@@ -37,6 +36,7 @@ import StatusUI from '../../components/StatusUI';
 import {ApproveCancelModal} from '../../components/Modal';
 import {ToastWarning} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
+import FilterStatusUI from '../../components/FilterStatusUI';
 
 const HistoryRegisterTicketScreen = ({navigation, route}) => {
   const refresh = route?.params?.refresh;
@@ -51,32 +51,6 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
   const [commentInput, setCommentInput] = useState('');
   const [reasonCancel, setReasonCancel] = useState('');
   const [refreshComponent, setRefreshComponent] = useState(false);
-  const approveArr = [
-    {
-      title: 'Tất cả',
-      color: '#618cf2',
-      bgColor: 'rgba(254, 244, 235, 0.3)',
-      icon: Images.all,
-    },
-    {
-      title: 'Chờ duyệt',
-      color: '#f0b263',
-      bgColor: 'rgba(254, 244, 235, 0.3)',
-      icon: Images.pending1,
-    },
-    {
-      title: 'Đã duyệt',
-      color: '#57b85d',
-      bgColor: 'rgba(222, 248, 237, 0.3)',
-      icon: Images.approved1,
-    },
-    {
-      title: 'Hủy bỏ',
-      color: '#f25157',
-      bgColor: 'rgba(249, 223, 224, 0.3)',
-      icon: Images.cancelled,
-    },
-  ];
   const [indexPicker, setIndexPicker] = useState(0);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
@@ -338,51 +312,10 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
     <SafeAreaView style={styles.container}>
       <Header title="Lịch sử đặt vé" navigation={navigation} />
       <BottomSheetModalProvider>
-        <View
-          style={{
-            borderBottomWidth: 0.6,
-            borderBlockColor: Colors.INACTIVE_GREY,
-            alignItems: 'center',
-            justifyContent: 'space-around',
-            width: '100%',
-            height: Dimension.setHeight(10),
-            flexDirection: 'row',
-          }}>
-          {approveArr.map((item, index) => {
-            return (
-              <TouchableOpacity
-                onPress={() => handlePickOption(index)}
-                key={index}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingTop: Dimension.setHeight(2.2),
-                  paddingBottom: Dimension.setHeight(1.5),
-                  paddingHorizontal: Dimension.setWidth(3),
-                  height: '100%',
-                  borderBottomWidth: indexPicker === index ? 1.6 : null,
-                  borderBlockColor: indexPicker === index ? item.color : null,
-                }}>
-                <Image
-                  source={item.icon}
-                  style={{
-                    height: 25,
-                    width: 25,
-                    tintColor: indexPicker === index ? item.color : '#edf2ed',
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: 16,
-                    color: indexPicker === index ? item.color : '#edf2ed',
-                  }}>
-                  {item.title}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+        <FilterStatusUI
+          handlePickOption={handlePickOption}
+          indexPicker={indexPicker}
+        />
 
         {handleFilter(indexPicker)?.length !== 0 ? (
           <FlatList
@@ -697,7 +630,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 17,
     color: '#8bc7bc',
-    lineHeight: Dimension.setHeight(2.2),
     marginBottom: Dimension.setHeight(1.6),
   },
 

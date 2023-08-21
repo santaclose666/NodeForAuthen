@@ -382,7 +382,6 @@ const styles = StyleSheet.create({
   companyText: {
     fontSize: 24,
     fontFamily: Fonts.SF_BOLD,
-    lineHeight: Dimension.setHeight(3.3),
     color: '#388a60',
   },
 
@@ -431,7 +430,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: Fonts.SF_BOLD,
     color: Colors.INACTIVE_GREY,
-    lineHeight: Dimension.setHeight(1.8),
   },
 
   weatherContainer: {
@@ -524,14 +522,12 @@ const styles = StyleSheet.create({
   newsTitleText: {
     fontFamily: Fonts.SF_SEMIBOLD,
     fontSize: 16,
-    lineHeight: Dimension.setHeight(3.3),
   },
 
   newsLocationText: {
     fontFamily: Fonts.SF_REGULAR,
     color: Colors.INACTIVE_GREY,
     fontSize: 14,
-    lineHeight: Dimension.setHeight(2.3),
   },
 });
 

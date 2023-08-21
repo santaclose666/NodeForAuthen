@@ -124,7 +124,6 @@ const StaffListScreen = ({navigation}) => {
                 style={{
                   fontFamily: Fonts.SF_SEMIBOLD,
                   fontSize: 19,
-                  lineHeight: Dimension.setHeight(3.8),
                 }}>
                 {item.hoten}
               </Text>
@@ -136,7 +135,6 @@ const StaffListScreen = ({navigation}) => {
                   fontFamily: Fonts.SF_REGULAR,
                   fontSize: 15,
                   width: Dimension.setWidth(45),
-                  lineHeight: Dimension.setHeight(2),
                 }}>
                 {item.email}
               </Text>
@@ -152,7 +150,6 @@ const StaffListScreen = ({navigation}) => {
                 fontFamily: Fonts.SF_REGULAR,
                 fontSize: 16,
                 color: Colors.INACTIVE_GREY,
-                lineHeight: Dimension.setHeight(2.8),
               }}>
               Chức vụ
             </Text>
@@ -160,7 +157,6 @@ const StaffListScreen = ({navigation}) => {
               style={{
                 fontFamily: Fonts.SF_SEMIBOLD,
                 fontSize: 15,
-                lineHeight: Dimension.setHeight(2.5),
               }}>
               {item.chucdanh}
             </Text>
@@ -256,7 +252,7 @@ const StaffListScreen = ({navigation}) => {
           }}
           containerStyle={styles.containerOptionStyle}
           itemContainerStyle={styles.itemContainer}
-          itemTextStyle={{lineHeight: Dimension.setHeight(2), color: '#57575a'}}
+          itemTextStyle={ {color: '#57575a'}}
           fontFamily={Fonts.SF_MEDIUM}
           activeColor="#eef2feff"
           maxHeight={Dimension.setHeight(23)}

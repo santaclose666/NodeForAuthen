@@ -186,7 +186,6 @@ const styles = StyleSheet.create({
     color: '#3a5072',
     fontFamily: Fonts.SF_BOLD,
     fontSize: 18,
-    lineHeight: Dimension.setHeight(2.5),
   },
 
   obj2: {
@@ -194,7 +193,6 @@ const styles = StyleSheet.create({
     color: '#7f84a1',
     fontFamily: Fonts.SF_REGULAR,
     fontSize: 18,
-    lineHeight: Dimension.setHeight(2.5),
   },
 
   time: {

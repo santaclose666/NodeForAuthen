@@ -1,12 +1,19 @@
-import React, {useRef, useState, useCallback, useMemo, useEffect} from 'react';
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  memo,
+  useLayoutEffect,
+  useMemo,
+} from 'react';
 import {
   View,
   Text,
   Image,
   StyleSheet,
   SafeAreaView,
-  ScrollView,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -20,185 +27,213 @@ import {
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
 import {shadowIOS} from '../../contants/propsIOS';
+import {getAllWorkSchedule} from '../../redux/apiRequest';
+import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
+import FilterStatusUI from '../../components/FilterStatusUI';
+import {changeFormatDate} from '../../utils/serviceFunction';
 
 const HistoryWorkShedule = ({navigation, route}) => {
-  const [workSheduleData, setWorkSheduleData] = useState([
-    {
-      fullName: 'Bùi Trung Hiếu',
-      subject: 'Phòng R&D',
-      location: 'Hà Tĩnh',
-      startDay: '08/08/2022',
-      endDay: '10/08/2022',
-      programName:
-        'Gói thầu số 01: Rà soát, điều chỉnh cục bộ Quy hoạch ba loại rừng theo Quyết định số 3042/QĐ-UBND ngày 27/12/2018 của Ủy ban nhân dân tỉnh Hòa Bình',
-      content: 'Làm việc tại CCKL',
-      status: 'Pending',
-    },
-    {
-      fullName: 'Bùi Trung Hiếu',
-      subject: 'Phòng R&D',
-      location: 'Hà Tĩnh',
-      startDay: '08/08/2022',
-      endDay: '10/08/2022',
-      programName: 'Xây dựng CSDL DDSH Cúc Phương',
-      content: 'Họp triển khai	',
-      status: 'Pending',
-    },
-    {
-      fullName: 'Bùi Trung Hiếu',
-      subject: 'Phòng R&D',
-      location: 'Ninh Bình	',
-      startDay: '08/08/2022',
-      endDay: '10/08/2022',
-      programName: 'Đi gửi văn bản tới Bộ NN&PTNT',
-      content: 'Đi gửi văn bản tới Bộ NN&PTNT',
-      status: 'Cancelled',
-    },
-  ]);
-
+  const refresh = route.params?.refresh;
+  const user = useSelector(state => state.auth.login?.currentUser);
+  const dispatch = useDispatch();
+  const workSheduleData = useSelector(
+    state => state.workShedule?.worksSchedule?.data,
+  );
+  const [refreshComponent, setRefreshComponent] = useState(false);
+  const [indexPicker, setIndexPicker] = useState(0);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [rerender, setRerender] = useState(false);
-
   const bottomSheetModalRef = useRef(null);
-
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
-  const handlePresentModalPress = useCallback(() => {
-    setRerender(true);
-  }, [selectedItem]);
-  const handleSheetChanges = useCallback(index => {
-    console.log('handleSheetChanges', index);
+  const handleSheetChanges = useCallback(() => {
+    setSelectedItem(null);
   }, []);
 
-  useEffect(() => {
-    if (rerender) {
-      bottomSheetModalRef.current?.present();
-      setRerender(false);
-    }
-  }, [rerender, selectedItem]);
+  const handlePickOption = useCallback(
+    index => {
+      setIndexPicker(index);
+    },
+    [indexPicker],
+  );
+
+  const handleFilter = useCallback(
+    index => {
+      switch (index) {
+        case 0:
+          return workSheduleData;
+        case 1:
+          return workSheduleData?.filter(item => item.status === 0);
+        case 2:
+          return workSheduleData?.filter(item => item.status === 1);
+        case 3:
+          return workSheduleData?.filter(item => item.status === 2);
+      }
+    },
+    [workSheduleData],
+  );
+
+  const fetchWorkSchedule = () => {
+    getAllWorkSchedule(dispatch, user?.id);
+  };
+
+  useLayoutEffect(() => {
+    fetchWorkSchedule();
+
+    console.log(workSheduleData[0].id);
+  }, [refresh, refreshComponent]);
+
+  const RenderWorkScheduleData = memo(({item, index}) => {
+    const colorStatus =
+      item.status === 0 ? '#f9a86a' : item.status === 1 ? '#57b85d' : '#f25157';
+    const bgColorStatus =
+      item.status === 0 ? '#fef4eb' : item.status === 1 ? '#def8ed' : '#f9dfe0';
+    const status =
+      item.status === 0
+        ? 'Chờ phê duyệt'
+        : item.status === 1
+        ? 'Đã phê duyệt'
+        : 'Đã hủy';
+    const icon =
+      item.status === 0
+        ? Images.pending
+        : item.status === 1
+        ? Images.approve
+        : Images.cancel;
+
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          setSelectedItem({
+            ...item,
+            colorStatus: colorStatus,
+            bgColorStatus: bgColorStatus,
+          });
+        }}
+        key={index}
+        style={{
+          marginHorizontal: Dimension.setWidth(3),
+          marginBottom: Dimension.setHeight(2),
+          backgroundColor: '#ffffff',
+          elevation: 5,
+          ...shadowIOS,
+          borderRadius: 15,
+          paddingHorizontal: Dimension.setWidth(5),
+          paddingVertical: Dimension.setHeight(2),
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <Text
+            numberOfLines={2}
+            ellipsizeMode="tail"
+            style={{
+              fontFamily: Fonts.SF_SEMIBOLD,
+              fontSize: 19,
+              width: '70%',
+            }}>
+            {item.thuocchuongtrinh}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingVertical: Dimension.setHeight(0.5),
+              paddingHorizontal: Dimension.setWidth(1.4),
+              borderRadius: 8,
+              backgroundColor: bgColorStatus,
+            }}>
+            <Image
+              source={icon}
+              style={{
+                height: 16,
+                width: 16,
+                marginRight: Dimension.setWidth(1),
+                tintColor: colorStatus,
+              }}
+            />
+            <Text
+              style={{
+                color: colorStatus,
+                fontSize: 14,
+                fontFamily: Fonts.SF_MEDIUM,
+              }}>
+              {status}
+            </Text>
+          </View>
+        </View>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: Fonts.SF_MEDIUM,
+            color: '#747476',
+            marginBottom: Dimension.setHeight(0.8),
+          }}>
+          {item.diadiem}
+        </Text>
+        <View style={styles.containerEachLine}>
+          <Image source={Images.insideperson} style={styles.Iconic} />
+          <Text
+            numberOfLines={2}
+            ellipsizeMode="tail"
+            style={[styles.title, {width: '90%'}]}>
+            Họ tên: <Text style={styles.content}>{item.name_user}</Text>
+          </Text>
+        </View>
+
+        <View style={styles.containerEachLine}>
+          <Image source={Images.datetime} style={styles.Iconic} />
+          <Text style={styles.title}>Thời gian:</Text>
+          <Text style={styles.content}>{changeFormatDate(item.tungay)}</Text>
+          <Separation />
+          <Text style={styles.content}>{changeFormatDate(item.denngay)}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  });
 
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Lịch sử công tác" navigation={navigation} />
+      <FilterStatusUI
+        handlePickOption={handlePickOption}
+        indexPicker={indexPicker}
+      />
       <BottomSheetModalProvider>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{flex: 1, marginTop: Dimension.setHeight(2)}}>
-          {workSheduleData.map((item, index) => {
-            const colorStatus =
-              item.status === 'Pending'
-                ? '#f9a86a'
-                : item.status === 'Approved'
-                ? '#57b85d'
-                : '#f25157';
-            const bgColorStatus =
-              item.status === 'Pending'
-                ? '#fef4eb'
-                : item.status === 'Approved'
-                ? '#def8ed'
-                : '#f9dfe0';
-
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedItem({
-                    ...item,
-                    colorStatus: colorStatus,
-                    bgColorStatus: bgColorStatus,
-                  });
-                  handlePresentModalPress();
-                }}
-                key={index}
-                style={{
-                  marginHorizontal: Dimension.setWidth(3),
-                  marginBottom: Dimension.setHeight(2),
-                  backgroundColor: '#ffffff',
-                  elevation: 5,
-                  ...shadowIOS,
-                  borderRadius: 15,
-                  paddingHorizontal: Dimension.setWidth(5),
-                  paddingVertical: Dimension.setHeight(2),
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text
-                    numberOfLines={2}
-                    ellipsizeMode="tail"
-                    style={{
-                      fontFamily: Fonts.SF_SEMIBOLD,
-                      fontSize: 19,
-                      width: '70%',
-                    }}>
-                    {item.programName}
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      paddingVertical: Dimension.setHeight(0.5),
-                      paddingHorizontal: Dimension.setWidth(1.4),
-                      borderRadius: 8,
-                      backgroundColor: bgColorStatus,
-                    }}>
-                    <Image
-                      source={
-                        item.status === 'Pending'
-                          ? Images.pending
-                          : item.status === 'Approved'
-                          ? Images.approve
-                          : Images.cancel
-                      }
-                      style={{
-                        height: 16,
-                        width: 16,
-                        marginRight: Dimension.setWidth(1),
-                        tintColor: colorStatus,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        color: colorStatus,
-                        fontSize: 14,
-                        fontFamily: Fonts.SF_MEDIUM,
-                      }}>
-                      {item.status}
-                    </Text>
-                  </View>
-                </View>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: Fonts.SF_MEDIUM,
-                    color: '#747476',
-                    marginBottom: Dimension.setHeight(0.8),
-                  }}>
-                  {item.location}
-                </Text>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.insideperson} style={styles.Iconic} />
-                  <Text
-                    numberOfLines={2}
-                    ellipsizeMode="tail"
-                    style={[styles.title, {width: '90%'}]}>
-                    Họ tên: <Text style={styles.content}>{item.fullName}</Text>
-                  </Text>
-                </View>
-
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.datetime} style={styles.Iconic} />
-                  <Text style={styles.title}>Thời gian:</Text>
-                  <Text style={styles.content}>{item.startDay}</Text>
-                  <Separation />
-                  <Text style={styles.content}>{item.endDay}</Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+        {handleFilter(indexPicker)?.length !== 0 ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            style={{
+              flex: 1,
+              paddingTop: Dimension.setHeight(3),
+            }}
+            data={handleFilter(indexPicker)}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <RenderWorkScheduleData item={item} index={index} />
+            )}
+            initialNumToRender={6}
+            windowSize={6}
+            removeClippedSubviews={true}
+            refreshing={true}
+            extraData={workSheduleData}
+          />
+        ) : (
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontFamily: Fonts.SF_MEDIUM,
+                color: Colors.INACTIVE_GREY,
+              }}>
+              Không có dữ liệu nào được tìm thấy
+            </Text>
+          </View>
+        )}
         {selectedItem && (
           <BottomSheetModal
             backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
@@ -380,7 +415,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 17,
     color: '#8bc7bc',
-    lineHeight: Dimension.setHeight(2.2),
     marginBottom: Dimension.setHeight(1.6),
   },
 });

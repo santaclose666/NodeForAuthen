@@ -1,7 +1,36 @@
+import Images from '../contants/Images';
+
 export const mainURL = 'https://forestry.ifee.edu.vn/';
 
 export const DocumentURL =
   'https://management.ifee.edu.vn/2023_Forestry4.0App/VanBanSoTay/';
+
+export const approveArr = [
+  {
+    title: 'Tất cả',
+    color: '#618cf2',
+    bgColor: 'rgba(254, 244, 235, 0.3)',
+    icon: Images.all,
+  },
+  {
+    title: 'Chờ duyệt',
+    color: '#f0b263',
+    bgColor: 'rgba(254, 244, 235, 0.3)',
+    icon: Images.pending1,
+  },
+  {
+    title: 'Đã duyệt',
+    color: '#57b85d',
+    bgColor: 'rgba(222, 248, 237, 0.3)',
+    icon: Images.approved1,
+  },
+  {
+    title: 'Hủy bỏ',
+    color: '#f25157',
+    bgColor: 'rgba(249, 223, 224, 0.3)',
+    icon: Images.cancelled,
+  },
+];
 
 export const DocumentData = [
   {

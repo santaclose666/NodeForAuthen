@@ -326,7 +326,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_REGULAR,
     fontSize: 14,
     marginLeft: Dimension.setWidth(2),
-    lineHeight: Dimension.setHeight(2),
   },
   searchInput: {
     alignSelf: 'center',

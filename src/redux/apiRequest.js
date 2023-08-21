@@ -33,6 +33,11 @@ import {
   getTicketPlaneStart,
   getTicketPlaneSuccess,
 } from './ticketSlice';
+import {
+  getWorkScheduleFailed,
+  getWorkScheduleStart,
+  getWorkScheduleSuccess,
+} from './workScheduleSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -221,6 +226,39 @@ export const getAllWorkName = async dispatch => {
   }
 };
 
+export const registerWorkSchedule = async data => {
+  try {
+    await axios.post(`https://management.ifee.edu.vn/api/lichcongtac/reg`, {
+      ...data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllWorkSchedule = async (dispatch, id) => {
+  dispatch(getWorkScheduleStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/lichcongtac/danhsach?id_user=${id}`,
+    );
+
+    const pendingArr = res.data.pheduyet;
+    const approvedArr = res.data.dapheduyet;
+    const data = approvedArr.concat(pendingArr);
+
+    dispatch(
+      getWorkScheduleSuccess(
+        data.sort((a, b) => {
+          return b.id - a.id;
+        }),
+      ),
+    );
+  } catch (error) {
+    dispatch(getWorkScheduleFailed());
+  }
+};
+
 /////////////////////  VEHIOCLE SCHEDULE DATA  ////////////////////
 
 export const getVehicleData = async (dispatch, id) => {
@@ -253,32 +291,6 @@ export const registerVehicle = async data => {
     ToastSuccess('Thành công');
   } catch (error) {
     ToastAlert('Gửi đề nghị thất bại!');
-  }
-};
-
-export const registerWorkSchedule = async data => {
-  try {
-    const op1 = data.op1_tenchuongtrinh;
-    const op2 = data.op2_tenchuongtrinh;
-    const checkOpp =
-      data.op_tenchuongtrinh === 1
-        ? {op1_tenchuongtrinh: op1}
-        : {op2_tenchuongtrinh: op2};
-
-    await axios.post(`https://management.ifee.edu.vn/api/lichcongtac/reg`, {
-      id_user: data.id_user,
-      tungay: data.tungay,
-      denngay: data.denngay,
-      diadiem: data.diadiem,
-      noidung: data.noidung,
-      daumoi: data.daumoi,
-      thanhphan: data.thanhphan,
-      ghichu: data.ghichu,
-      op_tenchuongtrinh: data.op_tenchuongtrinh,
-      ...checkOpp,
-    });
-  } catch (error) {
-    console.log(error);
   }
 };
 
