@@ -375,7 +375,12 @@ const styles = StyleSheet.create({
     height: 20,
     marginRight: Dimension.setWidth(1.3),
   },
-  nocar: {fontSize: 16, fontWeight: 'bold', color: 'red'},
+  nocar: {
+    fontSize: 16,
+    fontFamily: Fonts.SF_SEMIBOLD,
+    color: 'red',
+    alignSelf: 'center',
+  },
 });
 
 export default RegisterVehicleScreen;

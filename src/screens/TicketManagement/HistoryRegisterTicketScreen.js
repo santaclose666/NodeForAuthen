@@ -228,7 +228,8 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
             {item.chuongtrinh}
           </Text>
         </View>
-        <View style={{position: 'absolute', right: '5%', top: '7%'}}>
+        <View
+          style={{position: 'absolute', right: '5%', top: '7%', zIndex: 9999}}>
           {checktStatus() && (
             <StatusUI
               status={status}
@@ -564,7 +565,7 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
         )}
       </BottomSheetModalProvider>
       <ApproveCancelModal
-        screenName={'registerVehicalAndTicket'}
+        screenName={'registerTicket'}
         toggleApproveModal={toggleModal}
         setToggleApproveModal={setToggleModal}
         checkInput={checkInput}
@@ -608,7 +609,6 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     fontFamily: Fonts.SF_SEMIBOLD,
-    color: 'black',
   },
 
   bottomSheetContainer: {

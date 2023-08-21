@@ -292,6 +292,28 @@ export const registerVehicle = async data => {
   }
 };
 
+export const approveVehicle = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/xe/pheduyet/${data.id_dulieu}`,
+      {id_user: data.id_user},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelVehicle = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/xe/tuchoi/${data.id_dulieu}`,
+      {id_user: data.id_user},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /////////////////////  REGISTER PLANE DATA  ////////////////////
 
 export const registerPlaneTicket = async data => {

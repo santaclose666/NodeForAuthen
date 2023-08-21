@@ -27,9 +27,11 @@ import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
-import {getVehicleData} from '../../redux/apiRequest';
+import {cancelVehicle, getVehicleData} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
+import StatusUI from '../../components/StatusUI';
+import {changeFormatDate} from '../../utils/serviceFunction';
 
 export const approveArr = [
   {
@@ -72,6 +74,50 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const handleSheetChanges = useCallback(index => {
+    if (index < 0) {
+      setSelectedItem(null);
+    }
+  }, []);
+
+  const handleBottomSheet = useCallback(
+    (item, colorStatus, bgColorStatus) => {
+      setSelectedItem({
+        ...item,
+        colorStatus,
+        bgColorStatus,
+      });
+      setTimeout(() => {
+        handlePresentModalPress();
+      });
+    },
+    [selectedItem],
+  );
+
+  const handleApprove = useCallback(item => {
+    const data = {
+      id_dulieu: item.id,
+      id_user: user?.id,
+    };
+
+    approveVehicle(data);
+    setRefreshComponent(!refreshComponent);
+  }, []);
+
+  const handleCancel = useCallback(item => {
+    const data = {
+      id_dulieu: item.id,
+      id_user: user?.id,
+    };
+
+    cancelVehicle(data);
+    setRefreshComponent(!refreshComponent);
+  }, []);
+
   const handlePickOption = useCallback(
     index => {
       setIndexPicker(index);
@@ -98,44 +144,6 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
     },
     [allVehicleData],
   );
-
-  const handlePickItem = item => {
-    setSelectedItem(item);
-    setToggleApproveModal(true);
-  };
-
-  const handleNonAdjust = (check, item) => {
-    setCheckInput(check);
-    handlePickItem(item);
-  };
-
-  const handleSendNonAdjust = () => {
-    const importantData = {
-      idVehicle: selectedItem.id,
-      id_user: user?.id,
-    };
-    if (!checkInput && selectedItem !== null) {
-      const data = {
-        ...importantData,
-        lydo: reasonCancel,
-      };
-      rejectVehicleRequest(data);
-      setReasonCancel(null);
-      setRefreshComponent(!refreshComponent);
-      setToggleApproveModal(false);
-    } else if (checkInput && selectedItem !== null) {
-      const data = {
-        ...importantData,
-        nhanxet: commnetInput,
-      };
-      resolveVehicleRequest(data);
-      setCommentInput(null);
-      setRefreshComponent(!refreshComponent);
-      setToggleApproveModal(false);
-    } else {
-      ToastWarning('Nhập đầy đủ lý do');
-    }
-  };
 
   const fetchVehicleData = () => {
     getVehicleData(dispatch, user?.id);
@@ -175,18 +183,24 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
         ? Images.approve
         : Images.cancel;
 
+    const checktStatus = () => {
+      return (
+        ((user?.id === 2 || user?.id === 8) && item.pheduyet !== null) ||
+        (user?.id !== 2 && user?.id !== 8)
+      );
+    };
+
+    const checkRole = () => {
+      return (user?.id === 2 || user?.id === 8) && item.pheduyet === null;
+    };
+
     const userFilter = staffs.filter(
       user => item.id_user === user.id && user.tendonvi === 'IFEE',
     )[0];
     return (
       <TouchableOpacity
         onPress={() => {
-          setSelectedItem({
-            ...item,
-            colorStatus: colorStatus,
-            bgColorStatus: bgColorStatus,
-          });
-          handlePresentModalPress();
+          handleBottomSheet(item, colorStatus, bgColorStatus);
         }}
         key={index}
         style={{
@@ -197,17 +211,59 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
           ...shadowIOS,
           borderRadius: 15,
           paddingHorizontal: Dimension.setWidth(5),
-          paddingVertical: Dimension.setHeight(2),
+          paddingTop: Dimension.setHeight(2),
+          paddingBottom: Dimension.setHeight(1),
         }}>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
+            width: '66%',
           }}>
-          <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 19}}>
-            {`${item.loaixe}: ${item.noidung}`}
+          <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18}}>
+            {item.loaixe}
           </Text>
+        </View>
+        <View
+          style={{position: 'absolute', right: '5%', top: '7%', zIndex: 9999}}>
+          {checktStatus() && (
+            <StatusUI
+              status={status}
+              colorStatus={colorStatus}
+              bgColorStatus={bgColorStatus}
+              icon={icon}
+            />
+          )}
+          {checkRole() && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: Dimension.setWidth(17),
+                alignSelf: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  handleApprove(item);
+                }}>
+                <Image
+                  source={Images.approved}
+                  style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  handleCancel(item);
+                }}>
+                <Image
+                  source={Images.cancelled}
+                  style={[styles.approvedIcon, {tintColor: '#f25157'}]}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         <View
           style={{
@@ -222,35 +278,8 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
               color: '#747476',
               marginBottom: Dimension.setHeight(0.8),
             }}>
-            {item.noiden ? item.noiden : 'Không xác định'}
+            {item.noiden}
           </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingVertical: Dimension.setHeight(0.5),
-              paddingHorizontal: Dimension.setWidth(1.4),
-              borderRadius: 8,
-              backgroundColor: bgColorStatus,
-            }}>
-            <Image
-              source={icon}
-              style={{
-                height: 16,
-                width: 16,
-                marginRight: Dimension.setWidth(1),
-                tintColor: colorStatus,
-              }}
-            />
-            <Text
-              style={{
-                color: colorStatus,
-                fontSize: 14,
-                fontFamily: Fonts.SF_MEDIUM,
-              }}>
-              {status}
-            </Text>
-          </View>
         </View>
 
         <View style={styles.containerEachLine}>
@@ -265,30 +294,14 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
         <View style={styles.containerEachLine}>
           <Image source={Images.datetime} style={styles.Iconic} />
           <Text style={styles.title}>Mượn từ:{'  '}</Text>
-          <Text style={styles.content}>{item.ngaydi}</Text>
+          <Text style={styles.content}>{changeFormatDate(item.ngaydi)}</Text>
           <Separation />
-          <Text style={styles.content}>{item.ngayve}</Text>
+          <Text style={styles.content}>
+            {changeFormatDate(item.ngayve) !== 'Invalid date'
+              ? changeFormatDate(item.ngayve)
+              : 'Không xác định'}
+          </Text>
         </View>
-        {(user?.id == 2 || user?.id == 8) && item.pheduyet == null && (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => {}}
-              style={[
-                styles.buttonItem,
-                {backgroundColor: 'rgba(0, 181, 32, 0.32)'},
-              ]}>
-              <Text style={{color: 'rgba(0, 84, 15, 1)'}}>Phê duyệt</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {}}
-              style={[
-                styles.buttonItem,
-                {backgroundColor: 'rgba(233, 0, 0, 0.32)'},
-              ]}>
-              <Text style={{color: 'rgba(233, 0, 0, 0.9)'}}>Từ chối</Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </TouchableOpacity>
     );
   };
@@ -372,7 +385,7 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
           </View>
         )}
 
-        {/* {selectedItem && (
+        {selectedItem && (
           <BottomSheetModal
             backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
             ref={bottomSheetModalRef}
@@ -438,30 +451,32 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
                 </View>
                 <View style={styles.containerEachLine}>
                   <Image source={Images.datetime} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Mượn từ:{'  '}</Text>
-                    <Text style={styles.content}>{selectedItem.ngaydi}</Text>
-                    <Separation />
-                    <Text style={styles.content}>{selectedItem.ngayve}</Text>
-                  </View>
+                  <Text style={styles.title}>Mượn từ:{'  '}</Text>
+                  <Text style={styles.content}>
+                    {changeFormatDate(selectedItem.ngaydi)}
+                  </Text>
+                  <Separation />
+                  <Text style={styles.content}>
+                    {changeFormatDate(selectedItem.ngayve) !== 'Invalid date'
+                      ? changeFormatDate(selectedItem.ngayve)
+                      : 'Không xác định'}
+                  </Text>
                 </View>
                 <View style={styles.containerEachLine}>
                   <Image source={Images.content} style={styles.Iconic} />
                   <View
                     style={{
                       flexDirection: 'row',
-                      width: '66%',
+                      width: '90%',
                     }}>
-                    <Text style={styles.title}>Nội dung:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.noidung}
+                    <Text style={styles.title}>
+                      Nội dung:{'  '}
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.noidung}
+                      </Text>
                     </Text>
                   </View>
                 </View>
@@ -487,23 +502,7 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
                   </View>
                 </View>
                 <View style={styles.containerEachLine}>
-                  <Image source={Images.admin} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Người duyệt:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {getStaffByID(selectedItem.id_nguoiduyet)}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.outsideperson} style={styles.Iconic} />
+                  <Image source={Images.datetime} style={styles.Iconic} />
                   <View
                     style={{
                       flexDirection: 'row',
@@ -514,14 +513,14 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.ngayduyet}
+                      {changeFormatDate(selectedItem.ngayduyet)}
                     </Text>
                   </View>
                 </View>
               </View>
             </BottomSheetScrollView>
           </BottomSheetModal>
-        )} */}
+        )}
       </BottomSheetModalProvider>
     </SafeAreaView>
   );
@@ -547,7 +546,6 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    alignSelf: 'center',
     color: '#747476',
     fontSize: 15,
     fontFamily: Fonts.SF_MEDIUM,
@@ -589,6 +587,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 15,
     height: Dimension.setHeight(3.5),
+  },
+
+  approvedIcon: {
+    width: 30,
+    height: 30,
   },
 });
 

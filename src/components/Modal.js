@@ -94,7 +94,7 @@ export const ApproveCancelModal = ({
             </Text>
           </View>
         )}
-        {screenName === 'registerVehicalAndTicket' && (
+        {screenName === 'registerTicket' && (
           <View
             style={{
               alignItems: 'center',
@@ -114,6 +114,33 @@ export const ApproveCancelModal = ({
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
               {selectedItem?.chuongtrinh}
+            </Text>
+          </View>
+        )}
+        {screenName === 'registerVehicle' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image
+              source={
+                selectedItem?.loaixe?.includes('WAVE')
+                  ? Images.motorbike
+                  : Images.vehicles
+              }
+              style={{height: 55, width: 55}}
+            />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: 18,
+                fontFamily: Fonts.SF_SEMIBOLD,
+              }}>
+              {selectedItem?.loaixe}
             </Text>
           </View>
         )}
