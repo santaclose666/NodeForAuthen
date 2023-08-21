@@ -215,7 +215,7 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
           ...shadowIOS,
           borderRadius: 15,
           paddingHorizontal: Dimension.setWidth(5),
-          paddingVertical: Dimension.setHeight(2),
+          paddingTop: Dimension.setHeight(2),
         }}>
         <View
           style={{
@@ -280,7 +280,7 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
         </Text>
         <View style={styles.containerEachLine}>
           <Image source={Images.insideperson} style={styles.Iconic} />
-          <Text style={[styles.title, {alignSelf: 'flex-start', width: '90%'}]}>
+          <Text style={[styles.title, {width: '90%'}]}>
             Trong viện:{' '}
             <Text style={styles.content}>
               {item.trongvien.map((item, index) => {
@@ -435,11 +435,7 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
                 </View>
                 <View style={styles.containerEachLine}>
                   <Image source={Images.insideperson} style={styles.Iconic} />
-                  <Text
-                    style={[
-                      styles.title,
-                      {alignSelf: 'flex-start', width: '90%'},
-                    ]}>
+                  <Text style={[styles.title, {width: '90%'}]}>
                     Người trong viện:{' '}
                     <Text style={styles.content}>
                       {selectedItem.trongvien?.map((item, index) => {
@@ -612,6 +608,7 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     fontFamily: Fonts.SF_SEMIBOLD,
+    color: 'black',
   },
 
   bottomSheetContainer: {

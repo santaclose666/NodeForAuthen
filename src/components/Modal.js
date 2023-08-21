@@ -61,7 +61,7 @@ export const ApproveCancelModal = ({
             borderBottomWidth: 0.8,
             borderBlockColor: Colors.INACTIVE_GREY,
             width: '100%',
-            height: Dimension.setHeight(5),
+            height: Dimension.setHeight(4.5),
           }}>
           <Text
             style={{
@@ -129,7 +129,7 @@ export const ApproveCancelModal = ({
               borderRadius: 10,
               fontFamily: Fonts.SF_REGULAR,
               width: '70%',
-              height: Dimension.setHeight(6),
+              height: Dimension.setHeight(5),
               maxHeight: Dimension.setHeight(9),
             }}
             onChangeText={e =>
