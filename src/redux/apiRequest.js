@@ -1,4 +1,4 @@
-import axios, {formToJSON} from 'axios';
+import axios from 'axios';
 import {
   loginStart,
   loginSuccess,
@@ -121,7 +121,7 @@ export const getWeatherData = async dispatch => {
 export const registerOnLeave = async data => {
   try {
     await axios.post(
-      ` https://management.ifee.edu.vn/api/nghiphep/reg/${data.id_user}`,
+      `https://management.ifee.edu.vn/api/nghiphep/reg/${data.id_user}`,
       {tungay: data.tungay, tong: data.tong, lydo: data.lydo},
     );
   } catch (error) {

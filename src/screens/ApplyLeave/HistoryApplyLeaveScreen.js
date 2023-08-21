@@ -316,6 +316,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                 borderRadius: 8,
                 backgroundColor:
                   item.yc_update === 0 ? bgColorStatus : bgColorAdjustStatus,
+                marginBottom: Dimension.setHeight(0.6),
               }}>
               <Image
                 source={item.yc_update === 0 ? icon : iconAdjust}
@@ -418,6 +419,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                     alignItems: 'center',
                     alignSelf: 'center',
                     justifyContent: 'center',
+                    marginLeft: Dimension.setWidth(1),
                   }}>
                   <Image
                     source={Images.adjust}
@@ -680,6 +682,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               borderBottomWidth: 0.8,
               borderBlockColor: Colors.INACTIVE_GREY,
               width: '100%',
+              height: Dimension.setHeight(4.5),
             }}>
             <Text
               style={{
