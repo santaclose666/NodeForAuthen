@@ -16,11 +16,8 @@ import Icons from '../../contants/Icons';
 import Colors from '../../contants/Colors';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
-import Data from '../../utils/Data.json';
 import {shadowIOS} from '../../contants/propsIOS';
-
-const baseURL =
-  'https://management.ifee.edu.vn/2023_Forestry4.0App/VanBanSoTay/';
+import {DocumentData, DocumentURL} from '../../contants/Variable';
 
 const DocumentListScreen = ({navigation}) => {
   const [pickFileIndex, setpickFileIndex] = useState(null);
@@ -34,14 +31,14 @@ const DocumentListScreen = ({navigation}) => {
     'Thông tư',
     'Sổ tay',
   ]);
-  const [data, setData] = useState(Data);
+  const [data, setData] = useState(DocumentData);
 
   const handleSearch = useCallback(
     text => {
       setInput(text);
       setPickOptionIndex(null);
 
-      const filter = Data.filter(
+      const filter = DocumentData.filter(
         item =>
           unidecode(item.SoHieu.toLowerCase()).includes(text.toLowerCase()) ||
           unidecode(item.TrichYeu.toLowerCase()).includes(text.toLowerCase()),
@@ -54,8 +51,8 @@ const DocumentListScreen = ({navigation}) => {
   const handlePickOption = useCallback(
     (keyWord, index) => {
       index === 0
-        ? setData(Data)
-        : setData(Data.filter(item => item.LoaiVB === keyWord));
+        ? setData(DocumentData)
+        : setData(DocumentData.filter(item => item.LoaiVB === keyWord));
 
       setPickOptionIndex(index);
     },
@@ -63,7 +60,7 @@ const DocumentListScreen = ({navigation}) => {
   );
 
   const handlePress = useCallback(fileName => {
-    navigation.navigate('PDF', {link: baseURL + fileName});
+    navigation.navigate('PDF', {link: DocumentURL + fileName});
   }, []);
 
   const RenderDocument = memo(({item, index}) => {
@@ -329,7 +326,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_REGULAR,
     fontSize: 14,
     marginLeft: Dimension.setWidth(2),
-    lineHeight: Dimension.setHeight(2),
   },
   searchInput: {
     alignSelf: 'center',

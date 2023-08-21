@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   TextInput,
   ScrollView,
-  Platform,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
@@ -30,7 +29,8 @@ import {
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
 import {registerPlaneTicket} from '../../redux/apiRequest';
-import {calendarView, shadowIOS} from '../../contants/propsIOS';
+import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const planeCompany = [
   {
@@ -184,6 +184,7 @@ const RegisterPlaneScreen = ({navigation}) => {
   );
   const [timeValue, setTimeValue] = useState(getCurrentTime());
   const [kgNumber, setKgNumber] = useState(0);
+  
 
   const handlePickDate = date => {
     if (dateTime === 'date') {
@@ -239,7 +240,10 @@ const RegisterPlaneScreen = ({navigation}) => {
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Người đăng kí</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={Images.avatar} style={{height: 40, width: 40}} />
+              <Image
+                src={mainURL + user?.path}
+                style={{height: 40, width: 40}}
+              />
               <Text
                 style={{
                   marginLeft: Dimension.setWidth(3),
@@ -276,7 +280,7 @@ const RegisterPlaneScreen = ({navigation}) => {
               selectedStyle={styles.selectedStyle}
               selectedTextStyle={[
                 styles.selectedTextStyle,
-                {fontSize: 13, lineHeight: Dimension.setHeight(1.8)},
+                {fontSize: 13},
               ]}
               containerStyle={styles.containerOptionStyle}
               iconStyle={styles.iconStyle}
@@ -597,7 +601,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 15,
     color: '#8bc7bc',
-    lineHeight: Dimension.setHeight(2.2),
     marginBottom: Dimension.setHeight(1),
   },
 
@@ -622,7 +625,6 @@ const styles = StyleSheet.create({
   dateTimeText: {
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 16,
-    lineHeight: Dimension.setHeight(2.2),
   },
 
   dropdown: {
@@ -641,7 +643,6 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     color: '#277aaeff',
     fontSize: 15,
-    lineHeight: Dimension.setHeight(2),
   },
   imageStyle: {
     width: 24,
@@ -662,7 +663,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   itemText: {
-    lineHeight: Dimension.setHeight(2),
     color: '#57575a',
     fontSize: 14,
   },
@@ -670,10 +670,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: Dimension.setWidth(1.3),
-  },
-
-  calendarView: {
-    ...calendarView,
   },
 });
 

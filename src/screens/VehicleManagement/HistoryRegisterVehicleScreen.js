@@ -27,6 +27,7 @@ import {
   rejectVehicleRequest,
 } from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 import {ApproveCancelModal} from '../../components/Modal';
 
 const HistoryRegisterVehicleScreen = ({navigation}) => {
@@ -53,7 +54,6 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const bottomSheetModalRef = useRef(null);
   const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
-  const mainURL = 'https://forestry.ifee.edu.vn/';
 
   const approveArr = [
     {
@@ -614,7 +614,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 17,
     color: '#8bc7bc',
-    lineHeight: Dimension.setHeight(2.2),
     marginBottom: Dimension.setHeight(1.6),
   },
   buttonContainer: {

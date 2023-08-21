@@ -242,7 +242,6 @@ const AllNewsScreen = ({navigation}) => {
                     fontFamily: Fonts.SF_SEMIBOLD,
                     fontSize: 17,
                     color: Colors.DARK_FOUR,
-                    lineHeight: Dimension.setHeight(3.3),
                   }}>
                   {item.name}
                 </Text>
@@ -251,7 +250,6 @@ const AllNewsScreen = ({navigation}) => {
                     fontFamily: Fonts.SF_REGULAR,
                     fontSize: 15,
                     color: Colors.INACTIVE_GREY,
-                    lineHeight: Dimension.setHeight(2.5),
                   }}>
                   {item.location}
                 </Text>
