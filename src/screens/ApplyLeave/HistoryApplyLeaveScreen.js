@@ -1,4 +1,10 @@
-import React, {useEffect, useState, useCallback, memo} from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  memo,
+  useLayoutEffect,
+} from 'react';
 import {
   View,
   Text,
@@ -82,7 +88,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const [indexPicker, setIndexPicker] = useState(0);
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     handleGetAllLeaveData();
   }, [refreshComponent, refresh, handleGetAllLeaveData]);
 
@@ -520,6 +526,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         setToggleApproveModal={setToggleApproveModal}
         checkInput={checkInput}
         selectedItem={selectedItem}
+        setSelectedItem={selectedItem}
         commnetInput={commnetInput}
         setCommentInput={setCommentInput}
         reasonCancel={reasonCancel}
@@ -555,7 +562,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               borderBottomWidth: 0.8,
               borderBlockColor: Colors.INACTIVE_GREY,
               width: '100%',
-              height: Dimension.setHeight(4),
+              height: Dimension.setHeight(4.5),
             }}>
             <Text
               style={{
