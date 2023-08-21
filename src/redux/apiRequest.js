@@ -276,7 +276,6 @@ export const getVehicleData = async (dispatch, id) => {
 
 export const registerVehicle = async data => {
   try {
-    console.log(data);
     await axios.post(
       `https://management.ifee.edu.vn/api/xe/reg/${data.id_user}`,
       {
@@ -288,9 +287,8 @@ export const registerVehicle = async data => {
         ngaynhan: data.ngaynhan,
       },
     );
-    ToastSuccess('Thành công');
   } catch (error) {
-    ToastAlert('Gửi đề nghị thất bại!');
+    console.log(error);
   }
 };
 

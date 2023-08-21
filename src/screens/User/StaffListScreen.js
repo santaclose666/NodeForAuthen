@@ -21,7 +21,7 @@ import {Dropdown} from 'react-native-element-dropdown';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 
-const typeStaff = [{value: 'XMG'}, {value: 'VST'}];
+const typeStaff = [{value: 'XMG'}, {value: 'IFEE'}];
 
 const StaffListScreen = ({navigation}) => {
   const [typeStaffValue, setTypeStaffValue] = useState(typeStaff[0].value);
@@ -37,6 +37,26 @@ const StaffListScreen = ({navigation}) => {
     'Đào tạo',
   ];
   const IFEEGroup = ['Tất cả', 'CNMT', 'STPTR', 'UDVT', 'TTDV'];
+  const IFEEorder = [
+    'Viện trưởng',
+    'Phó Viện trưởng',
+    'Giám đốc',
+    'Phó giám đốc',
+    'Trưởng phòng',
+    'Phó trưởng phòng',
+    'Phụ trách kế toán',
+    'Văn thư',
+    'Ngiên cứu viên',
+  ];
+
+  const XMGorder = [
+    'Giám đốc',
+    'Phó Giám đốc',
+    'Trưởng phòng',
+    'Phó Trưởng phòng',
+    'Nhân viên',
+    'Cộng tác viên',
+  ];
   const [selectId, setSelectId] = useState(0);
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
 
@@ -63,9 +83,27 @@ const StaffListScreen = ({navigation}) => {
     setSelectId(index);
   };
 
+  const orderPosition = (data, typeStaffValue) => {
+    const orderData =
+      typeStaffValue === 'XMG'
+        ? data.sort((a, b) => {
+            const indexA = XMGorder.indexOf(a.chucdanh);
+            const indexB = XMGorder.indexOf(b.chucdanh);
+            return indexA - indexB;
+          })
+        : data.sort((a, b) => {
+            const indexA = IFEEorder.indexOf(a.chucdanh);
+            const indexB = IFEEorder.indexOf(b.chucdanh);
+            return indexA - indexB;
+          });
+
+    return orderData;
+  };
+
   const handlePickUnit = useCallback(typeStaffValue => {
     const data = staffs.filter(item => item.tendonvi === typeStaffValue);
-    return data;
+
+    return orderPosition(data, typeStaffValue);
   }, []);
 
   const handleFilter = useCallback((index, typeStaffValue) => {
@@ -252,7 +290,7 @@ const StaffListScreen = ({navigation}) => {
           }}
           containerStyle={styles.containerOptionStyle}
           itemContainerStyle={styles.itemContainer}
-          itemTextStyle={ {color: '#57575a'}}
+          itemTextStyle={{color: '#57575a'}}
           fontFamily={Fonts.SF_MEDIUM}
           activeColor="#eef2feff"
           maxHeight={Dimension.setHeight(23)}

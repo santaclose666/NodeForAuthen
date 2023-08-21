@@ -4,7 +4,8 @@ const vehicleSlice = createSlice({
   name: 'vehicle',
   initialState: {
     vehicle: {
-      data: null,
+      statusData: null,
+      availableCarData: null,
       isFetching: false,
       err: false,
     },
@@ -15,8 +16,15 @@ const vehicleSlice = createSlice({
       state.vehicle.isFetching = true;
     },
     getVehicleSuccess: (state, action) => {
+      const dataVehicle = action.payload;
+      const availableData = dataVehicle.khadung;
+      const pendingData = dataVehicle.data_pheduyet;
+      const approvedData = dataVehicle.data_dapheduyet;
+      const statusData = pendingData.concat(approvedData);
+
       state.vehicle.isFetching = false;
-      state.vehicle.data = action.payload;
+      state.vehicle.statusData = statusData;
+      state.vehicle.availableCarData = availableData;
     },
     getVehicleFailed: state => {
       state.vehicle.isFetching = false;
