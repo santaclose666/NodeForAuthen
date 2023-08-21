@@ -221,41 +221,6 @@ export const getAllWorkName = async dispatch => {
   }
 };
 
-/////////////////////  VEHIOCLE SCHEDULE DATA  ////////////////////
-
-export const getVehicleData = async (dispatch, id) => {
-  dispatch(getVehicleStart());
-  try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/xe/danhsach/${id}`,
-    );
-
-    dispatch(getVehicleSuccess(res.data));
-  } catch (error) {
-    dispatch(getVehicleFailed());
-  }
-};
-
-export const registerVehicle = async data => {
-  try {
-    console.log(data);
-    await axios.post(
-      `https://management.ifee.edu.vn/api/xe/reg/${data.id_user}`,
-      {
-        loaixe: data.loaixe,
-        ngaydi: data.ngaydi,
-        noiden: data.noiden,
-        noidung: data.noidung,
-        gionhan: data.gionhan,
-        ngaynhan: data.ngaynhan,
-      },
-    );
-    ToastSuccess('Thành công');
-  } catch (error) {
-    ToastAlert('Gửi đề nghị thất bại!');
-  }
-};
-
 export const registerWorkSchedule = async data => {
   try {
     const op1 = data.op1_tenchuongtrinh;
@@ -279,6 +244,68 @@ export const registerWorkSchedule = async data => {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+/////////////////////  VEHIOCLE SCHEDULE DATA  ////////////////////
+
+export const getVehicleData = async (dispatch, id) => {
+  dispatch(getVehicleStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/xe/danhsach/${id}`,
+    );
+    dispatch(getVehicleSuccess(res.data));
+  } catch (error) {
+    console.log('errr'.error);
+    dispatch(getVehicleFailed());
+  }
+};
+
+export const registerVehicle = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/xe/reg/${data.id_user}`,
+      {
+        loaixe: data.loaixe,
+        ngaydi: data.ngaydi,
+        noiden: data.noiden,
+        noidung: data.noidung,
+        gionhan: data.gionhan,
+        ngaynhan: data.ngaynhan,
+      },
+    );
+    ToastSuccess('Thành công');
+  } catch (error) {
+    ToastAlert('Gửi đề nghị thất bại!');
+  }
+};
+
+export const resolveVehicleRequest = async data => {
+  try {
+    console.log('resolve', data);
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/xe/pheduyet/${data.idVehicle}`,
+      {id_user: data.id_user},
+    );
+    ToastSuccess('Phê duyệt thành công');
+  } catch (error) {
+    console.log(error);
+    ToastAlert('Phê duyệt không thành công');
+  }
+};
+
+export const rejectVehicleRequest = async data => {
+  try {
+    console.log('reject', data);
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/xe/tuchoi/${data.idVehicle}`,
+      {id_user: data.id_user},
+    );
+    ToastSuccess('Đã từ chối đề nghị');
+  } catch (error) {
+    console.log(error);
+    oastAlert('Từ chối thất bại');
   }
 };
 

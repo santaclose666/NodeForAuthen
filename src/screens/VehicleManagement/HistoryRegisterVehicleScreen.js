@@ -21,27 +21,35 @@ import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
-import {getVehicleData} from '../../redux/apiRequest';
+import {
+  getVehicleData,
+  resolveVehicleRequest,
+  rejectVehicleRequest,
+} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
+import {ApproveCancelModal} from '../../components/Modal';
 
 const HistoryRegisterVehicleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
   const [registedVehicleData, setRegistedVehicleData] = useState([]);
-
+  const [toggleApproveModal, setToggleApproveModal] = useState(false);
+  const [commnetInput, setCommentInput] = useState(null);
+  const [reasonCancel, setReasonCancel] = useState(null);
+  const [checkInput, setCheckInput] = useState(null);
   const waitRequest = useSelector(
-    state => state.vehicle?.vehicle?.data.data_pheduyet,
+    state => state.vehicle?.vehicle?.data?.data_pheduyet,
   );
   const processedRequest = useSelector(
-    state => state.vehicle?.vehicle?.data.data_dapheduyet,
+    state => state.vehicle?.vehicle?.data?.data_dapheduyet,
   );
   const [usingVehicle, setsingVehicle] = useState([]);
   const [rejectVehicle, setRejectVehicle] = useState([]);
   const [doneVehicle, setDoneVehicle] = useState([]);
-
   const [selectedItem, setSelectedItem] = useState(null);
   const [rerender, setRerender] = useState(false);
   const [indexPicker, setIndexPicker] = useState(0);
+  const [refreshComponent, setRefreshComponent] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
@@ -74,15 +82,23 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     },
   ];
 
+  useEffect(() => {
+    getAllData();
+    classifiedData();
+    if (rerender) {
+      bottomSheetModalRef.current?.present();
+      setRerender(false);
+    }
+  }, [rerender, selectedItem]);
+
   const handlePresentModalPress = useCallback(() => {
     setRerender(true);
   }, [selectedItem]);
-  const handleSheetChanges = useCallback(index => {
-    console.log('handleSheetChanges', index);
-  }, []);
 
-  const getAllData = async => {
-    getVehicleData(dispatch, user.id);
+  const handleSheetChanges = useCallback(index => {}, []);
+
+  const getAllData = async () => {
+    await getVehicleData(dispatch, user.id);
   };
 
   const classifiedData = () => {
@@ -100,9 +116,38 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
         }
       }
     }
+    setRegistedVehicleData(waitRequest);
     setsingVehicle(usingVehicleArr);
     setRejectVehicle(rejectVehicleArr);
     setDoneVehicle(doneVehicleArr);
+  };
+
+  const handleSendNonAdjust = () => {
+    const importantData = {
+      idVehicle: selectedItem.id,
+      id_user: user?.id,
+    };
+    if (!checkInput && selectedItem !== null) {
+      const data = {
+        ...importantData,
+        lydo: reasonCancel,
+      };
+      rejectVehicleRequest(data);
+      setReasonCancel(null);
+      setRefreshComponent(!refreshComponent);
+      setToggleApproveModal(false);
+    } else if (checkInput && selectedItem !== null) {
+      const data = {
+        ...importantData,
+        nhanxet: commnetInput,
+      };
+      resolveVehicleRequest(data);
+      setCommentInput(null);
+      setRefreshComponent(!refreshComponent);
+      setToggleApproveModal(false);
+    } else {
+      ToastWarning('Nhập đầy đủ lý do');
+    }
   };
 
   const getUserParth = id => {
@@ -121,6 +166,16 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
         return staffs[i].hoten;
       }
     }
+  };
+
+  const handlePickItem = item => {
+    setSelectedItem(item);
+    setToggleApproveModal(true);
+  };
+
+  const handleNonAdjust = (check, item) => {
+    setCheckInput(check);
+    handlePickItem(item);
   };
 
   const handlePickOption = useCallback(
@@ -143,16 +198,6 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     },
     [indexPicker],
   );
-
-  useEffect(() => {
-    getAllData();
-    classifiedData();
-    setRegistedVehicleData(waitRequest);
-    if (rerender) {
-      bottomSheetModalRef.current?.present();
-      setRerender(false);
-    }
-  }, [rerender, selectedItem]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -325,7 +370,9 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                 {(user?.id == 2 || user?.id == 8) && item.pheduyet == null && (
                   <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                      onPress={() => {}}
+                      onPress={() => {
+                        handleNonAdjust(true, item);
+                      }}
                       style={[
                         styles.buttonItem,
                         {backgroundColor: 'rgba(0, 181, 32, 0.32)'},
@@ -335,7 +382,9 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => {}}
+                      onPress={() => {
+                        handleNonAdjust(false, item);
+                      }}
                       style={[
                         styles.buttonItem,
                         {backgroundColor: 'rgba(233, 0, 0, 0.32)'},
@@ -349,6 +398,19 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
               </TouchableOpacity>
             );
           })}
+
+          <ApproveCancelModal
+            screenName={'registerVehicle'}
+            toggleApproveModal={toggleApproveModal}
+            setToggleApproveModal={setToggleApproveModal}
+            checkInput={checkInput}
+            selectedItem={selectedItem}
+            commnetInput={commnetInput}
+            setCommentInput={setCommentInput}
+            reasonCancel={reasonCancel}
+            setReasonCancel={setReasonCancel}
+            eventFunc={handleSendNonAdjust}
+          />
         </ScrollView>
         {selectedItem && (
           <BottomSheetModal

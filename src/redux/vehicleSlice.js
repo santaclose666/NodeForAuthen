@@ -4,7 +4,7 @@ const vehicleSlice = createSlice({
   name: 'vehicle',
   initialState: {
     vehicle: {
-      data: null,
+      data: {data_pheduyet: [], data_dapheduyet: []},
       isFetching: false,
       err: false,
     },
