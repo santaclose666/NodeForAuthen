@@ -29,6 +29,7 @@ import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import LinearGradient from 'react-native-linear-gradient';
 import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const requestPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -52,7 +53,6 @@ const requestPermissions = async () => {
 };
 
 const HomePageScreen = ({navigation}) => {
-  const mainURl = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
   const notifiData = useSelector(
@@ -119,7 +119,6 @@ const HomePageScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    console.log(mainURl + user?.path);
     if (weather) {
       setInTerVal(
         setInterval(() => {
@@ -159,7 +158,7 @@ const HomePageScreen = ({navigation}) => {
                 }}
                 style={styles.avatarUserContainer}>
                 <Image
-                  src={`${mainURl + user?.path}`}
+                  src={`${mainURL + user?.path}`}
                   style={styles.avatarUserImg}
                 />
               </TouchableOpacity>
@@ -383,7 +382,6 @@ const styles = StyleSheet.create({
   companyText: {
     fontSize: 24,
     fontFamily: Fonts.SF_BOLD,
-    lineHeight: Dimension.setHeight(3.3),
     color: '#388a60',
   },
 
@@ -432,7 +430,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: Fonts.SF_BOLD,
     color: Colors.INACTIVE_GREY,
-    lineHeight: Dimension.setHeight(1.8),
   },
 
   weatherContainer: {
@@ -525,14 +522,12 @@ const styles = StyleSheet.create({
   newsTitleText: {
     fontFamily: Fonts.SF_SEMIBOLD,
     fontSize: 16,
-    lineHeight: Dimension.setHeight(3.3),
   },
 
   newsLocationText: {
     fontFamily: Fonts.SF_REGULAR,
     color: Colors.INACTIVE_GREY,
     fontSize: 14,
-    lineHeight: Dimension.setHeight(2.3),
   },
 });
 

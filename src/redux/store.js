@@ -7,6 +7,7 @@ import onLeaveReducer from './onLeaveSlice';
 import workReducer from './workSlice';
 import vehicleReducer from './vehicleSlice';
 import ticketReducer from './ticketSlice';
+import workScheduleReducer from './workScheduleSlice';
 import logger from 'redux-logger';
 import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   work: workReducer,
   vehicle: vehicleReducer,
   ticketPlane: ticketReducer,
+  workSchedule: workScheduleReducer,
 });
 const persistedReducer = persistReducer(
   persistConfig,

@@ -1,4 +1,10 @@
-import React, {useEffect, useState, useCallback, memo} from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  memo,
+  useLayoutEffect,
+} from 'react';
 import {
   View,
   Text,
@@ -35,10 +41,11 @@ import Colors from '../../contants/Colors';
 import {ToastWarning, ToastAlert} from '../../components/Toast';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ApproveCancelModal} from '../../components/Modal';
-import {calendarView, shadowIOS} from '../../contants/propsIOS';
+import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
+import FilterStatusUI from '../../components/FilterStatusUI';
 
 const HistoryApplyLeaveScreen = ({navigation, route}) => {
-  const mainURL = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
   const refresh = route?.params?.refresh;
@@ -53,36 +60,10 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
   const [reasonCancelAdjust, setReasonCancelAdjust] = useState(null);
   const [toggleCancelAdjust, setToggleCancelAdjust] = useState(false);
   const [refreshComponent, setRefreshComponent] = useState(false);
-  const approveArr = [
-    {
-      title: 'Tất cả',
-      color: '#618cf2',
-      bgColor: 'rgba(254, 244, 235, 0.3)',
-      icon: Images.all,
-    },
-    {
-      title: 'Chờ duyệt',
-      color: '#f0b263',
-      bgColor: 'rgba(254, 244, 235, 0.3)',
-      icon: Images.pending1,
-    },
-    {
-      title: 'Đã duyệt',
-      color: '#57b85d',
-      bgColor: 'rgba(222, 248, 237, 0.3)',
-      icon: Images.approved1,
-    },
-    {
-      title: 'Hủy bỏ',
-      color: '#f25157',
-      bgColor: 'rgba(249, 223, 224, 0.3)',
-      icon: Images.cancelled,
-    },
-  ];
   const [indexPicker, setIndexPicker] = useState(0);
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     handleGetAllLeaveData();
   }, [refreshComponent, refresh, handleGetAllLeaveData]);
 
@@ -310,6 +291,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                 borderRadius: 8,
                 backgroundColor:
                   item.yc_update === 0 ? bgColorStatus : bgColorAdjustStatus,
+                marginBottom: Dimension.setHeight(0.6),
               }}>
               <Image
                 source={item.yc_update === 0 ? icon : iconAdjust}
@@ -412,6 +394,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                     alignItems: 'center',
                     alignSelf: 'center',
                     justifyContent: 'center',
+                    marginLeft: Dimension.setWidth(1),
                   }}>
                   <Image
                     source={Images.adjust}
@@ -439,51 +422,10 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     <SafeAreaView style={styles.container}>
       <Header title="Lịch sử nghỉ phép" navigation={navigation} />
 
-      <View
-        style={{
-          borderBottomWidth: 0.6,
-          borderBlockColor: Colors.INACTIVE_GREY,
-          alignItems: 'center',
-          justifyContent: 'space-around',
-          width: '100%',
-          height: Dimension.setHeight(10),
-          flexDirection: 'row',
-        }}>
-        {approveArr.map((item, index) => {
-          return (
-            <TouchableOpacity
-              onPress={() => handlePickOption(index)}
-              key={index}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingTop: Dimension.setHeight(2.2),
-                paddingBottom: Dimension.setHeight(1.5),
-                paddingHorizontal: Dimension.setWidth(3),
-                height: '100%',
-                borderBottomWidth: indexPicker === index ? 1.6 : null,
-                borderBlockColor: indexPicker === index ? item.color : null,
-              }}>
-              <Image
-                source={item.icon}
-                style={{
-                  height: 25,
-                  width: 25,
-                  tintColor: indexPicker === index ? item.color : '#edf2ed',
-                }}
-              />
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_MEDIUM,
-                  fontSize: 16,
-                  color: indexPicker === index ? item.color : '#edf2ed',
-                }}>
-                {item.title}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+      <FilterStatusUI
+        handlePickOption={handlePickOption}
+        indexPicker={indexPicker}
+      />
 
       {handleFilter(indexPicker)?.length !== 0 ? (
         <FlatList
@@ -520,6 +462,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         setToggleApproveModal={setToggleApproveModal}
         checkInput={checkInput}
         selectedItem={selectedItem}
+        setSelectedItem={selectedItem}
         commnetInput={commnetInput}
         setCommentInput={setCommentInput}
         reasonCancel={reasonCancel}
@@ -555,7 +498,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               borderBottomWidth: 0.8,
               borderBlockColor: Colors.INACTIVE_GREY,
               width: '100%',
-              height: Dimension.setHeight(4),
+              height: Dimension.setHeight(4.5),
             }}>
             <Text
               style={{
@@ -673,6 +616,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               borderBottomWidth: 0.8,
               borderBlockColor: Colors.INACTIVE_GREY,
               width: '100%',
+              height: Dimension.setHeight(4.5),
             }}>
             <Text
               style={{
@@ -822,10 +766,6 @@ const styles = StyleSheet.create({
     height: 17,
     width: 17,
     tintColor: '#ffffff',
-  },
-
-  calendarView: {
-    ...calendarView,
   },
 
   btnModal: {

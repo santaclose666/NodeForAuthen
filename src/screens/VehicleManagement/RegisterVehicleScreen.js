@@ -26,10 +26,11 @@ import {
   formatTimeToPost,
   formatDateToPost,
 } from '../../utils/serviceFunction';
-import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import {ToastAlert} from '../../components/Toast';
 import RegisterBtn from '../../components/RegisterBtn';
 import {registerVehicle} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const RegisterVehicleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -331,7 +332,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 15,
     color: '#8bc7bc',
-    lineHeight: Dimension.setHeight(2.2),
     marginBottom: Dimension.setHeight(1),
   },
 
@@ -356,7 +356,6 @@ const styles = StyleSheet.create({
   dateTimeText: {
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 16,
-    lineHeight: Dimension.setHeight(2.2),
   },
 
   dropdown: {
@@ -375,7 +374,6 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     color: '#277aaeff',
     fontSize: 15,
-    lineHeight: Dimension.setHeight(2),
   },
   imageStyle: {
     width: 24,
@@ -396,7 +394,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   itemText: {
-    lineHeight: Dimension.setHeight(2),
     color: '#57575a',
     fontSize: 14,
   },
@@ -406,18 +403,6 @@ const styles = StyleSheet.create({
     marginRight: Dimension.setWidth(1.3),
   },
   nocar: {fontSize: 16, fontWeight: 'bold', color: 'red'},
-  calendarView: {
-    position: 'absolute',
-    top: '25%',
-    left: '5%',
-    zIndex: 999,
-    backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
-    padding: 15,
-    borderRadius: 15,
-    width: '95%',
-  },
 });
 
 export default RegisterVehicleScreen;

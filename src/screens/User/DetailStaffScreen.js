@@ -19,9 +19,9 @@ import {useDispatch} from 'react-redux';
 import {logoutUser} from '../../redux/apiRequest';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const DetailStaffScreen = ({navigation, route}) => {
-  const mainURL = 'https://forestry.ifee.edu.vn/';
   const dispatch = useDispatch();
   const item = route.params?.item;
   const user = useSelector(state => state.auth.login?.currentUser);

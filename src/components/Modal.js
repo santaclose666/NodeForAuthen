@@ -13,6 +13,7 @@ import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
 import {useSelector} from 'react-redux';
+import {mainURL} from '../contants/Variable';
 
 export const ApproveCancelModal = ({
   screenName,
@@ -20,13 +21,13 @@ export const ApproveCancelModal = ({
   setToggleApproveModal,
   checkInput,
   selectedItem,
+  setSelectedItem,
   commnetInput,
   setCommentInput,
   reasonCancel,
   setReasonCancel,
   eventFunc,
 }) => {
-  const mainURL = 'https://forestry.ifee.edu.vn/';
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
   const avatar = staffs.filter(
     item => item.id === selectedItem?.id_nhansu && item.tendonvi === 'VST',
@@ -60,7 +61,7 @@ export const ApproveCancelModal = ({
             borderBottomWidth: 0.8,
             borderBlockColor: Colors.INACTIVE_GREY,
             width: '100%',
-            height: Dimension.setHeight(5),
+            height: Dimension.setHeight(4.5),
           }}>
           <Text
             style={{
@@ -150,7 +151,7 @@ export const ApproveCancelModal = ({
               borderRadius: 10,
               fontFamily: Fonts.SF_REGULAR,
               width: '70%',
-              height: Dimension.setHeight(6),
+              height: Dimension.setHeight(5),
               maxHeight: Dimension.setHeight(9),
             }}
             onChangeText={e =>
@@ -172,7 +173,10 @@ export const ApproveCancelModal = ({
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          onPress={() => setToggleApproveModal(false)}
+          onPress={() => {
+            setSelectedItem(null);
+            setToggleApproveModal(false);
+          }}
           style={{position: 'absolute', right: '5%', top: '5%'}}>
           <Image source={Images.minusclose} style={styles.btnModal} />
         </TouchableOpacity>

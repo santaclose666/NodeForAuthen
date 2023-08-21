@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_BOLD,
     fontSize: 16,
     color: Colors.INACTIVE_GREY,
-    lineHeight: Dimension.setHeight(2.2),
   },
 
   roleTeamTittle: {
@@ -185,7 +184,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_BOLD,
     fontSize: 20,
     color: '#4a4c56',
-    lineHeight: Dimension.setHeight(2.5),
     overflow: 'hidden',
   },
 
@@ -232,7 +230,6 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontFamily: Fonts.SF_BOLD,
     color: '#4a4c56',
-    lineHeight: Dimension.setHeight(3.3),
   },
 });
 

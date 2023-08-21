@@ -7,7 +7,6 @@ import {
   StyleSheet,
   SafeAreaView,
   TextInput,
-  Platform,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
@@ -26,7 +25,9 @@ import {
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
 import {registerOnLeave} from '../../redux/apiRequest';
-import {calendarView, shadowIOS} from '../../contants/propsIOS';
+import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
+import {approveArr} from '../../contants/Variable';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 0.5},
@@ -36,7 +37,6 @@ const numberOfDayOff = [
 ];
 
 const CreateApplyLeaveScreen = ({navigation}) => {
-  const mainURL = 'https://forestry.ifee.edu.vn/';
   const user = useSelector(state => state.auth.login?.currentUser);
   const [valueNumberOfDay, setValueNumberOfDay] = useState(null);
   const [offNumber, setOffNumber] = useState(2);
@@ -258,7 +258,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 15,
     color: '#8bc7bc',
-    lineHeight: Dimension.setHeight(2.2),
     marginBottom: Dimension.setHeight(1),
   },
 
@@ -313,12 +312,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(2),
   },
   itemText: {
-    lineHeight: Dimension.setHeight(2),
     color: '#57575a',
-  },
-
-  calendarView: {
-    ...calendarView,
   },
 
   dateTimePickerContainer: {
@@ -342,7 +336,6 @@ const styles = StyleSheet.create({
   dateTimeText: {
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 16,
-    lineHeight: Dimension.setHeight(2.2),
   },
 });
 

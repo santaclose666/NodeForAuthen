@@ -26,7 +26,8 @@ import {
 import RegisterBtn from '../../components/RegisterBtn';
 import {useDispatch} from 'react-redux';
 import {getAllWorkName, registerWorkSchedule} from '../../redux/apiRequest';
-import {calendarView, shadowIOS} from '../../contants/propsIOS';
+import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 
 const optionData = [
   {
@@ -85,7 +86,6 @@ const CreateWorkSchedule = ({navigation}) => {
 
   const handlePickDate = date => {
     setToggleDatePicker(false);
-    console.log(date);
     if (checkPick) {
       const dayStart = formatDate(date);
       if (endDay !== null) {
@@ -106,6 +106,11 @@ const CreateWorkSchedule = ({navigation}) => {
   };
 
   const handleRegister = () => {
+    const checkOp =
+      workValue === 1
+        ? {op1_tenchuongtrinh: workNameValue}
+        : {op2_tenchuongtrinh: ortherWorkInput};
+
     const data = {
       id_user: user?.id,
       tungay: formatDateToPost(startDay),
@@ -116,8 +121,7 @@ const CreateWorkSchedule = ({navigation}) => {
       thanhphan: componentInput,
       ghichu: noteInput,
       op_tenchuongtrinh: workValue,
-      op1_tenchuongtrinh: workNameValue,
-      op2_tenchuongtrinh: ortherWorkInput,
+      ...checkOp,
     };
 
     if (
@@ -129,9 +133,9 @@ const CreateWorkSchedule = ({navigation}) => {
       noteInput !== '' &&
       (workValue === 2 ? ortherWorkInput !== '' : workNameValue !== '')
     ) {
-      // registerWorkSchedule(data);
+      registerWorkSchedule(data);
       ToastSuccess('Đăng kí lịch công tác thành công');
-      navigation.navigate('HistoryWorkShedule');
+      navigation.navigate('HistoryWorkShedule', {refresh: true});
     } else {
       ToastAlert('Thiếu thông tin!');
     }
@@ -156,7 +160,10 @@ const CreateWorkSchedule = ({navigation}) => {
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Người đăng kí</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={Images.avatar} style={{height: 40, width: 40}} />
+              <Image
+                src={mainURL + user?.path}
+                style={{height: 40, width: 40}}
+              />
               <Text
                 style={{
                   marginLeft: Dimension.setWidth(3),
@@ -311,6 +318,7 @@ const CreateWorkSchedule = ({navigation}) => {
                 showsVerticalScrollIndicator={false}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
+                selectedTextProps={{numberOfLines: 3}}
                 containerStyle={styles.containerOptionStyle}
                 iconStyle={styles.iconStyle}
                 itemContainerStyle={styles.itemContainer}
@@ -417,7 +425,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 15,
     color: '#8bc7bc',
-    lineHeight: Dimension.setHeight(2.2),
     marginBottom: Dimension.setHeight(1),
   },
 
@@ -442,7 +449,6 @@ const styles = StyleSheet.create({
   dateTimeText: {
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: 16,
-    lineHeight: Dimension.setHeight(2.2),
   },
 
   inputText: {
@@ -470,7 +476,6 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     color: '#277aaeff',
     fontSize: 15,
-    lineHeight: Dimension.setHeight(2),
   },
   imageStyle: {
     width: 24,
@@ -491,7 +496,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   itemText: {
-    lineHeight: Dimension.setHeight(2),
     color: '#57575a',
     fontSize: 14,
   },
@@ -499,9 +503,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: Dimension.setWidth(1.3),
-  },
-  calendarView: {
-    ...calendarView,
   },
 });
 
