@@ -24,19 +24,37 @@ import {mainURL} from '../../contants/Variable';
 const typeStaff = [{value: 'XMG'}, {value: 'IFEE'}];
 
 const StaffListScreen = ({navigation}) => {
-  const [typeStaffValue, setTypeStaffValue] = useState(typeStaff[0].value);
+  const user = useSelector(state => state.auth.login?.currentUser);
+  const [typeStaffValue, setTypeStaffValue] = useState(
+    user?.tendonvi === 'IFEE' ? typeStaff[1].value : typeStaff[0].value,
+  );
   const [input, setInput] = useState(null);
   const [allStaff, setAllStaff] = useState(null);
   const XMGGroup = [
     'Tất cả',
-    'Ban Giám đốc',
     'Tổng hợp',
     'Kỹ thuật',
     'RnD',
     'Kinh doanh',
     'Đào tạo',
   ];
-  const IFEEGroup = ['Tất cả', 'CNMT', 'STPTR', 'UDVT', 'TTDV'];
+  const XMGorder = [
+    'Trưởng phòng',
+    'Chuyên gia',
+    'Phó Trưởng phòng',
+    'Nhân viên',
+    'Cộng tác viên',
+  ];
+
+  const IFEEGroup = [
+    'Tất cả',
+    'Tổng hợp',
+    'CNMT',
+    'RnD',
+    'STPTR',
+    'UDVT',
+    'TTDV',
+  ];
   const IFEEorder = [
     'Viện trưởng',
     'Phó Viện trưởng',
@@ -49,14 +67,6 @@ const StaffListScreen = ({navigation}) => {
     'Ngiên cứu viên',
   ];
 
-  const XMGorder = [
-    'Giám đốc',
-    'Phó Giám đốc',
-    'Trưởng phòng',
-    'Phó Trưởng phòng',
-    'Nhân viên',
-    'Cộng tác viên',
-  ];
   const [selectId, setSelectId] = useState(0);
   const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
 
@@ -236,7 +246,7 @@ const StaffListScreen = ({navigation}) => {
           marginTop: Dimension.setHeight(1),
           marginBottom: Dimension.setHeight(1.5),
         }}>
-        <View style={{marginBottom: Dimension.setHeight(0.3)}}>
+        <View style={{marginBottom: Dimension.setHeight(1)}}>
           <Text
             style={{
               fontFamily: Fonts.SF_SEMIBOLD,
@@ -281,28 +291,30 @@ const StaffListScreen = ({navigation}) => {
           }}>
           Danh sách nhân sự
         </Text>
-        <Dropdown
-          style={styles.dropdown}
-          showsVerticalScrollIndicator={false}
-          selectedTextStyle={{
-            color: typeStaffValue === 'XMG' ? '#8cdeb0' : '#5e8ee8',
-            fontSize: 18,
-          }}
-          containerStyle={styles.containerOptionStyle}
-          itemContainerStyle={styles.itemContainer}
-          itemTextStyle={{color: '#57575a'}}
-          fontFamily={Fonts.SF_MEDIUM}
-          activeColor="#eef2feff"
-          maxHeight={Dimension.setHeight(23)}
-          labelField="value"
-          valueField="value"
-          data={typeStaff}
-          value={typeStaffValue}
-          onChange={item => {
-            setSelectId(0);
-            setTypeStaffValue(item.value);
-          }}
-        />
+        {user?.ifee_xmg === 1 && (
+          <Dropdown
+            style={styles.dropdown}
+            showsVerticalScrollIndicator={false}
+            selectedTextStyle={{
+              color: typeStaffValue === 'XMG' ? '#8cdeb0' : '#5e8ee8',
+              fontSize: 18,
+            }}
+            containerStyle={styles.containerOptionStyle}
+            itemContainerStyle={styles.itemContainer}
+            itemTextStyle={{color: '#57575a'}}
+            fontFamily={Fonts.SF_MEDIUM}
+            activeColor="#eef2feff"
+            maxHeight={Dimension.setHeight(23)}
+            labelField="value"
+            valueField="value"
+            data={typeStaff}
+            value={typeStaffValue}
+            onChange={item => {
+              setSelectId(0);
+              setTypeStaffValue(item.value);
+            }}
+          />
+        )}
       </View>
       <FlatList
         data={allStaff ? allStaff : handleFilter(selectId, typeStaffValue)}

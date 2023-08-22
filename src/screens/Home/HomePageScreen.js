@@ -159,7 +159,7 @@ const HomePageScreen = ({navigation}) => {
                 style={styles.avatarUserContainer}>
                 <Image
                   src={`${mainURL + user?.path}`}
-                  style={styles.avatarUserImg}
+                  style={[styles.avatarUserImg, {borderRadius: 50}]}
                 />
               </TouchableOpacity>
             ) : (

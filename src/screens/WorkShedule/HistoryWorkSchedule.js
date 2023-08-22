@@ -37,7 +37,7 @@ import {useDispatch} from 'react-redux';
 import FilterStatusUI from '../../components/FilterStatusUI';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import StatusUI from '../../components/StatusUI';
-import {mainURL} from '../../contants/Variable';
+import {defaultIFEE, defaultXMG, mainURL} from '../../contants/Variable';
 import {ApproveCancelModal} from '../../components/Modal';
 import {ToastWarning} from '../../components/Toast';
 
@@ -185,8 +185,17 @@ const HistoryWorkShedule = ({navigation, route}) => {
     const filterUser = staffs.filter(
       staff => staff.id === item.id_user && staff.tendonvi === 'IFEE',
     )[0];
-    const subject = filterUser.tenphong;
-    const avatar = filterUser.path;
+    const subject =
+      filterUser?.tenphong === undefined
+        ? 'Không xác định'
+        : filterUser?.tenphong;
+    const avatar =
+      filterUser?.path === undefined
+        ? user?.tendonvi === 'IFEE'
+          ? defaultIFEE
+          : defaultXMG
+        : filterUser?.path;
+    console.log(subject, avatar);
 
     const checkRole = () => {
       return (
