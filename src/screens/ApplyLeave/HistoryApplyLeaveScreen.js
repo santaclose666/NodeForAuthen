@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  memo,
-  useLayoutEffect,
-} from 'react';
+import React, {useState, useCallback, memo, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -65,7 +59,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
 
   useLayoutEffect(() => {
     handleGetAllLeaveData();
-  }, [refreshComponent, refresh, handleGetAllLeaveData]);
+  }, [refreshComponent, refresh]);
 
   const handleGetAllLeaveData = async () => {
     await getAllOnLeaveData(user?.id, dispatch);
@@ -279,7 +273,8 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
           }}>
           {item.lydo}
         </Text>
-        <View style={{position: 'absolute', right: '5%', top: '7%'}}>
+        <View
+          style={{position: 'absolute', right: '5%', top: '7%', zIndex: 999}}>
           {checkStatus() && (
             <View
               style={{

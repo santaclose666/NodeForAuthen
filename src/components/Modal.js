@@ -145,6 +145,30 @@ export const ApproveCancelModal = ({
           </View>
         )}
 
+        {screenName === 'registerWorkSchedule' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image
+              source={Images.workSchedule}
+              style={{height: 55, width: 55}}
+            />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: 18,
+                fontFamily: Fonts.SF_SEMIBOLD,
+              }}>
+              {selectedItem?.thuocchuongtrinh}
+            </Text>
+          </View>
+        )}
+
         <View style={styles.containerEachLine}>
           <Image source={Images.comment} style={styles.iconic} />
           <TextInput

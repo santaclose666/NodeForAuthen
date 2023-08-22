@@ -223,6 +223,7 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             width: '66%',
+            marginBottom: Dimension.setHeight(0.5),
           }}>
           <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18}}>
             {item.chuongtrinh}
@@ -246,7 +247,6 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
                 justifyContent: 'space-between',
                 width: Dimension.setWidth(17),
                 alignSelf: 'center',
-                zIndex: 9999,
               }}>
               <TouchableOpacity
                 onPress={() => {
@@ -269,7 +269,6 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
             </View>
           )}
         </View>
-
         <Text
           style={{
             fontSize: 16,
@@ -609,6 +608,7 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     fontFamily: Fonts.SF_SEMIBOLD,
+    color: '#747476',
   },
 
   bottomSheetContainer: {

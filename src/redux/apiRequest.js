@@ -259,6 +259,28 @@ export const getAllWorkSchedule = async (dispatch, id) => {
   }
 };
 
+export const approveWorkSchedule = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/dongy/${data.id_lichcongtac}`,
+      {nhanxet: data.nhanxet},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelWorkSchedule = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/tuchoi/${data.id_lichcongtac}`,
+      {lydo: data.lydo},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /////////////////////  VEHIOCLE SCHEDULE DATA  ////////////////////
 
 export const getVehicleData = async (dispatch, id) => {

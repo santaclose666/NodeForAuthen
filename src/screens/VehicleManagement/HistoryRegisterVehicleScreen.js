@@ -554,6 +554,7 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     fontFamily: Fonts.SF_SEMIBOLD,
+    color: '#747476',
   },
 
   bottomSheetContainer: {
