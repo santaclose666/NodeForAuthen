@@ -40,6 +40,7 @@ import StatusUI from '../../components/StatusUI';
 import {defaultIFEE, defaultXMG, mainURL} from '../../contants/Variable';
 import {ApproveCancelModal} from '../../components/Modal';
 import {ToastWarning} from '../../components/Toast';
+import StaggerUI from '../../components/StaggerUI';
 
 const HistoryWorkShedule = ({navigation, route}) => {
   const refresh = route.params?.refresh;
@@ -152,9 +153,17 @@ const HistoryWorkShedule = ({navigation, route}) => {
     [workSheduleData],
   );
 
-  const fetchWorkSchedule = () => {
-    getAllWorkSchedule(dispatch, user?.id);
+  const handleRedirectCreate = () => {
+    navigation.navigate('CreateWorkSchedule');
   };
+
+  const handleRedirectMyWorkSchedule = useCallback(() => {
+    navigation.navigate('MyWorkSchedule');
+  }, []);
+
+  const fetchWorkSchedule = useCallback(() => {
+    getAllWorkSchedule(dispatch, user?.id);
+  }, []);
 
   useLayoutEffect(() => {
     fetchWorkSchedule();
@@ -195,7 +204,6 @@ const HistoryWorkShedule = ({navigation, route}) => {
           ? defaultIFEE
           : defaultXMG
         : filterUser?.path;
-    console.log(subject, avatar);
 
     const checkRole = () => {
       return (
@@ -517,6 +525,19 @@ const HistoryWorkShedule = ({navigation, route}) => {
           setReasonCancel={setReasonCancel}
           eventFunc={handleSendNonAdjust}
         />
+
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            bottom: Dimension.setHeight(4.5),
+            right: Dimension.setWidth(6),
+          }}>
+          <StaggerUI
+            eventFunc1={handleRedirectMyWorkSchedule}
+            eventFunc2={handleRedirectCreate}
+          />
+        </View>
       </BottomSheetModalProvider>
     </SafeAreaView>
   );

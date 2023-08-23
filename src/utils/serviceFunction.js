@@ -16,6 +16,18 @@ export const getVietnameseDayOfWeek = () => {
   return vietnameseDays[dayOfWeek];
 };
 
+export const getFirstDateOfWeek = () => {
+  const firstDay = formatDateToPost(moment().isoWeekday(1));
+  const lastDay = formatDateToPost(moment().isoWeekday(7));
+
+  console.log(firstDay, lastDay);
+
+  return {
+    firstDay,
+    lastDay,
+  };
+};
+
 export const getFormattedDate = () => {
   const today = new Date();
   const day = String(today.getDate()).padStart(2, '0');

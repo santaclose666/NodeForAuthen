@@ -108,6 +108,8 @@ const Images = {
   motorbike: require('../assets/images/motorbike.png'),
   approved: require('../assets/images/approved.png'),
   cancelled: require('../assets/images/cancelled.png'),
+  addFile: require('../assets/images/addfile.png'),
+  personal: require('../assets/images/personal.png'),
 };
 
 export default Images;

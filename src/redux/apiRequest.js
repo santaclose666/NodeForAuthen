@@ -37,6 +37,11 @@ import {
   getWorkScheduleStart,
   getWorkScheduleSuccess,
 } from './workScheduleSlice';
+import {
+  getMyWorkFailed,
+  getMyWorkStart,
+  getMyWorkSuccess,
+} from './myWorkScheduleSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -277,6 +282,23 @@ export const cancelWorkSchedule = async data => {
     );
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getMyWorkSchedule = async (id, dispatch) => {
+  dispatch(getMyWorkStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/lichcongtac/canhan/${id}`,
+    );
+
+    const data = res.data.sort((a, b) => {
+      return a.id - b.id;
+    });
+
+    dispatch(getMyWorkSuccess(data));
+  } catch (error) {
+    dispatch(getMyWorkFailed());
   }
 };
 

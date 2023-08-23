@@ -5,6 +5,7 @@ import TabNaviagtor from './BottomTab';
 import LoginScreen from '../screens/Login/LoginScreen';
 import DisplayPDF from '../screens/Document/DisplayPDFScreen';
 import DetailNewsScreen from '../screens/News/DetailNewsScreen';
+import MyWorkScheduleScreen from '../screens/WorkShedule/MyWorkScheduleScreen';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ const RootNavigator = () => {
         <Stack.Screen name="BottomTab" component={TabNaviagtor} />
         <Stack.Screen name="PDF" component={DisplayPDF} />
         <Stack.Screen name="DetailNews" component={DetailNewsScreen} />
+        <Stack.Screen name="MyWorkSchedule" component={MyWorkScheduleScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
