@@ -28,6 +28,7 @@ const Header = ({title, eventFunc, navigation}) => {
         paddingVertical: Dimension.setHeight(1),
         paddingHorizontal: Dimension.setWidth(2),
         backgroundColor: 'rgba(254, 254, 254, 0)',
+        marginBottom: Dimension.setHeight(2),
       }}>
       <StatusBar
         backgroundColor="rgba(254, 254, 254, 0)"

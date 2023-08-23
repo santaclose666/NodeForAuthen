@@ -20,8 +20,6 @@ export const getFirstDateOfWeek = () => {
   const firstDay = formatDateToPost(moment().isoWeekday(1));
   const lastDay = formatDateToPost(moment().isoWeekday(7));
 
-  console.log(firstDay, lastDay);
-
   return {
     firstDay,
     lastDay,

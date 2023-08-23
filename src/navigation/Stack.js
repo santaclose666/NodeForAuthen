@@ -13,6 +13,7 @@ import HistoryRegisterVehicleScreen from '../screens/VehicleManagement/HistoryRe
 import CreateWorkSchedule from '../screens/WorkShedule/CreateWorkShedule';
 import HistoryWorkShedule from '../screens/WorkShedule/HistoryWorkSchedule';
 import HistoryRegisterTicketScreen from '../screens/TicketManagement/HistoryRegisterTicketScreen';
+import MyWorkScheduleScreen from '../screens/WorkShedule/MyWorkScheduleScreen';
 
 const Stack = createStackNavigator();
 
@@ -49,6 +50,7 @@ const StactNavigator = () => {
       />
       <Stack.Screen name="CreateWorkSchedule" component={CreateWorkSchedule} />
       <Stack.Screen name="HistoryWorkShedule" component={HistoryWorkShedule} />
+      <Stack.Screen name="MyWorkSchedule" component={MyWorkScheduleScreen} />
     </Stack.Navigator>
   );
 };
