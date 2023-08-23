@@ -39,13 +39,6 @@ const StaffListScreen = ({navigation}) => {
     'Kinh doanh',
     'Đào tạo',
   ];
-  const XMGorder = [
-    'Trưởng phòng',
-    'Chuyên gia',
-    'Phó Trưởng phòng',
-    'Nhân viên',
-    'Cộng tác viên',
-  ];
 
   const IFEEGroup = [
     'Tất cả',
@@ -55,17 +48,6 @@ const StaffListScreen = ({navigation}) => {
     'STPTR',
     'UDVT',
     'TTDV',
-  ];
-  const IFEEorder = [
-    'Viện trưởng',
-    'Phó Viện trưởng',
-    'Giám đốc',
-    'Phó giám đốc',
-    'Trưởng phòng',
-    'Phó trưởng phòng',
-    'Phụ trách kế toán',
-    'Văn thư',
-    'Ngiên cứu viên',
   ];
 
   const [selectId, setSelectId] = useState(0);
@@ -97,21 +79,9 @@ const StaffListScreen = ({navigation}) => {
 
   const handlePickUnit = useCallback(typeStaffValue => {
     if (typeStaffValue === 'XMG') {
-      const XMG = [...XMGstaffs].sort((a, b) => {
-        const indexA = XMGorder.indexOf(a.info_phong[0].chucdanh);
-        const indexB = XMGorder.indexOf(b.info_phong[0].chucdanh);
-        return indexA - indexB;
-      });
-
-      return XMG;
+      return XMGstaffs;
     } else {
-      const IFEE = [...IFEEstaffs].sort((a, b) => {
-        const indexA = IFEEorder.indexOf(a.chucdanh);
-        const indexB = IFEEorder.indexOf(b.chucdanh);
-        return indexA - indexB;
-      });
-
-      return IFEE;
+      return IFEEstaffs;
     }
   }, []);
 

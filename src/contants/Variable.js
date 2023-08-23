@@ -9,6 +9,28 @@ export const defaultXMG = 'XMG/user/xmg.jpg';
 export const DocumentURL =
   'https://management.ifee.edu.vn/2023_Forestry4.0App/VanBanSoTay/';
 
+export const XMGorder = [
+  'Giám đốc',
+  'Phó Giám đốc',
+  'Chuyên gia',
+  'Trưởng phòng',
+  'Phó Trưởng phòng',
+  'Nhân viên',
+  'Cộng tác viên',
+];
+
+export const IFEEorder = [
+  'Viện trưởng',
+  'Phó Viện trưởng',
+  'Giám đốc',
+  'Phó giám đốc',
+  'Trưởng phòng',
+  'Phó trưởng phòng',
+  'Phụ trách kế toán',
+  'Văn thư',
+  'Ngiên cứu viên',
+];
+
 export const approveArr = [
   {
     title: 'Tất cả',
