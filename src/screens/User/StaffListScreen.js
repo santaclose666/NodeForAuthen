@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, memo, useEffect} from 'react';
 import {
   View,
   Text,
@@ -32,6 +32,7 @@ const StaffListScreen = ({navigation}) => {
   const [allStaff, setAllStaff] = useState(null);
   const XMGGroup = [
     'Tất cả',
+    'Ban Giám đốc',
     'Tổng hợp',
     'Kỹ thuật',
     'RnD',
@@ -68,7 +69,8 @@ const StaffListScreen = ({navigation}) => {
   ];
 
   const [selectId, setSelectId] = useState(0);
-  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
+  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const XMGstaffs = useSelector(state => state.staffs?.staffs?.XMGStaff);
 
   const handleSearch = (text, typeStaffValue) => {
     setInput(text);
@@ -93,27 +95,24 @@ const StaffListScreen = ({navigation}) => {
     setSelectId(index);
   };
 
-  const orderPosition = (data, typeStaffValue) => {
-    const orderData =
-      typeStaffValue === 'XMG'
-        ? data.sort((a, b) => {
-            const indexA = XMGorder.indexOf(a.chucdanh);
-            const indexB = XMGorder.indexOf(b.chucdanh);
-            return indexA - indexB;
-          })
-        : data.sort((a, b) => {
-            const indexA = IFEEorder.indexOf(a.chucdanh);
-            const indexB = IFEEorder.indexOf(b.chucdanh);
-            return indexA - indexB;
-          });
-
-    return orderData;
-  };
-
   const handlePickUnit = useCallback(typeStaffValue => {
-    const data = staffs.filter(item => item.tendonvi === typeStaffValue);
+    if (typeStaffValue === 'XMG') {
+      const XMG = [...XMGstaffs].sort((a, b) => {
+        const indexA = XMGorder.indexOf(a.info_phong[0].chucdanh);
+        const indexB = XMGorder.indexOf(b.info_phong[0].chucdanh);
+        return indexA - indexB;
+      });
 
-    return orderPosition(data, typeStaffValue);
+      return XMG;
+    } else {
+      const IFEE = [...IFEEstaffs].sort((a, b) => {
+        const indexA = IFEEorder.indexOf(a.chucdanh);
+        const indexB = IFEEorder.indexOf(b.chucdanh);
+        return indexA - indexB;
+      });
+
+      return IFEE;
+    }
   }, []);
 
   const handleFilter = useCallback((index, typeStaffValue) => {
@@ -121,99 +120,105 @@ const StaffListScreen = ({navigation}) => {
     if (index === 0) {
       return data;
     } else {
-      return data.filter(
-        item =>
-          item.tenphong ===
-          (typeStaffValue === 'XMG' ? XMGGroup[index] : IFEEGroup[index]),
-      );
+      if (typeStaffValue === 'IFEE') {
+        return handlePickUnit(typeStaffValue).filter(
+          item => item.tenphong === IFEEGroup[index],
+        );
+      } else {
+        return handlePickUnit(typeStaffValue).filter(item => {
+          return item.info_phong.some(
+            group => group.tenphong === XMGGroup[index],
+          );
+        });
+      }
     }
   }, []);
 
-  const RenderStaffs = useCallback(
-    ({item, index}) => {
-      return (
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('DetailStaff', {item: item});
-          }}
-          key={index}
+  const RenderStaffs = memo(({item, index}) => {
+    const role =
+      typeStaffValue === 'XMG' ? item.info_phong[0].chucdanh : item.chucdanh;
+
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('DetailStaff', {item: item});
+        }}
+        key={index}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderRadius: 12,
+          borderColor: Colors.INACTIVE_GREY,
+          backgroundColor: index % 2 === 0 ? '#f8f7fc' : '#ffffff',
+          paddingHorizontal: Dimension.setWidth(1),
+          paddingVertical: Dimension.setHeight(1),
+          elevation: 10,
+          ...shadowIOS,
+        }}>
+        <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            borderRadius: 12,
-            borderColor: Colors.INACTIVE_GREY,
-            backgroundColor: index % 2 === 0 ? '#f8f7fc' : '#ffffff',
-            paddingHorizontal: Dimension.setWidth(1),
+            justifyContent: 'center',
             paddingVertical: Dimension.setHeight(1),
-            elevation: 10,
-            ...shadowIOS,
+            marginLeft: Dimension.setWidth(2),
+            maxWidth: Dimension.setWidth(60),
           }}>
-          <View
+          <Image
+            src={`${mainURL + item.path}`}
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingVertical: Dimension.setHeight(1),
-              marginLeft: Dimension.setWidth(2),
-              maxWidth: Dimension.setWidth(60),
-            }}>
-            <Image
-              src={`${mainURL + item.path}`}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 50,
-                marginRight: Dimension.setWidth(3),
-              }}
-            />
-            <View style={{justifyContent: 'center'}}>
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_SEMIBOLD,
-                  fontSize: 19,
-                }}>
-                {item.hoten}
-              </Text>
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                style={{
-                  color: Colors.INACTIVE_GREY,
-                  fontFamily: Fonts.SF_REGULAR,
-                  fontSize: 15,
-                  width: Dimension.setWidth(45),
-                }}>
-                {item.email}
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: 'flex-end',
-              marginRight: Dimension.setWidth(3.6),
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.SF_REGULAR,
-                fontSize: 16,
-                color: Colors.INACTIVE_GREY,
-              }}>
-              Chức vụ
-            </Text>
+              width: 50,
+              height: 50,
+              borderRadius: 50,
+              marginRight: Dimension.setWidth(3),
+            }}
+          />
+          <View style={{justifyContent: 'center'}}>
             <Text
               style={{
                 fontFamily: Fonts.SF_SEMIBOLD,
-                fontSize: 15,
+                fontSize: 19,
               }}>
-              {item.chucdanh}
+              {item.hoten}
+            </Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={{
+                color: Colors.INACTIVE_GREY,
+                fontFamily: Fonts.SF_REGULAR,
+                fontSize: 15,
+                width: Dimension.setWidth(45),
+              }}>
+              {item.email}
             </Text>
           </View>
-        </TouchableOpacity>
-      );
-    },
-    [allStaff],
-  );
+        </View>
+        <View
+          style={{
+            alignItems: 'flex-end',
+            marginRight: Dimension.setWidth(3.6),
+          }}>
+          <Text
+            style={{
+              fontFamily: Fonts.SF_REGULAR,
+              fontSize: 16,
+              color: Colors.INACTIVE_GREY,
+            }}>
+            Chức vụ
+          </Text>
+          <Text
+            style={{
+              fontFamily: Fonts.SF_SEMIBOLD,
+              fontSize: 15,
+            }}>
+            {role}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -260,7 +265,7 @@ const StaffListScreen = ({navigation}) => {
           keyExtractor={(_, index) => index}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          extraData={staffs}
+          extraData={typeStaffValue === 'XMG' ? XMGstaffs : IFEEstaffs}
           renderItem={({item, index}) => {
             return (
               <TouchableOpacity
@@ -323,6 +328,9 @@ const StaffListScreen = ({navigation}) => {
           <RenderStaffs item={item} index={index} />
         )}
         showsVerticalScrollIndicator={false}
+        initialNumToRender={10}
+        windowSize={10}
+        removeClippedSubviews={true}
       />
     </SafeAreaView>
   );

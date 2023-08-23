@@ -55,9 +55,10 @@ const requestPermissions = async () => {
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
-  const notifiData = useSelector(
-    state => state.notifi.notifications?.allNotifi,
-  );
+  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
+  // const notifiData = useSelector(
+  //   state => state.notifi.notifications?.allNotifi,
+  // );
   const dispatch = useDispatch();
   const [interval, setInTerVal] = useState(null);
   const [newsArr, setNewArr] = useState([
@@ -119,7 +120,7 @@ const HomePageScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (weather) {
+    if (weather && staffs) {
       setInTerVal(
         setInterval(() => {
           fetchImportantData();

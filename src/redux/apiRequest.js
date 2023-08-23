@@ -85,13 +85,7 @@ export const getAllStaffs = async dispatch => {
 
     const data = res.data;
 
-    dispatch(
-      getStaffSuccess(
-        data.sort((a, b) => {
-          return a.id - b.id;
-        }),
-      ),
-    );
+    dispatch(getStaffSuccess(data));
   } catch (err) {
     dispatch(getStaffFailed());
   }
