@@ -60,8 +60,7 @@ export const approveArr = [
   },
 ];
 
-const HistoryRegisterVehicleScreen = ({navigation, route}) => {
-  const refresh = route.params?.refresh;
+const HistoryRegisterVehicleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const allVehicleData = useSelector(
@@ -69,7 +68,6 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
   );
   const [selectedItem, setSelectedItem] = useState(null);
   const [indexPicker, setIndexPicker] = useState(0);
-  const [refreshComponent, setRefreshComponent] = useState(true);
   const bottomSheetModalRef = useRef(null);
   const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
@@ -105,7 +103,9 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
     };
 
     approveVehicle(data);
-    setRefreshComponent(!refreshComponent);
+    setTimeout(() => {
+      fetchVehicleData();
+    });
   }, []);
 
   const handleCancel = useCallback(item => {
@@ -115,7 +115,9 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
     };
 
     cancelVehicle(data);
-    setRefreshComponent(!refreshComponent);
+    setTimeout(() => {
+      fetchVehicleData();
+    });
   }, []);
 
   const handlePickOption = useCallback(
@@ -151,11 +153,7 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
 
   useLayoutEffect(() => {
     fetchVehicleData();
-
-    if (refresh) {
-      setIndexPicker(1);
-    }
-  }, [refresh, refreshComponent]);
+  }, []);
 
   const RenderVehicleData = ({item, index}) => {
     const colorStatus =
@@ -306,7 +304,11 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Lịch sử đăng kí xe" navigation={navigation} />
+      <Header
+        title="Lịch sử đăng kí xe"
+        navigation={navigation}
+        refreshData={fetchVehicleData}
+      />
       <View
         style={{
           flex: 0.1,

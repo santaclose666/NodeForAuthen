@@ -13,7 +13,7 @@ import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
 
-const Header = ({title, eventFunc, navigation, updateData}) => {
+const Header = ({title, eventFunc, navigation, refreshData}) => {
   const showCreateButton =
     title === 'Lịch sử nghỉ phép' ||
     title === 'Lịch sử đặt vé' ||
@@ -32,7 +32,7 @@ const Header = ({title, eventFunc, navigation, updateData}) => {
       }}>
       <StatusBar
         translucent
-        backgroundColor="#22a87e"
+        // backgroundColor="#22a87e"
         barStyle="light-content"
       />
       <TouchableOpacity
@@ -60,14 +60,20 @@ const Header = ({title, eventFunc, navigation, updateData}) => {
           onPress={() => {
             if (title === 'Lịch sử nghỉ phép') {
               navigation.navigate('RegisterApplyLeave', {
-                updateData: updateData,
+                refreshData: refreshData,
               });
             } else if (title === 'Lịch sử đặt vé') {
-              navigation.navigate('RegisterPlaneTicket');
+              navigation.navigate('RegisterPlaneTicket', {
+                refreshData: refreshData,
+              });
             } else if (title === 'Lịch sử công tác') {
-              navigation.navigate('CreateWorkSchedule');
+              navigation.navigate('CreateWorkSchedule', {
+                refreshData: refreshData,
+              });
             } else if (title === 'Lịch sử đăng kí xe') {
-              navigation.navigate('RegisterVehicle');
+              navigation.navigate('RegisterVehicle', {
+                refreshData: refreshData,
+              });
             }
           }}>
           <Image source={Images.adjust} style={{width: 30, height: 30}} />

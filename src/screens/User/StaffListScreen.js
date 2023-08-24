@@ -1,4 +1,4 @@
-import React, {useState, useCallback, memo, useEffect} from 'react';
+import React, {useState, useCallback, memo, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -17,11 +17,14 @@ import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
 import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {shadowIOS} from '../../contants/propsIOS';
-import {fontDefault, mainURL, XMGorder} from '../../contants/Variable';
+import {fontDefault, mainURL} from '../../contants/Variable';
+import {getAllStaffs} from '../../redux/apiRequest';
 
 const StaffListScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const dispatch = useDispatch();
   const [input, setInput] = useState(null);
   const [allStaff, setAllStaff] = useState(null);
   const XMGGroup = [
@@ -43,10 +46,17 @@ const StaffListScreen = ({navigation}) => {
     'UDVT',
     'TTDV',
   ];
-
   const [selectId, setSelectId] = useState(0);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const XMGstaffs = useSelector(state => state.staffs?.staffs?.XMGStaff);
+
+  const fetchAllStaff = () => {
+    getAllStaffs(dispatch);
+  };
+
+  useLayoutEffect(() => {
+    fetchAllStaff();
+  }, []);
 
   const handleSearch = (text, typeStaffValue) => {
     setInput(text);
@@ -77,9 +87,9 @@ const StaffListScreen = ({navigation}) => {
       return data;
     } else {
       if (user?.tendonvi === 'IFEE') {
-        return data.filter(item => item.tenphong === IFEEGroup[index]);
+        return data?.filter(item => item.tenphong === IFEEGroup[index]);
       } else {
-        return data.filter(item => {
+        return data?.filter(item => {
           return item.info_phong?.some(
             group => group.tenphong === XMGGroup[index],
           );

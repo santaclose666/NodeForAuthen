@@ -32,8 +32,9 @@ import {registerPlaneTicket} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import {planeCompany, ticketType, airplane} from '../../contants/Variable';
+import Loading from '../../components/LoadingUI';
 
-const RegisterPlaneScreen = ({navigation}) => {
+const RegisterPlaneScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const allStaffs = IFEEstaffs.map(item => {
@@ -55,6 +56,7 @@ const RegisterPlaneScreen = ({navigation}) => {
   );
   const [timeValue, setTimeValue] = useState(getCurrentTime());
   const [kgNumber, setKgNumber] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const handlePickDate = date => {
     if (dateTime === 'date') {
@@ -68,7 +70,7 @@ const RegisterPlaneScreen = ({navigation}) => {
     setToggleDatePicker(false);
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const data = {
       id_user: user?.id,
       ds_ns: multiStaff,
@@ -83,9 +85,20 @@ const RegisterPlaneScreen = ({navigation}) => {
     };
 
     if (multiStaff.length !== 0 && workName.length !== 0) {
-      ToastSuccess('Đăng kí thành công');
-      registerPlaneTicket(data);
-      navigation.navigate('HistoryPlaneTicket', {refresh: true});
+      setLoading(true);
+      try {
+        const res = await registerPlaneTicket(data);
+
+        if (res) {
+          ToastSuccess('Đăng kí thành công');
+          navigation.goBack();
+          route.params?.refreshData();
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       ToastAlert('Thiếu thông tin!');
     }
@@ -444,6 +457,7 @@ const RegisterPlaneScreen = ({navigation}) => {
           <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
         </KeyboardAwareScrollView>
       </ScrollView>
+      {loading === true && <Loading />}
     </SafeAreaView>
   );
 };

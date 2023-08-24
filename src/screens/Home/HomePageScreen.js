@@ -7,7 +7,6 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  StatusBar,
   SafeAreaView,
   Platform,
   PermissionsAndroid,
@@ -22,7 +21,7 @@ import {
   getVietnameseDayOfWeek,
   getFormattedDate,
 } from '../../utils/serviceFunction';
-import {getAllStaffs, getWeatherData} from '../../redux/apiRequest';
+import {getWeatherData} from '../../redux/apiRequest';
 import {getToken, notificationListener} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -54,7 +53,6 @@ const requestPermissions = async () => {
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
-  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   // const notifiData = useSelector(
   //   state => state.notifi.notifications?.allNotifi,
   // );
@@ -109,7 +107,6 @@ const HomePageScreen = ({navigation}) => {
 
   const fetchImportantData = async () => {
     await requestPermissions();
-    await getAllStaffs(dispatch);
     await getWeatherData(dispatch);
   };
 
@@ -119,7 +116,7 @@ const HomePageScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (weather && IFEEstaffs) {
+    if (weather) {
       setInTerVal(
         setInterval(() => {
           fetchImportantData();
@@ -129,7 +126,7 @@ const HomePageScreen = ({navigation}) => {
       fetchImportantData();
     }
 
-    notificationHandle();
+    // notificationHandle();
 
     return () => clearInterval(interval);
   }, []);
@@ -140,7 +137,7 @@ const HomePageScreen = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={false}
         style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor={'red'} />
+        {/* <StatusBar barStyle="dark-content" backgroundColor={'red'} /> */}
         <View style={styles.userInforContainer}>
           <View style={styles.userNameContainer}>
             <Text style={styles.userNameText}>Welcome, {user?.hoten} </Text>

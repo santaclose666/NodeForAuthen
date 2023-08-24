@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -30,8 +30,9 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {registerVehicle} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
+import Loading from '../../components/LoadingUI';
 
-const RegisterVehicleScreen = ({navigation}) => {
+const RegisterVehicleScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const typeVehicle = useSelector(
     state => state.vehicle?.vehicle?.availableCarData,
@@ -45,6 +46,7 @@ const RegisterVehicleScreen = ({navigation}) => {
   const [check, setCheck] = useState(null);
   const [placeInput, setPlaceInput] = useState('');
   const [contentInput, setContentInput] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handlePickDate = date => {
     const message = 'Ngày nhận xe không hợp lệ!';
@@ -82,7 +84,7 @@ const RegisterVehicleScreen = ({navigation}) => {
     setToggleDatePicker(true);
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const data = {
       id_user: user.id,
       loaixe: vehicleValue,
@@ -94,9 +96,21 @@ const RegisterVehicleScreen = ({navigation}) => {
     };
 
     if (vehicleValue !== null && placeInput !== '' && contentInput !== '') {
-      registerVehicle(data);
-      ToastSuccess('Đăng kí thành công');
-      navigation.navigate('HistoryRegisterVehicle', {refresh: true});
+      setLoading(true);
+      try {
+        const res = await registerVehicle(data);
+        console.log(res);
+
+        if (res) {
+          ToastSuccess('Đăng kí thành công');
+          navigation.goBack();
+          route.params?.refreshData();
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       ToastAlert('Thiếu thông tin!');
     }
@@ -281,6 +295,7 @@ const RegisterVehicleScreen = ({navigation}) => {
           <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
         </KeyboardAwareScrollView>
       </ScrollView>
+      {loading === true && <Loading />}
     </SafeAreaView>
   );
 };

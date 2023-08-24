@@ -27,6 +27,7 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {registerOnLeave} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
+import Loading from '../../components/LoadingUI';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 0.5},
@@ -42,6 +43,7 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [startDay, setStartDay] = useState(formatDate(new Date()));
   const [inputDecription, setInputDecription] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handlePickDate = date => {
     setToggleDatePicker(false);
@@ -51,7 +53,7 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
       : ToastAlert(message);
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (valueNumberOfDay === null || inputDecription === '') {
       const message = 'Thiếu thông tin!';
       ToastAlert(message);
@@ -62,15 +64,23 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
         tungay: formatDateToPost(startDay),
         tong: valueNumberOfDay === 'Nhiều ngày' ? offNumber : valueNumberOfDay,
       };
-      registerOnLeave(data);
 
-      const message = 'Đăng kí thành công';
-      ToastSuccess(message);
+      setLoading(true);
+      try {
+        const res = await registerOnLeave(data);
 
-      navigation.goBack();
-      setTimeout(() => {
-        route.params.updateData();
-      });
+        if (res) {
+          const message = 'Đăng kí thành công';
+          ToastSuccess(message);
+
+          navigation.goBack();
+          route.params?.refreshData();
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -235,6 +245,7 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
         </View>
         <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
       </KeyboardAwareScrollView>
+      {loading === true && <Loading />}
     </SafeAreaView>
   );
 };

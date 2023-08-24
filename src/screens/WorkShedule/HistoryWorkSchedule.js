@@ -42,15 +42,13 @@ import {ApproveCancelModal} from '../../components/Modal';
 import {ToastWarning} from '../../components/Toast';
 import StaggerUI from '../../components/StaggerUI';
 
-const HistoryWorkShedule = ({navigation, route}) => {
-  const refresh = route.params?.refresh;
+const HistoryWorkShedule = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const dispatch = useDispatch();
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const workSheduleData = useSelector(
     state => state.workSchedule?.worksSchedule?.data,
   );
-  const [refreshComponent, setRefreshComponent] = useState(false);
   const [indexPicker, setIndexPicker] = useState(0);
   const [selectedItem, setSelectedItem] = useState(null);
   const [toggleModal, setToggleModal] = useState(false);
@@ -113,8 +111,10 @@ const HistoryWorkShedule = ({navigation, route}) => {
 
       approveWorkSchedule(data);
       setCommentInput(null);
-      setRefreshComponent(!refreshComponent);
       setToggleModal(false);
+      setTimeout(() => {
+        fetchWorkSchedule();
+      });
     } else if (!checkInput && reasonCancel !== '' && selectedItem !== null) {
       const data = {
         id_lichcongtac: selectedItem.id,
@@ -123,8 +123,10 @@ const HistoryWorkShedule = ({navigation, route}) => {
 
       cancelWorkSchedule(data);
       setReasonCancel(null);
-      setRefreshComponent(!refreshComponent);
       setToggleModal(false);
+      setTimeout(() => {
+        fetchWorkSchedule();
+      });
     } else {
       ToastWarning('Nhập đầy đủ thông tin!');
     }
@@ -165,11 +167,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
 
   useLayoutEffect(() => {
     fetchWorkSchedule();
-
-    if (refresh) {
-      setIndexPicker(0);
-    }
-  }, [refresh, refreshComponent]);
+  }, []);
 
   const RenderWorkScheduleData = memo(({item, index}) => {
     const colorStatus =
@@ -207,7 +205,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
           item.id_user !== user?.id &&
           user?.vitri_ifee === 3 &&
           filterUser.vitri_ifee > 3) ||
-        (user?.vitri_ifee === 1 && item.status === 0)
+        (user?.vitri_ifee == 1 && item.status === 0)
       );
     };
 
@@ -335,7 +333,11 @@ const HistoryWorkShedule = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Lịch sử công tác" navigation={navigation} />
+      <Header
+        title="Lịch sử công tác"
+        navigation={navigation}
+        refreshData={fetchWorkSchedule}
+      />
       <FilterStatusUI
         handlePickOption={handlePickOption}
         indexPicker={indexPicker}

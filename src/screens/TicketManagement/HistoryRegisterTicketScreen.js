@@ -38,8 +38,7 @@ import {ToastWarning} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
 import FilterStatusUI from '../../components/FilterStatusUI';
 
-const HistoryRegisterTicketScreen = ({navigation, route}) => {
-  const refresh = route?.params?.refresh;
+const HistoryRegisterTicketScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const ticketPlaneData = useSelector(
     state => state.ticketPlane.ticketPlane?.data,
@@ -50,7 +49,6 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
   const [checkInput, setCheckInput] = useState(null);
   const [commentInput, setCommentInput] = useState('');
   const [reasonCancel, setReasonCancel] = useState('');
-  const [refreshComponent, setRefreshComponent] = useState(false);
   const [indexPicker, setIndexPicker] = useState(0);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
@@ -116,8 +114,14 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
       (commentInput.length !== 0 || reasonCancel.length !== 0) &&
       selectedItem !== null
     ) {
-      checkInput ? approvePlaneTicket(data) : cancelPlaneTicket(data);
-      setRefreshComponent(!refreshComponent);
+      if (checkInput) {
+        approvePlaneTicket(data);
+      } else {
+        cancelPlaneTicket(data);
+      }
+      setTimeout(() => {
+        fetchPlaneData();
+      });
       setToggleModal(false);
     } else {
       ToastWarning('Nhập đầy đủ thông tin');
@@ -145,13 +149,13 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
     [ticketPlaneData],
   );
 
-  const fetchPlaneData = async () => {
-    await getAllPlaneData(dispatch);
+  const fetchPlaneData = () => {
+    getAllPlaneData(dispatch);
   };
 
   useLayoutEffect(() => {
     fetchPlaneData();
-  }, [refreshComponent, refresh]);
+  }, []);
 
   const RenderTicketData = memo(({item, index}) => {
     const colorStatus =
@@ -308,7 +312,11 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Lịch sử đặt vé" navigation={navigation} />
+      <Header
+        title="Lịch sử đặt vé"
+        navigation={navigation}
+        refreshData={fetchPlaneData}
+      />
       <BottomSheetModalProvider>
         <FilterStatusUI
           handlePickOption={handlePickOption}

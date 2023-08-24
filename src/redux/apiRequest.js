@@ -135,8 +135,7 @@ export const registerOnLeave = async data => {
       },
     );
 
-    // return it
-    return res;
+    return res.data;
   } catch (error) {
     console.log(error);
   }
@@ -238,9 +237,14 @@ export const getAllWorkName = async dispatch => {
 
 export const registerWorkSchedule = async data => {
   try {
-    await axios.post(`https://management.ifee.edu.vn/api/lichcongtac/reg`, {
-      ...data,
-    });
+    const res = await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/reg`,
+      {
+        ...data,
+      },
+    );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }
@@ -325,7 +329,7 @@ export const getVehicleData = async (dispatch, id) => {
 
 export const registerVehicle = async data => {
   try {
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/xe/reg/${data.id_user}`,
       {
         loaixe: data.loaixe,
@@ -336,6 +340,8 @@ export const registerVehicle = async data => {
         ngaynhan: data.ngaynhan,
       },
     );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }
@@ -366,8 +372,7 @@ export const cancelVehicle = async data => {
 
 export const registerPlaneTicket = async data => {
   try {
-    console.log(data);
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/vemaybay/reg/${data.id_user}`,
       {
         ds_ns: data.ds_ns,
@@ -381,6 +386,8 @@ export const registerPlaneTicket = async data => {
         kygui: data.kygui,
       },
     );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }

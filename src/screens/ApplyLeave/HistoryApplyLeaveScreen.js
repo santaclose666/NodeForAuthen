@@ -14,7 +14,7 @@ import {useDispatch} from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
-import Header1 from '../../components/Header';
+import Header from '../../components/Header';
 import {
   adjustOnLeave,
   approveAdjustOnLeave,
@@ -416,10 +416,10 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header1
+      <Header
         title="Lịch sử nghỉ phép"
         navigation={navigation}
-        updateData={handleGetAllLeaveData}
+        refreshData={handleGetAllLeaveData}
       />
 
       <FilterStatusUI
