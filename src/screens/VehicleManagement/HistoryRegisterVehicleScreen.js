@@ -334,14 +334,16 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
                   padding: 5,
                   height: 25,
                   width: 25,
-                  tintColor: indexPicker === index ? item.color : '#edf2ed',
+                  tintColor: indexPicker === index ? item.color : item.color,
                 }}
               />
               <Text
                 style={{
                   fontFamily: Fonts.SF_MEDIUM,
                   fontSize: 16,
-                  color: indexPicker === index ? item.color : '#edf2ed',
+                  opacity: 0.8,
+                  color:
+                    indexPicker === index ? item.color : Colors.DEFAULT_BLACK,
                 }}>
                 {item.title}
               </Text>
@@ -527,7 +529,7 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#b6c987',
+    backgroundColor: '#f2f2f2',
   },
 
   containerEachLine: {

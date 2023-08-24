@@ -76,7 +76,7 @@ const DetailStaffScreen = ({navigation, route}) => {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: bgColor,
+        backgroundColor: '#f2f2f2',
         justifyContent: 'center',
       }}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" />

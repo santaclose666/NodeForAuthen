@@ -44,7 +44,7 @@ const FilterStatusUI = ({handlePickOption, indexPicker}) => {
               style={{
                 fontFamily: Fonts.SF_MEDIUM,
                 fontSize: 16,
-                opacity: 0.7,
+                opacity: 0.8,
                 color: indexPicker === index ? item.color : '#041d3b',
               }}>
               {item.title}

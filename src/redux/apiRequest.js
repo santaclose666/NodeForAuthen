@@ -42,6 +42,7 @@ import {
   getMyWorkStart,
   getMyWorkSuccess,
 } from './myWorkScheduleSlice';
+import {saveSuccess} from './credentialSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -49,7 +50,7 @@ const resetAction = CommonActions.reset({
 });
 
 /////////////////////  USER DATA  ////////////////////
-export const loginUser = async (user, dispatch, navigation) => {
+export const loginUser = async (user, dispatch, navigation, save) => {
   dispatch(loginStart());
   try {
     const res = await axios.post(
@@ -64,6 +65,8 @@ export const loginUser = async (user, dispatch, navigation) => {
     } else {
       navigation.dispatch(resetAction);
       navigation.navigate('BottomTab');
+
+      save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));
     }
   } catch (err) {
     console.log(err);

@@ -542,7 +542,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#b6c987',
+    backgroundColor: '#f2f2f2',
   },
 
   containerEachLine: {

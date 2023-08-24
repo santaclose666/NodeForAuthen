@@ -241,7 +241,7 @@ const CreateApplyLeaveScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f2f2f2',
   },
 
   containerEachLine: {

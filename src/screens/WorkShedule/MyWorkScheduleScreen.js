@@ -133,7 +133,7 @@ styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: Dimension.setWidth(4),
     paddingVertical: Dimension.setHeight(2),
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f2f2f2',
     marginBottom: Dimension.setHeight(1),
     marginTop: Dimension.setHeight(1.3),
     borderRadius: 12,

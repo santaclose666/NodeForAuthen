@@ -680,7 +680,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e2ebf5',
+    backgroundColor: '#f2f2f2',
   },
 
   containerEachLine: {

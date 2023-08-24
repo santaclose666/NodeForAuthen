@@ -18,7 +18,7 @@ import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
 import {useSelector} from 'react-redux';
 import {shadowIOS} from '../../contants/propsIOS';
-import {mainURL, XMGorder} from '../../contants/Variable';
+import {fontDefault, mainURL, XMGorder} from '../../contants/Variable';
 
 const StaffListScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -71,8 +71,6 @@ const StaffListScreen = ({navigation}) => {
     setSelectId(index);
   };
 
-  const filterXMG = () => {};
-
   const handleFilter = useCallback(index => {
     const data = user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs;
     if (index === 0) {
@@ -82,7 +80,7 @@ const StaffListScreen = ({navigation}) => {
         return data.filter(item => item.tenphong === IFEEGroup[index]);
       } else {
         return data.filter(item => {
-          return item.info_phong.some(
+          return item.info_phong?.some(
             group => group.tenphong === XMGGroup[index],
           );
         });
@@ -135,6 +133,7 @@ const StaffListScreen = ({navigation}) => {
               style={{
                 fontFamily: Fonts.SF_SEMIBOLD,
                 fontSize: 19,
+                ...fontDefault,
               }}>
               {item.hoten}
             </Text>
@@ -168,6 +167,7 @@ const StaffListScreen = ({navigation}) => {
             style={{
               fontFamily: Fonts.SF_SEMIBOLD,
               fontSize: 15,
+              ...fontDefault,
             }}>
             {role}
           </Text>
@@ -233,8 +233,9 @@ const StaffListScreen = ({navigation}) => {
                     fontFamily:
                       selectId !== index ? Fonts.SF_REGULAR : Fonts.SF_BOLD,
                     fontSize: 16,
+                    opacity: 0.6,
                     color:
-                      selectId === index ? '#85d4ee' : Colors.INACTIVE_GREY,
+                      selectId === index ? '#85d4ee' : Colors.DEFAULT_BLACK,
                   }}>
                   {item}
                 </Text>
@@ -271,7 +272,7 @@ const StaffListScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f2f2f2',
   },
 
   nameScreenContainer: {

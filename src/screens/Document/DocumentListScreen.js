@@ -17,7 +17,7 @@ import Colors from '../../contants/Colors';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import {shadowIOS} from '../../contants/propsIOS';
-import {DocumentData, DocumentURL} from '../../contants/Variable';
+import {DocumentData, DocumentURL, fontDefault} from '../../contants/Variable';
 
 const DocumentListScreen = ({navigation}) => {
   const [pickFileIndex, setpickFileIndex] = useState(null);
@@ -89,7 +89,11 @@ const DocumentListScreen = ({navigation}) => {
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 16}}>
+                style={{
+                  fontFamily: Fonts.SF_SEMIBOLD,
+                  fontSize: 16,
+                  ...fontDefault,
+                }}>
                 {item.SoHieu}
               </Text>
             </View>
@@ -219,12 +223,16 @@ const DocumentListScreen = ({navigation}) => {
                 style={{marginRight: Dimension.setWidth(4.4)}}>
                 <Text
                   style={{
-                    fontFamily: Fonts.SF_REGULAR,
+                    fontFamily:
+                      pickOptionIndex === index
+                        ? Fonts.SF_SEMIBOLD
+                        : Fonts.SF_REGULAR,
                     fontSize: 17,
+                    opacity: 0.6,
                     color:
                       pickOptionIndex === index
-                        ? '#49d0ef'
-                        : Colors.INACTIVE_GREY,
+                        ? Colors.DEFAULT_GREEN
+                        : Colors.DEFAULT_BLACK,
                   }}>
                   {item}
                 </Text>
@@ -271,7 +279,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f2f2f2',
   },
 
   headerContainer: {
@@ -320,12 +328,14 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: Fonts.SF_BOLD,
     fontSize: 14,
+    ...fontDefault,
   },
 
   content: {
     fontFamily: Fonts.SF_REGULAR,
     fontSize: 14,
     marginLeft: Dimension.setWidth(2),
+    textAlign: 'justify',
   },
   searchInput: {
     alignSelf: 'center',

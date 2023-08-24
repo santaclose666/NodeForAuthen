@@ -11,6 +11,7 @@ import {
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
+import Colors from '../contants/Colors';
 
 const Header = ({title, eventFunc, navigation}) => {
   const showCreateButton =
@@ -27,7 +28,7 @@ const Header = ({title, eventFunc, navigation}) => {
         justifyContent: 'space-between',
         paddingVertical: Dimension.setHeight(2),
         paddingHorizontal: Dimension.setWidth(2),
-        backgroundColor: '#22a87e',
+        backgroundColor: '#e4edfdff',
       }}>
       <StatusBar
         translucent
@@ -40,7 +41,7 @@ const Header = ({title, eventFunc, navigation}) => {
         }}>
         <Image
           source={Images.back}
-          style={{width: 22, height: 22, tintColor: '#fff'}}
+          style={{width: 25, height: 25, tintColor: Colors.DEFAULT_BLACK}}
         />
       </TouchableOpacity>
       <View style={{flex: 1, alignItems: 'center'}}>
@@ -48,7 +49,8 @@ const Header = ({title, eventFunc, navigation}) => {
           style={{
             fontFamily: Fonts.SF_MEDIUM,
             fontSize: 18,
-            color: '#fff',
+            opacity: 0.8,
+            color: '#041d3b',
           }}>
           {title}
         </Text>
@@ -66,7 +68,7 @@ const Header = ({title, eventFunc, navigation}) => {
               navigation.navigate('RegisterVehicle');
             }
           }}>
-          <Image source={Images.create} style={{width: 30, height: 30}} />
+          <Image source={Images.adjust} style={{width: 30, height: 30}} />
         </TouchableOpacity>
       ) : (
         <View style={{width: 30}} />

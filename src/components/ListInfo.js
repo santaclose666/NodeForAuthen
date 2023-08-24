@@ -5,10 +5,9 @@ import Fonts from '../contants/Fonts';
 import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
 import {shadowIOS} from '../contants/propsIOS';
+import {fontDefault} from '../contants/Variable';
 
 const ListInfo = ({info, index}) => {
-  const colorText = Colors.INACTIVE_GREY;
-
   const role =
     info?.role === 1 ? 'Admin' : info?.role === 2 ? 'Manager' : 'User';
   return (
@@ -59,13 +58,13 @@ const ListInfo = ({info, index}) => {
         showsVerticalScrollIndicator={false}>
         <View style={[styles.wrap, {marginTop: Dimension.setHeight(2.4)}]}>
           <Image
-            style={[styles.img, {tintColor: colorText}]}
+            style={[styles.img]}
             source={
               info?.userName !== undefined ? Images.user : Images.position
             }
           />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {color: colorText}]}>
+            <Text style={[styles.titleText, {...fontDefault}]}>
               {info?.userName !== undefined ? 'Tên người dùng' : 'Chức danh'}
             </Text>
             <Text style={styles.contentText}>
@@ -74,44 +73,34 @@ const ListInfo = ({info, index}) => {
           </View>
         </View>
         <View style={styles.wrap}>
-          <Image
-            style={[styles.img, {tintColor: colorText}]}
-            source={Images.hr}
-          />
+          <Image style={[styles.img]} source={Images.hr} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {color: colorText}]}>Bộ phận</Text>
+            <Text style={[styles.titleText, {opacity: 0.8, color: '#041d3b'}]}>
+              Bộ phận
+            </Text>
             <Text style={styles.contentText}>{info?.hr}</Text>
           </View>
         </View>
         <View style={styles.wrap}>
-          <Image
-            style={[styles.img, {tintColor: colorText}]}
-            source={Images.year}
-          />
+          <Image style={[styles.img]} source={Images.year} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {color: colorText}]}>
+            <Text style={[styles.titleText, {opacity: 0.8, color: '#041d3b'}]}>
               Sinh nhật
             </Text>
             <Text style={styles.contentText}>{info?.birthday}</Text>
           </View>
         </View>
         <View style={styles.wrap}>
-          <Image
-            style={[styles.img, {tintColor: colorText}]}
-            source={Images.email}
-          />
+          <Image style={[styles.img]} source={Images.email} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {color: colorText}]}>Email</Text>
+            <Text style={[styles.titleText, {...fontDefault}]}>Email</Text>
             <Text style={styles.contentText}>{info?.email}</Text>
           </View>
         </View>
         <View style={styles.wrap}>
-          <Image
-            style={[styles.img, {tintColor: colorText}]}
-            source={Images.phone}
-          />
+          <Image style={[styles.img]} source={Images.phone} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {color: colorText}]}>
+            <Text style={[styles.titleText, {...fontDefault}]}>
               Số điện thoại
             </Text>
             <Text style={styles.contentText}>0{info?.phone}</Text>
@@ -175,15 +164,15 @@ const styles = StyleSheet.create({
   },
 
   roleTeamTittle: {
-    fontFamily: Fonts.SF_BOLD,
+    fontFamily: Fonts.SF_MEDIUM,
     fontSize: 15,
     color: Colors.INACTIVE_GREY,
   },
 
   roleTeamText: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 20,
-    color: '#4a4c56',
+    fontSize: 18,
+    ...fontDefault,
     overflow: 'hidden',
   },
 
@@ -212,6 +201,7 @@ const styles = StyleSheet.create({
   img: {
     width: 30,
     height: 30,
+    tintColor: Colors.DEFAULT_GREEN,
   },
 
   textContainer: {
@@ -227,9 +217,10 @@ const styles = StyleSheet.create({
   },
 
   contentText: {
-    fontSize: 19,
+    fontSize: 18,
     fontFamily: Fonts.SF_BOLD,
-    color: '#4a4c56',
+    ...fontDefault,
+    marginVertical: Dimension.setHeight(1),
   },
 });
 

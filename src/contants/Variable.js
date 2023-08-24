@@ -91,6 +91,8 @@ export const ticketType = [
   },
 ];
 
+export const fontDefault = {opacity: 0.8, color: '#041d3b'};
+
 export const airplane = [
   {
     label: 'Hà Nội (HAN), Sân bay QT Nội Bài',

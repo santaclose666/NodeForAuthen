@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -15,13 +15,16 @@ import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import {loginUser} from '../../redux/apiRequest';
 import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ToastAlert} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
-import {defaultXMG, mainURL} from '../../contants/Variable';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
+  const credential = useSelector(
+    state => state.credential.credential?.emailPwd,
+  );
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [checkShowHide, setCheckShowHide] = useState(true);
@@ -30,12 +33,19 @@ const LoginScreen = ({navigation}) => {
   const handleLogin = () => {
     if (email !== '' && password !== '') {
       const data = {email, password};
-      loginUser(data, dispatch, navigation);
+      loginUser(data, dispatch, navigation, save);
     } else {
       const mess = 'Vui lòng nhập đầy đủ thông tin!';
       ToastAlert(mess);
     }
   };
+
+  useLayoutEffect(() => {
+    if (credential) {
+      setEmail(credential.email);
+      setPassword(credential.password);
+    }
+  }, []);
 
   return (
     <KeyboardAwareScrollView
@@ -43,20 +53,23 @@ const LoginScreen = ({navigation}) => {
       enableResetScrollToCoords={true}
       enableOnAndroid={true}
       behavior="padding"
-      style={{flex: 1, backgroundColor: '#ffffff'}}>
+      style={{flex: 1, backgroundColor: '#f2f2f2'}}>
       <View style={styles.themeContainer}>
         <TouchableOpacity
           style={styles.headerBtn}
           onPress={() => navigation.goBack()}>
-          <Image source={Images.back} style={{width: 20, height: 20}} />
+          <Image
+            source={Images.back}
+            style={{width: 18, height: 18, tintColor: '#fff'}}
+          />
         </TouchableOpacity>
         <Image
           source={Images.logo}
           resizeMode="cover"
           style={{
-            width: Dimensions.get('screen').width / 1.5,
-            height: Dimensions.get('screen').width / 1.5,
-            borderRadius: 150,
+            width: Dimensions.get('screen').width / 1.8,
+            height: Dimensions.get('screen').width / 1.8,
+            borderRadius: 30,
           }}
         />
       </View>
@@ -155,9 +168,15 @@ const LoginScreen = ({navigation}) => {
             </View>
           </View>
         </View>
-        <VStack space={4}>
-          <Switch size={'sm'} defaultIsChecked colorScheme="emerald" />
-        </VStack>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Switch
+            size={'sm'}
+            colorScheme="emerald"
+            isChecked={save}
+            onChange={val => setSave(val.nativeEvent.value)}
+          />
+          <Text style={{fontFamily: Fonts.SF_MEDIUM}}>Lưu thông tin</Text>
+        </View>
         <TouchableOpacity
           onPress={handleLogin}
           style={{
@@ -165,7 +184,7 @@ const LoginScreen = ({navigation}) => {
             justifyContent: 'center',
             marginTop: Dimension.setHeight(2),
             borderColor: Colors.INACTIVE_GREY,
-            backgroundColor: 'rgba(120, 255,100, 1)',
+            backgroundColor: '#22a87e',
             borderRadius: 10,
             paddingVertical: Dimension.setHeight(1.6),
             elevation: 5,
@@ -175,7 +194,7 @@ const LoginScreen = ({navigation}) => {
             style={{
               fontSize: 18,
               fontFamily: Fonts.SF_BOLD,
-              color: '#333',
+              color: '#fff',
             }}>
             Truy cập
           </Text>
@@ -186,23 +205,6 @@ const LoginScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-
   themeContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -246,7 +248,7 @@ const styles = StyleSheet.create({
   },
   headerBtn: {
     padding: 10,
-    backgroundColor: 'rgba(120, 255,100, 1)',
+    backgroundColor: '#22a87e',
     borderRadius: 12,
     elevation: 6,
     ...shadowIOS,

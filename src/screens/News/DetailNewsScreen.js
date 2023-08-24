@@ -14,6 +14,7 @@ import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import {shadowIOS} from '../../contants/propsIOS';
+import {fontDefault} from '../../contants/Variable';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
@@ -37,14 +38,11 @@ const DetailNewsScreen = ({navigation, route}) => {
         <TouchableOpacity
           style={styles.headerBtn}
           onPress={() => navigation.goBack()}>
-          <Image source={Images.back} style={{width: 20, height: 20}} />
-        </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.headerBtn}>
           <Image
-            source={Images.heart}
-            style={{width: 20, height: 20, tintColor: 'red'}}
+            source={Images.back}
+            style={{width: 20, height: 20, tintColor: '#fff'}}
           />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -55,6 +53,8 @@ const DetailNewsScreen = ({navigation, route}) => {
             style={{
               fontSize: 20,
               fontFamily: Fonts.SF_SEMIBOLD,
+              textAlign: 'justify',
+              ...fontDefault,
             }}>
             {item.name}
           </Text>
@@ -63,6 +63,7 @@ const DetailNewsScreen = ({navigation, route}) => {
               fontSize: 15,
               fontFamily: Fonts.SF_REGULAR,
               color: Colors.INACTIVE_GREY,
+              marginVertical: Dimension.setHeight(1),
             }}>
             {item.date}
           </Text>
@@ -96,6 +97,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     flex: 1,
+    backgroundColor: '#f2f2f2',
   },
 
   mainImgContainer: {
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
 
   headerBtn: {
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.DEFAULT_GREEN,
     borderRadius: 12,
     elevation: 10,
     ...shadowIOS,
@@ -139,6 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: Dimension.setHeight(2.2),
     marginHorizontal: Dimension.setWidth(6),
+    marginVertical: Dimension.setHeight(2),
   },
 
   descriptionContainer: {
@@ -164,6 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginVertical: 5,
     textAlign: 'justify',
+    ...fontDefault,
   },
 });
 
