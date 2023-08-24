@@ -201,7 +201,6 @@ export const ApproveCancelModal = ({
         </View>
         <TouchableOpacity
           onPress={() => {
-            setSelectedItem(null);
             setToggleApproveModal(false);
           }}
           style={{position: 'absolute', right: '5%', top: '5%'}}>

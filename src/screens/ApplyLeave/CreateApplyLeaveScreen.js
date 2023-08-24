@@ -27,7 +27,6 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {registerOnLeave} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
-import {approveArr} from '../../contants/Variable';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 0.5},
@@ -36,7 +35,7 @@ const numberOfDayOff = [
   {label: 'Nhiều ngày', value: 'Nhiều ngày'},
 ];
 
-const CreateApplyLeaveScreen = ({navigation}) => {
+const CreateApplyLeaveScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const [valueNumberOfDay, setValueNumberOfDay] = useState(null);
   const [offNumber, setOffNumber] = useState(2);
@@ -63,13 +62,15 @@ const CreateApplyLeaveScreen = ({navigation}) => {
         tungay: formatDateToPost(startDay),
         tong: valueNumberOfDay === 'Nhiều ngày' ? offNumber : valueNumberOfDay,
       };
-
       registerOnLeave(data);
 
       const message = 'Đăng kí thành công';
       ToastSuccess(message);
 
-      navigation.navigate('HistoryApplyLeave', {refresh: true});
+      navigation.goBack();
+      setTimeout(() => {
+        route.params.updateData();
+      });
     }
   };
 

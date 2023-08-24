@@ -39,10 +39,9 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import FilterStatusUI from '../../components/FilterStatusUI';
 
-const HistoryApplyLeaveScreen = ({navigation, route}) => {
+const HistoryApplyLeaveScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
-  const refresh = route?.params?.refresh;
   const [selectedItem, setSelectedItem] = useState(null);
   const [commnetInput, setCommentInput] = useState(null);
   const [reasonCancel, setReasonCancel] = useState(null);
@@ -59,10 +58,10 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
 
   useLayoutEffect(() => {
     handleGetAllLeaveData();
-  }, [refreshComponent, refresh]);
+  }, []);
 
-  const handleGetAllLeaveData = async () => {
-    await getAllOnLeaveData(user?.id, dispatch);
+  const handleGetAllLeaveData = () => {
+    getAllOnLeaveData(user?.id, dispatch);
   };
 
   const handlePickItem = item => {
@@ -87,17 +86,22 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
       };
       rejectLeaveRequest(data);
       setReasonCancel(null);
-      setRefreshComponent(!refreshComponent);
       setToggleApproveModal(false);
+      setTimeout(() => {
+        handleGetAllLeaveData();
+      });
     } else if (checkInput && selectedItem !== null) {
       const data = {
         ...importantData,
         nhanxet: commnetInput,
       };
       resolveLeaveRequest(data);
+
       setCommentInput(null);
-      setRefreshComponent(!refreshComponent);
       setToggleApproveModal(false);
+      setTimeout(() => {
+        handleGetAllLeaveData();
+      });
     } else {
       ToastWarning('Nhập đầy đủ lý do');
     }
@@ -166,11 +170,11 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     index => {
       switch (index) {
         case 0:
-          return leaveData.filter(
+          return leaveData?.filter(
             item => item.status === 0 || item.yc_update === 1,
           );
         case 1:
-          return leaveData.filter(
+          return leaveData?.filter(
             item =>
               (item.status === 1 &&
                 item.yc_update !== 1 &&
@@ -178,7 +182,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
               item.yc_update === 2,
           );
         case 2:
-          return leaveData.filter(
+          return leaveData?.filter(
             item => item.status === 2 || item.yc_update === 3,
           );
       }
@@ -412,7 +416,11 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header1 title="Lịch sử nghỉ phép" navigation={navigation} />
+      <Header1
+        title="Lịch sử nghỉ phép"
+        navigation={navigation}
+        updateData={handleGetAllLeaveData}
+      />
 
       <FilterStatusUI
         handlePickOption={handlePickOption}
@@ -454,7 +462,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
         setToggleApproveModal={setToggleApproveModal}
         checkInput={checkInput}
         selectedItem={selectedItem}
-        setSelectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
         commnetInput={commnetInput}
         setCommentInput={setCommentInput}
         reasonCancel={reasonCancel}

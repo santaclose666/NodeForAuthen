@@ -126,10 +126,17 @@ export const getWeatherData = async dispatch => {
 /////////////////////  ON LEAVE DATA  ////////////////////
 export const registerOnLeave = async data => {
   try {
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/nghiphep/reg/${data.id_user}`,
-      {tungay: data.tungay, tong: data.tong, lydo: data.lydo},
+      {
+        tungay: data.tungay,
+        tong: data.tong,
+        lydo: data.lydo,
+      },
     );
+
+    // return it
+    return res;
   } catch (error) {
     console.log(error);
   }
@@ -154,11 +161,12 @@ export const getAllOnLeaveData = async (id, dispatch) => {
 
 export const resolveLeaveRequest = async data => {
   try {
-    console.log('resolve', data);
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/nghiphep/duyet/${data.id_nghiphep}`,
       {id_user: data.id_user, nhanxet: data.nhanxet},
     );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }
@@ -166,11 +174,12 @@ export const resolveLeaveRequest = async data => {
 
 export const rejectLeaveRequest = async data => {
   try {
-    console.log('reject', data);
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/nghiphep/tuchoi/${data.id_nghiphep}`,
       {id_user: data.id_user, lydo: data.lydo},
     );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }

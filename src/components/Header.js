@@ -13,7 +13,7 @@ import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
 
-const Header = ({title, eventFunc, navigation}) => {
+const Header = ({title, eventFunc, navigation, updateData}) => {
   const showCreateButton =
     title === 'Lịch sử nghỉ phép' ||
     title === 'Lịch sử đặt vé' ||
@@ -59,7 +59,9 @@ const Header = ({title, eventFunc, navigation}) => {
         <TouchableOpacity
           onPress={() => {
             if (title === 'Lịch sử nghỉ phép') {
-              navigation.navigate('RegisterApplyLeave');
+              navigation.navigate('RegisterApplyLeave', {
+                updateData: updateData,
+              });
             } else if (title === 'Lịch sử đặt vé') {
               navigation.navigate('RegisterPlaneTicket');
             } else if (title === 'Lịch sử công tác') {
