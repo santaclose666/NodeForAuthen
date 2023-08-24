@@ -63,7 +63,7 @@ export const approveArr = [
 const HistoryRegisterVehicleScreen = ({navigation, route}) => {
   const refresh = route.params?.refresh;
   const user = useSelector(state => state.auth.login?.currentUser);
-  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
+  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const allVehicleData = useSelector(
     state => state.vehicle?.vehicle?.statusData,
   );
@@ -194,9 +194,7 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
       return (user?.id === 2 || user?.id === 8) && item.pheduyet === null;
     };
 
-    const userFilter = staffs.filter(
-      user => item.id_user === user.id && user.tendonvi === 'IFEE',
-    )[0];
+    const userFilter = IFEEstaffs.filter(user => item.id_user === user.id)[0];
     return (
       <TouchableOpacity
         onPress={() => {

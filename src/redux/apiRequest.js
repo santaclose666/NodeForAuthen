@@ -343,8 +343,7 @@ export const approveVehicle = async data => {
 export const cancelVehicle = async data => {
   try {
     await axios.get(
-      `https://management.ifee.edu.vn/api/xe/tuchoi/${data.id_dulieu}`,
-      {id_user: data.id_user},
+      `https://management.ifee.edu.vn/api/xe/tuchoi/${data.id_dulieu}?id_user=${data.id_user}`,
     );
   } catch (error) {
     console.log(error);

@@ -17,17 +17,11 @@ import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
 import {useSelector} from 'react-redux';
-import {Dropdown} from 'react-native-element-dropdown';
 import {shadowIOS} from '../../contants/propsIOS';
-import {mainURL} from '../../contants/Variable';
-
-const typeStaff = [{value: 'XMG'}, {value: 'IFEE'}];
+import {mainURL, XMGorder} from '../../contants/Variable';
 
 const StaffListScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const [typeStaffValue, setTypeStaffValue] = useState(
-    user?.tendonvi === 'IFEE' ? typeStaff[1].value : typeStaff[0].value,
-  );
   const [input, setInput] = useState(null);
   const [allStaff, setAllStaff] = useState(null);
   const XMGGroup = [
@@ -77,25 +71,17 @@ const StaffListScreen = ({navigation}) => {
     setSelectId(index);
   };
 
-  const handlePickUnit = useCallback(typeStaffValue => {
-    if (typeStaffValue === 'XMG') {
-      return XMGstaffs;
-    } else {
-      return IFEEstaffs;
-    }
-  }, []);
+  const filterXMG = () => {};
 
-  const handleFilter = useCallback((index, typeStaffValue) => {
-    const data = handlePickUnit(typeStaffValue);
+  const handleFilter = useCallback(index => {
+    const data = user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs;
     if (index === 0) {
       return data;
     } else {
-      if (typeStaffValue === 'IFEE') {
-        return handlePickUnit(typeStaffValue).filter(
-          item => item.tenphong === IFEEGroup[index],
-        );
+      if (user?.tendonvi === 'IFEE') {
+        return data.filter(item => item.tenphong === IFEEGroup[index]);
       } else {
-        return handlePickUnit(typeStaffValue).filter(item => {
+        return data.filter(item => {
           return item.info_phong.some(
             group => group.tenphong === XMGGroup[index],
           );
@@ -106,7 +92,7 @@ const StaffListScreen = ({navigation}) => {
 
   const RenderStaffs = memo(({item, index}) => {
     const role =
-      typeStaffValue === 'XMG' ? item.info_phong[0].chucdanh : item.chucdanh;
+      user?.tendonvi === 'XMG' ? item.info_phong[0].chucdanh : item.chucdanh;
 
     return (
       <TouchableOpacity
@@ -231,11 +217,11 @@ const StaffListScreen = ({navigation}) => {
           </Text>
         </View>
         <FlatList
-          data={typeStaffValue === 'XMG' ? XMGGroup : IFEEGroup}
+          data={user?.tendonvi === 'XMG' ? XMGGroup : IFEEGroup}
           keyExtractor={(_, index) => index}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          extraData={typeStaffValue === 'XMG' ? XMGstaffs : IFEEstaffs}
+          extraData={user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs}
           renderItem={({item, index}) => {
             return (
               <TouchableOpacity
@@ -266,33 +252,9 @@ const StaffListScreen = ({navigation}) => {
           }}>
           Danh sách nhân sự
         </Text>
-        {user?.ifee_xmg === 1 && (
-          <Dropdown
-            style={styles.dropdown}
-            showsVerticalScrollIndicator={false}
-            selectedTextStyle={{
-              color: typeStaffValue === 'XMG' ? '#8cdeb0' : '#5e8ee8',
-              fontSize: 18,
-            }}
-            containerStyle={styles.containerOptionStyle}
-            itemContainerStyle={styles.itemContainer}
-            itemTextStyle={{color: '#57575a'}}
-            fontFamily={Fonts.SF_MEDIUM}
-            activeColor="#eef2feff"
-            maxHeight={Dimension.setHeight(23)}
-            labelField="value"
-            valueField="value"
-            data={typeStaff}
-            value={typeStaffValue}
-            onChange={item => {
-              setSelectId(0);
-              setTypeStaffValue(item.value);
-            }}
-          />
-        )}
       </View>
       <FlatList
-        data={allStaff ? allStaff : handleFilter(selectId, typeStaffValue)}
+        data={allStaff ? allStaff : handleFilter(selectId)}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({item, index}) => (
           <RenderStaffs item={item} index={index} />

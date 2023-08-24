@@ -67,7 +67,7 @@ const MyWorkScheduleScreen = ({navigation}) => {
     const timestampCurr = moment(dayOfWeek.firstDay).valueOf();
     const tasks = {};
     let count = 0;
-    myWorkData.forEach(item => {
+    myWorkData?.forEach(item => {
       const time = timestampCurr + 25200000 + count * 24 * 60 * 60 * 1000;
       count++;
       const strTime = timeToString(time);

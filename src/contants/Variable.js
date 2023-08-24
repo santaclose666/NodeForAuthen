@@ -33,12 +33,6 @@ export const IFEEorder = [
 
 export const approveArr = [
   {
-    title: 'Tất cả',
-    color: '#618cf2',
-    bgColor: 'rgba(254, 244, 235, 0.3)',
-    icon: Images.all,
-  },
-  {
     title: 'Chờ duyệt',
     color: '#f0b263',
     bgColor: 'rgba(254, 244, 235, 0.3)',
@@ -52,6 +46,7 @@ export const approveArr = [
   },
   {
     title: 'Hủy bỏ',
+    inActiveColor: '',
     color: '#f25157',
     bgColor: 'rgba(249, 223, 224, 0.3)',
     icon: Images.cancelled,

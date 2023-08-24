@@ -37,14 +37,15 @@ const FilterStatusUI = ({handlePickOption, indexPicker}) => {
               style={{
                 height: 25,
                 width: 25,
-                tintColor: indexPicker === index ? item.color : '#edf2ed',
+                tintColor: indexPicker === index ? item.color : item.color,
               }}
             />
             <Text
               style={{
                 fontFamily: Fonts.SF_MEDIUM,
                 fontSize: 16,
-                color: indexPicker === index ? item.color : '#edf2ed',
+                opacity: 0.7,
+                color: indexPicker === index ? item.color : '#041d3b',
               }}>
               {item.title}
             </Text>

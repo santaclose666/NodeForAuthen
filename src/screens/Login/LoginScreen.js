@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  StatusBar,
+  Dimensions,
 } from 'react-native';
+import {Switch, VStack} from 'native-base';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
@@ -17,12 +18,14 @@ import {useDispatch} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ToastAlert} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
+import {defaultXMG, mainURL} from '../../contants/Variable';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [checkShowHide, setCheckShowHide] = useState(true);
+  const [save, setSave] = useState(true);
 
   const handleLogin = () => {
     if (email !== '' && password !== '') {
@@ -41,7 +44,6 @@ const LoginScreen = ({navigation}) => {
       enableOnAndroid={true}
       behavior="padding"
       style={{flex: 1, backgroundColor: '#ffffff'}}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <View style={styles.themeContainer}>
         <TouchableOpacity
           style={styles.headerBtn}
@@ -49,12 +51,12 @@ const LoginScreen = ({navigation}) => {
           <Image source={Images.back} style={{width: 20, height: 20}} />
         </TouchableOpacity>
         <Image
-          source={Images.loginTheme}
+          source={Images.logo}
           resizeMode="cover"
           style={{
-            width: Dimension.setWidth(90),
-            height: Dimension.setHeight(36),
-            transform: [{rotate: '-4deg'}],
+            width: Dimensions.get('screen').width / 1.5,
+            height: Dimensions.get('screen').width / 1.5,
+            borderRadius: 150,
           }}
         />
       </View>
@@ -153,6 +155,9 @@ const LoginScreen = ({navigation}) => {
             </View>
           </View>
         </View>
+        <VStack space={4}>
+          <Switch size={'sm'} defaultIsChecked colorScheme="emerald" />
+        </VStack>
         <TouchableOpacity
           onPress={handleLogin}
           style={{
@@ -181,6 +186,23 @@ const LoginScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  highlight: {
+    fontWeight: '700',
+  },
+
   themeContainer: {
     justifyContent: 'center',
     alignItems: 'center',

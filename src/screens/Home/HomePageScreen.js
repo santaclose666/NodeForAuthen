@@ -55,7 +55,7 @@ const requestPermissions = async () => {
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
-  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
+  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   // const notifiData = useSelector(
   //   state => state.notifi.notifications?.allNotifi,
   // );
@@ -120,7 +120,7 @@ const HomePageScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (weather && staffs) {
+    if (weather && IFEEstaffs) {
       setInTerVal(
         setInterval(() => {
           fetchImportantData();
@@ -243,6 +243,9 @@ const HomePageScreen = ({navigation}) => {
                 />
                 <Text style={styles.featureText}>Văn bản</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
             </View>
           </View>
           <View style={styles.featureBtnContainer}>
@@ -270,7 +273,9 @@ const HomePageScreen = ({navigation}) => {
                   navigation.navigate('HistoryWorkShedule');
                 }}>
                 <Image source={Images.calendar2} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Lịch công tác</Text>
+                <Text style={[styles.featureText, {alignSelf: 'center'}]}>
+                  Lịch công tác
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonFuc}
@@ -308,6 +313,8 @@ const HomePageScreen = ({navigation}) => {
                 />
                 <Text style={styles.featureText}>Đăng kí vé</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
             </View>
           </View>
           <View style={styles.newTextContainer}>
@@ -453,32 +460,31 @@ const styles = StyleSheet.create({
 
   featureBtnContainer: {
     marginBottom: 10,
-    marginHorizontal: 18,
+    marginHorizontal: Dimension.setWidth(3.6),
   },
 
   btnContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
+    marginBottom: Dimension.setHeight(1.4),
   },
 
   buttonFuc: {
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: '3%',
-    borderRadius: 8,
-    width: '20%',
   },
 
   featureBtn: {
-    width: 50,
-    height: 50,
+    width: 44,
+    height: 44,
   },
 
   featureText: {
     fontFamily: Fonts.SF_SEMIBOLD,
     alignContent: 'center',
+    textAlign: 'center',
   },
 
   newTextContainer: {

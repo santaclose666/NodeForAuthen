@@ -92,6 +92,7 @@ const Images = {
   vehicleplate: require('../assets/images/vehicleplate.png'),
   content: require('../assets/images/content.png'),
   admin: require('../assets/images/admin.png'),
+  logo: require('../assets/images/logo.jpeg'),
   select: require('../assets/images/select.png'),
   clue: require('../assets/images/clue.png'),
   content: require('../assets/images/content.png'),

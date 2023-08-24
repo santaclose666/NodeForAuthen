@@ -135,12 +135,10 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
     index => {
       switch (index) {
         case 0:
-          return ticketPlaneData;
-        case 1:
           return ticketPlaneData.filter(item => item.status === 0);
-        case 2:
+        case 1:
           return ticketPlaneData.filter(item => item.status === 1);
-        case 3:
+        case 2:
           return ticketPlaneData.filter(item => item.status === 2);
       }
     },

@@ -14,7 +14,7 @@ import {useDispatch} from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
-import Header from '../../components/Header';
+import Header1 from '../../components/Header';
 import {
   adjustOnLeave,
   approveAdjustOnLeave,
@@ -166,12 +166,10 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
     index => {
       switch (index) {
         case 0:
-          return leaveData;
-        case 1:
           return leaveData.filter(
             item => item.status === 0 || item.yc_update === 1,
           );
-        case 2:
+        case 1:
           return leaveData.filter(
             item =>
               (item.status === 1 &&
@@ -179,7 +177,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
                 item.yc_update !== 3) ||
               item.yc_update === 2,
           );
-        case 3:
+        case 2:
           return leaveData.filter(
             item => item.status === 2 || item.yc_update === 3,
           );
@@ -233,12 +231,11 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
 
     const checkRole = () => {
       return (
-        (((item.yc_update === 0 && item.status === 0) ||
-          item.yc_update === 1) &&
-          item.id_nhansu !== user?.id &&
+        ((item.status === 0 || item.yc_update === 1) &&
+          user?.id !== item.id_nhansu &&
           user?.vitri_ifee === 3 &&
           item.vitri_ifee > 3) ||
-        (user?.vitri_ifee === 1 && (item.status === 0 || item.yc_update === 1))
+        (user?.vitri_ifee == 1 && (item.status === 0 || item.yc_update === 1))
       );
     };
 
@@ -415,7 +412,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Lịch sử nghỉ phép" navigation={navigation} />
+      <Header1 title="Lịch sử nghỉ phép" navigation={navigation} />
 
       <FilterStatusUI
         handlePickOption={handlePickOption}
@@ -683,7 +680,7 @@ const HistoryApplyLeaveScreen = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#b6c987',
+    backgroundColor: '#e2ebf5',
   },
 
   containerEachLine: {

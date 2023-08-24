@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   StatusBar,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
-import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
 
 const Header = ({title, eventFunc, navigation}) => {
@@ -25,26 +25,30 @@ const Header = ({title, eventFunc, navigation}) => {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: Dimension.setHeight(1),
+        paddingVertical: Dimension.setHeight(2),
         paddingHorizontal: Dimension.setWidth(2),
-        backgroundColor: 'rgba(254, 254, 254, 0)',
-        marginBottom: Dimension.setHeight(2),
+        backgroundColor: '#22a87e',
       }}>
       <StatusBar
-        backgroundColor="rgba(254, 254, 254, 0)"
-        barStyle="dark-content"
+        translucent
+        backgroundColor="#22a87e"
+        barStyle="light-content"
       />
       <TouchableOpacity
         onPress={() => {
           navigation.goBack();
         }}>
-        <Image source={Images.back} style={{width: 25, height: 25}} />
+        <Image
+          source={Images.back}
+          style={{width: 22, height: 22, tintColor: '#fff'}}
+        />
       </TouchableOpacity>
       <View style={{flex: 1, alignItems: 'center'}}>
         <Text
           style={{
-            fontFamily: Fonts.SF_BOLD,
-            fontSize: 22,
+            fontFamily: Fonts.SF_MEDIUM,
+            fontSize: 18,
+            color: '#fff',
           }}>
           {title}
         </Text>

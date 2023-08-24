@@ -35,9 +35,8 @@ import {planeCompany, ticketType, airplane} from '../../contants/Variable';
 
 const RegisterPlaneScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
-  const data = staffs.filter(item => item.tendonvi === 'IFEE');
-  const allStaffs = data.map(item => {
+  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const allStaffs = IFEEstaffs.map(item => {
     return {label: item.hoten, value: item.id};
   });
   const [multiStaff, setMultiStaff] = useState([]);

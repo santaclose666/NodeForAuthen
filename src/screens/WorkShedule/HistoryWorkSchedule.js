@@ -46,7 +46,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
   const refresh = route.params?.refresh;
   const user = useSelector(state => state.auth.login?.currentUser);
   const dispatch = useDispatch();
-  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
+  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const workSheduleData = useSelector(
     state => state.workSchedule?.worksSchedule?.data,
   );
@@ -141,12 +141,10 @@ const HistoryWorkShedule = ({navigation, route}) => {
     index => {
       switch (index) {
         case 0:
-          return workSheduleData;
-        case 1:
           return workSheduleData?.filter(item => item.status === 0);
-        case 2:
+        case 1:
           return workSheduleData?.filter(item => item.status === 1);
-        case 3:
+        case 2:
           return workSheduleData?.filter(item => item.status === 2);
       }
     },
@@ -191,9 +189,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
         ? Images.approve
         : Images.cancel;
 
-    const filterUser = staffs.filter(
-      staff => staff.id === item.id_user && staff.tendonvi === 'IFEE',
-    )[0];
+    const filterUser = IFEEstaffs.filter(staff => staff.id === item.id_user)[0];
     const subject =
       filterUser?.tenphong === undefined
         ? 'Không xác định'
