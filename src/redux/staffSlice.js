@@ -19,14 +19,10 @@ const staffSlice = createSlice({
     getStaffSuccess: (state, action) => {
       state.staffs.isFetching = false;
       state.staffs.IFEEStaff = action.payload.ifee.sort((a, b) => {
-        const indexA = IFEEorder.indexOf(a.chucdanh);
-        const indexB = IFEEorder.indexOf(b.chucdanh);
-        return indexA - indexB;
+        return a.vitri_ifee - b.vitri_ifee;
       });
       state.staffs.XMGStaff = action.payload.xmg.sort((a, b) => {
-        const indexA = XMGorder.indexOf(a.info_phong[0].chucdanh);
-        const indexB = XMGorder.indexOf(b.info_phong[0].chucdanh);
-        return indexA - indexB;
+        return a.info_phong[0].vitri_ifee - b.info_phong[0].vitri_ifee;
       });
     },
     getStaffFailed: state => {

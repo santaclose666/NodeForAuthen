@@ -140,7 +140,7 @@ const HomePageScreen = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={false}
         style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+        <StatusBar barStyle="dark-content" backgroundColor={'red'} />
         <View style={styles.userInforContainer}>
           <View style={styles.userNameContainer}>
             <Text style={styles.userNameText}>Welcome, {user?.hoten} </Text>
