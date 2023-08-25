@@ -5,7 +5,6 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  StatusBar,
   SafeAreaView,
 } from 'react-native';
 import {AlertDialog, Button} from 'native-base';
@@ -79,7 +78,6 @@ const DetailStaffScreen = ({navigation, route}) => {
         backgroundColor: '#f2f2f2',
         justifyContent: 'center',
       }}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       {item || user ? (
         <>
           <View style={styles.headerContainer}>

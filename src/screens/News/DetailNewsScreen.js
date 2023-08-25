@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  StatusBar,
   SafeAreaView,
 } from 'react-native';
 import Images from '../../contants/Images';
@@ -22,7 +21,6 @@ const DetailNewsScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <View style={styles.mainImgContainer}>
         <Image
           resizeMode="cover"

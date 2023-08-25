@@ -50,6 +50,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
   const [commentInput, setCommentInput] = useState('');
   const [reasonCancel, setReasonCancel] = useState('');
   const [indexPicker, setIndexPicker] = useState(0);
+  const [toggleConfirmModal, setToggleConfirmModal] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 

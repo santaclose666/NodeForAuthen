@@ -36,6 +36,7 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import StatusUI from '../../components/StatusUI';
 import {changeFormatDate} from '../../utils/serviceFunction';
+import {ConfirmModal} from '../../components/Modal';
 
 export const approveArr = [
   {
@@ -72,6 +73,8 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   );
   const [selectedItem, setSelectedItem] = useState(null);
   const [indexPicker, setIndexPicker] = useState(0);
+  const [isConfirm, setIsConfirm] = useState(null);
+  const [toggleConfirmModal, setToggleConfirmModal] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
@@ -100,6 +103,12 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     [selectedItem],
   );
 
+  const handlePickItem = useCallback((item, status) => {
+    setSelectedItem(item);
+    setIsConfirm(status);
+    setToggleConfirmModal(true);
+  }, []);
+
   const handleApprove = useCallback(item => {
     const data = {
       id_dulieu: item.id,
@@ -107,6 +116,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     };
 
     approveVehicle(data);
+    setToggleConfirmModal(false);
     setTimeout(() => {
       fetchVehicleData();
     });
@@ -119,6 +129,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     };
 
     cancelVehicle(data);
+    setToggleConfirmModal(false);
     setTimeout(() => {
       fetchVehicleData();
     });
@@ -246,7 +257,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  handleApprove(item);
+                  handlePickItem(item, true);
                 }}>
                 <Image
                   source={Images.approved}
@@ -255,7 +266,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  handleCancel(item);
+                  handlePickItem(item, false);
                 }}>
                 <Image
                   source={Images.cancelled}
@@ -444,7 +455,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      width: '66%',
+                      width: '68%',
                     }}>
                     <Text style={styles.title}>Km Giao:{'  '}</Text>
                     <Text
@@ -528,6 +539,14 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
           </BottomSheetModal>
         )}
       </BottomSheetModalProvider>
+      <ConfirmModal
+        toggleModal={toggleConfirmModal}
+        setToggleModal={setToggleConfirmModal}
+        item={selectedItem}
+        status={isConfirm}
+        handleApprove={handleApprove}
+        handleCancel={handleCancel}
+      />
     </SafeAreaView>
   );
 };

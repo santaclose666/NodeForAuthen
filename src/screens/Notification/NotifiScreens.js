@@ -6,7 +6,6 @@ import {
   Image,
   FlatList,
   StyleSheet,
-  StatusBar,
   SafeAreaView,
 } from 'react-native';
 import Images from '../../contants/Images';
@@ -36,7 +35,6 @@ const NotifiScreen = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="transparent" />
         <View style={styles.notifiMenuContainer}>
           <View
             style={{

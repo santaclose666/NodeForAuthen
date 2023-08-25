@@ -4,9 +4,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  StatusBar,
   SafeAreaView,
-  Platform,
 } from 'react-native';
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
@@ -30,11 +28,7 @@ const Header = ({title, eventFunc, navigation, refreshData}) => {
         paddingHorizontal: Dimension.setWidth(2),
         backgroundColor: '#e4edfdff',
       }}>
-      <StatusBar
-        translucent
-        // backgroundColor="#22a87e"
-        barStyle="light-content"
-      />
+     
       <TouchableOpacity
         onPress={() => {
           navigation.goBack();

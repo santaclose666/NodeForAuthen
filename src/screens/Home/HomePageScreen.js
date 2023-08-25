@@ -122,7 +122,11 @@ const HomePageScreen = ({navigation}) => {
 
   const handleLimitedFeature = routeName => {
     if (user) {
-      navigation.navigate(routeName);
+      if (user?.tendonvi == 'XMG' && routeName !== 'StaffList') {
+        ToastAlert('Tính năng dành riêng cho IFEE');
+      } else {
+        navigation.navigate(routeName);
+      }
     } else {
       ToastAlert('Đăng nhập để sử dụng tính năng này');
     }
@@ -152,7 +156,6 @@ const HomePageScreen = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={false}
         style={styles.container}>
-        {/* <StatusBar barStyle="dark-content" backgroundColor={'red'} /> */}
         <View style={styles.userInforContainer}>
           <View style={styles.userNameContainer}>
             <Text style={styles.userNameText}>Welcome, {user?.hoten} </Text>

@@ -7,7 +7,6 @@ import {
   Image,
   TextInput,
   StyleSheet,
-  StatusBar,
   SafeAreaView,
 } from 'react-native';
 import unidecode from 'unidecode';
@@ -138,7 +137,6 @@ const AllNewsScreen = ({navigation}) => {
 
   return (
     <SafeAreaView showsVerticalScrollIndicator={false} style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <View style={styles.searchFilterContainer}>
         <TouchableOpacity
           style={styles.headerContainer}

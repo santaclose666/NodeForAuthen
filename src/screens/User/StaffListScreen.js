@@ -7,7 +7,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  StatusBar,
   SafeAreaView,
 } from 'react-native';
 import unidecode from 'unidecode';
@@ -181,7 +180,6 @@ const StaffListScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <View style={styles.headerContainer}>
         <TouchableOpacity
           style={{marginRight: Dimension.setWidth(5)}}

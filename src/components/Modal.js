@@ -201,7 +201,118 @@ export const ApproveCancelModal = ({
         </View>
         <TouchableOpacity
           onPress={() => {
+            setSelectedItem(null);
             setToggleApproveModal(false);
+          }}
+          style={{position: 'absolute', right: '5%', top: '5%'}}>
+          <Image source={Images.minusclose} style={styles.btnModal} />
+        </TouchableOpacity>
+      </View>
+    </Modal>
+  );
+};
+
+export const ConfirmModal = ({
+  toggleModal,
+  setToggleModal,
+  item,
+  status,
+  handleApprove,
+  handleCancel,
+}) => {
+  const approveMess = 'Chắc chắn xác nhận phê duyệt đăng kí?';
+  const cancelMess = 'Chắc chắn xác nhận từ chối đăng kí?';
+
+  return (
+    <Modal
+      isVisible={toggleModal}
+      animationIn="fadeInUp"
+      animationInTiming={100}
+      animationOut="fadeOutDown"
+      animationOutTiming={100}
+      avoidKeyboard={true}>
+      <View
+        style={{
+          flex: 1,
+          position: 'absolute',
+          alignSelf: 'center',
+          backgroundColor: status ? '#def8ed' : '#f9dfe0',
+          width: Dimension.setWidth(85),
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 14,
+          paddingHorizontal: Dimension.setWidth(3),
+        }}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginVertical: Dimension.setHeight(1),
+            borderBottomWidth: 0.8,
+            borderBlockColor: Colors.INACTIVE_GREY,
+            width: '100%',
+            height: Dimension.setHeight(4.5),
+          }}>
+          <Text
+            style={{
+              fontFamily: Fonts.SF_BOLD,
+              fontSize: 20,
+              color: status ? '#57b85d' : '#f25157',
+            }}>
+            {status ? 'Phê duyệt' : 'Từ chối'}
+          </Text>
+        </View>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingVertical: Dimension.setHeight(1.5),
+            paddingHorizontal: Dimension.setWidth(3),
+            width: '100%',
+          }}>
+          <Image source={Images.vehicles} style={{height: 55, width: 55}} />
+          <Text
+            style={{
+              marginLeft: Dimension.setWidth(3),
+              fontSize: 18,
+              fontFamily: Fonts.SF_SEMIBOLD,
+            }}>
+            {status ? approveMess : cancelMess}
+          </Text>
+        </View>
+
+        <View
+          style={[
+            styles.containerEachLine,
+            {width: Dimension.setWidth(56), justifyContent: 'space-between'},
+          ]}>
+          <TouchableOpacity
+            onPress={() => {
+              status ? handleApprove(item) : handleCancel(item);
+            }}
+            style={[
+              styles.confirmBtn,
+              {borderColor: !status ? '#f25157' : '#57b85d'},
+            ]}>
+            <Text
+              style={[
+                styles.textConfirm,
+                {color: !status ? '#f25157' : '#57b85d'},
+              ]}>
+              Xác nhận
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setToggleModal(false);
+            }}
+            style={[styles.confirmBtn, {borderColor: '#f0b263'}]}>
+            <Text style={[styles.textConfirm, {color: '#f0b263'}]}>Hủy bỏ</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            setToggleModal(false);
           }}
           style={{position: 'absolute', right: '5%', top: '5%'}}>
           <Image source={Images.minusclose} style={styles.btnModal} />
@@ -216,6 +327,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: Dimension.setHeight(1.3),
+  },
+
+  confirmBtn: {
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#f25157',
+    paddingVertical: Dimension.setHeight(0.3),
+    paddingHorizontal: Dimension.setWidth(2),
+    width: Dimension.setWidth(25),
+  },
+  textConfirm: {
+    fontSize: 16,
+    fontFamily: Fonts.SF_MEDIUM,
   },
 
   iconic: {

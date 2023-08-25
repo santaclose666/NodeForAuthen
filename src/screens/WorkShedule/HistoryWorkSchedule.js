@@ -34,7 +34,6 @@ import {
 } from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import FilterStatusUI from '../../components/FilterStatusUI';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import StatusUI from '../../components/StatusUI';
 import {defaultIFEE, defaultXMG, mainURL} from '../../contants/Variable';
