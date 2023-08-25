@@ -21,13 +21,14 @@ import {
   getVietnameseDayOfWeek,
   getFormattedDate,
 } from '../../utils/serviceFunction';
-import {getWeatherData} from '../../redux/apiRequest';
+import {getWeatherData, getAllStaffs} from '../../redux/apiRequest';
 import {getToken, notificationListener} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
+import {ToastAlert} from '../../components/Toast';
 
 const requestPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -110,9 +111,21 @@ const HomePageScreen = ({navigation}) => {
     await getWeatherData(dispatch);
   };
 
+  const fetchAllStaff = () => {
+    getAllStaffs(dispatch);
+  };
+
   const notificationHandle = async () => {
     await getToken();
     await notificationListener(notifiData, navigation, dispatch);
+  };
+
+  const handleLimitedFeature = routeName => {
+    if (user) {
+      navigation.navigate(routeName);
+    } else {
+      ToastAlert('Đăng nhập để sử dụng tính năng này');
+    }
   };
 
   useEffect(() => {
@@ -125,6 +138,8 @@ const HomePageScreen = ({navigation}) => {
     } else {
       fetchImportantData();
     }
+
+    fetchAllStaff();
 
     // notificationHandle();
 
@@ -247,7 +262,7 @@ const HomePageScreen = ({navigation}) => {
             <TouchableOpacity
               style={styles.buttonFuc}
               onPress={() => {
-                navigation.navigate('StaffList');
+                handleLimitedFeature('StaffList');
               }}>
               <Image source={Images.staff} style={styles.featureBtn} />
               <Text style={styles.featureText}>Nhân sự</Text>
@@ -255,7 +270,7 @@ const HomePageScreen = ({navigation}) => {
             <TouchableOpacity
               style={styles.buttonFuc}
               onPress={() => {
-                navigation.navigate('HistoryWorkShedule');
+                handleLimitedFeature('HistoryWorkShedule');
               }}>
               <Image source={Images.calendar2} style={styles.featureBtn} />
               <Text style={[styles.featureText, {alignSelf: 'center'}]}>
@@ -265,7 +280,7 @@ const HomePageScreen = ({navigation}) => {
             <TouchableOpacity
               style={styles.buttonFuc}
               onPress={() => {
-                navigation.navigate('HistoryApplyLeave');
+                handleLimitedFeature('HistoryApplyLeave');
               }}>
               <Image source={Images.busy} style={styles.featureBtn} />
               <Text style={styles.featureText}>Nghỉ phép</Text>
@@ -279,7 +294,7 @@ const HomePageScreen = ({navigation}) => {
             <TouchableOpacity
               style={styles.buttonFuc}
               onPress={() => {
-                navigation.navigate('HistoryRegisterVehicle');
+                handleLimitedFeature('HistoryRegisterVehicle');
               }}>
               <Image
                 source={Images.registervehicle}
@@ -290,7 +305,7 @@ const HomePageScreen = ({navigation}) => {
             <TouchableOpacity
               style={styles.buttonFuc}
               onPress={() => {
-                navigation.navigate('HistoryPlaneTicket');
+                handleLimitedFeature('HistoryPlaneTicket');
               }}>
               <Image source={Images.registerticket} style={styles.featureBtn} />
               <Text style={styles.featureText}>Đăng kí vé</Text>

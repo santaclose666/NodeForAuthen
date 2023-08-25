@@ -20,11 +20,9 @@ import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import {shadowIOS} from '../../contants/propsIOS';
 import {fontDefault, mainURL} from '../../contants/Variable';
-import {getAllStaffs} from '../../redux/apiRequest';
 
 const StaffListScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const dispatch = useDispatch();
   const [input, setInput] = useState(null);
   const [allStaff, setAllStaff] = useState(null);
   const XMGGroup = [
@@ -49,14 +47,6 @@ const StaffListScreen = ({navigation}) => {
   const [selectId, setSelectId] = useState(0);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const XMGstaffs = useSelector(state => state.staffs?.staffs?.XMGStaff);
-
-  const fetchAllStaff = () => {
-    getAllStaffs(dispatch);
-  };
-
-  useLayoutEffect(() => {
-    fetchAllStaff();
-  }, []);
 
   const handleSearch = (text, typeStaffValue) => {
     setInput(text);

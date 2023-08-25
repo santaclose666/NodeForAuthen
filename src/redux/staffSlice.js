@@ -1,5 +1,4 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {XMGorder, IFEEorder} from '../contants/Variable';
 
 const staffSlice = createSlice({
   name: 'staff',
@@ -22,7 +21,7 @@ const staffSlice = createSlice({
         return a.vitri_ifee - b.vitri_ifee;
       });
       state.staffs.XMGStaff = action.payload.xmg.sort((a, b) => {
-        return a.info_phong[0].vitr_ifee - b.info_phong[0].vitr_ifee;
+        return a.info_phong[0].vitri_ifee - b.info_phong[0].vitri_ifee;
       });
     },
     getStaffFailed: state => {

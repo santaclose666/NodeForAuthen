@@ -373,6 +373,8 @@ PODS:
     - glog
   - react-native-blob-util (0.16.4):
     - React-Core
+  - react-native-blur (4.3.2):
+    - React-Core
   - react-native-document-picker (8.2.1):
     - React-Core
   - react-native-flipper-performance-plugin (0.4.0):
@@ -581,6 +583,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-blob-util (from `../node_modules/react-native-blob-util`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-flipper-performance-plugin (from `../node_modules/react-native-flipper-performance-plugin`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
@@ -681,6 +684,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-blob-util:
     :path: "../node_modules/react-native-blob-util"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-flipper-performance-plugin:
@@ -788,6 +793,7 @@ SPEC CHECKSUMS:
   React-jsinspector: b511447170f561157547bc0bef3f169663860be7
   React-logger: c5b527272d5f22eaa09bb3c3a690fee8f237ae95
   react-native-blob-util: 60453b777610c87a22b3524032c0214e8db555db
+  react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-document-picker: 69ca2094d8780cfc1e7e613894d15290fdc54bba
   react-native-flipper-performance-plugin: 42ec5017abd26e7c5a1f527f2db92c14a90cabdb
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
