@@ -55,7 +55,7 @@ const RegisterPlaneScreen = ({navigation, route}) => {
     moment(new Date()).format('DD/MM/YYYY'),
   );
   const [timeValue, setTimeValue] = useState(getCurrentTime());
-  const [kgNumber, setKgNumber] = useState(0);
+  const [kgNumber, setKgNumber] = useState(10);
   const [loading, setLoading] = useState(false);
 
   const handlePickDate = date => {

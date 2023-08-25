@@ -259,7 +259,9 @@ export const getAllWorkSchedule = async (dispatch, id) => {
 
     const pendingArr = res.data.pheduyet;
     const approvedArr = res.data.dapheduyet;
-    const data = approvedArr.concat(pendingArr);
+    const cancelArr = res.data.tuchoi;
+
+    const data = approvedArr.concat(pendingArr.concat(cancelArr));
 
     dispatch(
       getWorkScheduleSuccess(

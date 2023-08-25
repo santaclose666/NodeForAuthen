@@ -351,7 +351,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
             color: Colors.INACTIVE_GREY,
             marginBottom: Dimension.setHeight(0.8),
           }}>
-          ID: {item.id}
+          {item.songay} ngày
         </Text>
         <View style={styles.containerEachLine}>
           <Image source={Images.avatar} style={styles.iconic} />

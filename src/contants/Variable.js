@@ -74,16 +74,16 @@ export const planeCompany = [
 
 export const ticketType = [
   {
+    label: 'Phổ thông',
+    value: 'Phổ thông',
+  },
+  {
     label: 'Hạng nhất',
     value: 'Hạng nhất',
   },
   {
     label: 'Thương gia',
     value: 'Thương gia',
-  },
-  {
-    label: 'Phổ thông',
-    value: 'Phổ thông',
   },
   {
     label: 'Phổ thông đặc biệt',

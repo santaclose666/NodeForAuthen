@@ -42,6 +42,34 @@ import {ApproveCancelModal} from '../../components/Modal';
 import {ToastWarning} from '../../components/Toast';
 import StaggerUI from '../../components/StaggerUI';
 
+const approveArr = [
+  {
+    title: 'Tất cả',
+    color: '#618cf2',
+    bgColor: 'rgba(254, 244, 235, 0.3)',
+    icon: Images.all,
+  },
+  {
+    title: 'Chờ duyệt',
+    color: '#f0b263',
+    bgColor: 'rgba(254, 244, 235, 0.3)',
+    icon: Images.pending1,
+  },
+  {
+    title: 'Đã duyệt',
+    color: '#57b85d',
+    bgColor: 'rgba(222, 248, 237, 0.3)',
+    icon: Images.approved1,
+  },
+  {
+    title: 'Hủy bỏ',
+    inActiveColor: '',
+    color: '#f25157',
+    bgColor: 'rgba(249, 223, 224, 0.3)',
+    icon: Images.cancelled,
+  },
+];
+
 const HistoryWorkShedule = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const dispatch = useDispatch();
@@ -143,10 +171,12 @@ const HistoryWorkShedule = ({navigation}) => {
     index => {
       switch (index) {
         case 0:
-          return workSheduleData?.filter(item => item.status === 0);
+          return workSheduleData;
         case 1:
-          return workSheduleData?.filter(item => item.status === 1);
+          return workSheduleData?.filter(item => item.status === 0);
         case 2:
+          return workSheduleData?.filter(item => item.status === 1);
+        case 3:
           return workSheduleData?.filter(item => item.status === 2);
       }
     },
@@ -338,10 +368,52 @@ const HistoryWorkShedule = ({navigation}) => {
         navigation={navigation}
         refreshData={fetchWorkSchedule}
       />
-      <FilterStatusUI
-        handlePickOption={handlePickOption}
-        indexPicker={indexPicker}
-      />
+      <View
+        style={{
+          borderBottomWidth: 0.6,
+          borderBlockColor: Colors.INACTIVE_GREY,
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          width: '100%',
+          height: Dimension.setHeight(10),
+          flexDirection: 'row',
+        }}>
+        {approveArr.map((item, index) => {
+          return (
+            <TouchableOpacity
+              onPress={() => handlePickOption(index)}
+              key={index}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingTop: Dimension.setHeight(2.2),
+                paddingBottom: Dimension.setHeight(1.5),
+                paddingHorizontal: Dimension.setWidth(3),
+                height: '100%',
+                borderBottomWidth: indexPicker === index ? 1.6 : null,
+                borderBlockColor: indexPicker === index ? item.color : null,
+              }}>
+              <Image
+                source={item.icon}
+                style={{
+                  height: 25,
+                  width: 25,
+                  tintColor: indexPicker === index ? item.color : item.color,
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: 16,
+                  opacity: 0.8,
+                  color: indexPicker === index ? item.color : '#041d3b',
+                }}>
+                {item.title}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
       <BottomSheetModalProvider>
         {handleFilter(indexPicker)?.length !== 0 ? (
           <FlatList

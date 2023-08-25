@@ -37,6 +37,7 @@ const StaffListScreen = ({navigation}) => {
 
   const IFEEGroup = [
     'Tất cả',
+    'Ban lãnh đạo',
     'Tổng hợp',
     'CNMT',
     'RnD',
@@ -75,6 +76,8 @@ const StaffListScreen = ({navigation}) => {
     const data = user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs;
     if (index === 0) {
       return data;
+    } else if (index === 1 && user?.tendonvi === 'IFEE') {
+      return data?.filter(item => item.vitri_ifee == 1 || item.vitri_ifee == 2);
     } else {
       if (user?.tendonvi === 'IFEE') {
         return data?.filter(item => item.tenphong === IFEEGroup[index]);

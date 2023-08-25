@@ -27,7 +27,11 @@ import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
-import {cancelVehicle, getVehicleData} from '../../redux/apiRequest';
+import {
+  cancelVehicle,
+  getVehicleData,
+  approveVehicle,
+} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import StatusUI from '../../components/StatusUI';

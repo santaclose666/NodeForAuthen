@@ -18,7 +18,8 @@ const Loading = () => {
       <BlurView
         blurType="light"
         blurAmount={30}
-        reducedTransparencyFallbackColor="white">
+        reducedTransparencyFallbackColor="white"
+        overlayColor="transparent">
         <Spinner size="lg" color="emerald.500" />
       </BlurView>
     </View>
