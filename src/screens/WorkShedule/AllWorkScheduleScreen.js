@@ -49,58 +49,14 @@ import StaggerUI from '../../components/StaggerUI';
 import {Agenda} from 'react-native-calendars';
 import moment from 'moment';
 
-const timeToString = time => {
-  const date = new Date(time);
-  return date.toISOString().split('T')[0];
-};
-
 const AllWorkScheduleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const totalWorkData = [
-    useSelector(state => state.totalWork.totalWorkSchedule?.t2),
-    useSelector(state => state.totalWork.totalWorkSchedule?.t3),
-    useSelector(state => state.totalWork.totalWorkSchedule?.t4),
-    useSelector(state => state.totalWork.totalWorkSchedule?.t5),
-    useSelector(state => state.totalWork.totalWorkSchedule?.t6),
-    useSelector(state => state.totalWork.totalWorkSchedule?.t7),
-    useSelector(state => state.totalWork.totalWorkSchedule?.cn),
-  ];
+  const totalWorkData = useSelector(
+    state => state.totalWork.totalWorkSchedule?.data,
+  );
   const avt = user?.tendonvi === 'XMG' ? defaultXMG : defaultIFEE;
   const dayOfWeek = getFirstDateOfWeek();
   const currentDate = formatDateToPost(new Date());
-  const [items, setItems] = useState(null);
-
-  const loadTask = useCallback(() => {
-    const timestampCurr = moment(dayOfWeek.firstDay).valueOf();
-    const tasks = {};
-    totalWorkData?.forEach((item, index) => {
-      const time = timestampCurr + 25200000 + index * 24 * 60 * 60 * 1000;
-      const strTime = timeToString(time);
-
-      tasks[strTime] = [];
-
-      item.forEach(subItem => {
-        tasks[strTime].push({
-          id: subItem.id,
-          id_user: subItem.id_user,
-          name: subItem.ten,
-          position: subItem.chucdanh,
-          time: subItem.thoigian,
-          location: subItem.diadiem,
-          content: subItem.noidung,
-          clue: subItem.daumoi,
-          component: subItem.thanhphan,
-          warning: subItem.canhbao,
-          ct: subItem.ct,
-        });
-      });
-    });
-    setItems(tasks);
-  }, []);
-
-  useEffect(() => {
-    loadTask();
-  }, []);
 
   const RenderTaskOfDay = item => {
     return (
@@ -125,7 +81,7 @@ const AllWorkScheduleScreen = ({navigation}) => {
     <SafeAreaView style={{flex: 1}}>
       <Header title={'Tổng hợp lịch công tác'} navigation={navigation} />
       <Agenda
-        items={items}
+        items={totalWorkData}
         selected={currentDate}
         minDate={dayOfWeek.firstDay}
         maxDate={dayOfWeek.lastDay}
