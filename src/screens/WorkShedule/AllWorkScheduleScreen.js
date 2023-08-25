@@ -115,7 +115,7 @@ const AllWorkScheduleScreen = ({navigation}) => {
         </View>
         <View style={styles.containerEachLine}>
           <Text style={styles.title}>Thời gian: </Text>
-          <Text style={styles.content}>{item.time?.splice(6, 2)}</Text>
+          <Text style={styles.content}>{item.time?.slice(0, 5)}</Text>
         </View>
       </TouchableOpacity>
     );
