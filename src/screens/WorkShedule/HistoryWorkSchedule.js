@@ -31,6 +31,7 @@ import {
   approveWorkSchedule,
   cancelWorkSchedule,
   getAllWorkSchedule,
+  totalWorkSchedule,
 } from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -187,11 +188,12 @@ const HistoryWorkShedule = ({navigation}) => {
   };
 
   const handleRedirectMyWorkSchedule = useCallback(() => {
-    navigation.navigate('MyWorkSchedule');
+    navigation.navigate('AllWorkSchedule');
   }, []);
 
   const fetchWorkSchedule = useCallback(() => {
     getAllWorkSchedule(dispatch, user?.id);
+    totalWorkSchedule(dispatch);
   }, []);
 
   useLayoutEffect(() => {

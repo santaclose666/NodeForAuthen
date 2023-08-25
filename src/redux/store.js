@@ -8,7 +8,7 @@ import workReducer from './workSlice';
 import vehicleReducer from './vehicleSlice';
 import ticketReducer from './ticketSlice';
 import workScheduleReducer from './workScheduleSlice';
-import myWorkScheduleReducer from './myWorkScheduleSlice';
+import totalWorkScheduleReducer from './totalWorkScheduleSlice';
 import credentialReducer from './credentialSlice';
 import logger from 'redux-logger';
 import {persistStore, persistReducer} from 'redux-persist';
@@ -29,7 +29,7 @@ const rootReducer = combineReducers({
   vehicle: vehicleReducer,
   ticketPlane: ticketReducer,
   workSchedule: workScheduleReducer,
-  myWork: myWorkScheduleReducer,
+  totalWork: totalWorkScheduleReducer,
   credential: credentialReducer,
 });
 const persistedReducer = persistReducer(

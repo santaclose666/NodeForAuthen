@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#f25157',
-    paddingVertical: Dimension.setHeight(0.3),
+    paddingVertical: Dimension.setHeight(0.5),
     paddingHorizontal: Dimension.setWidth(2),
     width: Dimension.setWidth(25),
   },

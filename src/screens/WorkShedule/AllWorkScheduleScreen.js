@@ -5,6 +5,7 @@ import React, {
   memo,
   useLayoutEffect,
   useMemo,
+  useEffect,
 } from 'react';
 import {
   View,
@@ -31,7 +32,6 @@ import {
   approveWorkSchedule,
   cancelWorkSchedule,
   getAllWorkSchedule,
-  getMyWorkSchedule,
 } from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -54,11 +54,18 @@ const timeToString = time => {
   return date.toISOString().split('T')[0];
 };
 
-const MyWorkScheduleScreen = ({navigation}) => {
+const AllWorkScheduleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const myWorkData = useSelector(state => state.myWork.myWorkSchedule?.data);
+  const totalWorkData = [
+    useSelector(state => state.totalWork.totalWorkSchedule?.t2),
+    useSelector(state => state.totalWork.totalWorkSchedule?.t3),
+    useSelector(state => state.totalWork.totalWorkSchedule?.t4),
+    useSelector(state => state.totalWork.totalWorkSchedule?.t5),
+    useSelector(state => state.totalWork.totalWorkSchedule?.t6),
+    useSelector(state => state.totalWork.totalWorkSchedule?.t7),
+    useSelector(state => state.totalWork.totalWorkSchedule?.cn),
+  ];
   const avt = user?.tendonvi === 'XMG' ? defaultXMG : defaultIFEE;
-  const dispatch = useDispatch();
   const dayOfWeek = getFirstDateOfWeek();
   const currentDate = formatDateToPost(new Date());
   const [items, setItems] = useState(null);
@@ -66,54 +73,57 @@ const MyWorkScheduleScreen = ({navigation}) => {
   const loadTask = useCallback(() => {
     const timestampCurr = moment(dayOfWeek.firstDay).valueOf();
     const tasks = {};
-    let count = 0;
-    myWorkData?.forEach(item => {
-      const time = timestampCurr + 25200000 + count * 24 * 60 * 60 * 1000;
-      count++;
+    totalWorkData?.forEach((item, index) => {
+      const time = timestampCurr + 25200000 + index * 24 * 60 * 60 * 1000;
       const strTime = timeToString(time);
 
       tasks[strTime] = [];
-      tasks[strTime].push({
-        id: item.id,
-        time: item.thoigian,
-        location: item.diadiem,
-        content: item.noidung,
-        clue: item.daumoi,
-        component: item.thanhphan,
-        startDay: item.tungay,
-        endDay: item.denngay,
+
+      item.forEach(subItem => {
+        tasks[strTime].push({
+          id: subItem.id,
+          id_user: subItem.id_user,
+          name: subItem.ten,
+          position: subItem.chucdanh,
+          time: subItem.thoigian,
+          location: subItem.diadiem,
+          content: subItem.noidung,
+          clue: subItem.daumoi,
+          component: subItem.thanhphan,
+          warning: subItem.canhbao,
+          ct: subItem.ct,
+        });
       });
     });
     setItems(tasks);
   }, []);
 
-  const fetchMyWorkSchedule = () => {
-    getMyWorkSchedule(user?.id, dispatch);
-  };
-
-  useLayoutEffect(() => {
-    fetchMyWorkSchedule();
-
+  useEffect(() => {
     loadTask();
   }, []);
 
   const RenderTaskOfDay = item => {
     return (
       <TouchableOpacity style={styles.containerEachItem}>
-        <Text style={{fontFamily: Fonts.SF_MEDIUM, fontSize: 16}}>
-          {item.content}
-        </Text>
-        <Image
-          src={mainURL + avt}
-          style={{height: 40, width: 40, borderRadius: 50}}
-        />
+        <View style={styles.containerEachLine}>
+          <Text style={styles.title}>Họ tên: </Text>
+          <Text style={styles.content}>{item.name}</Text>
+        </View>
+        <View style={[styles.containerEachLine, {flexDirection: 'column'}]}>
+          <Text style={styles.title}>Nội dung: </Text>
+          <Text style={styles.content}>{item.content}</Text>
+        </View>
+        <View style={styles.containerEachLine}>
+          <Text style={styles.title}>Thời gian: </Text>
+          <Text style={styles.content}>{item.time?.splice(6, 2)}</Text>
+        </View>
       </TouchableOpacity>
     );
   };
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Header title={'Lịch trong tuần'} navigation={navigation} />
+      <Header title={'Tổng hợp lịch công tác'} navigation={navigation} />
       <Agenda
         items={items}
         selected={currentDate}
@@ -128,9 +138,6 @@ const MyWorkScheduleScreen = ({navigation}) => {
 
 styles = StyleSheet.create({
   containerEachItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: Dimension.setWidth(4),
     paddingVertical: Dimension.setHeight(2),
     backgroundColor: '#f2f2f2',
@@ -141,6 +148,21 @@ styles = StyleSheet.create({
     ...shadowIOS,
     width: Dimension.setWidth(80),
   },
+
+  containerEachLine: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+
+  title: {
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: 16,
+  },
+
+  content: {
+    fontFamily: Fonts.SF_REGULAR,
+    fontSize: 16,
+  },
 });
 
-export default MyWorkScheduleScreen;
+export default AllWorkScheduleScreen;

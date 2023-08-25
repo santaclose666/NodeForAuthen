@@ -38,10 +38,10 @@ import {
   getWorkScheduleSuccess,
 } from './workScheduleSlice';
 import {
-  getMyWorkFailed,
-  getMyWorkStart,
-  getMyWorkSuccess,
-} from './myWorkScheduleSlice';
+  getTotalWorkFailed,
+  getTotalWorkStart,
+  getTotalWorkSuccess,
+} from './totalWorkScheduleSlice';
 import {saveSuccess} from './credentialSlice';
 
 const resetAction = CommonActions.reset({
@@ -297,20 +297,18 @@ export const cancelWorkSchedule = async data => {
   }
 };
 
-export const getMyWorkSchedule = async (id, dispatch) => {
-  dispatch(getMyWorkStart());
+export const totalWorkSchedule = async dispatch => {
+  dispatch(getTotalWorkStart());
   try {
     const res = await axios.get(
-      `https://management.ifee.edu.vn/api/lichcongtac/canhan/${id}`,
+      `https://management.ifee.edu.vn/api/lichcongtac/tonghop`,
     );
 
-    const data = res.data.sort((a, b) => {
-      return a.id - b.id;
-    });
+    const data = res.data;
 
-    dispatch(getMyWorkSuccess(data));
+    dispatch(getTotalWorkSuccess(data));
   } catch (error) {
-    dispatch(getMyWorkFailed());
+    dispatch(getTotalWorkFailed());
   }
 };
 
