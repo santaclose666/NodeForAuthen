@@ -28,6 +28,8 @@ import {registerOnLeave} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
+import MyStatusBar from '../../components/MyStatusBar';
+import LinearGradient from 'react-native-linear-gradient';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 0.5},
@@ -85,175 +87,184 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="Đăng kí nghỉ phép" navigation={navigation} />
-      <KeyboardAwareScrollView
-        enableAutomaticScroll={true}
-        enableResetScrollToCoords={true}
-        enableOnAndroid={true}
-        behavior="padding"
-        contentContainerStyle={{
-          backgroundColor: '#fbfbfd',
-          borderRadius: 12,
-          marginHorizontal: Dimension.setWidth(3),
-          marginVertical: Dimension.setHeight(3),
-          paddingHorizontal: Dimension.setWidth(4),
-          paddingTop: Dimension.setHeight(3),
-          elevation: 5,
-          ...shadowIOS,
-        }}>
-        <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Người đăng kí</Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              src={mainURL + user?.path}
-              style={{height: 40, width: 40, borderRadius: 50}}
-            />
-            <Text
-              style={{
-                marginLeft: Dimension.setWidth(3),
-                fontSize: 19,
-                fontFamily: Fonts.SF_SEMIBOLD,
-              }}>
-              {user?.hoten}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Số ngày nghỉ</Text>
-          <Dropdown
-            style={styles.dropdown}
-            autoScroll={false}
-            showsVerticalScrollIndicator={false}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            containerStyle={styles.containerOptionStyle}
-            iconStyle={styles.iconStyle}
-            itemContainerStyle={styles.itemContainer}
-            itemTextStyle={styles.itemText}
-            fontFamily={Fonts.SF_MEDIUM}
-            activeColor="#eef2feff"
-            maxHeight={Dimension.setHeight(23)}
-            labelField="label"
-            valueField="value"
-            placeholder="Chọn số ngày"
-            data={numberOfDayOff}
-            value={valueNumberOfDay}
-            onChange={item => {
-              setValueNumberOfDay(item.value);
-            }}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={styles.container}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView style={styles.container}>
+        <Header title="Đăng kí nghỉ phép" navigation={navigation} />
+        <KeyboardAwareScrollView
+          enableAutomaticScroll={true}
+          enableResetScrollToCoords={true}
+          enableOnAndroid={true}
+          behavior="padding"
+          contentContainerStyle={{
+            backgroundColor: '#fbfbfd',
+            borderRadius: 12,
+            marginHorizontal: Dimension.setWidth(3),
+            marginVertical: Dimension.setHeight(3),
+            paddingHorizontal: Dimension.setWidth(4),
+            paddingTop: Dimension.setHeight(3),
+            elevation: 5,
+            ...shadowIOS,
           }}>
-          <TouchableOpacity
-            onPress={() => {
-              setToggleDatePicker(true);
-            }}
-            style={[
-              styles.containerEachLine,
-              {width: '48%', paddingVertical: Dimension.setHeight(1.8)},
-            ]}>
-            <Text style={styles.title}>Nghỉ từ</Text>
-            <View style={styles.dateTimePickerContainer}>
-              <Text style={styles.dateTimeText}>{startDay}</Text>
-              <View
-                style={[
-                  styles.dateTimeImgContainer,
-                  {backgroundColor: '#ff8d6a'},
-                ]}>
-                <Image
-                  source={Images.calendarBlack}
-                  style={styles.dateTimeImg}
-                />
-              </View>
+          <View style={styles.containerEachLine}>
+            <Text style={styles.title}>Người đăng kí</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                src={mainURL + user?.path}
+                style={{height: 40, width: 40, borderRadius: 50}}
+              />
+              <Text
+                style={{
+                  marginLeft: Dimension.setWidth(3),
+                  fontSize: 19,
+                  fontFamily: Fonts.SF_SEMIBOLD,
+                }}>
+                {user?.hoten}
+              </Text>
             </View>
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={toggleDatePicker}
-            mode="date"
-            onConfirm={handlePickDate}
-            onCancel={() => {
-              setToggleDatePicker(false);
-            }}
-          />
-          {valueNumberOfDay === 'Nhiều ngày' && (
-            <View
+          </View>
+          <View style={styles.containerEachLine}>
+            <Text style={styles.title}>Số ngày nghỉ</Text>
+            <Dropdown
+              style={styles.dropdown}
+              autoScroll={false}
+              showsVerticalScrollIndicator={false}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              containerStyle={styles.containerOptionStyle}
+              iconStyle={styles.iconStyle}
+              itemContainerStyle={styles.itemContainer}
+              itemTextStyle={styles.itemText}
+              fontFamily={Fonts.SF_MEDIUM}
+              activeColor="#eef2feff"
+              maxHeight={Dimension.setHeight(23)}
+              labelField="label"
+              valueField="value"
+              placeholder="Chọn số ngày"
+              data={numberOfDayOff}
+              value={valueNumberOfDay}
+              onChange={item => {
+                setValueNumberOfDay(item.value);
+              }}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setToggleDatePicker(true);
+              }}
               style={[
                 styles.containerEachLine,
-                ,
-                {
-                  width: '48%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                },
+                {width: '48%', paddingVertical: Dimension.setHeight(1.8)},
               ]}>
-              <Text style={[styles.title, {alignSelf: 'center'}]}>
-                Số ngày nghỉ phép
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    offNumber !== 0 ? setOffNumber(offNumber - 1) : null;
-                  }}>
+              <Text style={styles.title}>Nghỉ từ</Text>
+              <View style={styles.dateTimePickerContainer}>
+                <Text style={styles.dateTimeText}>{startDay}</Text>
+                <View
+                  style={[
+                    styles.dateTimeImgContainer,
+                    {backgroundColor: '#ff8d6a'},
+                  ]}>
                   <Image
-                    style={{height: 22, width: 22}}
-                    source={Images.minus}
+                    source={Images.calendarBlack}
+                    style={styles.dateTimeImg}
                   />
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    marginHorizontal: Dimension.setWidth(3),
-                    fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: 16,
-                  }}>
-                  {offNumber}
-                </Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setOffNumber(offNumber + 1);
-                  }}>
-                  <Image style={{height: 22, width: 22}} source={Images.plus} />
-                </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          )}
-        </View>
-        <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Lý do cụ thể</Text>
-          <TextInput
-            style={{
-              height: Dimension.setHeight(5.3),
-              borderBottomWidth: 0.6,
-              borderBottomColor: 'gray',
-              marginHorizontal: Dimension.setWidth(1.6),
-              fontFamily: Fonts.SF_MEDIUM,
-            }}
-            placeholder="Nhập mô tả"
-            value={inputDecription}
-            onChangeText={e => setInputDecription(e)}
-          />
-        </View>
-        <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
-      </KeyboardAwareScrollView>
-      {loading === true && <Loading />}
-    </SafeAreaView>
+            </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={toggleDatePicker}
+              mode="date"
+              onConfirm={handlePickDate}
+              onCancel={() => {
+                setToggleDatePicker(false);
+              }}
+            />
+            {valueNumberOfDay === 'Nhiều ngày' && (
+              <View
+                style={[
+                  styles.containerEachLine,
+                  ,
+                  {
+                    width: '48%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  },
+                ]}>
+                <Text style={[styles.title, {alignSelf: 'center'}]}>
+                  Số ngày nghỉ phép
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      offNumber !== 0 ? setOffNumber(offNumber - 1) : null;
+                    }}>
+                    <Image
+                      style={{height: 22, width: 22}}
+                      source={Images.minus}
+                    />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      marginHorizontal: Dimension.setWidth(3),
+                      fontFamily: Fonts.SF_MEDIUM,
+                      fontSize: 16,
+                    }}>
+                    {offNumber}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setOffNumber(offNumber + 1);
+                    }}>
+                    <Image
+                      style={{height: 22, width: 22}}
+                      source={Images.plus}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+          </View>
+          <View style={styles.containerEachLine}>
+            <Text style={styles.title}>Lý do cụ thể</Text>
+            <TextInput
+              style={{
+                height: Dimension.setHeight(5.3),
+                borderBottomWidth: 0.6,
+                borderBottomColor: 'gray',
+                marginHorizontal: Dimension.setWidth(1.6),
+                fontFamily: Fonts.SF_MEDIUM,
+              }}
+              placeholder="Nhập mô tả"
+              value={inputDecription}
+              onChangeText={e => setInputDecription(e)}
+            />
+          </View>
+          <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
+        </KeyboardAwareScrollView>
+        {loading === true && <Loading />}
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    padding: 3,
   },
 
   containerEachLine: {

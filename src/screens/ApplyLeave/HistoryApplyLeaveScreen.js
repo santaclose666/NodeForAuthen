@@ -1,4 +1,4 @@
-import React, {useState, useCallback, memo, useLayoutEffect} from 'react';
+import React, {useState, useCallback, memo, useEffect} from 'react';
 import {
   View,
   Text,
@@ -38,6 +38,7 @@ import {ApproveCancelModal} from '../../components/Modal';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import FilterStatusUI from '../../components/FilterStatusUI';
+import LinearGradient from 'react-native-linear-gradient';
 
 const HistoryApplyLeaveScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -56,7 +57,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
   const [indexPicker, setIndexPicker] = useState(0);
   const dispatch = useDispatch();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     handleGetAllLeaveData();
   }, []);
 
@@ -390,13 +391,13 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
                     alignItems: 'center',
                     alignSelf: 'center',
                     justifyContent: 'center',
-                    marginLeft: Dimension.setWidth(1),
+                    flex: 1,
                   }}>
                   <Image
                     source={Images.adjust}
                     style={{
-                      height: 25,
-                      width: 25,
+                      height: 32,
+                      width: 32,
                     }}
                   />
                 </TouchableOpacity>
@@ -415,280 +416,296 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
   });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header
-        title="Lịch sử nghỉ phép"
-        navigation={navigation}
-        refreshData={handleGetAllLeaveData}
-      />
-
-      <FilterStatusUI
-        handlePickOption={handlePickOption}
-        indexPicker={indexPicker}
-      />
-
-      {handleFilter(indexPicker)?.length !== 0 ? (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          style={{
-            flex: 1,
-            paddingTop: Dimension.setHeight(3),
-          }}
-          data={handleFilter(indexPicker)}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({item}) => <RenderLeaveList item={item} />}
-          initialNumToRender={6}
-          windowSize={6}
-          removeClippedSubviews={true}
-          refreshing={true}
-          extraData={leaveData}
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView style={styles.container}>
+        <Header
+          title="Lịch sử nghỉ phép"
+          navigation={navigation}
+          refreshData={handleGetAllLeaveData}
         />
-      ) : (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: Fonts.SF_MEDIUM,
-              color: Colors.INACTIVE_GREY,
-            }}>
-            Không có dữ liệu nào được tìm thấy
-          </Text>
-        </View>
-      )}
 
-      <ApproveCancelModal
-        screenName={'registerOnleave'}
-        toggleApproveModal={toggleApproveModal}
-        setToggleApproveModal={setToggleApproveModal}
-        checkInput={checkInput}
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
-        commnetInput={commnetInput}
-        setCommentInput={setCommentInput}
-        reasonCancel={reasonCancel}
-        setReasonCancel={setReasonCancel}
-        eventFunc={handleSendNonAdjust}
-      />
+        <FilterStatusUI
+          handlePickOption={handlePickOption}
+          indexPicker={indexPicker}
+        />
 
-      <Modal
-        isVisible={toggleEditModal}
-        animationIn="fadeInUp"
-        animationInTiming={1}
-        animationOut="fadeOutDown"
-        animationOutTiming={1}
-        avoidKeyboard={true}>
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            alignSelf: 'center',
-            backgroundColor: '#fef4eb',
-            width: Dimension.setWidth(85),
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 14,
-            paddingHorizontal: Dimension.setWidth(3),
-            paddingBottom: Dimension.setHeight(1),
-          }}>
-          <View
+        {handleFilter(indexPicker)?.length !== 0 ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
             style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginVertical: Dimension.setHeight(1),
-              borderBottomWidth: 0.8,
-              borderBlockColor: Colors.INACTIVE_GREY,
-              width: '100%',
-              height: Dimension.setHeight(4.5),
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.SF_BOLD,
-                fontSize: 20,
-                color: '#f9a86a',
-              }}>
-              Điều chỉnh
-            </Text>
-          </View>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingVertical: Dimension.setHeight(1.5),
-              paddingHorizontal: Dimension.setWidth(3),
-            }}>
-            <Image src={mainURL + user?.path} style={{height: 55, width: 55}} />
-            <Text
-              style={{
-                marginLeft: Dimension.setWidth(3),
-                fontSize: 18,
-                fontFamily: Fonts.SF_SEMIBOLD,
-              }}>
-              {user?.hoten}
-            </Text>
-          </View>
-          <View style={styles.lineContainerModal}>
-            <View style={styles.itemContainerModal}>
-              <Text style={styles.titleModal}>Ngày hiện tại</Text>
-              <View style={styles.dateModalContainer}>
-                <Text style={styles.contentModal}>
-                  {changeFormatDate(selectedItem?.denngay)}
-                </Text>
-                <View style={styles.imgModalContainer}>
-                  <Image source={Images.calendarBlack} style={styles.imgDate} />
-                </View>
-              </View>
-            </View>
-            <View style={styles.itemContainerModal}>
-              <Text style={styles.titleModal}>Ngày điều chỉnh</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  setToggleDatePicker(true);
-                }}
-                style={styles.dateModalContainer}>
-                <Text style={styles.contentModal}>{datePicker}</Text>
-                <View
-                  style={[
-                    styles.imgModalContainer,
-                    {backgroundColor: '#7cc985'},
-                  ]}>
-                  <Image source={Images.calendarBlack} style={styles.imgDate} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <TouchableOpacity
-            style={{
-              position: 'absolute',
-              left: '5%',
-              top: '5%',
-              flexDirection: 'row',
-              alignItems: 'center',
+              flex: 1,
+              paddingTop: Dimension.setHeight(3),
             }}
-            onPress={() => setToggleEditModal(false)}>
-            <Image source={Images.minusclose} style={styles.btnModal} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleAdjust}
-            style={{
-              position: 'absolute',
-              right: '5%',
-              top: '5%',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <Image source={Images.confirm} style={styles.btnModal} />
-          </TouchableOpacity>
-        </View>
-        <DateTimePickerModal
-          isVisible={toggleDatePicker}
-          mode="date"
-          onConfirm={handlePickDate}
-          onCancel={() => {
-            setToggleDatePicker(false);
-          }}
-        />
-      </Modal>
-
-      <Modal
-        isVisible={toggleCancelAdjust}
-        animationIn="fadeInUp"
-        animationInTiming={100}
-        animationOut="fadeOutDown"
-        animationOutTiming={100}
-        avoidKeyboard={true}>
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            alignSelf: 'center',
-            backgroundColor: '#f9dfe0',
-            width: Dimension.setWidth(85),
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 14,
-            paddingHorizontal: Dimension.setWidth(3),
-          }}>
+            data={handleFilter(indexPicker)}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({item}) => <RenderLeaveList item={item} />}
+            initialNumToRender={6}
+            windowSize={6}
+            removeClippedSubviews={true}
+            refreshing={true}
+            extraData={leaveData}
+          />
+        ) : (
           <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginVertical: Dimension.setHeight(1),
-              borderBottomWidth: 0.8,
-              borderBlockColor: Colors.INACTIVE_GREY,
-              width: '100%',
-              height: Dimension.setHeight(4.5),
-            }}>
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
             <Text
               style={{
-                fontFamily: Fonts.SF_BOLD,
                 fontSize: 20,
-                color: '#f25157',
+                fontFamily: Fonts.SF_MEDIUM,
+                color: Colors.INACTIVE_GREY,
               }}>
-              Từ chối
+              Không có dữ liệu nào được tìm thấy
             </Text>
           </View>
+        )}
+
+        <ApproveCancelModal
+          screenName={'registerOnleave'}
+          toggleApproveModal={toggleApproveModal}
+          setToggleApproveModal={setToggleApproveModal}
+          checkInput={checkInput}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+          commnetInput={commnetInput}
+          setCommentInput={setCommentInput}
+          reasonCancel={reasonCancel}
+          setReasonCancel={setReasonCancel}
+          eventFunc={handleSendNonAdjust}
+        />
+
+        <Modal
+          isVisible={toggleEditModal}
+          animationIn="fadeInUp"
+          animationInTiming={1}
+          animationOut="fadeOutDown"
+          animationOutTiming={1}
+          avoidKeyboard={true}>
           <View
             style={{
+              flex: 1,
+              position: 'absolute',
+              alignSelf: 'center',
+              backgroundColor: '#fef4eb',
+              width: Dimension.setWidth(85),
               alignItems: 'center',
               justifyContent: 'center',
-              paddingVertical: Dimension.setHeight(1.5),
+              borderRadius: 14,
               paddingHorizontal: Dimension.setWidth(3),
+              paddingBottom: Dimension.setHeight(1),
             }}>
-            <Image source={Images.avatar} style={{height: 55, width: 55}} />
-            <Text
+            <View
               style={{
-                marginLeft: Dimension.setWidth(3),
-                fontSize: 18,
-                fontFamily: Fonts.SF_SEMIBOLD,
-              }}>
-              {selectedItem?.hoten}
-            </Text>
-          </View>
-          <View style={styles.containerEachLine}>
-            <Image source={Images.comment} style={styles.iconic} />
-            <TextInput
-              multiline={true}
-              placeholder="Lý do từ chối đ/c"
-              style={{
-                backgroundColor: '#ffffff',
-                paddingHorizontal: Dimension.setWidth(2),
-                borderRadius: 10,
-                fontFamily: Fonts.SF_REGULAR,
-                width: '70%',
-                height: Dimension.setHeight(6),
-                maxHeight: Dimension.setHeight(9),
-              }}
-              onChangeText={e => setReasonCancelAdjust(e)}
-              value={reasonCancelAdjust}
-            />
-            <TouchableOpacity
-              onPress={handleCancelAdjust}
-              style={{
-                backgroundColor: '#d9eafa',
-                padding: 6,
-                marginLeft: Dimension.setWidth(1.6),
-                borderRadius: 50,
                 alignItems: 'center',
                 justifyContent: 'center',
+                marginVertical: Dimension.setHeight(1),
+                borderBottomWidth: 0.8,
+                borderBlockColor: Colors.INACTIVE_GREY,
+                width: '100%',
+                height: Dimension.setHeight(4.5),
               }}>
-              <Image source={Images.send} style={{width: 25, height: 25}} />
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: 20,
+                  color: '#f9a86a',
+                }}>
+                Điều chỉnh
+              </Text>
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: Dimension.setHeight(1.5),
+                paddingHorizontal: Dimension.setWidth(3),
+              }}>
+              <Image
+                src={mainURL + user?.path}
+                style={{height: 55, width: 55}}
+              />
+              <Text
+                style={{
+                  marginLeft: Dimension.setWidth(3),
+                  fontSize: 18,
+                  fontFamily: Fonts.SF_SEMIBOLD,
+                }}>
+                {user?.hoten}
+              </Text>
+            </View>
+            <View style={styles.lineContainerModal}>
+              <View style={styles.itemContainerModal}>
+                <Text style={styles.titleModal}>Ngày hiện tại</Text>
+                <View style={styles.dateModalContainer}>
+                  <Text style={styles.contentModal}>
+                    {changeFormatDate(selectedItem?.denngay)}
+                  </Text>
+                  <View style={styles.imgModalContainer}>
+                    <Image
+                      source={Images.calendarBlack}
+                      style={styles.imgDate}
+                    />
+                  </View>
+                </View>
+              </View>
+              <View style={styles.itemContainerModal}>
+                <Text style={styles.titleModal}>Ngày điều chỉnh</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setToggleDatePicker(true);
+                  }}
+                  style={styles.dateModalContainer}>
+                  <Text style={styles.contentModal}>{datePicker}</Text>
+                  <View
+                    style={[
+                      styles.imgModalContainer,
+                      {backgroundColor: '#7cc985'},
+                    ]}>
+                    <Image
+                      source={Images.calendarBlack}
+                      style={styles.imgDate}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                left: '5%',
+                top: '5%',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+              onPress={() => setToggleEditModal(false)}>
+              <Image source={Images.minusclose} style={styles.btnModal} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleAdjust}
+              style={{
+                position: 'absolute',
+                right: '5%',
+                top: '5%',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image source={Images.confirm} style={styles.btnModal} />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={() => setToggleCancelAdjust(false)}
-            style={{position: 'absolute', right: '5%', top: '5%'}}>
-            <Image source={Images.minusclose} style={styles.btnModal} />
-          </TouchableOpacity>
-        </View>
-      </Modal>
-    </SafeAreaView>
+          <DateTimePickerModal
+            isVisible={toggleDatePicker}
+            mode="date"
+            onConfirm={handlePickDate}
+            onCancel={() => {
+              setToggleDatePicker(false);
+            }}
+          />
+        </Modal>
+
+        <Modal
+          isVisible={toggleCancelAdjust}
+          animationIn="fadeInUp"
+          animationInTiming={100}
+          animationOut="fadeOutDown"
+          animationOutTiming={100}
+          avoidKeyboard={true}>
+          <View
+            style={{
+              flex: 1,
+              position: 'absolute',
+              alignSelf: 'center',
+              backgroundColor: '#f9dfe0',
+              width: Dimension.setWidth(85),
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 14,
+              paddingHorizontal: Dimension.setWidth(3),
+            }}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: Dimension.setHeight(1),
+                borderBottomWidth: 0.8,
+                borderBlockColor: Colors.INACTIVE_GREY,
+                width: '100%',
+                height: Dimension.setHeight(4.5),
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: 20,
+                  color: '#f25157',
+                }}>
+                Từ chối
+              </Text>
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: Dimension.setHeight(1.5),
+                paddingHorizontal: Dimension.setWidth(3),
+              }}>
+              <Image source={Images.avatar} style={{height: 55, width: 55}} />
+              <Text
+                style={{
+                  marginLeft: Dimension.setWidth(3),
+                  fontSize: 18,
+                  fontFamily: Fonts.SF_SEMIBOLD,
+                }}>
+                {selectedItem?.hoten}
+              </Text>
+            </View>
+            <View style={styles.containerEachLine}>
+              <Image source={Images.comment} style={styles.iconic} />
+              <TextInput
+                multiline={true}
+                placeholder="Lý do từ chối đ/c"
+                style={{
+                  backgroundColor: '#ffffff',
+                  paddingHorizontal: Dimension.setWidth(2),
+                  borderRadius: 10,
+                  fontFamily: Fonts.SF_REGULAR,
+                  width: '70%',
+                  height: Dimension.setHeight(6),
+                  maxHeight: Dimension.setHeight(9),
+                }}
+                onChangeText={e => setReasonCancelAdjust(e)}
+                value={reasonCancelAdjust}
+              />
+              <TouchableOpacity
+                onPress={handleCancelAdjust}
+                style={{
+                  backgroundColor: '#d9eafa',
+                  padding: 6,
+                  marginLeft: Dimension.setWidth(1.6),
+                  borderRadius: 50,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image source={Images.send} style={{width: 25, height: 25}} />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              onPress={() => setToggleCancelAdjust(false)}
+              style={{position: 'absolute', right: '5%', top: '5%'}}>
+              <Image source={Images.minusclose} style={styles.btnModal} />
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    padding: 3,
   },
 
   containerEachLine: {

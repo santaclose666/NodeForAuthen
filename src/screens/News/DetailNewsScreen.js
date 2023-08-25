@@ -18,11 +18,9 @@ import {fontDefault} from '../../contants/Variable';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
-  console.log(item);
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <View style={styles.mainImgContainer}>
         <Image
           resizeMode="cover"
@@ -40,7 +38,7 @@ const DetailNewsScreen = ({navigation, route}) => {
           onPress={() => navigation.goBack()}>
           <Image
             source={Images.back}
-            style={{width: 20, height: 20, tintColor: '#fff'}}
+            style={{width: 18, height: 16, tintColor: '#fff'}}
           />
         </TouchableOpacity>
       </View>
@@ -51,7 +49,7 @@ const DetailNewsScreen = ({navigation, route}) => {
         <View style={styles.titleContainer}>
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 18,
               fontFamily: Fonts.SF_SEMIBOLD,
               textAlign: 'justify',
               ...fontDefault,
@@ -60,26 +58,14 @@ const DetailNewsScreen = ({navigation, route}) => {
           </Text>
           <Text
             style={{
-              fontSize: 15,
+              fontSize: 14,
               fontFamily: Fonts.SF_REGULAR,
-              color: Colors.INACTIVE_GREY,
+              color: Colors.DEFAULT_BLACK,
+              opacity: 0.6,
               marginVertical: Dimension.setHeight(1),
             }}>
             {item.date}
           </Text>
-          {item.subImg && (
-            <View>
-              <Image
-                resizeMode="cover"
-                source={item.subImg}
-                style={{
-                  width: '100%',
-                  height: Dimension.setHeight(25),
-                  borderRadius: 6,
-                }}
-              />
-            </View>
-          )}
         </View>
 
         <View style={styles.descriptionContainer}>
@@ -106,21 +92,18 @@ const styles = StyleSheet.create({
   },
 
   backHeartContainer: {
-    position: 'absolute',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    width: 60,
+    height: 60,
+    left: 10,
+    top: -20,
+    justifyContent: 'center',
     alignItems: 'center',
-    width: '90%',
-    marginHorizontal: Dimension.setWidth(5),
-    marginTop: Dimension.setHeight(3),
   },
 
   headerBtn: {
     padding: 10,
+    borderRadius: 100,
     backgroundColor: Colors.DEFAULT_GREEN,
-    borderRadius: 12,
-    elevation: 10,
-    ...shadowIOS,
   },
 
   contentDetailContainer: {
