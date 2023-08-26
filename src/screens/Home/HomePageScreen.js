@@ -254,8 +254,23 @@ const HomePageScreen = ({navigation}) => {
                 />
                 <Text style={styles.featureText}>Văn bản</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  navigation.navigate('SelectWMSLayer');
+                }}>
+                <Image source={Images.map} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Bản đồ số</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}>
+                <TouchableOpacity style={styles.buttonFuc}>
+                  <Image
+                    source={Images.biodiversity}
+                    style={styles.featureBtn}
+                  />
+                  <Text style={styles.featureText}>ĐDSH</Text>
+                </TouchableOpacity>
+              </TouchableOpacity>
               <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
             </View>
           </View>

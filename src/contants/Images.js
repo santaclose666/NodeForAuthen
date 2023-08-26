@@ -111,6 +111,8 @@ const Images = {
   cancelled: require('../assets/images/cancelled.png'),
   addFile: require('../assets/images/addfile.png'),
   personal: require('../assets/images/personal.png'),
+  map: require('../assets/images/map.png'),
+  biodiversity: require('../assets/images/biodiversity.png'),
 };
 
 export default Images;

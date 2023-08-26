@@ -14,6 +14,8 @@ import CreateWorkSchedule from '../screens/WorkShedule/CreateWorkShedule';
 import HistoryWorkShedule from '../screens/WorkShedule/HistoryWorkSchedule';
 import HistoryRegisterTicketScreen from '../screens/TicketManagement/HistoryRegisterTicketScreen';
 import MyWorkScheduleScreen from '../screens/WorkShedule/MyWorkScheduleScreen';
+import SelectWMSLayerScreen from '../screens/MapService/SelectWMSLayerScreen1';
+import MapScreen from '../screens/MapService/MapScreen';
 
 const Stack = createStackNavigator();
 
@@ -51,6 +53,8 @@ const StactNavigator = () => {
       <Stack.Screen name="CreateWorkSchedule" component={CreateWorkSchedule} />
       <Stack.Screen name="HistoryWorkShedule" component={HistoryWorkShedule} />
       <Stack.Screen name="MyWorkSchedule" component={MyWorkScheduleScreen} />
+      <Stack.Screen name="SelectWMSLayer" component={SelectWMSLayerScreen} />
+      <Stack.Screen name="MapWMS" component={MapScreen} />
     </Stack.Navigator>
   );
 };
