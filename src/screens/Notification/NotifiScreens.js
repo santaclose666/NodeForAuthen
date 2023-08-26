@@ -42,7 +42,7 @@ const NotifiScreen = ({ navigation }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}>
       <SafeAreaView style={styles.container}>
-        <Header title="Thông báo" navigation={navigation} />
+        <Header title="Thông báo" navigation={navigation} replace={true} />
         <View style={styles.notifiItemContainer}>
           <FlatList
             data={notifiMenu}

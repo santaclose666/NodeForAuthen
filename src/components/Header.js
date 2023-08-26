@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity, Platform} from 'react-native';
+import { View, Text, Image, TouchableOpacity, Platform } from 'react-native';
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
-import {fontDefault, imgDefault} from '../contants/Variable';
+import { fontDefault, imgDefault } from '../contants/Variable';
 
-const Header = ({title, navigation, refreshData}) => {
+const Header = ({ title, navigation, refreshData, replace = false }) => {
   const showCreateButton =
     title === 'Lịch sử nghỉ phép' ||
     title === 'Lịch sử đặt vé' ||
@@ -28,14 +28,18 @@ const Header = ({title, navigation, refreshData}) => {
       }}>
       <TouchableOpacity
         onPress={() => {
-          navigation.goBack();
+          replace == true
+            ?
+            navigation.navigate('Home')
+            :
+            navigation.goBack()
         }}>
         <Image
           source={Images.back}
-          style={{width: 25, height: 18, ...imgDefault}}
+          style={{ width: 25, height: 18, ...imgDefault }}
         />
       </TouchableOpacity>
-      <View style={{flex: 1, alignItems: 'center'}}>
+      <View style={{ flex: 1, alignItems: 'center' }}>
         <Text
           style={{
             fontFamily: Fonts.SF_BOLD,
@@ -68,11 +72,11 @@ const Header = ({title, navigation, refreshData}) => {
           }}>
           <Image
             source={Images.adjust}
-            style={{width: 30, height: 30, ...imgDefault}}
+            style={{ width: 30, height: 30, ...imgDefault }}
           />
         </TouchableOpacity>
       ) : (
-        <View style={{width: 30}} />
+        <View style={{ width: 30 }} />
       )}
     </View>
   );

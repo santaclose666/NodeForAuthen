@@ -146,7 +146,7 @@ const AllNewsScreen = ({ navigation }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}>
       <SafeAreaView showsVerticalScrollIndicator={false} style={styles.container}>
-        <Header title="Tin tức" navigation={navigation} />
+        <Header title="Tin tức" navigation={navigation} replace={true} />
         {/* <View style={styles.searchFilterContainer}>
         <TouchableOpacity
           style={styles.headerContainer}
