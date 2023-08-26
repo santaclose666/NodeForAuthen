@@ -312,6 +312,19 @@ export const totalWorkSchedule = async dispatch => {
   }
 };
 
+export const warningWorkSchedule = async data => {
+  try {
+    const res = await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/canhbao/${data.id_lichchitiet}`,
+      {lydo: data.lydo},
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /////////////////////  VEHIOCLE SCHEDULE DATA  ////////////////////
 
 export const getVehicleData = async (dispatch, id) => {

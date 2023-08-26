@@ -322,6 +322,99 @@ export const ConfirmModal = ({
   );
 };
 
+export const WarningModal = ({
+  toggleModal,
+  setToggleModal,
+  item,
+  reasonInput,
+  setReasonInput,
+  handleWarning,
+}) => {
+  console.log(item);
+
+  return (
+    <Modal
+      isVisible={toggleModal}
+      animationIn="fadeInUp"
+      animationInTiming={100}
+      animationOut="fadeOutDown"
+      animationOutTiming={100}
+      avoidKeyboard={true}>
+      <View
+        style={{
+          flex: 1,
+          position: 'absolute',
+          alignSelf: 'center',
+          width: Dimension.setWidth(85),
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 14,
+          paddingHorizontal: Dimension.setWidth(3),
+          backgroundColor: '#e6d2c0',
+        }}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginVertical: Dimension.setHeight(1),
+            borderBottomWidth: 0.8,
+            borderBlockColor: Colors.INACTIVE_GREY,
+            width: '100%',
+            height: Dimension.setHeight(4.5),
+          }}>
+          <Text
+            style={{
+              fontFamily: Fonts.SF_BOLD,
+              fontSize: 20,
+              color: '#f0b263',
+            }}>
+            Cảnh báo
+          </Text>
+        </View>
+
+        <View style={styles.containerEachLine}>
+          <Image source={Images.comment} style={styles.iconic} />
+          <TextInput
+            multiline={true}
+            placeholder="Lý do cảnh báo"
+            style={{
+              backgroundColor: '#ffffff',
+              paddingHorizontal: Dimension.setWidth(2),
+              borderRadius: 10,
+              fontFamily: Fonts.SF_REGULAR,
+              width: '70%',
+              height: Dimension.setHeight(5),
+              maxHeight: Dimension.setHeight(9),
+            }}
+            onChangeText={e => reasonInput(e)}
+            value={reasonInput}
+          />
+          <TouchableOpacity
+            onPress={handleWarning}
+            style={{
+              backgroundColor: '#d9eafa',
+              padding: 6,
+              marginLeft: Dimension.setWidth(1.6),
+              borderRadius: 50,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image source={Images.send} style={{width: 25, height: 25}} />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          onPress={() => {
+            setToggleModal(false);
+          }}
+          style={{position: 'absolute', right: '5%', top: '5%'}}>
+          <Image source={Images.minusclose} style={styles.btnModal} />
+        </TouchableOpacity>
+      </View>
+    </Modal>
+  );
+};
+
 const styles = StyleSheet.create({
   containerEachLine: {
     flexDirection: 'row',

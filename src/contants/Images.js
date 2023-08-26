@@ -21,6 +21,7 @@ const Images = {
   test2: require('../assets/images/langBac.png'),
   test3: require('../assets/images/temple1.png'),
   test4: require('../assets/images/test.png'),
+  warning: require('../assets/images/warning.png'),
   heart: require('../assets/images/heart.png'),
   location: require('../assets/images/location.png'),
   comment: require('../assets/images/chat.png'),
