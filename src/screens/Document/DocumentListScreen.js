@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     ...shadowIOS,
     marginHorizontal: 5,
     borderWidth: 0.5,
-    borderColor: Colors.INACTIVE_GREY,
+    borderColor: Colors.WHITE,
     paddingTop: Dimension.setHeight(1.6),
     paddingBottom: Dimension.setHeight(1.2),
   },

@@ -1,4 +1,4 @@
-import React, {useState, useCallback, memo, useLayoutEffect} from 'react';
+import React, { useState, useCallback, memo, useLayoutEffect } from 'react';
 import {
   View,
   Text,
@@ -16,12 +16,14 @@ import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
-import {useSelector} from 'react-redux';
-import {useDispatch} from 'react-redux';
-import {shadowIOS} from '../../contants/propsIOS';
-import {fontDefault, mainURL} from '../../contants/Variable';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { shadowIOS } from '../../contants/propsIOS';
+import { fontDefault, mainURL } from '../../contants/Variable';
+import LinearGradient from 'react-native-linear-gradient';
+import Header from '../../components/Header';
 
-const StaffListScreen = ({navigation}) => {
+const StaffListScreen = ({ navigation }) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const [input, setInput] = useState(null);
   const [allStaff, setAllStaff] = useState(null);
@@ -91,14 +93,14 @@ const StaffListScreen = ({navigation}) => {
     }
   }, []);
 
-  const RenderStaffs = memo(({item, index}) => {
+  const RenderStaffs = memo(({ item, index }) => {
     const role =
       user?.tendonvi === 'XMG' ? item.info_phong[0].chucdanh : item.chucdanh;
 
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('DetailStaff', {item: item});
+          navigation.navigate('DetailStaff', { item: item });
         }}
         key={index}
         style={{
@@ -106,11 +108,11 @@ const StaffListScreen = ({navigation}) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           borderRadius: 12,
-          borderColor: Colors.INACTIVE_GREY,
-          backgroundColor: index % 2 === 0 ? '#f8f7fc' : '#ffffff',
+          borderColor: Colors.WHITE,
+          backgroundColor:  Colors.WHITE,
           paddingHorizontal: Dimension.setWidth(1),
-          paddingVertical: Dimension.setHeight(1),
-          elevation: 10,
+          paddingVertical: Dimension.setWidth(2),
+          marginVertical: Dimension.setWidth(1),
           ...shadowIOS,
         }}>
         <View
@@ -131,7 +133,7 @@ const StaffListScreen = ({navigation}) => {
               marginRight: Dimension.setWidth(3),
             }}
           />
-          <View style={{justifyContent: 'center'}}>
+          <View style={{ justifyContent: 'center' }}>
             <Text
               style={{
                 fontFamily: Fonts.SF_SEMIBOLD,
@@ -180,102 +182,78 @@ const StaffListScreen = ({navigation}) => {
   });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
-          style={{marginRight: Dimension.setWidth(5)}}
-          onPress={() => {
-            navigation.goBack();
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{ flex: 1, padding: 3 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}>
+      <SafeAreaView style={styles.container}>
+        <Header title="Danh sách nhân sự" navigation={navigation} />
+        <View
+          style={{
+            marginLeft: Dimension.setWidth(4),
+            marginTop: Dimension.setHeight(1),
+            marginBottom: Dimension.setHeight(1.5),
           }}>
-          <Image source={Images.back} style={{width: 25, height: 25}} />
-        </TouchableOpacity>
-        <View style={styles.searchInput}>
-          <Icons.Feather name="search" size={25} color={Colors.INACTIVE_GREY} />
-          <TextInput
-            onChangeText={e => handleSearch(e, typeStaffValue)}
-            value={input}
-            placeholder="Tìm kiếm nhân sự"
-            style={{
-              fontFamily: Fonts.SF_REGULAR,
-              marginLeft: Dimension.setWidth(3),
-              width: '80%',
+          <FlatList
+            data={user?.tendonvi === 'XMG' ? XMGGroup : IFEEGroup}
+            keyExtractor={(_, index) => index}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            extraData={user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => handlePickOption(index)}
+                  key={index}
+                  style={{
+                    marginRight: Dimension.setWidth(4.4),
+                    paddingVertical: 3,
+                    borderBottomWidth: selectId === index ? 2 : 0,
+                    borderBottomColor:
+                      selectId === index ? Colors.DEFAULT_GREEN : '#fff',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily:
+                        selectId === index
+                          ? Fonts.SF_SEMIBOLD
+                          : Fonts.SF_REGULAR,
+                      fontSize: 16,
+                      opacity: 0.8,
+                      color:
+                        selectId === index
+                          ? Colors.DEFAULT_GREEN
+                          : Colors.DEFAULT_BLACK,
+                    }}>
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+              );
             }}
           />
         </View>
-      </View>
-      <View
-        style={{
-          marginLeft: Dimension.setWidth(4),
-          marginTop: Dimension.setHeight(1),
-          marginBottom: Dimension.setHeight(1.5),
-        }}>
-        <View style={{marginBottom: Dimension.setHeight(1)}}>
-          <Text
-            style={{
-              fontFamily: Fonts.SF_SEMIBOLD,
-              fontSize: 20,
-            }}>
-            Nhóm nhân sự
-          </Text>
-        </View>
+        
         <FlatList
-          data={user?.tendonvi === 'XMG' ? XMGGroup : IFEEGroup}
-          keyExtractor={(_, index) => index}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          extraData={user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                onPress={() => handlePickOption(index)}
-                key={index}
-                style={{marginRight: Dimension.setWidth(4)}}>
-                <Text
-                  style={{
-                    fontFamily:
-                      selectId !== index ? Fonts.SF_REGULAR : Fonts.SF_BOLD,
-                    fontSize: 16,
-                    opacity: 0.6,
-                    color:
-                      selectId === index ? '#85d4ee' : Colors.DEFAULT_BLACK,
-                  }}>
-                  {item}
-                </Text>
-              </TouchableOpacity>
-            );
-          }}
+          data={allStaff ? allStaff : handleFilter(selectId)}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <RenderStaffs item={item} index={index} />
+          )}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={10}
+          windowSize={10}
+          removeClippedSubviews={true}
         />
-      </View>
-      <View style={styles.staffListContainer}>
-        <Text
-          style={{
-            fontFamily: Fonts.SF_SEMIBOLD,
-            fontSize: 20,
-            marginRight: Dimension.setWidth(2),
-          }}>
-          Danh sách nhân sự
-        </Text>
-      </View>
-      <FlatList
-        data={allStaff ? allStaff : handleFilter(selectId)}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({item, index}) => (
-          <RenderStaffs item={item} index={index} />
-        )}
-        showsVerticalScrollIndicator={false}
-        initialNumToRender={10}
-        windowSize={10}
-        removeClippedSubviews={true}
-      />
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    padding: 3
   },
 
   nameScreenContainer: {

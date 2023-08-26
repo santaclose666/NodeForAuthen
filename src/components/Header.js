@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, Platform} from 'react-native';
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
@@ -24,6 +24,7 @@ const Header = ({title, navigation, refreshData}) => {
         backgroundColor: 'rgba(255, 255, 255, 0.3)',
         marginHorizontal: Dimension.setHeight(1.4),
         borderRadius: 25,
+        marginTop: Platform.OS == 'android' ? 10 : 0
       }}>
       <TouchableOpacity
         onPress={() => {

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   StatusBar,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     left: 10,
-    top: -20,
+    top: Platform.OS == 'ios' ? -20 : 0,
     justifyContent: 'center',
     alignItems: 'center',
   },

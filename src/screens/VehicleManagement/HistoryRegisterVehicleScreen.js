@@ -23,8 +23,8 @@ import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
-import {useSelector} from 'react-redux';
-import {useDispatch} from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
 import {
@@ -32,10 +32,11 @@ import {
   getVehicleData,
   approveVehicle,
 } from '../../redux/apiRequest';
-import {shadowIOS} from '../../contants/propsIOS';
-import {mainURL} from '../../contants/Variable';
+import { shadowIOS } from '../../contants/propsIOS';
+import { mainURL } from '../../contants/Variable';
 import StatusUI from '../../components/StatusUI';
-import {changeFormatDate} from '../../utils/serviceFunction';
+import { changeFormatDate } from '../../utils/serviceFunction';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const approveArr = [
   {
@@ -64,7 +65,7 @@ export const approveArr = [
   },
 ];
 
-const HistoryRegisterVehicleScreen = ({navigation}) => {
+const HistoryRegisterVehicleScreen = ({ navigation }) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const allVehicleData = useSelector(
@@ -159,31 +160,31 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     fetchVehicleData();
   }, []);
 
-  const RenderVehicleData = ({item, index}) => {
+  const RenderVehicleData = ({ item, index }) => {
     const colorStatus =
       item.pheduyet === null
         ? '#f9a86a'
         : item.pheduyet === '1'
-        ? '#57b85d'
-        : '#f25157';
+          ? '#57b85d'
+          : '#f25157';
     const bgColorStatus =
       item.pheduyet === null
         ? '#fef4eb'
         : item.pheduyet === '1'
-        ? '#def8ed'
-        : '#f9dfe0';
+          ? '#def8ed'
+          : '#f9dfe0';
     const status =
       item.pheduyet === '1'
         ? 'Phê duyệt'
         : item.pheduyet === '0'
-        ? 'Từ chối'
-        : 'Chờ phê duyệt';
+          ? 'Từ chối'
+          : 'Chờ phê duyệt';
     const icon =
       item.pheduyet === null
         ? Images.pending
         : item.pheduyet === '1'
-        ? Images.approve
-        : Images.cancel;
+          ? Images.approve
+          : Images.cancel;
 
     const checktStatus = () => {
       return (
@@ -221,12 +222,12 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
             justifyContent: 'space-between',
             width: '66%',
           }}>
-          <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18}}>
+          <Text style={{ fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18 }}>
             {item.loaixe}
           </Text>
         </View>
         <View
-          style={{position: 'absolute', right: '5%', top: '7%', zIndex: 9999}}>
+          style={{ position: 'absolute', right: '5%', top: '7%', zIndex: 9999 }}>
           {checktStatus() && (
             <StatusUI
               status={status}
@@ -250,7 +251,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                 }}>
                 <Image
                   source={Images.approved}
-                  style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
+                  style={[styles.approvedIcon, { tintColor: '#57b85d' }]}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -259,7 +260,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                 }}>
                 <Image
                   source={Images.cancelled}
-                  style={[styles.approvedIcon, {tintColor: '#f25157'}]}
+                  style={[styles.approvedIcon, { tintColor: '#f25157' }]}
                 />
               </TouchableOpacity>
             </View>
@@ -285,7 +286,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
         <View style={styles.containerEachLine}>
           <Image
             src={mainURL + userFilter?.path}
-            style={[styles.Iconic, {borderRadius: 50}]}
+            style={[styles.Iconic, { borderRadius: 50 }]}
           />
           <Text style={styles.title}>Đăng kí: </Text>
           <Text style={styles.content}>{item.hoten}</Text>
@@ -307,235 +308,240 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header
-        title="Lịch sử đăng kí xe"
-        navigation={navigation}
-        refreshData={fetchVehicleData}
-      />
-      <View
-        style={{
-          flex: 0.1,
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-        }}>
-        {approveArr?.map((item, index) => {
-          return (
-            <TouchableOpacity
-              onPress={() => handlePickOption(index)}
-              key={index}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingTop: Dimension.setHeight(2.2),
-                paddingBottom: Dimension.setHeight(1.5),
-                paddingHorizontal: Dimension.setWidth(3),
-                height: '100%',
-                borderBottomWidth: indexPicker === index ? 1.6 : null,
-                borderBlockColor: indexPicker === index ? item.color : null,
-              }}>
-              <Image
-                source={item.icon}
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{ flex: 1 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}>
+      <SafeAreaView style={styles.container}>
+        <Header
+          title="Lịch sử đăng kí xe"
+          navigation={navigation}
+          refreshData={fetchVehicleData}
+        />
+        <View
+          style={{
+            flex: 0.1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          {approveArr?.map((item, index) => {
+            return (
+              <TouchableOpacity
+                onPress={() => handlePickOption(index)}
+                key={index}
                 style={{
-                  padding: 5,
-                  height: 25,
-                  width: 25,
-                  tintColor: indexPicker === index ? item.color : item.color,
-                }}
-              />
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_MEDIUM,
-                  fontSize: 16,
-                  opacity: 0.8,
-                  color:
-                    indexPicker === index ? item.color : Colors.DEFAULT_BLACK,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingHorizontal: Dimension.setWidth(3),
+                  paddingVertical: 8,
+                  marginTop: 10,
+                  height: '100%',
+                  borderBottomWidth: indexPicker === index ? 1.6 : null,
+                  borderBlockColor: indexPicker === index ? item.color : null,
                 }}>
-                {item.title}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-
-      <BottomSheetModalProvider>
-        {handleFilter(indexPicker)?.length !== 0 ? (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            style={{
-              flex: 1,
-              paddingTop: Dimension.setHeight(3),
-            }}
-            data={handleFilter(indexPicker)}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({item, index}) => (
-              <RenderVehicleData item={item} index={index} />
-            )}
-            initialNumToRender={6}
-            windowSize={6}
-            removeClippedSubviews={true}
-            refreshing={true}
-            extraData={allVehicleData}
-          />
-        ) : (
-          <View
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text
+                <Image
+                  source={item.icon}
+                  style={{
+                    padding: 5,
+                    height: 25,
+                    width: 25,
+                    tintColor: indexPicker === index ? item.color : item.color,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_MEDIUM,
+                    fontSize: 16,
+                    opacity: 0.8,
+                    color:
+                      indexPicker === index ? item.color : Colors.DEFAULT_BLACK,
+                  }}>
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        <BottomSheetModalProvider>
+          {handleFilter(indexPicker)?.length !== 0 ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
               style={{
-                fontSize: 20,
-                fontFamily: Fonts.SF_MEDIUM,
-                color: Colors.INACTIVE_GREY,
-              }}>
-              Không có dữ liệu nào được tìm thấy
-            </Text>
-          </View>
-        )}
-
-        {selectedItem && (
-          <BottomSheetModal
-            backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
-            ref={bottomSheetModalRef}
-            index={0}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}>
+                flex: 1,
+                paddingTop: Dimension.setHeight(3),
+              }}
+              data={handleFilter(indexPicker)}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({ item, index }) => (
+                <RenderVehicleData item={item} index={index} />
+              )}
+              initialNumToRender={6}
+              windowSize={6}
+              removeClippedSubviews={true}
+              refreshing={true}
+              extraData={allVehicleData}
+            />
+          ) : (
             <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: Dimension.setHeight(1.2),
-                paddingBottom: Dimension.setHeight(1.5),
-                borderBottomWidth: 0.8,
-                borderBottomColor: Colors.INACTIVE_GREY,
-              }}>
+              style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
               <Text
                 style={{
-                  fontFamily: Fonts.SF_BOLD,
                   fontSize: 20,
-                  color: selectedItem.colorStatus,
+                  fontFamily: Fonts.SF_MEDIUM,
+                  color: Colors.INACTIVE_GREY,
                 }}>
-                Thông tin chi tiết
+                Không có dữ liệu nào được tìm thấy
               </Text>
             </View>
-            <BottomSheetScrollView showsVerticalScrollIndicator={false}>
+          )}
+
+          {selectedItem && (
+            <BottomSheetModal
+              backgroundStyle={{ backgroundColor: selectedItem.bgColorStatus }}
+              ref={bottomSheetModalRef}
+              index={0}
+              snapPoints={snapPoints}
+              onChange={handleSheetChanges}>
               <View
-                style={[
-                  styles.bottomSheetContainer,
-                  {marginTop: Dimension.setHeight(2.5)},
-                ]}>
-                <Text style={styles.titleBottomSheet}>Thông tin xe</Text>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.vehicles} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Loại xe:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.loaixe}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.vehicleplate} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Km Giao:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.km_giao}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.datetime} style={styles.Iconic} />
-                  <Text style={styles.title}>Mượn từ:{'  '}</Text>
-                  <Text style={styles.content}>
-                    {changeFormatDate(selectedItem.ngaydi)}
-                  </Text>
-                  <Separation />
-                  <Text style={styles.content}>
-                    {changeFormatDate(selectedItem.ngayve) !== 'Invalid date'
-                      ? changeFormatDate(selectedItem.ngayve)
-                      : 'Không xác định'}
-                  </Text>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.content} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '90%',
-                    }}>
-                    <Text style={styles.title}>
-                      Nội dung:{'  '}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: Dimension.setHeight(1.2),
+                  paddingBottom: Dimension.setHeight(1.5),
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: Colors.INACTIVE_GREY,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_BOLD,
+                    fontSize: 20,
+                    color: selectedItem.colorStatus,
+                  }}>
+                  Thông tin chi tiết
+                </Text>
+              </View>
+              <BottomSheetScrollView showsVerticalScrollIndicator={false}>
+                <View
+                  style={[
+                    styles.bottomSheetContainer,
+                    { marginTop: Dimension.setHeight(2.5) },
+                  ]}>
+                  <Text style={styles.titleBottomSheet}>Thông tin xe</Text>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.vehicles} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Loại xe:{'  '}</Text>
                       <Text
                         numberOfLines={2}
                         ellipsizeMode="tail"
                         style={styles.content}>
-                        {selectedItem.noidung}
+                        {selectedItem.loaixe}
                       </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.vehicleplate} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Km Giao:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.km_giao}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.datetime} style={styles.Iconic} />
+                    <Text style={styles.title}>Mượn từ:{'  '}</Text>
+                    <Text style={styles.content}>
+                      {changeFormatDate(selectedItem.ngaydi)}
+                    </Text>
+                    <Separation />
+                    <Text style={styles.content}>
+                      {changeFormatDate(selectedItem.ngayve) !== 'Invalid date'
+                        ? changeFormatDate(selectedItem.ngayve)
+                        : 'Không xác định'}
                     </Text>
                   </View>
-                </View>
-              </View>
-              <View style={styles.bottomSheetContainer}>
-                <Text style={styles.titleBottomSheet}>
-                  Người đăng kí & phê duyệt
-                </Text>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.registerperson} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Người đăng kí:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.hoten}
-                    </Text>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.content} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '90%',
+                      }}>
+                      <Text style={styles.title}>
+                        Nội dung:{'  '}
+                        <Text
+                          numberOfLines={2}
+                          ellipsizeMode="tail"
+                          style={styles.content}>
+                          {selectedItem.noidung}
+                        </Text>
+                      </Text>
+                    </View>
                   </View>
                 </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.datetime} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Ngày duyệt:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {changeFormatDate(selectedItem.ngayduyet)}
-                    </Text>
+                <View style={styles.bottomSheetContainer}>
+                  <Text style={styles.titleBottomSheet}>
+                    Người đăng kí & phê duyệt
+                  </Text>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.registerperson} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Người đăng kí:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.hoten}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.datetime} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Ngày duyệt:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {changeFormatDate(selectedItem.ngayduyet)}
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </BottomSheetScrollView>
-          </BottomSheetModal>
-        )}
-      </BottomSheetModalProvider>
-    </SafeAreaView>
+              </BottomSheetScrollView>
+            </BottomSheetModal>
+          )}
+        </BottomSheetModalProvider>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    padding: 3
   },
 
   containerEachLine: {

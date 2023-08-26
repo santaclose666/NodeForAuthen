@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,20 +7,22 @@ import {
   StyleSheet,
   TextInput,
   Dimensions,
+  SafeAreaView
 } from 'react-native';
-import {Switch, VStack} from 'native-base';
+import { Switch, VStack } from 'native-base';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import {loginUser} from '../../redux/apiRequest';
-import {useDispatch} from 'react-redux';
-import {useSelector} from 'react-redux';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {ToastAlert} from '../../components/Toast';
-import {shadowIOS} from '../../contants/propsIOS';
+import { loginUser } from '../../redux/apiRequest';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ToastAlert } from '../../components/Toast';
+import { shadowIOS } from '../../contants/propsIOS';
+import { fontDefault } from '../../contants/Variable';
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const credential = useSelector(
     state => state.credential.credential?.emailPwd,
@@ -32,7 +34,7 @@ const LoginScreen = ({navigation}) => {
 
   const handleLogin = () => {
     if (email !== '' && password !== '') {
-      const data = {email, password};
+      const data = { email, password };
       loginUser(data, dispatch, navigation, save);
     } else {
       const mess = 'Vui lòng nhập đầy đủ thông tin!';
@@ -48,159 +50,164 @@ const LoginScreen = ({navigation}) => {
   }, []);
 
   return (
-    <KeyboardAwareScrollView
-      enableAutomaticScroll={true}
-      enableResetScrollToCoords={true}
-      enableOnAndroid={true}
-      behavior="padding"
-      style={{flex: 1, backgroundColor: '#f2f2f2'}}>
-      <View style={styles.themeContainer}>
-        <TouchableOpacity
-          style={styles.headerBtn}
-          onPress={() => navigation.goBack()}>
+    <SafeAreaView style={{flex: 1, padding: 3}}>
+      <KeyboardAwareScrollView
+        enableAutomaticScroll={true}
+        enableResetScrollToCoords={true}
+        enableOnAndroid={true}
+        behavior="padding"
+        style={{ flex: 1, backgroundColor: '#f2f2f2' }}>
+        <View style={styles.themeContainer}>
+          <TouchableOpacity
+            style={styles.headerBtn}
+            onPress={() => navigation.goBack()}>
+            <Image
+              source={Images.back}
+              style={{ width: 18, height: 18, tintColor: '#fff' }}
+            />
+          </TouchableOpacity>
           <Image
-            source={Images.back}
-            style={{width: 18, height: 18, tintColor: '#fff'}}
+            source={Images.logo}
+            resizeMode="cover"
+            style={{
+              width: Dimensions.get('screen').width / 1.8,
+              height: Dimensions.get('screen').width / 1.8,
+              borderRadius: 30,
+            }}
           />
-        </TouchableOpacity>
-        <Image
-          source={Images.logo}
-          resizeMode="cover"
-          style={{
-            width: Dimensions.get('screen').width / 1.8,
-            height: Dimensions.get('screen').width / 1.8,
-            borderRadius: 30,
-          }}
-        />
-      </View>
-      <View style={styles.loginFormContainer}>
-        <Text
-          style={{
-            fontFamily: Fonts.SF_SEMIBOLD,
-            fontSize: 25,
-            marginLeft: Dimension.setWidth(2),
-            marginBottom: Dimension.setHeight(1),
-          }}>
-          Đăng nhập
-        </Text>
-        <View
-          style={{
-            marginBottom: Dimension.setHeight(2),
-            marginTop: Dimension.setHeight(1),
-          }}>
-          <View
+        </View>
+        <View style={styles.loginFormContainer}>
+          <Text
             style={{
-              borderBottomWidth: 1,
-              borderBottomColor: Colors.INACTIVE_GREY,
-              marginBottom: Dimension.setHeight(0.8),
-              width: '95%',
-              alignSelf: 'center',
+              fontFamily: Fonts.SF_SEMIBOLD,
+              fontSize: 25,
+              ...fontDefault,
+              marginLeft: Dimension.setWidth(2),
+              marginBottom: Dimension.setHeight(1),
             }}>
-            <View style={styles.inputContainer}>
-              <Image
-                source={Images.username}
-                style={{
-                  width: 25,
-                  height: 25,
-                  marginRight: Dimension.setWidth(2),
-                }}
-              />
-              <TextInput
-                placeholder="Enter your Email"
-                style={{
-                  fontFamily: Fonts.SF_REGULAR,
-                  width: '100%',
-                  height: Dimension.setHeight(6),
-                }}
-                onChangeText={text => setEmail(text)}
-                value={email}
-              />
-            </View>
-          </View>
+            Đăng nhập
+          </Text>
           <View
             style={{
-              borderBottomWidth: 1,
-              borderBottomColor: Colors.INACTIVE_GREY,
-              width: '95%',
-              alignSelf: 'center',
+              marginBottom: Dimension.setHeight(2),
+              marginTop: Dimension.setHeight(1),
             }}>
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginHorizontal: Dimension.setWidth(2),
+                borderBottomWidth: 1,
+                borderBottomColor: Colors.INACTIVE_GREY,
+                marginBottom: Dimension.setHeight(0.8),
+                width: '95%',
+                alignSelf: 'center',
+              }}>
+              <View style={styles.inputContainer}>
+                <Image
+                  source={Images.username}
+                  style={{
+                    width: 25,
+                    height: 25,
+                    tintColor: Colors.DEFAULT_GREEN,
+                    marginRight: Dimension.setWidth(2),
+                  }}
+                />
+                <TextInput
+                  placeholder="Enter your Email"
+                  style={{
+                    fontFamily: Fonts.SF_REGULAR,
+                    width: '100%',
+                    height: Dimension.setHeight(6),
+                  }}
+                  onChangeText={text => setEmail(text)}
+                  value={email}
+                />
+              </View>
+            </View>
+            <View
+              style={{
+                borderBottomWidth: 1,
+                borderBottomColor: Colors.INACTIVE_GREY,
+                width: '95%',
+                alignSelf: 'center',
               }}>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginHorizontal: Dimension.setWidth(2),
                 }}>
-                <Image
-                  source={Images.lock}
+                <View
                   style={{
-                    width: 25,
-                    height: 25,
-                    marginRight: Dimension.setWidth(2),
-                  }}
-                />
-                <TextInput
-                  secureTextEntry={checkShowHide}
-                  placeholder="Enter your Password"
-                  style={{
-                    fontFamily: Fonts.SF_REGULAR,
-                    width: '85%',
-                    height: Dimension.setHeight(6),
-                  }}
-                  onChangeText={text => setPassword(text)}
-                  value={password}
-                />
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={Images.lock}
+                    style={{
+                      width: 25,
+                      height: 25,
+                      tintColor: Colors.DEFAULT_GREEN,
+                      marginRight: Dimension.setWidth(2),
+                    }}
+                  />
+                  <TextInput
+                    secureTextEntry={checkShowHide}
+                    placeholder="Enter your Password"
+                    style={{
+                      fontFamily: Fonts.SF_REGULAR,
+                      width: '85%',
+                      height: Dimension.setHeight(6),
+                    }}
+                    onChangeText={text => setPassword(text)}
+                    value={password}
+                  />
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCheckShowHide(!checkShowHide);
+                  }}>
+                  <Image
+                    source={checkShowHide === true ? Images.noEye : Images.eye}
+                    style={{ width: 22, height: 22, tintColor: Colors.DEFAULT_GREEN }}
+                  />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  setCheckShowHide(!checkShowHide);
-                }}>
-                <Image
-                  source={checkShowHide === true ? Images.eye : Images.noEye}
-                  style={{width: 22, height: 22}}
-                />
-              </TouchableOpacity>
             </View>
           </View>
-        </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Switch
-            size={'sm'}
-            colorScheme="emerald"
-            isChecked={save}
-            onChange={val => setSave(val.nativeEvent.value)}
-          />
-          <Text style={{fontFamily: Fonts.SF_MEDIUM}}>Lưu thông tin</Text>
-        </View>
-        <TouchableOpacity
-          onPress={handleLogin}
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: Dimension.setHeight(2),
-            borderColor: Colors.INACTIVE_GREY,
-            backgroundColor: '#22a87e',
-            borderRadius: 10,
-            paddingVertical: Dimension.setHeight(1.6),
-            elevation: 5,
-            ...shadowIOS,
-          }}>
-          <Text
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Switch
+              size={'sm'}
+              colorScheme="emerald"
+              isChecked={save}
+              onChange={val => setSave(val.nativeEvent.value)}
+            />
+            <Text style={{ fontFamily: Fonts.SF_MEDIUM }}>Lưu thông tin</Text>
+          </View>
+          <TouchableOpacity
+            onPress={handleLogin}
             style={{
-              fontSize: 18,
-              fontFamily: Fonts.SF_BOLD,
-              color: '#fff',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: Dimension.setHeight(2),
+              borderColor: Colors.INACTIVE_GREY,
+              backgroundColor: '#22a87e',
+              borderRadius: 10,
+              paddingVertical: Dimension.setHeight(1.6),
+              elevation: 5,
+              ...shadowIOS,
             }}>
-            Truy cập
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAwareScrollView>
+            <Text
+              style={{
+                fontSize: 18,
+                fontFamily: Fonts.SF_BOLD,
+                color: '#fff',
+              }}>
+              Truy cập
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -208,7 +215,6 @@ const styles = StyleSheet.create({
   themeContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: Dimension.setHeight(4),
   },
 
   loginFormContainer: {
@@ -254,7 +260,7 @@ const styles = StyleSheet.create({
     ...shadowIOS,
     alignSelf: 'flex-start',
     marginLeft: 15,
-    marginTop: Dimension.setHeight(2),
+    marginVertical: Dimension.setHeight(2),
   },
 });
 

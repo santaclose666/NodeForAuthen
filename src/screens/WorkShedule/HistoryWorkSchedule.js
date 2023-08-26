@@ -41,6 +41,7 @@ import {defaultIFEE, defaultXMG, mainURL} from '../../contants/Variable';
 import {ApproveCancelModal} from '../../components/Modal';
 import {ToastWarning} from '../../components/Toast';
 import StaggerUI from '../../components/StaggerUI';
+import LinearGradient from 'react-native-linear-gradient';
 
 const approveArr = [
   {
@@ -362,6 +363,11 @@ const HistoryWorkShedule = ({navigation}) => {
   });
 
   return (
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{ flex: 1 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}>
     <SafeAreaView style={styles.container}>
       <Header
         title="Lịch sử công tác"
@@ -370,8 +376,6 @@ const HistoryWorkShedule = ({navigation}) => {
       />
       <View
         style={{
-          borderBottomWidth: 0.6,
-          borderBlockColor: Colors.INACTIVE_GREY,
           alignItems: 'center',
           justifyContent: 'space-around',
           width: '100%',
@@ -390,8 +394,8 @@ const HistoryWorkShedule = ({navigation}) => {
                 paddingBottom: Dimension.setHeight(1.5),
                 paddingHorizontal: Dimension.setWidth(3),
                 height: '100%',
-                borderBottomWidth: indexPicker === index ? 1.6 : null,
-                borderBlockColor: indexPicker === index ? item.color : null,
+                borderBottomWidth: indexPicker === index ? 2 : 0,
+                borderBottomColor: indexPicker === index ? Colors.DEFAULT_GREEN : '#fff',
               }}>
               <Image
                 source={item.icon}
@@ -610,13 +614,14 @@ const HistoryWorkShedule = ({navigation}) => {
         </View>
       </BottomSheetModalProvider>
     </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    padding: 3
   },
 
   containerEachLine: {

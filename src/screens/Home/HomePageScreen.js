@@ -177,7 +177,7 @@ const HomePageScreen = ({navigation}) => {
                 style={{
                   padding: 7,
                   borderRadius: 8,
-                  backgroundColor: '#7bbf8c',
+                  backgroundColor: Colors.DEFAULT_GREEN,
                   paddingVertical: Dimension.setHeight(1.1),
                 }}
                 onPress={() => {

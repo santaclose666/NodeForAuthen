@@ -9,8 +9,8 @@ const FilterStatusUI = ({handlePickOption, indexPicker}) => {
   return (
     <View
       style={{
-        borderBottomWidth: 0.6,
-        borderBlockColor: Colors.INACTIVE_GREY,
+        // borderBottomWidth: 0.6,
+        // borderBlockColor: Colors.INACTIVE_GREY,
         alignItems: 'center',
         justifyContent: 'space-around',
         width: '100%',
