@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import {View, StyleSheet, Dimensions, PixelRatio} from 'react-native';
 import MapView, {WMSTile} from 'react-native-maps';
 import {useRoute} from '@react-navigation/native';
 
@@ -13,7 +13,8 @@ const LONGITUDE_DELTA = ASPECT_RATIO * LATITUDE_DELTA;
 const MapScreen = navigation => {
   const route = useRoute();
   const data = route.params;
-  const [linkWMS, setLinkWMS] = useState(data.linkWMS);
+  console.log(data.WMSLink)
+  const [linkWMS, setLinkWMS] = useState(null);
   const [mapType, setMapType] = useState('satellite');
   const [initialRegion, setInitialRegion] = useState({
     latitude: 21.058052476351282,
@@ -33,7 +34,7 @@ const MapScreen = navigation => {
 
   useEffect(() => {
     getInitRegion();
-    setLinkWMS(data.linkWMS);
+    setLinkWMS(data.WMSLink[0]);
   }, []);
 
   const getInitRegion = () => {
@@ -54,9 +55,7 @@ const MapScreen = navigation => {
     let maxY = region.latitude + region.latitudeDelta / 2; // northLat - max lat
     let linkAPIGetInfoFull = `${
       data.linkRootQueryInfo
-    }&bbox=${minX},${minY},${maxX},${maxY}&width=${Math.round(
-      mapViewWidth,
-    )}&height=${Math.round(mapViewHeight)}&x=${x}&y=${y}`;
+    }&bbox=${minX},${minY},${maxX},${maxY}&width=${Math.round(mapViewWidth)}&height=${Math.round(mapViewHeight)}&x=${Math.round(x)}&y=${Math.round(y)}`;
     console.log(linkAPIGetInfoFull);
     return linkAPIGetInfoFull;
   };
@@ -65,7 +64,7 @@ const MapScreen = navigation => {
     try {
       const ApiCall = await fetch(linkAPIGetInfoFull);
       const regionFeatureInfo = await ApiCall.json();
-      console.log(regionFeatureInfo);
+      console.log(regionFeatureInfo.features[0].properties);
     } catch (err) {
       console.log(err);
     }
@@ -73,7 +72,11 @@ const MapScreen = navigation => {
 
   const handleMapPress = event => {
     const {coordinate} = event.nativeEvent;
-    console.log(coordinate);
+    console.log(coordinate)
+    if (Platform.OS === "android") {
+      coordinate.latitude = coordinate.latitude / PixelRatio.get();
+      coordinate.longitude = coordinate.longitude / PixelRatio.get();
+    }
     _getWMSFeatureInfo(
       _getWMSInfoAPILink(coordinate.latitude, coordinate.longitude),
     );
@@ -84,6 +87,7 @@ const MapScreen = navigation => {
     setMapViewWidth(width);
     setMapViewHeight(height);
   };
+
   return (
     <View style={styles.container}>
       <MapView
