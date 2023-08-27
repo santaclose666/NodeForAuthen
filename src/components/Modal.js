@@ -61,14 +61,25 @@ export const ApproveCancelModal = ({
             width: '100%',
             height: Dimension.setHeight(4.5),
           }}>
-          <Text
-            style={{
-              fontFamily: Fonts.SF_BOLD,
-              fontSize: 20,
-              color: checkInput ? '#57b85d' : '#f25157',
-            }}>
-            {checkInput ? 'Phê duyệt' : 'Từ chối'}
-          </Text>
+          {screenName === 'finishRequestWork' ? (
+            <Text
+              style={{
+                fontFamily: Fonts.SF_BOLD,
+                fontSize: 20,
+                color: checkInput ? '#57b85d' : '#f25157',
+              }}>
+              {checkInput ? 'Phê duyệt kết thúc' : 'Từ chối kết thúc'}
+            </Text>
+          ) : (
+            <Text
+              style={{
+                fontFamily: Fonts.SF_BOLD,
+                fontSize: 20,
+                color: checkInput ? '#57b85d' : '#f25157',
+              }}>
+              {checkInput ? 'Phê duyệt' : 'Từ chối'}
+            </Text>
+          )}
         </View>
         {screenName === 'registerOnleave' && (
           <View
@@ -84,7 +95,6 @@ export const ApproveCancelModal = ({
             />
             <Text
               style={{
-                marginLeft: Dimension.setWidth(3),
                 fontSize: 18,
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
@@ -107,7 +117,6 @@ export const ApproveCancelModal = ({
             />
             <Text
               style={{
-                marginLeft: Dimension.setWidth(3),
                 fontSize: 18,
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
@@ -134,7 +143,6 @@ export const ApproveCancelModal = ({
             />
             <Text
               style={{
-                marginLeft: Dimension.setWidth(3),
                 fontSize: 18,
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
@@ -143,7 +151,8 @@ export const ApproveCancelModal = ({
           </View>
         )}
 
-        {screenName === 'registerWorkSchedule' && (
+        {(screenName === 'registerWorkSchedule' ||
+          screenName === 'finishRequestWork') && (
           <View
             style={{
               alignItems: 'center',
@@ -158,7 +167,6 @@ export const ApproveCancelModal = ({
             />
             <Text
               style={{
-                marginLeft: Dimension.setWidth(3),
                 fontSize: 18,
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>

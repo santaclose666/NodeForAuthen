@@ -98,6 +98,16 @@ export const compareDate = (date1, date2) => {
   }
 };
 
+export const compareOriginDate = (date1, date2) => {
+  const beforeDate = moment(date1).startOf('day');
+  const afterDate = moment(date2).startOf('day');
+  if (beforeDate <= afterDate) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 export const formatTimeToPost = time => {
   const parseTime = moment(time, 'HH:mm a');
   const formatTime = parseTime.format('HH:mm:ss');

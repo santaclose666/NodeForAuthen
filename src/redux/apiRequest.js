@@ -324,6 +324,44 @@ export const warningWorkSchedule = async data => {
   }
 };
 
+export const requestFinishWorkSchedule = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/yc_ketthuc/${data.id_lichcongtac}?giove=${data.giove}&ngayve=${data.ngayve}`,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const approveFinishRequest = async data => {
+  try {
+    console.log(data);
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/pd_ketthuc/${data.id_lichcongtac}`,
+      {
+        nhanxet: data.nhanxet,
+      },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelFinishRequest = async data => {
+  try {
+    console.log(data);
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/tc_ketthuc/${data.id_lichcongtac}`,
+      {
+        lydo: data.lydo,
+      },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /////////////////////  VEHIOCLE SCHEDULE DATA  ////////////////////
 
 export const getVehicleData = async (dispatch, id) => {

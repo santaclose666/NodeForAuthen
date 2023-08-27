@@ -71,6 +71,7 @@ const Images = {
   minidate: require('../assets/images/minidate.png'),
   datetime: require('../assets/images/datetime.png'),
   create: require('../assets/images/create.png'),
+  done: require('../assets/images/done.png'),
   leaveDate: require('../assets/images/leaveDate.png'),
   cancel: require('../assets/images/cancel.png'),
   pending: require('../assets/images/pending.png'),
@@ -112,6 +113,8 @@ const Images = {
   cancelled: require('../assets/images/cancelled.png'),
   addFile: require('../assets/images/addfile.png'),
   personal: require('../assets/images/personal.png'),
+  flagnocolor: require('../assets/images/flagnocolor.png'),
+  flagcolor: require('../assets/images/flagcolor.png'),
 };
 
 export default Images;

@@ -28,19 +28,32 @@ import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
 import {shadowIOS} from '../../contants/propsIOS';
 import {
+  approveFinishRequest,
   approveWorkSchedule,
+  cancelFinishRequest,
   cancelWorkSchedule,
   getAllWorkSchedule,
+  requestFinishWorkSchedule,
   totalWorkSchedule,
 } from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import {changeFormatDate} from '../../utils/serviceFunction';
+import {
+  changeFormatDate,
+  formatDate,
+  formatTime,
+  compareOriginDate,
+  formatDateToPost,
+  formatTimeToPost,
+} from '../../utils/serviceFunction';
 import StatusUI from '../../components/StatusUI';
 import {defaultIFEE, defaultXMG, mainURL} from '../../contants/Variable';
 import {ApproveCancelModal} from '../../components/Modal';
 import {ToastWarning} from '../../components/Toast';
 import StaggerUI from '../../components/StaggerUI';
+import Modal from 'react-native-modal';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {ToastAlert} from '../../components/Toast';
 
 const approveArr = [
   {
@@ -78,11 +91,17 @@ const HistoryWorkShedule = ({navigation}) => {
     state => state.workSchedule?.worksSchedule?.data,
   );
   const [indexPicker, setIndexPicker] = useState(0);
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(formatTime(new Date()));
+  const [dateTime, setDateTime] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [toggleModal, setToggleModal] = useState(false);
+  const [toggleConfirmModal, setToggleConfirmModal] = useState(false);
+  const [toggleHandleFinishModal, setToggleHandleFinishModal] = useState(false);
   const [checkInput, setCheckInput] = useState(null);
   const [commentInput, setCommentInput] = useState('');
   const [reasonCancel, setReasonCancel] = useState('');
+  const [toggleFinishModal, setToggleFinishModal] = useState(false);
+  const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
@@ -112,11 +131,37 @@ const HistoryWorkShedule = ({navigation}) => {
     }
   }, []);
 
+  const handlePickDate = date => {
+    if (dateTime == 'time') {
+      setTime(formatTime(date));
+    } else {
+      const message = 'Ngày về không hợp lệ';
+      compareOriginDate(new Date(), date) ? setDate(date) : ToastAlert(message);
+    }
+    setToggleDatePicker(false);
+  };
+
+  const handleRequestFinish = () => {
+    const data = {
+      id_lichcongtac: selectedItem.id,
+      ngayve: formatDateToPost(date),
+      giove: formatTimeToPost(time),
+    };
+
+    requestFinishWorkSchedule(data);
+    setToggleFinishModal(false);
+    setTimeout(() => {
+      fetchWorkSchedule();
+    });
+  };
+
   const handleApprove = useCallback(
     item => {
       setSelectedItem(item);
       setCheckInput(true);
-      setToggleModal(true);
+      item.kt_congtac == 1
+        ? setToggleHandleFinishModal(true)
+        : setToggleConfirmModal(true);
     },
     [selectedItem],
   );
@@ -125,10 +170,42 @@ const HistoryWorkShedule = ({navigation}) => {
     item => {
       setSelectedItem(item);
       setCheckInput(false);
-      setToggleModal(true);
+      item.kt_congtac == 1
+        ? setToggleHandleFinishModal(true)
+        : setToggleConfirmModal(true);
     },
     [selectedItem],
   );
+
+  const handleApproveCancelFinish = () => {
+    if (checkInput && commentInput !== '' && selectedItem !== null) {
+      const data = {
+        id_lichcongtac: selectedItem.id,
+        nhanxet: commentInput,
+      };
+
+      approveFinishRequest(data);
+      setCommentInput('');
+      setToggleHandleFinishModal(false);
+      setTimeout(() => {
+        fetchWorkSchedule();
+      });
+    } else if (!checkInput && reasonCancel !== '' && selectedItem !== null) {
+      const data = {
+        id_lichcongtac: selectedItem.id,
+        lydo: reasonCancel,
+      };
+
+      cancelFinishRequest(data);
+      setReasonCancel('');
+      setToggleHandleFinishModal(false);
+      setTimeout(() => {
+        fetchWorkSchedule();
+      });
+    } else {
+      ToastWarning('Nhập đầy đủ thông tin!');
+    }
+  };
 
   const handleSendNonAdjust = () => {
     if (checkInput && commentInput !== '' && selectedItem !== null) {
@@ -139,7 +216,7 @@ const HistoryWorkShedule = ({navigation}) => {
 
       approveWorkSchedule(data);
       setCommentInput(null);
-      setToggleModal(false);
+      setToggleConfirmModal(false);
       setTimeout(() => {
         fetchWorkSchedule();
       });
@@ -151,13 +228,18 @@ const HistoryWorkShedule = ({navigation}) => {
 
       cancelWorkSchedule(data);
       setReasonCancel(null);
-      setToggleModal(false);
+      setToggleConfirmModal(false);
       setTimeout(() => {
         fetchWorkSchedule();
       });
     } else {
       ToastWarning('Nhập đầy đủ thông tin!');
     }
+  };
+
+  const handleToggleFinish = item => {
+    setSelectedItem(item);
+    setToggleFinishModal(true);
   };
 
   const handlePickOption = useCallback(
@@ -173,9 +255,15 @@ const HistoryWorkShedule = ({navigation}) => {
         case 0:
           return workSheduleData;
         case 1:
-          return workSheduleData?.filter(item => item.status === 0);
+          return workSheduleData?.filter(
+            item =>
+              item.status === 0 ||
+              (item.trangthai === 0 && item.kt_congtac === 1),
+          );
         case 2:
-          return workSheduleData?.filter(item => item.status === 1);
+          return workSheduleData?.filter(
+            item => item.status === 1 && item.kt_congtac !== 1,
+          );
         case 3:
           return workSheduleData?.filter(item => item.status === 2);
       }
@@ -218,6 +306,31 @@ const HistoryWorkShedule = ({navigation}) => {
         ? Images.approve
         : Images.cancel;
 
+    const finishStatus =
+      item.trangthai == 0 && item.kt_congtac == 1
+        ? 'Chờ duyệt k/t'
+        : item.trangthai == 1 && item.kt_congtac == 2
+        ? 'Đã duyệt k/t'
+        : 'Từ chối k/t';
+    const finishIcon =
+      item.trangthai == 0 && item.kt_congtac == 1
+        ? Images.pending
+        : item.trangthai == 1 && item.kt_congtac == 2
+        ? Images.approve
+        : Images.cancel;
+    const finishColorStatus =
+      item.trangthai == 0 && item.kt_congtac == 1
+        ? '#f9a86a'
+        : item.trangthai == 1 && item.kt_congtac == 2
+        ? '#57b85d'
+        : '#f25157';
+    const finishBgColorStatus =
+      item.trangthai == 0 && item.kt_congtac == 1
+        ? '#fef4eb'
+        : item.trangthai == 1 && item.kt_congtac == 2
+        ? '#def8ed'
+        : '#f9dfe0';
+
     const filterUser = IFEEstaffs.filter(staff => staff.id === item.id_user)[0];
     const subject =
       filterUser?.tenphong === undefined
@@ -232,20 +345,27 @@ const HistoryWorkShedule = ({navigation}) => {
 
     const checkRole = () => {
       return (
-        (item.status === 0 &&
+        ((item.status === 0 || item.kt_congtac === 1) &&
           item.id_user !== user?.id &&
           user?.vitri_ifee === 3 &&
           filterUser.vitri_ifee > 3) ||
-        (user?.vitri_ifee == 1 && item.status === 0)
+        (user?.vitri_ifee == 1 && (item.status === 0 || item.kt_congtac === 1))
       );
     };
 
     const checkStatus = () => {
       return (
         item.status !== 0 ||
+        item.kt_congtac !== 1 ||
         user?.vitri_ifee > 3 ||
         item.id_user === user?.id ||
         (user?.id === 1 && item.status !== 0)
+      );
+    };
+
+    const checkFinished = () => {
+      return (
+        item.status == 1 && item.id_user == user?.id && item.kt_congtac !== 1
       );
     };
 
@@ -270,9 +390,6 @@ const HistoryWorkShedule = ({navigation}) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '66%',
-            marginBottom: Dimension.setHeight(0.5),
           }}>
           <Text
             numberOfLines={2}
@@ -293,10 +410,14 @@ const HistoryWorkShedule = ({navigation}) => {
           }}>
           {checkStatus() && (
             <StatusUI
-              status={status}
-              colorStatus={colorStatus}
-              bgColorStatus={bgColorStatus}
-              icon={icon}
+              status={item.kt_congtac == 0 ? status : finishStatus}
+              colorStatus={
+                item.kt_congtac == 0 ? colorStatus : finishColorStatus
+              }
+              bgColorStatus={
+                item.kt_congtac == 0 ? bgColorStatus : finishBgColorStatus
+              }
+              icon={item.kt_congtac == 0 ? icon : finishIcon}
             />
           )}
           {checkRole() && (
@@ -328,16 +449,52 @@ const HistoryWorkShedule = ({navigation}) => {
               </TouchableOpacity>
             </View>
           )}
+          {checkFinished() && (
+            <>
+              {item.trangthai == 1 ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    handleToggleFinish(item);
+                  }}
+                  style={{
+                    flexDirection: 'row',
+                    alignSelf: 'flex-end',
+                    marginTop: Dimension.setHeight(0.6),
+                  }}>
+                  <Image
+                    source={Images.flagnocolor}
+                    style={styles.approvedIcon}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    handleToggleFinish(item);
+                  }}
+                  style={{
+                    flexDirection: 'row',
+                    alignSelf: 'flex-end',
+                    marginTop: Dimension.setHeight(0.6),
+                  }}>
+                  <Image
+                    source={Images.flagnocolor}
+                    style={styles.approvedIcon}
+                  />
+                </TouchableOpacity>
+              )}
+            </>
+          )}
         </View>
+
         <Text
           style={{
             fontSize: 16,
             fontFamily: Fonts.SF_MEDIUM,
             color: '#747476',
-            marginBottom: Dimension.setHeight(0.8),
           }}>
           {item.diadiem}
         </Text>
+
         <View style={styles.containerEachLine}>
           <Image
             src={mainURL + avatar}
@@ -585,8 +742,8 @@ const HistoryWorkShedule = ({navigation}) => {
         )}
         <ApproveCancelModal
           screenName={'registerWorkSchedule'}
-          toggleApproveModal={toggleModal}
-          setToggleApproveModal={setToggleModal}
+          toggleApproveModal={toggleConfirmModal}
+          setToggleApproveModal={setToggleConfirmModal}
           checkInput={checkInput}
           selectedItem={selectedItem}
           setSelectedItem={setSelectedItem}
@@ -596,6 +753,153 @@ const HistoryWorkShedule = ({navigation}) => {
           setReasonCancel={setReasonCancel}
           eventFunc={handleSendNonAdjust}
         />
+
+        <ApproveCancelModal
+          screenName={'finishRequestWork'}
+          toggleApproveModal={toggleHandleFinishModal}
+          setToggleApproveModal={setToggleHandleFinishModal}
+          checkInput={checkInput}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+          commnetInput={commentInput}
+          setCommentInput={setCommentInput}
+          reasonCancel={reasonCancel}
+          setReasonCancel={setReasonCancel}
+          eventFunc={handleApproveCancelFinish}
+        />
+
+        <Modal
+          isVisible={toggleFinishModal}
+          animationIn="fadeInUp"
+          animationInTiming={1}
+          animationOut="fadeOutDown"
+          animationOutTiming={1}
+          avoidKeyboard={true}>
+          <View
+            style={{
+              flex: 1,
+              position: 'absolute',
+              alignSelf: 'center',
+              backgroundColor: '#fef4eb',
+              width: Dimension.setWidth(85),
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 14,
+              paddingHorizontal: Dimension.setWidth(3),
+              paddingBottom: Dimension.setHeight(1),
+            }}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: Dimension.setHeight(1),
+                borderBottomWidth: 0.8,
+                borderBlockColor: Colors.INACTIVE_GREY,
+                width: '100%',
+                height: Dimension.setHeight(4.5),
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: 20,
+                  color: '#f9a86a',
+                }}>
+                Yêu cầu kết thúc
+              </Text>
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: Dimension.setHeight(1.5),
+                paddingHorizontal: Dimension.setWidth(3),
+              }}>
+              <Image
+                source={Images.workSchedule}
+                style={{height: 55, width: 55}}
+              />
+              <Text
+                style={{
+                  marginLeft: Dimension.setWidth(3),
+                  fontSize: 18,
+                  fontFamily: Fonts.SF_SEMIBOLD,
+                }}>
+                {selectedItem?.thuocchuongtrinh}
+              </Text>
+            </View>
+            <View style={styles.lineContainerModal}>
+              <View style={styles.itemContainerModal}>
+                <Text style={styles.titleModal}>Ngày về</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setDateTime('date');
+                    setToggleDatePicker(true);
+                  }}
+                  style={styles.dateModalContainer}>
+                  <Text style={styles.contentModal}>{formatDate(date)}</Text>
+                  <View
+                    style={[
+                      styles.imgModalContainer,
+                      {backgroundColor: '#7cc985'},
+                    ]}>
+                    <Image
+                      source={Images.calendarBlack}
+                      style={styles.imgDate}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.itemContainerModal}>
+                <Text style={styles.titleModal}>Giờ về</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setDateTime('time');
+                    setToggleDatePicker(true);
+                  }}
+                  style={styles.dateModalContainer}>
+                  <Text style={styles.contentModal}>{time}</Text>
+                  <View
+                    style={[
+                      styles.imgModalContainer,
+                      {backgroundColor: '#e3c242'},
+                    ]}>
+                    <Image source={Images.time} style={styles.imgDate} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                left: '5%',
+                top: '5%',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+              onPress={() => setToggleFinishModal(false)}>
+              <Image source={Images.minusclose} style={styles.btnModal} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleRequestFinish}
+              style={{
+                position: 'absolute',
+                right: '5%',
+                top: '5%',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image source={Images.confirm} style={styles.btnModal} />
+            </TouchableOpacity>
+          </View>
+          <DateTimePickerModal
+            isVisible={toggleDatePicker}
+            mode={dateTime}
+            onConfirm={handlePickDate}
+            onCancel={() => {
+              setToggleDatePicker(false);
+            }}
+          />
+        </Modal>
 
         <View
           style={{
@@ -668,6 +972,59 @@ const styles = StyleSheet.create({
   approvedIcon: {
     width: 30,
     height: 30,
+  },
+
+  lineContainerModal: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+
+  itemContainerModal: {
+    paddingVertical: Dimension.setHeight(1),
+    paddingHorizontal: Dimension.setWidth(2),
+  },
+
+  titleModal: {
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: 13,
+  },
+
+  dateModalContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 12,
+    backgroundColor: '#ffffff',
+    paddingHorizontal: Dimension.setWidth(2.2),
+    paddingVertical: Dimension.setHeight(0.8),
+    elevation: 5,
+    ...shadowIOS,
+    width: Dimension.setWidth(35),
+  },
+
+  contentModal: {
+    fontFamily: Fonts.SF_SEMIBOLD,
+    fontSize: 15,
+  },
+
+  imgModalContainer: {
+    backgroundColor: '#ed735f',
+    padding: Dimension.setWidth(1.1),
+    borderRadius: 8,
+  },
+
+  imgDate: {
+    height: 17,
+    width: 17,
+    tintColor: '#ffffff',
+  },
+
+  btnModal: {
+    width: 28,
+    height: 28,
   },
 });
 
