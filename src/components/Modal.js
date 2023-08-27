@@ -13,7 +13,7 @@ import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
 import {useSelector} from 'react-redux';
-import {mainURL} from '../contants/Variable';
+import {defaultIFEE, mainURL} from '../contants/Variable';
 
 export const ApproveCancelModal = ({
   screenName,
@@ -330,8 +330,6 @@ export const WarningModal = ({
   setReasonInput,
   handleWarning,
 }) => {
-  console.log(item);
-
   return (
     <Modal
       isVisible={toggleModal}
@@ -372,6 +370,34 @@ export const WarningModal = ({
           </Text>
         </View>
 
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingVertical: Dimension.setHeight(1.5),
+            paddingHorizontal: Dimension.setWidth(3),
+            width: '100%',
+          }}>
+          <Image
+            src={mainURL + item?.path}
+            style={{height: 55, width: 55, borderRadius: 50}}
+          />
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: Fonts.SF_SEMIBOLD,
+            }}>
+            {item?.name}
+          </Text>
+          <Text
+            style={{
+              fontSize: 18,
+              fontFamily: Fonts.SF_SEMIBOLD,
+            }}>
+            {item?.content}
+          </Text>
+        </View>
+
         <View style={styles.containerEachLine}>
           <Image source={Images.comment} style={styles.iconic} />
           <TextInput
@@ -386,11 +412,13 @@ export const WarningModal = ({
               height: Dimension.setHeight(5),
               maxHeight: Dimension.setHeight(9),
             }}
-            onChangeText={e => reasonInput(e)}
+            onChangeText={e => setReasonInput(e)}
             value={reasonInput}
           />
           <TouchableOpacity
-            onPress={handleWarning}
+            onPress={() => {
+              handleWarning(item.id, reasonInput);
+            }}
             style={{
               backgroundColor: '#d9eafa',
               padding: 6,

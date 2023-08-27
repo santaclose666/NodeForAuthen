@@ -17,6 +17,7 @@ import {
   approveWorkSchedule,
   cancelWorkSchedule,
   getAllWorkSchedule,
+  warningWorkSchedule,
 } from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -47,8 +48,14 @@ const AllWorkScheduleScreen = ({navigation}) => {
     setToggleWarningModal(true);
   }, []);
 
-  const handleWarning = useCallback(() => {
-    console.log('warning');
+  const handleWarning = useCallback((id, reason) => {
+    const data = {
+      id_lichchitiet: id,
+      lydo: reason,
+    };
+
+    warningWorkSchedule(data);
+    setToggleWarningModal(false);
   }, []);
 
   const RenderTaskOfDay = useCallback((day, item) => {
@@ -64,7 +71,7 @@ const AllWorkScheduleScreen = ({navigation}) => {
 
     const checkRole = () => {
       return (
-        item.warning !== 1 &&
+        item.warning == 0 &&
         (user?.vitri_ifee == 1 ||
           (user?.vitri_ifee == 3 &&
             filterUser?.vitri_ifee > 3 &&
@@ -107,7 +114,11 @@ const AllWorkScheduleScreen = ({navigation}) => {
         {checkRole() && (
           <TouchableOpacity
             onPress={() => {
-              handlePickItem(item);
+              const data = {
+                ...item,
+                path: filterUser?.path,
+              };
+              handlePickItem(data);
             }}
             style={{
               position: 'absolute',
@@ -157,13 +168,14 @@ styles = StyleSheet.create({
   containerEachItem: {
     paddingHorizontal: Dimension.setWidth(4),
     paddingVertical: Dimension.setHeight(2),
-    marginBottom: Dimension.setHeight(1),
-    marginTop: Dimension.setHeight(1.3),
+    marginVertical: Dimension.setHeight(1.3),
+    marginHorizontal: Dimension.setWidth(5),
     borderRadius: 12,
     elevation: 5,
     ...shadowIOS,
-    width: Dimension.setWidth(100),
+    width: Dimension.setWidth(90),
     borderTopWidth: 7,
+    alignSelf: 'center',
   },
 
   containerEachLine: {
