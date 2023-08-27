@@ -259,6 +259,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
       const data = {
         WMSLink: joined,
         linkRootQueryInfo: linkRootQueryInfo,
+        centerPoint: centerPoint,
       };
       navigation.navigate('MapWMS', data);
     } else {
@@ -319,6 +320,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
                 setListProvinces([]);
                 setListDistricts([]);
                 setListCommunes([]);
+                setCenterPoint(null);
                 getListYear(item.value);
               }}
             />
@@ -358,6 +360,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
                 setListProvinces([]);
                 setListDistricts([]);
                 setListCommunes([]);
+                setCenterPoint(null);
                 getListProvince(item.value);
               }}
             />
@@ -396,6 +399,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
                 setSelectProvinceCode(item.value);
                 setListDistricts([]);
                 setListCommunes([]);
+                setCenterPoint({x: item.provinX, y: item.provinY});
                 getListDistrict(item.value);
               }}
             />
@@ -433,6 +437,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
                 setSelectDistrict(item.value);
                 setSelectDistrictCode(item.value);
                 setListCommunes([]);
+                setCenterPoint({x: item.districtX, y: item.districtY});
                 getListCommune(item.value);
               }}
             />
@@ -470,6 +475,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
               onChange={item => {
                 setSelectCommune(item.value);
                 setSelectCommuneCode(item.value);
+                setCenterPoint({x: item.communeX, y: item.communeY});
               }}
             />
           </View>
