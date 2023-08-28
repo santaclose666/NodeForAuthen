@@ -7,24 +7,40 @@ import {
   ScrollView,
   StyleSheet,
   SafeAreaView,
+  useWindowDimensions,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import {shadowIOS} from '../../contants/propsIOS';
-import {fontDefault} from '../../contants/Variable';
+import {fontDefault, newsURL} from '../../contants/Variable';
+import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
+import RenderHtml from 'react-native-render-html';
+import WebView from 'react-native-webview';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
-  console.log(item);
+  const {width} = useWindowDimensions();
+
+  const source = {
+    html: `${item.content}`,
+  };
+
+  const renderers = {
+    iframe: IframeRenderer,
+  };
+
+  const customHTMLElementModels = {
+    iframe: iframeModel,
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainImgContainer}>
         <Image
           resizeMode="cover"
-          source={item.mainImg}
+          src={newsURL + item.avatar}
           style={{
             width: Dimension.setWidth(100),
             height: Dimension.setHeight(40),
@@ -54,37 +70,34 @@ const DetailNewsScreen = ({navigation, route}) => {
               textAlign: 'justify',
               ...fontDefault,
             }}>
-            {item.name}
+            {item.title}
           </Text>
           <Text
             style={{
               fontSize: 15,
               fontFamily: Fonts.SF_REGULAR,
               color: Colors.INACTIVE_GREY,
-              marginVertical: Dimension.setHeight(1),
             }}>
-            {item.date}
+            {item.date_created}
           </Text>
-          {item.subImg && (
-            <View>
-              <Image
-                resizeMode="cover"
-                source={item.subImg}
-                style={{
-                  width: '100%',
-                  height: Dimension.setHeight(25),
-                  borderRadius: 6,
-                }}
-              />
-            </View>
-          )}
         </View>
 
         <View style={styles.descriptionContainer}>
-          {item.header1 && <Text style={styles.header}>{item.header1}</Text>}
-          {item.content1 && <Text style={styles.content}>{item.content1}</Text>}
-          {item.header2 && <Text style={styles.header}>{item.header2}</Text>}
-          {item.content2 && <Text style={styles.content}>{item.content2}</Text>}
+          <RenderHtml
+            contentWidth={width}
+            renderers={renderers}
+            WebView={WebView}
+            source={source}
+            customHTMLElementModels={customHTMLElementModels}
+            renderersProps={{
+              iframe: {
+                scalesPageToFit: true,
+                webViewProps: {
+                  /* Any prop you want to pass to iframe WebViews */
+                },
+              },
+            }}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -143,12 +156,11 @@ const styles = StyleSheet.create({
   },
 
   descriptionContainer: {
-    marginHorizontal: Dimension.setWidth(6),
-    marginBottom: Dimension.setHeight(14),
+    marginBottom: Dimension.setHeight(4),
     flexWrap: 'wrap',
-    width: '90%',
     flexDirection: 'row',
     flex: 1,
+    paddingHorizontal: Dimension.setWidth(3),
   },
 
   header: {

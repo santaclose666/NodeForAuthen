@@ -43,6 +43,7 @@ import {
   getTotalWorkSuccess,
 } from './totalWorkScheduleSlice';
 import {saveSuccess} from './credentialSlice';
+import {getNewFailed, getNewStart, getNewSuccess} from './newSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -480,5 +481,18 @@ export const cancelPlaneTicket = async data => {
     );
   } catch (error) {
     console.log(error);
+  }
+};
+
+/////////////////////  NEWS DATA  ////////////////////
+
+export const getallNews = async dispatch => {
+  dispatch(getNewStart());
+  try {
+    const res = await axios.get(`https://ifee.edu.vn/api/tintuc/danhsach`);
+
+    dispatch(getNewSuccess(res.data));
+  } catch (error) {
+    dispatch(getNewFailed(error));
   }
 };

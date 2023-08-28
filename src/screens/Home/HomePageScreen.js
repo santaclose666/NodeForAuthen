@@ -20,14 +20,15 @@ import {PERMISSIONS, request} from 'react-native-permissions';
 import {
   getVietnameseDayOfWeek,
   getFormattedDate,
+  changeFormatDate,
 } from '../../utils/serviceFunction';
-import {getWeatherData, getAllStaffs} from '../../redux/apiRequest';
+import {getWeatherData, getAllStaffs, getallNews} from '../../redux/apiRequest';
 import {getToken, notificationListener} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import {shadowIOS} from '../../contants/propsIOS';
-import {mainURL} from '../../contants/Variable';
+import {mainURL, newsURL} from '../../contants/Variable';
 import {ToastAlert} from '../../components/Toast';
 
 const requestPermissions = async () => {
@@ -59,56 +60,18 @@ const HomePageScreen = ({navigation}) => {
   // );
   const dispatch = useDispatch();
   const [interval, setInTerVal] = useState(null);
-  const [newsArr, setNewArr] = useState([
-    {
-      topic: 'Chính sách',
-      mainImg: require('../../assets/images/mainTopic1.png'),
-      subImg: null,
-      location: 'Tây Nguyên',
-      date: '16/06/2011',
-      name: 'Ứng dụng công nghệ số trong thực hiện chi trả dịch vụ môi trường rừng',
-      header1: 'Số hóa dữ liệu chi trả DVMTR',
-      content1:
-        'Content: Việc duy trì bảo vệ khoảng 217.658 ha rừng cung ứng DVMTR trên địa bàn tỉnh Đắk Lắk với 24 chủ rừng là tổ chức, 13 UBND cấp xã/phường, 75  hộ gia đình, cá nhân và 54 cộng đồng dân cư thôn được Nhà nước giao đất, giao rừng là rất khó khăn. Theo kế hoạch chuyển đổi số của Sở Nông nghiệp và PTNT, việc theo dõi, quản lý diện tích rừng được chi trả tiền DVMTR cần được thực hiện khoa học, đảm bảo nhanh chóng, chính xác, phù hợp với xu thế về chuyển đổi số quốc gia đến năm 2025, định hướng đến năm 2030.',
-      header2: 'Hướng tới sử dụng công nghệ số trong trả tiền DVMTR',
-      content2:
-        'Năm 2019, Quỹ Bảo vệ và phát triển rừng tỉnh thực hiện chi trả tiền DVMTR qua tài khoản ngân hàng, giao dịch điện tử đối với các chủ rừng là tổ chức, UBND các xã, thị trấn và hộ gia đình, cộng đồng, nhóm hộ nhận khoán bảo vệ rừng. Việc chi trả tiền DVMTR qua tài khoản góp phần đơn giản hóa thủ tục, đảm bảo tính công khai, minh bạch, an toàn, giúp chủ rừng thuận lợi hơn khi nhận tiền, tiết kiệm được thời gian, chi phí đi lại.',
-    },
-    {
-      topic: 'Chỉ đạo điều hành',
-      mainImg: require('../../assets/images/mainTopic2.png'),
-      subImg: require('../../assets/images/subTopic2.png'),
-      location: 'Tây Ninh',
-      date: '16/06/2011',
-      name: 'Tổng cục Lâm nghiệp: Tổ chức Hội nghị Công tác bảo vệ rừng và phòng cháy, chữa cháy rừng toàn quốc năm 2022 và triển khai nhiệm vụ năm 2023',
-      header1: null,
-      content1: `Theo báo cáo 9 tháng đầu năm 2022, công tác quản lý bảo vệ rừng và phòng cháy chữa cháy rừng có nhiều chuyển biến tích cực, các chỉ tiêu số vụ vi phạm và diện tích rừng bị ảnh hưởng tiếp tục giảm mạnh so với cùng kỳ các năm trước, cụ thể: diện tích rừng bị tác động giảm 63% so với cùng kỳ năm 2021; phòng cháy, chữa cháy rừng, xảy ra 46 vụ, giảm 143 vụ (giảm 76%), diện tích rừng bị ảnh hưởng là 30 ha (giảm 98%) so với cùng kỳ năm 2021.
-      Hội nghị cũng đã đề ra kế hoạch thực hiện nhiệm vụ 03 tháng cuối năm 2022 và phương hướng nhiệm vụ năm 2023, tập trung vào các nhiệm vụ trọng tâm sau: Tập trung thực hiện đảm bảo hoàn thành các chỉ tiêu kế hoạch năm 2022; đẩy mạnh các hoạt động về công tác quản lý bảo vệ rừng và phòng cháy, chữa cháy rừng; Tiếp tục nghiêm túc thực hiện đóng cửa khai thác gỗ rừng tự nhiên; kiểm soát chặt chẽ chuyển mục đích sử dụng rừng sang mục đích khác.
-      Ngoài ra, các đại biểu đã bổ sung, góp ý, đề xuất nhiều giải pháp phát sinh từ thực tế đề nghị cấp có thẩm quyền giải quyết gỡ vướng cho các địa phương, gồm: Về các cơ chế chính sách trong lĩnh vực lâm nghiệp; về tình hình công chức kiểm lâm và lực lượng chuyên trách bảo vệ rừng bỏ việc, thôi việc tại các địa phương.
-      `,
-      header2: null,
-      content2: null,
-    },
-    {
-      topic: 'Khoa học công nghệ',
-      mainImg: require('../../assets/images/mainTopic3.png'),
-      subImg: require('../../assets/images/subTopic3.png'),
-      location: 'Tây Tạng',
-      date: '16/06/2011',
-      name: 'Ứng dụng SMART trong quản lý rừng và đa dạng sinh học tại Việt Nam',
-      header1: null,
-      content1:
-        'Xuất phát từ thực tế trên, từ năm 2016, Tổ chức Hợp tác Phát triển Đức GIZ phối hợp với Tổng cục Lâm nghiệp Việt Nam và các bên liên quan khác trong khuôn khổ dự án "Bảo tồn và sử dụng bền vững đa dạng sinh học rừng và các dịch vụ hệ sinh thái ở Việt Nam" (dự án BIO) đã tiến hành chuẩn hóa mô hình dữ liệu SMART và giới thiệu sổ tay hướng dẫn áp dụng SMART trong toàn bộ hệ thống vườn quốc gia và khu bảo tồn. Đến năm 2021, mô hình dữ liệu SMART chuẩn và bộ tài liệu hướng dẫn kỹ thuật đã sẵn sàng để triển khai trên toàn quốc.',
-      header2: null,
-      content2: null,
-    },
-  ]);
+  const newData = useSelector(state => state.news.newSlice?.data);
+  const newArr = [newData[0], newData[1], newData[2], newData[3], newData[4]];
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
     await requestPermissions();
     await getWeatherData(dispatch);
+  };
+
+  const fetchAllNews = async () => {
+    await getallNews(dispatch);
   };
 
   const fetchAllStaff = () => {
@@ -143,6 +106,7 @@ const HomePageScreen = ({navigation}) => {
       fetchImportantData();
     }
 
+    fetchAllNews();
     fetchAllStaff();
 
     // notificationHandle();
@@ -327,7 +291,7 @@ const HomePageScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <FlatList
-          data={newsArr}
+          data={newArr}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
@@ -340,7 +304,7 @@ const HomePageScreen = ({navigation}) => {
                 style={styles.newsContainer}>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Image
-                    source={item.mainImg}
+                    src={newsURL + item.avatar}
                     resizeMode="cover"
                     style={styles.newsImg}
                   />
@@ -351,9 +315,11 @@ const HomePageScreen = ({navigation}) => {
                     marginHorizontal: Dimension.setWidth(1),
                   }}>
                   <Text numberOfLines={2} style={styles.newsTitleText}>
-                    {item.name}
+                    {item.title}
                   </Text>
-                  <Text style={styles.newsLocationText}>{item.location}</Text>
+                  <Text style={styles.newsLocationText}>
+                    {changeFormatDate(item.date_created)}
+                  </Text>
                 </View>
               </TouchableOpacity>
             );

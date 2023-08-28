@@ -2,6 +2,8 @@ import Images from '../contants/Images';
 
 export const mainURL = 'https://forestry.ifee.edu.vn/';
 
+export const newsURL = 'https://ifee.edu.vn/assets/img/blog/';
+
 export const defaultIFEE = 'IFEE/ifee.png';
 
 export const defaultXMG = 'XMG/user/xmg.jpg';

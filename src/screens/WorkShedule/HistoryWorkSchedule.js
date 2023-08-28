@@ -45,6 +45,7 @@ import {
   compareOriginDate,
   formatDateToPost,
   formatTimeToPost,
+  compareDate,
 } from '../../utils/serviceFunction';
 import StatusUI from '../../components/StatusUI';
 import {defaultIFEE, defaultXMG, mainURL} from '../../contants/Variable';
@@ -136,7 +137,10 @@ const HistoryWorkShedule = ({navigation}) => {
       setTime(formatTime(date));
     } else {
       const message = 'Ngày về không hợp lệ';
-      compareOriginDate(new Date(), date) ? setDate(date) : ToastAlert(message);
+      console.log(selectedItem.denngay);
+      compareDate(date, changeFormatDate(selectedItem.denngay))
+        ? setDate(date)
+        : ToastAlert(message);
     }
     setToggleDatePicker(false);
   };
@@ -294,9 +298,9 @@ const HistoryWorkShedule = ({navigation}) => {
     const bgColorStatus =
       item.status === 0 ? '#fef4eb' : item.status === 1 ? '#def8ed' : '#f9dfe0';
     const status =
-      item.status === 0
+      item.status == 0
         ? 'Chờ phê duyệt'
-        : item.status === 1
+        : item.status == 1
         ? 'Đã phê duyệt'
         : 'Đã hủy';
     const icon =
@@ -307,29 +311,37 @@ const HistoryWorkShedule = ({navigation}) => {
         : Images.cancel;
 
     const finishStatus =
-      item.trangthai == 0 && item.kt_congtac == 1
+      item.kt_congtac == 1 && item.nhanxet_duyetve == null
         ? 'Chờ duyệt k/t'
-        : item.trangthai == 1 && item.kt_congtac == 2
+        : item.kt_congtac == 2 && item.nhanxet_duyetve !== null
         ? 'Đã duyệt k/t'
-        : 'Từ chối k/t';
+        : item.kt_congtac == 0 && item.nhanxet_duyetve !== null
+        ? 'Từ chối k/t'
+        : status;
     const finishIcon =
       item.trangthai == 0 && item.kt_congtac == 1
         ? Images.pending
         : item.trangthai == 1 && item.kt_congtac == 2
         ? Images.approve
-        : Images.cancel;
+        : item.kt_congtac == 0 && item.nhanxet_duyetve !== null
+        ? Images.cancel
+        : icon;
     const finishColorStatus =
       item.trangthai == 0 && item.kt_congtac == 1
         ? '#f9a86a'
         : item.trangthai == 1 && item.kt_congtac == 2
         ? '#57b85d'
-        : '#f25157';
+        : item.kt_congtac == 0 && item.nhanxet_duyetve !== null
+        ? '#f25157'
+        : colorStatus;
     const finishBgColorStatus =
       item.trangthai == 0 && item.kt_congtac == 1
         ? '#fef4eb'
         : item.trangthai == 1 && item.kt_congtac == 2
         ? '#def8ed'
-        : '#f9dfe0';
+        : item.kt_congtac == 0 && item.nhanxet_duyetve !== null
+        ? '#f9dfe0'
+        : bgColorStatus;
 
     const filterUser = IFEEstaffs.filter(staff => staff.id === item.id_user)[0];
     const subject =
@@ -390,6 +402,7 @@ const HistoryWorkShedule = ({navigation}) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            width: '66%',
           }}>
           <Text
             numberOfLines={2}
@@ -410,14 +423,10 @@ const HistoryWorkShedule = ({navigation}) => {
           }}>
           {checkStatus() && (
             <StatusUI
-              status={item.kt_congtac == 0 ? status : finishStatus}
-              colorStatus={
-                item.kt_congtac == 0 ? colorStatus : finishColorStatus
-              }
-              bgColorStatus={
-                item.kt_congtac == 0 ? bgColorStatus : finishBgColorStatus
-              }
-              icon={item.kt_congtac == 0 ? icon : finishIcon}
+              status={finishStatus}
+              colorStatus={finishColorStatus}
+              bgColorStatus={finishBgColorStatus}
+              icon={finishIcon}
             />
           )}
           {checkRole() && (
@@ -452,20 +461,17 @@ const HistoryWorkShedule = ({navigation}) => {
           {checkFinished() && (
             <>
               {item.trangthai == 1 ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    handleToggleFinish(item);
-                  }}
+                <View
                   style={{
                     flexDirection: 'row',
                     alignSelf: 'flex-end',
                     marginTop: Dimension.setHeight(0.6),
                   }}>
                   <Image
-                    source={Images.flagnocolor}
+                    source={Images.flagcolor}
                     style={styles.approvedIcon}
                   />
-                </TouchableOpacity>
+                </View>
               ) : (
                 <TouchableOpacity
                   onPress={() => {
@@ -491,6 +497,7 @@ const HistoryWorkShedule = ({navigation}) => {
             fontSize: 16,
             fontFamily: Fonts.SF_MEDIUM,
             color: '#747476',
+            marginVertical: Dimension.setHeight(0.6),
           }}>
           {item.diadiem}
         </Text>

@@ -91,6 +91,8 @@ export const compareDate = (date1, date2) => {
   const beforeDate = moment(date1, 'DD/MM/YYYY').startOf('day');
   const afterDate = moment(date2, 'DD/MM/YYYY').startOf('day');
 
+  console.log(beforeDate, afterDate);
+
   if (beforeDate <= afterDate) {
     return true;
   } else {
