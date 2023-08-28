@@ -6,6 +6,7 @@ const vehicleSlice = createSlice({
     vehicle: {
       statusData: null,
       availableCarData: null,
+      data: {data_pheduyet: [], data_dapheduyet: []},
       isFetching: false,
       err: false,
     },

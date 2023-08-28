@@ -120,6 +120,9 @@ const Images = {
   km: require('../assets/images/km.png'),
   maintenance: require('../assets/images/maintenance.png'),
   staffgas: require('../assets/images/staffgas.png'),
+  map: require('../assets/images/map.png'),
+  biodiversity: require('../assets/images/biodiversity.png'),
+  worldwide: require('../assets/images/worldwide.png'),
 };
 
 export default Images;

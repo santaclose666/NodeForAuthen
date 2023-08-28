@@ -103,7 +103,29 @@ export const ApproveCancelModal = ({
             </Text>
           </View>
         )}
-        {screenName === 'registerTicket' && (
+        {screenName === 'registerVehicle' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+            }}>
+            <Image
+              src={mainURL + avatar[0]?.path}
+              style={{height: 55, width: 55}}
+            />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: 18,
+                fontFamily: Fonts.SF_SEMIBOLD,
+              }}>
+              {selectedItem?.hoten}
+            </Text>
+          </View>
+        )}
+        {screenName === 'registerVehicalAndTicket' && (
           <View
             style={{
               alignItems: 'center',
