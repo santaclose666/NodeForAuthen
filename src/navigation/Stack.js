@@ -13,7 +13,7 @@ import HistoryRegisterVehicleScreen from '../screens/VehicleManagement/HistoryRe
 import CreateWorkSchedule from '../screens/WorkShedule/CreateWorkShedule';
 import HistoryWorkShedule from '../screens/WorkShedule/HistoryWorkSchedule';
 import HistoryRegisterTicketScreen from '../screens/TicketManagement/HistoryRegisterTicketScreen';
-import MyWorkScheduleScreen from '../screens/WorkShedule/MyWorkScheduleScreen';
+import AllWorkScheduleScreen from '../screens/WorkShedule/AllWorkScheduleScreen';
 import SelectWMSLayerScreen from '../screens/MapService/SelectWMSLayerScreen1';
 import MapScreen from '../screens/MapService/MapScreen';
 import ListBioScreen from '../screens/BiodivesityScreen/ListBioScreen';
@@ -54,7 +54,7 @@ const StactNavigator = () => {
       />
       <Stack.Screen name="CreateWorkSchedule" component={CreateWorkSchedule} />
       <Stack.Screen name="HistoryWorkShedule" component={HistoryWorkShedule} />
-      <Stack.Screen name="MyWorkSchedule" component={MyWorkScheduleScreen} />
+      <Stack.Screen name="AllWorkSchedule" component={AllWorkScheduleScreen} />
       <Stack.Screen name="SelectWMSLayer" component={SelectWMSLayerScreen} />
       <Stack.Screen name="MapWMS" component={MapScreen} />
       <Stack.Screen name="ListBio" component={ListBioScreen} />

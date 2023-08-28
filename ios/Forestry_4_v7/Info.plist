@@ -54,6 +54,8 @@
 	<string>Forestry muốn sử dụng Vị trí để xác định vị trí thực nghiệm trong bản đồ</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Forestry 4.0 muốn gửi thông báo cho bạn</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

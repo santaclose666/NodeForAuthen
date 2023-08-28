@@ -1,12 +1,20 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StatusBar,
+  SafeAreaView,
+  Platform,
+} from 'react-native';
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
 import {fontDefault, imgDefault} from '../contants/Variable';
 
-const Header = ({title, navigation, refreshData}) => {
+const Header = ({title, navigation, refreshData, replace = false}) => {
   const showCreateButton =
     title === 'Lịch sử nghỉ phép' ||
     title === 'Lịch sử đặt vé' ||
@@ -24,10 +32,16 @@ const Header = ({title, navigation, refreshData}) => {
         backgroundColor: 'rgba(255, 255, 255, 0.3)',
         marginHorizontal: Dimension.setHeight(1.4),
         borderRadius: 25,
+        marginTop: Platform.OS == 'android' ? 10 : 0,
       }}>
+      <StatusBar
+        translucent
+        // backgroundColor="#22a87e"
+        barStyle="light-content"
+      />
       <TouchableOpacity
         onPress={() => {
-          navigation.goBack();
+          replace == true ? navigation.navigate('Home') : navigation.goBack();
         }}>
         <Image
           source={Images.back}

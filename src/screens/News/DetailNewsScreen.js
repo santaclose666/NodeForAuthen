@@ -6,28 +6,45 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  StatusBar,
   SafeAreaView,
+  useWindowDimensions,
+  Platform,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import {shadowIOS} from '../../contants/propsIOS';
-import {fontDefault} from '../../contants/Variable';
+import {fontDefault, newsURL} from '../../contants/Variable';
+import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
+import RenderHtml from 'react-native-render-html';
+import WebView from 'react-native-webview';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
+  const {width} = useWindowDimensions();
+
+  const source = {
+    html: `${item.content}`,
+  };
+
+  const renderers = {
+    iframe: IframeRenderer,
+  };
+
+  const customHTMLElementModels = {
+    iframe: iframeModel,
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainImgContainer}>
         <Image
           resizeMode="cover"
-          source={item.mainImg}
+          src={newsURL + item.avatar}
           style={{
             width: Dimension.setWidth(100),
-            height: Dimension.setHeight(40),
+            height: Dimension.setHeight(26),
           }}
         />
       </View>
@@ -54,7 +71,7 @@ const DetailNewsScreen = ({navigation, route}) => {
               textAlign: 'justify',
               ...fontDefault,
             }}>
-            {item.name}
+            {item.title}
           </Text>
           <Text
             style={{
@@ -62,17 +79,28 @@ const DetailNewsScreen = ({navigation, route}) => {
               fontFamily: Fonts.SF_REGULAR,
               color: Colors.DEFAULT_BLACK,
               opacity: 0.6,
-              marginVertical: Dimension.setHeight(1),
+              marginTop: Dimension.setHeight(1),
             }}>
-            {item.date}
+            {item.date_created}
           </Text>
         </View>
 
         <View style={styles.descriptionContainer}>
-          {item.header1 && <Text style={styles.header}>{item.header1}</Text>}
-          {item.content1 && <Text style={styles.content}>{item.content1}</Text>}
-          {item.header2 && <Text style={styles.header}>{item.header2}</Text>}
-          {item.content2 && <Text style={styles.content}>{item.content2}</Text>}
+          <RenderHtml
+            contentWidth={width}
+            renderers={renderers}
+            WebView={WebView}
+            source={source}
+            customHTMLElementModels={customHTMLElementModels}
+            renderersProps={{
+              iframe: {
+                scalesPageToFit: true,
+                webViewProps: {
+                  /* Any prop you want to pass to iframe WebViews */
+                },
+              },
+            }}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -81,21 +109,19 @@ const DetailNewsScreen = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
     flex: 1,
-    backgroundColor: '#f2f2f2',
   },
 
   mainImgContainer: {
     position: 'absolute',
-    height: Dimension.setHeight(40),
+    height: Dimension.setHeight(26),
   },
 
   backHeartContainer: {
     width: 60,
     height: 60,
     left: 10,
-    top: -20,
+    top: Platform.OS == 'ios' ? -20 : 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -110,8 +136,8 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'absolute',
     width: '100%',
-    height: Dimension.setHeight(70),
-    top: Dimension.setHeight(33),
+    height: Dimension.setHeight(100),
+    top: Dimension.setHeight(22),
     backgroundColor: '#fff',
     borderRadius: 36,
     borderWidth: 0.8,
@@ -124,16 +150,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: Dimension.setHeight(2.2),
     marginHorizontal: Dimension.setWidth(6),
-    marginVertical: Dimension.setHeight(2),
   },
 
   descriptionContainer: {
-    marginHorizontal: Dimension.setWidth(6),
-    marginBottom: Dimension.setHeight(14),
-    flexWrap: 'wrap',
-    width: '90%',
-    flexDirection: 'row',
+    marginBottom: Dimension.setHeight(20),
     flex: 1,
+    paddingHorizontal: Dimension.setWidth(3),
   },
 
   header: {

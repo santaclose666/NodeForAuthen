@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,14 +9,15 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Dropdown} from 'react-native-element-dropdown';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import LinearGradient from 'react-native-linear-gradient';
 import {
   formatTime,
   getCurrentTime,
@@ -25,14 +26,14 @@ import {
   formatTimeToPost,
   formatDateToPost,
 } from '../../utils/serviceFunction';
-import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import { ToastAlert, ToastSuccess } from '../../components/Toast';
 import RegisterBtn from '../../components/RegisterBtn';
-import {registerVehicle} from '../../redux/apiRequest';
-import {shadowIOS} from '../../contants/propsIOS';
-import {mainURL} from '../../contants/Variable';
+import { registerVehicle } from '../../redux/apiRequest';
+import { shadowIOS } from '../../contants/propsIOS';
+import { mainURL } from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
 
-const RegisterVehicleScreen = ({navigation, route}) => {
+const RegisterVehicleScreen = ({ navigation, route }) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const typeVehicle = useSelector(
     state => state.vehicle?.vehicle?.availableCarData,
@@ -117,130 +118,96 @@ const RegisterVehicleScreen = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="Đăng kí sử dụng xe" navigation={navigation} />
-      <ScrollView>
-        <KeyboardAwareScrollView
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{
-            backgroundColor: '#fbfbfd',
-            borderRadius: 12,
-            marginHorizontal: Dimension.setWidth(3),
-            marginVertical: Dimension.setHeight(3),
-            paddingHorizontal: Dimension.setWidth(3),
-            paddingTop: Dimension.setHeight(3),
-            elevation: 5,
-            ...shadowIOS,
-          }}>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Người đăng kí</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                src={mainURL + user?.path}
-                style={{height: 40, width: 40}}
-              />
-              <Text
-                style={{
-                  marginLeft: Dimension.setWidth(3),
-                  fontSize: 19,
-                  fontFamily: Fonts.SF_SEMIBOLD,
-                }}>
-                {user?.hoten}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Loại xe</Text>
-            {typeVehicle?.length === 0 ? (
-              <Text style={styles.nocar}>
-                Hiện tại đang không còn xe khả dụng
-              </Text>
-            ) : (
-              <Dropdown
-                style={styles.dropdown}
-                autoScroll={false}
-                showsVerticalScrollIndicator={false}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                containerStyle={styles.containerOptionStyle}
-                imageStyle={styles.imageStyle}
-                iconStyle={styles.iconStyle}
-                itemContainerStyle={styles.itemContainer}
-                itemTextStyle={styles.itemText}
-                fontFamily={Fonts.SF_MEDIUM}
-                activeColor="#eef2feff"
-                placeholder="Chọn loại xe"
-                data={typeVehicle}
-                maxHeight={Dimension.setHeight(30)}
-                labelField="loaixe"
-                valueField="id"
-                imageField="image"
-                value={vehicleValue}
-                renderLeftIcon={() => {
-                  return (
-                    <Image
-                      source={
-                        vehicleValue < 3 ? Images.vehicles : Images.motorbike
-                      }
-                      style={styles.leftIconDropdown}
-                    />
-                  );
-                }}
-                onChange={item => {
-                  setVehicleValue(item.id);
-                }}
-              />
-            )}
-          </View>
-          <TouchableOpacity
-            onPress={handlePickStartDate}
-            style={styles.containerEachLine}>
-            <Text style={styles.title}>Ngày đi</Text>
-            <View style={styles.dateTimePickerContainer}>
-              <Text style={styles.dateTimeText}>{dateStart}</Text>
-              <View
-                style={[
-                  styles.dateTimeImgContainer,
-                  {backgroundColor: '#dbd265'},
-                ]}>
-                <Image
-                  source={Images.calendarBlack}
-                  style={styles.dateTimeImg}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{ flex: 1 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}>
+      <SafeAreaView style={styles.container}>
+        <Header title="Đăng kí sử dụng xe" navigation={navigation} />
+        <ScrollView>
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+              backgroundColor: '#fbfbfd',
+              borderRadius: 12,
+              marginHorizontal: Dimension.setWidth(3),
+              marginVertical: Dimension.setHeight(3),
+              paddingHorizontal: Dimension.setWidth(3),
+              paddingTop: Dimension.setHeight(3),
+              elevation: 5,
+              ...shadowIOS,
             }}>
-            <TouchableOpacity
-              onPress={handlePickReceiveTime}
-              style={[styles.containerEachLine, {width: '48%'}]}>
-              <Text style={styles.title}>Giờ nhận xe</Text>
-              <View style={styles.dateTimePickerContainer}>
-                <Text style={styles.dateTimeText}>{receiveTime}</Text>
-                <View
-                  style={[
-                    styles.dateTimeImgContainer,
-                    {backgroundColor: '#96d1d9'},
-                  ]}>
-                  <Image source={Images.time} style={styles.dateTimeImg} />
-                </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Người đăng kí</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image
+                  src={mainURL + user?.path}
+                  style={{ height: 40, width: 40 }}
+                />
+                <Text
+                  style={{
+                    marginLeft: Dimension.setWidth(3),
+                    fontSize: 19,
+                    fontFamily: Fonts.SF_SEMIBOLD,
+                  }}>
+                  {user?.hoten}
+                </Text>
               </View>
-            </TouchableOpacity>
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Loại xe</Text>
+              {typeVehicle?.length === 0 ? (
+                <Text style={styles.nocar}>
+                  Hiện tại đang không còn xe khả dụng
+                </Text>
+              ) : (
+                <Dropdown
+                  style={styles.dropdown}
+                  autoScroll={false}
+                  showsVerticalScrollIndicator={false}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  containerStyle={styles.containerOptionStyle}
+                  imageStyle={styles.imageStyle}
+                  iconStyle={styles.iconStyle}
+                  itemContainerStyle={styles.itemContainer}
+                  itemTextStyle={styles.itemText}
+                  fontFamily={Fonts.SF_MEDIUM}
+                  activeColor="#eef2feff"
+                  placeholder="Chọn loại xe"
+                  data={typeVehicle}
+                  maxHeight={Dimension.setHeight(30)}
+                  labelField="loaixe"
+                  valueField="id"
+                  imageField="image"
+                  value={vehicleValue}
+                  renderLeftIcon={() => {
+                    return (
+                      <Image
+                        source={
+                          vehicleValue < 3 ? Images.vehicles : Images.motorbike
+                        }
+                        style={styles.leftIconDropdown}
+                      />
+                    );
+                  }}
+                  onChange={item => {
+                    setVehicleValue(item.id);
+                  }}
+                />
+              )}
+            </View>
             <TouchableOpacity
-              onPress={handelePickReceiveDate}
-              style={[styles.containerEachLine, {width: '48%'}]}>
-              <Text style={styles.title}>Ngày nhận xe</Text>
+              onPress={handlePickStartDate}
+              style={styles.containerEachLine}>
+              <Text style={styles.title}>Ngày đi</Text>
               <View style={styles.dateTimePickerContainer}>
-                <Text style={styles.dateTimeText}>{receiveDate}</Text>
+                <Text style={styles.dateTimeText}>{dateStart}</Text>
                 <View
                   style={[
                     styles.dateTimeImgContainer,
-                    {backgroundColor: '#dbd265'},
+                    { backgroundColor: '#dbd265' },
                   ]}>
                   <Image
                     source={Images.calendarBlack}
@@ -249,61 +216,101 @@ const RegisterVehicleScreen = ({navigation, route}) => {
                 </View>
               </View>
             </TouchableOpacity>
-            <DateTimePickerModal
-              isVisible={toggleDatePicker}
-              mode={dateTime}
-              onConfirm={handlePickDate}
-              onCancel={() => {
-                setToggleDatePicker(false);
-              }}
-            />
-          </View>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Nơi đến</Text>
-            <TextInput
-              placeholder="Nhập địa điểm"
+            <View
               style={{
-                borderBottomWidth: 0.6,
-                borderBottomColor: 'gray',
-                marginHorizontal: Dimension.setWidth(1.6),
-                fontFamily: Fonts.SF_MEDIUM,
-                fontSize: 16,
-                height: Dimension.setHeight(6),
-              }}
-              value={placeInput}
-              onChangeText={e => setPlaceInput(e)}
-            />
-          </View>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Nội dung công tác</Text>
-            <TextInput
-              multiline
-              placeholder="Nội dung công tác"
-              style={{
-                borderBottomWidth: 0.6,
-                borderBottomColor: 'gray',
-                marginHorizontal: Dimension.setWidth(1.6),
-                fontFamily: Fonts.SF_MEDIUM,
-                fontSize: 16,
-                height: Dimension.setHeight(5),
-              }}
-              value={contentInput}
-              onChangeText={e => setContentInput(e)}
-            />
-          </View>
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                onPress={handlePickReceiveTime}
+                style={[styles.containerEachLine, { width: '48%' }]}>
+                <Text style={styles.title}>Giờ nhận xe</Text>
+                <View style={styles.dateTimePickerContainer}>
+                  <Text style={styles.dateTimeText}>{receiveTime}</Text>
+                  <View
+                    style={[
+                      styles.dateTimeImgContainer,
+                      { backgroundColor: '#96d1d9' },
+                    ]}>
+                    <Image source={Images.time} style={styles.dateTimeImg} />
+                  </View>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handelePickReceiveDate}
+                style={[styles.containerEachLine, { width: '48%' }]}>
+                <Text style={styles.title}>Ngày nhận xe</Text>
+                <View style={styles.dateTimePickerContainer}>
+                  <Text style={styles.dateTimeText}>{receiveDate}</Text>
+                  <View
+                    style={[
+                      styles.dateTimeImgContainer,
+                      { backgroundColor: '#dbd265' },
+                    ]}>
+                    <Image
+                      source={Images.calendarBlack}
+                      style={styles.dateTimeImg}
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+              <DateTimePickerModal
+                isVisible={toggleDatePicker}
+                mode={dateTime}
+                onConfirm={handlePickDate}
+                onCancel={() => {
+                  setToggleDatePicker(false);
+                }}
+              />
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Nơi đến</Text>
+              <TextInput
+                placeholder="Nhập địa điểm"
+                style={{
+                  borderBottomWidth: 0.6,
+                  borderBottomColor: 'gray',
+                  marginHorizontal: Dimension.setWidth(1.6),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: 16,
+                  height: Dimension.setHeight(6),
+                }}
+                value={placeInput}
+                onChangeText={e => setPlaceInput(e)}
+              />
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Nội dung công tác</Text>
+              <TextInput
+                multiline
+                placeholder="Nội dung công tác"
+                style={{
+                  borderBottomWidth: 0.6,
+                  borderBottomColor: 'gray',
+                  marginHorizontal: Dimension.setWidth(1.6),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: 16,
+                  height: Dimension.setHeight(5),
+                }}
+                value={contentInput}
+                onChangeText={e => setContentInput(e)}
+              />
+            </View>
 
-          <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
-        </KeyboardAwareScrollView>
-      </ScrollView>
-      {loading === true && <Loading />}
-    </SafeAreaView>
+            <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
+          </KeyboardAwareScrollView>
+        </ScrollView>
+        {loading === true && <Loading />}
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    padding: 3
   },
 
   containerEachLine: {

@@ -5,7 +5,6 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  StatusBar,
   SafeAreaView,
 } from 'react-native';
 import {AlertDialog, Button} from 'native-base';
@@ -19,7 +18,8 @@ import {useDispatch} from 'react-redux';
 import {logoutUser} from '../../redux/apiRequest';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import {shadowIOS} from '../../contants/propsIOS';
-import {mainURL} from '../../contants/Variable';
+import {mainURL, imgDefault, fontDefault} from '../../contants/Variable';
+import LinearGradient from 'react-native-linear-gradient';
 
 const DetailStaffScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -73,117 +73,126 @@ const DetailStaffScreen = ({navigation, route}) => {
   }, []);
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: '#f2f2f2',
-        justifyContent: 'center',
-      }}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
-      {item || user ? (
-        <>
-          <View style={styles.headerContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                {
-                  indexInfo === 0
-                    ? navigation.navigate('HomePage')
-                    : navigation.navigate('StaffList');
-                }
-              }}>
-              <Image source={Images.back} style={{width: 25, height: 25}} />
-            </TouchableOpacity>
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{flex: 1, padding: 3}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+        }}>
+        {item || user ? (
+          <>
+            <View style={styles.headerContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  {
+                    indexInfo === 0 ? navigation.goBack() : navigation.goBack();
+                  }
+                }}>
+                <Image
+                  source={Images.back}
+                  style={{width: 25, height: 18, ...imgDefault}}
+                />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: 18,
+                  ...fontDefault,
+                }}>
+                Thông tin
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setTogglecConfirmOut(true);
+                }}>
+                {indexInfo === 0 && (
+                  <Image
+                    source={Images.logout}
+                    style={{width: 24, height: 24, ...imgDefault}}
+                  />
+                )}
+              </TouchableOpacity>
+              <AlertDialog
+                leastDestructiveRef={cancelRef}
+                isOpen={toggleConfirmOut}
+                onClose={onCloseConfirmOut}>
+                <AlertDialog.Content>
+                  <AlertDialog.CloseButton />
+                  <AlertDialog.Header>
+                    <Text style={{fontSize: 20, fontFamily: Fonts.SF_BOLD}}>
+                      Đăng Xuất
+                    </Text>
+                  </AlertDialog.Header>
+                  <AlertDialog.Body>
+                    <Text style={{fontSize: 16, fontFamily: Fonts.SF_REGULAR}}>
+                      Xác nhận đăng xuất tài khoản này?
+                    </Text>
+                  </AlertDialog.Body>
+                  <AlertDialog.Footer>
+                    <Button.Group space={2}>
+                      <Button
+                        variant="unstyled"
+                        colorScheme="coolGray"
+                        onPress={onCloseConfirmOut}
+                        ref={cancelRef}>
+                        <Text
+                          style={{fontSize: 15, fontFamily: Fonts.SF_REGULAR}}>
+                          Hủy
+                        </Text>
+                      </Button>
+                      <Button colorScheme="danger" onPress={handleLogout}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            fontFamily: Fonts.SF_REGULAR,
+                            color: '#ffffff',
+                          }}>
+                          Xác nhận
+                        </Text>
+                      </Button>
+                    </Button.Group>
+                  </AlertDialog.Footer>
+                </AlertDialog.Content>
+              </AlertDialog>
+            </View>
+
+            <View style={{flex: 1}}>
+              <ListInfo
+                info={indexInfo === 0 ? userInfo : workInfo}
+                index={indexInfo}
+              />
+            </View>
+          </>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Login');
+            }}
+            style={{
+              borderRadius: 16,
+              backgroundColor: '#6ac78c',
+              alignSelf: 'center',
+              elevation: 6,
+              ...shadowIOS,
+            }}>
             <Text
               style={{
+                fontSize: 20,
                 fontFamily: Fonts.SF_BOLD,
-                fontSize: 22,
+                color: '#ffffff',
+                paddingHorizontal: Dimension.setWidth(3),
+                paddingVertical: Dimension.setHeight(1.2),
               }}>
-              Thông tin
+              Đăng nhập
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                setTogglecConfirmOut(true);
-              }}>
-              {indexInfo === 0 && (
-                <Image source={Images.logout} style={{width: 35, height: 35}} />
-              )}
-            </TouchableOpacity>
-            <AlertDialog
-              leastDestructiveRef={cancelRef}
-              isOpen={toggleConfirmOut}
-              onClose={onCloseConfirmOut}>
-              <AlertDialog.Content>
-                <AlertDialog.CloseButton />
-                <AlertDialog.Header>
-                  <Text style={{fontSize: 20, fontFamily: Fonts.SF_BOLD}}>
-                    Đăng Xuất
-                  </Text>
-                </AlertDialog.Header>
-                <AlertDialog.Body>
-                  <Text style={{fontSize: 16, fontFamily: Fonts.SF_REGULAR}}>
-                    Xác nhận đăng xuất tài khoản này?
-                  </Text>
-                </AlertDialog.Body>
-                <AlertDialog.Footer>
-                  <Button.Group space={2}>
-                    <Button
-                      variant="unstyled"
-                      colorScheme="coolGray"
-                      onPress={onCloseConfirmOut}
-                      ref={cancelRef}>
-                      <Text
-                        style={{fontSize: 15, fontFamily: Fonts.SF_REGULAR}}>
-                        Hủy
-                      </Text>
-                    </Button>
-                    <Button colorScheme="danger" onPress={handleLogout}>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          fontFamily: Fonts.SF_REGULAR,
-                          color: '#ffffff',
-                        }}>
-                        Xác nhận
-                      </Text>
-                    </Button>
-                  </Button.Group>
-                </AlertDialog.Footer>
-              </AlertDialog.Content>
-            </AlertDialog>
-          </View>
-
-          <View style={{flex: 1}}>
-            <ListInfo
-              info={indexInfo === 0 ? userInfo : workInfo}
-              index={indexInfo}
-            />
-          </View>
-        </>
-      ) : (
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Login');
-          }}
-          style={{
-            borderRadius: 16,
-            backgroundColor: '#6ac78c',
-            alignSelf: 'center',
-            elevation: 6,
-            ...shadowIOS,
-          }}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: Fonts.SF_BOLD,
-              color: '#ffffff',
-              paddingHorizontal: Dimension.setWidth(3),
-              paddingVertical: Dimension.setHeight(1.2),
-            }}>
-            Đăng nhập
-          </Text>
-        </TouchableOpacity>
-      )}
-    </SafeAreaView>
+          </TouchableOpacity>
+        )}
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
@@ -192,8 +201,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: Dimension.setWidth(3),
-    marginTop: Dimension.setHeight(1.5),
+    paddingVertical: Dimension.setHeight(2),
+    paddingHorizontal: Dimension.setWidth(2.2),
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    marginHorizontal: Dimension.setHeight(1.4),
+    borderRadius: 25,
+    marginTop: Platform.OS == 'android' ? 10 : 0,
   },
 
   optionInfoContainer: {

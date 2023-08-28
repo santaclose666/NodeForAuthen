@@ -552,7 +552,7 @@
 				CODE_SIGN_ENTITLEMENTS = Forestry_4_v7/Forestry_4_v7.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 7L7FA98CYL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Forestry_4_v7/Info.plist;
@@ -586,7 +586,7 @@
 				CODE_SIGN_ENTITLEMENTS = Forestry_4_v7/Forestry_4_v7.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 7L7FA98CYL;
 				INFOPLIST_FILE = Forestry_4_v7/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Forestry4.0;

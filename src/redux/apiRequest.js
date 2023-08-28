@@ -38,11 +38,12 @@ import {
   getWorkScheduleSuccess,
 } from './workScheduleSlice';
 import {
-  getMyWorkFailed,
-  getMyWorkStart,
-  getMyWorkSuccess,
-} from './myWorkScheduleSlice';
+  getTotalWorkFailed,
+  getTotalWorkStart,
+  getTotalWorkSuccess,
+} from './totalWorkScheduleSlice';
 import {saveSuccess} from './credentialSlice';
+import {getNewFailed, getNewStart, getNewSuccess} from './newSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -297,20 +298,68 @@ export const cancelWorkSchedule = async data => {
   }
 };
 
-export const getMyWorkSchedule = async (id, dispatch) => {
-  dispatch(getMyWorkStart());
+export const totalWorkSchedule = async dispatch => {
+  dispatch(getTotalWorkStart());
   try {
     const res = await axios.get(
-      `https://management.ifee.edu.vn/api/lichcongtac/canhan/${id}`,
+      `https://management.ifee.edu.vn/api/lichcongtac/tonghop`,
     );
 
-    const data = res.data.sort((a, b) => {
-      return a.id - b.id;
-    });
+    const data = res.data;
 
-    dispatch(getMyWorkSuccess(data));
+    dispatch(getTotalWorkSuccess(data));
   } catch (error) {
-    dispatch(getMyWorkFailed());
+    dispatch(getTotalWorkFailed());
+  }
+};
+
+export const warningWorkSchedule = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/canhbao/${data.id_lichchitiet}?lydo=${data.lydo}`,
+    );
+
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestFinishWorkSchedule = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/yc_ketthuc/${data.id_lichcongtac}?giove=${data.giove}&ngayve=${data.ngayve}`,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const approveFinishRequest = async data => {
+  try {
+    console.log(data);
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/pd_ketthuc/${data.id_lichcongtac}`,
+      {
+        nhanxet: data.nhanxet,
+      },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelFinishRequest = async data => {
+  try {
+    console.log(data);
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/tc_ketthuc/${data.id_lichcongtac}`,
+      {
+        lydo: data.lydo,
+      },
+    );
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -365,6 +414,28 @@ export const cancelVehicle = async data => {
     await axios.get(
       `https://management.ifee.edu.vn/api/xe/tuchoi/${data.id_dulieu}?id_user=${data.id_user}`,
     );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const returnVehicle = async data => {
+  try {
+    console.log(data);
+    const res = await axios.post(
+      `https://management.ifee.edu.vn/api/xe/traXe/${data.id}`,
+      {
+        ngayve: data.ngayve,
+        km_nhan: data.km_nhan,
+        phixangxe: data.phixangxe,
+        nguoimuaxang: data.nguoimuaxang,
+        phibaoduong: data.phibaoduong,
+        nguoibaoduong: data.nguoibaoduong,
+        file: data.file,
+      },
+    );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }
@@ -432,5 +503,26 @@ export const cancelPlaneTicket = async data => {
     );
   } catch (error) {
     console.log(error);
+  }
+};
+
+/////////////////////  NEWS DATA  ////////////////////
+
+export const getallNews = async dispatch => {
+  dispatch(getNewStart());
+  try {
+    const res = await axios.get(`https://ifee.edu.vn/api/tintuc/danhsach`);
+
+    dispatch(getNewSuccess(res.data));
+    const data = [
+      res.data.data[0],
+      res.data.data[1],
+      res.data.data[2],
+      res.data.data[3],
+      res.data.data[4],
+    ];
+    return data;
+  } catch (error) {
+    dispatch(getNewFailed(error));
   }
 };
