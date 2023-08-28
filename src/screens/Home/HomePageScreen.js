@@ -59,7 +59,6 @@ const HomePageScreen = ({navigation}) => {
 
   const dispatch = useDispatch();
   const [interval, setInTerVal] = useState(null);
-  const newData = useSelector(state => state.news.newSlice?.data);
   const [newArr, setNewArr] = useState(null);
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();

@@ -13,7 +13,8 @@ import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
 import {useSelector} from 'react-redux';
-import {defaultIFEE, mainURL} from '../contants/Variable';
+import {mainURL} from '../contants/Variable';
+import {shadowIOS} from '../contants/propsIOS';
 
 export const ApproveCancelModal = ({
   screenName,
@@ -483,5 +484,53 @@ const styles = StyleSheet.create({
   btnModal: {
     width: 28,
     height: 28,
+  },
+
+  lineContainerModal: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+
+  itemContainerModal: {
+    paddingVertical: Dimension.setHeight(1),
+    paddingHorizontal: Dimension.setWidth(2),
+  },
+
+  titleModal: {
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: 13,
+  },
+
+  dateModalContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 12,
+    backgroundColor: '#ffffff',
+    paddingHorizontal: Dimension.setWidth(2.2),
+    paddingVertical: Dimension.setHeight(0.8),
+    elevation: 5,
+    ...shadowIOS,
+    width: Dimension.setWidth(35),
+  },
+
+  contentModal: {
+    fontFamily: Fonts.SF_SEMIBOLD,
+    fontSize: 15,
+  },
+
+  imgModalContainer: {
+    backgroundColor: '#ed735f',
+    padding: Dimension.setWidth(1.1),
+    borderRadius: 8,
+  },
+
+  imgDate: {
+    height: 17,
+    width: 17,
+    tintColor: '#ffffff',
   },
 });

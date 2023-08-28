@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,16 +9,16 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { ToastAlert, ToastSuccess } from '../../components/Toast';
+import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import {
   compareDate,
   formatDate,
@@ -28,18 +28,30 @@ import {
   getCurrentTime,
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
-import { registerPlaneTicket } from '../../redux/apiRequest';
-import { shadowIOS } from '../../contants/propsIOS';
-import { mainURL } from '../../contants/Variable';
-import { planeCompany, ticketType, airplane } from '../../contants/Variable';
+import {registerPlaneTicket} from '../../redux/apiRequest';
+import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
+import {planeCompany, ticketType, airplane} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
 import LinearGradient from 'react-native-linear-gradient';
 
-const RegisterPlaneScreen = ({ navigation, route }) => {
+const workData = [
+  {
+    label: 'Chọn từ danh sách',
+    value: 1,
+  },
+  {
+    label: 'Khác',
+    value: 2,
+  },
+];
+
+const RegisterPlaneScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const workNameData = useSelector(state => state.work.works?.data);
   const allStaffs = IFEEstaffs.map(item => {
-    return { label: item.hoten, value: item.id };
+    return {label: item.hoten, value: item.id};
   });
   const [multiStaff, setMultiStaff] = useState([]);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
@@ -58,6 +70,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
   const [timeValue, setTimeValue] = useState(getCurrentTime());
   const [kgNumber, setKgNumber] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [workValue, setWorkValue] = useState(workData[0].value);
 
   const handlePickDate = date => {
     if (dateTime === 'date') {
@@ -108,9 +121,9 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
   return (
     <LinearGradient
       colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{ flex: 1 }}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}>
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
       <SafeAreaView style={styles.container}>
         <Header title="Đăng kí vé máy bay" navigation={navigation} />
         <ScrollView>
@@ -128,10 +141,10 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
             }}>
             <View style={styles.containerEachLine}>
               <Text style={styles.title}>Người đăng kí</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
                   src={mainURL + user?.path}
-                  style={{ height: 40, width: 40 }}
+                  style={{height: 40, width: 40}}
                 />
                 <Text
                   style={{
@@ -144,6 +157,68 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
               </View>
             </View>
             <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Thuộc chương trình</Text>
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                data={workData}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="label"
+                valueField="value"
+                value={workValue}
+                onChange={item => {
+                  setWorkName('');
+                  setWorkValue(item.value);
+                }}
+              />
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Tên chương trình</Text>
+              {workValue === 1 && workNameData ? (
+                <Dropdown
+                  style={styles.dropdown}
+                  autoScroll={false}
+                  showsVerticalScrollIndicator={false}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  selectedTextProps={{numberOfLines: 3}}
+                  containerStyle={styles.containerOptionStyle}
+                  iconStyle={styles.iconStyle}
+                  itemContainerStyle={styles.itemContainer}
+                  itemTextStyle={styles.itemText}
+                  fontFamily={Fonts.SF_MEDIUM}
+                  placeholder="Chọn chương trình"
+                  search
+                  searchPlaceholder="Tìm kiếm"
+                  activeColor="#eef2feff"
+                  data={workNameData}
+                  maxHeight={Dimension.setHeight(40)}
+                  labelField="tenhd"
+                  valueField="tenhd"
+                  value={workName}
+                  onChange={item => {
+                    setWorkName(item.tenhd);
+                  }}
+                />
+              ) : (
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Nhập tên chương trình"
+                  value={workName}
+                  onChangeText={e => setWorkName(e)}
+                />
+              )}
+            </View>
+            {/* <View style={styles.containerEachLine}>
               <Text style={styles.title}>Tên chương trình</Text>
               <TextInput
                 style={{
@@ -158,7 +233,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                 value={workName}
                 onChangeText={e => setWorkName(e)}
               />
-            </View>
+            </View> */}
             <View style={styles.containerEachLine}>
               <Text style={styles.title}>Người công tác</Text>
               <MultiSelect
@@ -167,7 +242,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                 showsVerticalScrollIndicator={false}
                 placeholderStyle={styles.placeholderStyle}
                 selectedStyle={styles.selectedStyle}
-                selectedTextStyle={[styles.selectedTextStyle, { fontSize: 13 }]}
+                selectedTextStyle={[styles.selectedTextStyle, {fontSize: 13}]}
                 containerStyle={styles.containerOptionStyle}
                 iconStyle={styles.iconStyle}
                 itemContainerStyle={styles.itemContainer}
@@ -217,7 +292,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-              <View style={[styles.containerEachLine, { width: '54%' }]}>
+              <View style={[styles.containerEachLine, {width: '54%'}]}>
                 <Text style={styles.title}>Hãng bay</Text>
                 <Dropdown
                   style={styles.dropdown}
@@ -251,7 +326,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                   }}
                 />
               </View>
-              <View style={[styles.containerEachLine, { width: '44%' }]}>
+              <View style={[styles.containerEachLine, {width: '44%'}]}>
                 <Text style={styles.title}>Hạng vé</Text>
                 <Dropdown
                   style={styles.dropdown}
@@ -290,7 +365,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-              <View style={{ width: '52%' }}>
+              <View style={{width: '52%'}}>
                 <TouchableOpacity
                   onPress={() => {
                     setDateTime('date');
@@ -310,7 +385,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                     <View
                       style={[
                         styles.dateTimeImgContainer,
-                        { backgroundColor: '#dbd265' },
+                        {backgroundColor: '#dbd265'},
                       ]}>
                       <Image
                         source={Images.calendarBlack}
@@ -326,7 +401,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                   }}
                   style={[
                     styles.containerEachLine,
-                    { width: '100%', paddingVertical: Dimension.setHeight(1) },
+                    {width: '100%', paddingVertical: Dimension.setHeight(1)},
                   ]}>
                   <Text style={styles.title}>Thời gian</Text>
                   <View style={styles.dateTimePickerContainer}>
@@ -334,7 +409,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                     <View
                       style={[
                         styles.dateTimeImgContainer,
-                        { backgroundColor: '#96d1d9' },
+                        {backgroundColor: '#96d1d9'},
                       ]}>
                       <Image source={Images.time} style={styles.dateTimeImg} />
                     </View>
@@ -360,7 +435,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                     justifyContent: 'center',
                   },
                 ]}>
-                <Text style={[styles.title, { alignSelf: 'center' }]}>
+                <Text style={[styles.title, {alignSelf: 'center'}]}>
                   Cân nặng kí gửi
                 </Text>
                 <View
@@ -374,7 +449,7 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                       kgNumber !== 0 ? setKgNumber(kgNumber - 1) : null;
                     }}>
                     <Image
-                      style={{ height: 22, width: 22 }}
+                      style={{height: 22, width: 22}}
                       source={Images.minus}
                     />
                   </TouchableOpacity>
@@ -390,7 +465,10 @@ const RegisterPlaneScreen = ({ navigation, route }) => {
                     onPress={() => {
                       setKgNumber(kgNumber + 2);
                     }}>
-                    <Image style={{ height: 22, width: 22 }} source={Images.plus} />
+                    <Image
+                      style={{height: 22, width: 22}}
+                      source={Images.plus}
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -490,6 +568,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1),
+  },
+
+  inputText: {
+    borderBottomWidth: 0.6,
+    borderBottomColor: 'gray',
+    marginHorizontal: Dimension.setWidth(1.6),
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: 16,
+    height: Dimension.setHeight(5),
   },
 
   dateTimePickerContainer: {

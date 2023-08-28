@@ -44,6 +44,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
   const ticketPlaneData = useSelector(
     state => state.ticketPlane.ticketPlane?.data,
   );
+
   const dispatch = useDispatch();
   const [selectedItem, setSelectedItem] = useState(null);
   const [toggleModal, setToggleModal] = useState(false);
@@ -51,7 +52,6 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
   const [commentInput, setCommentInput] = useState('');
   const [reasonCancel, setReasonCancel] = useState('');
   const [indexPicker, setIndexPicker] = useState(0);
-  const [toggleConfirmModal, setToggleConfirmModal] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
@@ -315,281 +315,287 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
   return (
     <LinearGradient
       colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{ flex: 1 }}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}>
-    <SafeAreaView style={styles.container}>
-      <Header
-        title="Lịch sử đặt vé"
-        navigation={navigation}
-        refreshData={fetchPlaneData}
-      />
-      <BottomSheetModalProvider>
-        <FilterStatusUI
-          handlePickOption={handlePickOption}
-          indexPicker={indexPicker}
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView style={styles.container}>
+        <Header
+          title="Lịch sử đặt vé"
+          navigation={navigation}
+          refreshData={fetchPlaneData}
         />
-
-        {handleFilter(indexPicker)?.length !== 0 ? (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            style={{
-              flex: 1,
-              paddingTop: Dimension.setHeight(3),
-            }}
-            data={handleFilter(indexPicker)}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({item, index}) => (
-              <RenderTicketData item={item} index={index} />
-            )}
-            initialNumToRender={6}
-            windowSize={6}
-            removeClippedSubviews={true}
-            refreshing={true}
-            extraData={ticketPlaneData}
+        <BottomSheetModalProvider>
+          <FilterStatusUI
+            handlePickOption={handlePickOption}
+            indexPicker={indexPicker}
           />
-        ) : (
-          <View
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text
+
+          {handleFilter(indexPicker)?.length !== 0 ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
               style={{
-                fontSize: 20,
-                fontFamily: Fonts.SF_MEDIUM,
-                color: Colors.INACTIVE_GREY,
-              }}>
-              Không có dữ liệu nào được tìm thấy
-            </Text>
-          </View>
-        )}
-        {selectedItem && (
-          <BottomSheetModal
-            backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
-            ref={bottomSheetModalRef}
-            index={0}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}>
+                flex: 1,
+                paddingTop: Dimension.setHeight(3),
+              }}
+              data={handleFilter(indexPicker)}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <RenderTicketData item={item} index={index} />
+              )}
+              initialNumToRender={6}
+              windowSize={6}
+              removeClippedSubviews={true}
+              refreshing={true}
+              extraData={ticketPlaneData}
+            />
+          ) : (
             <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: Dimension.setHeight(1.2),
-                paddingBottom: Dimension.setHeight(1.5),
-                borderBottomWidth: 0.8,
-                borderBottomColor: Colors.INACTIVE_GREY,
-              }}>
+              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
               <Text
                 style={{
-                  fontFamily: Fonts.SF_BOLD,
                   fontSize: 20,
-                  color: selectedItem.colorStatus,
+                  fontFamily: Fonts.SF_MEDIUM,
+                  color: Colors.INACTIVE_GREY,
                 }}>
-                Thông tin chi tiết
+                Không có dữ liệu nào được tìm thấy
               </Text>
             </View>
-            <BottomSheetScrollView showsVerticalScrollIndicator={false}>
+          )}
+          {selectedItem && (
+            <BottomSheetModal
+              backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
+              ref={bottomSheetModalRef}
+              index={0}
+              snapPoints={snapPoints}
+              onChange={handleSheetChanges}>
               <View
-                style={[
-                  styles.bottomSheetContainer,
-                  {marginTop: Dimension.setHeight(2.5)},
-                ]}>
-                <Text style={styles.titleBottomSheet}>Chương trình</Text>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.work} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '90%',
-                    }}>
-                    <Text style={styles.title}>
-                      Tên chương trình:{'  '}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: Dimension.setHeight(1.2),
+                  paddingBottom: Dimension.setHeight(1.5),
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: Colors.INACTIVE_GREY,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_BOLD,
+                    fontSize: 20,
+                    color: selectedItem.colorStatus,
+                  }}>
+                  Thông tin chi tiết
+                </Text>
+              </View>
+              <BottomSheetScrollView showsVerticalScrollIndicator={false}>
+                <View
+                  style={[
+                    styles.bottomSheetContainer,
+                    {marginTop: Dimension.setHeight(2.5)},
+                  ]}>
+                  <Text style={styles.titleBottomSheet}>Chương trình</Text>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.work} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '90%',
+                      }}>
+                      <Text style={styles.title}>
+                        Tên chương trình:{'  '}
+                        <Text
+                          numberOfLines={3}
+                          ellipsizeMode="tail"
+                          style={styles.content}>
+                          {selectedItem.chuongtrinh}
+                        </Text>
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.worklocation} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Địa điểm:{'  '}</Text>
                       <Text
-                        numberOfLines={3}
+                        numberOfLines={2}
                         ellipsizeMode="tail"
                         style={styles.content}>
-                        {selectedItem.chuongtrinh}
+                        {selectedItem.filterPlace}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.bottomSheetContainer}>
+                  <Text style={styles.titleBottomSheet}>Người tham gia</Text>
+                  <View style={styles.containerEachLine}>
+                    <Image
+                      source={Images.registerperson}
+                      style={styles.Iconic}
+                    />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Người đăng kí:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.name_user}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.insideperson} style={styles.Iconic} />
+                    <Text style={[styles.title, {width: '90%'}]}>
+                      Người trong viện:{' '}
+                      <Text style={styles.content}>
+                        {selectedItem.trongvien?.map((item, index) => {
+                          return <Text key={index}>{item.hoten}, </Text>;
+                        })}
                       </Text>
                     </Text>
                   </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.worklocation} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Địa điểm:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.filterPlace}
-                    </Text>
+                  <View style={styles.containerEachLine}>
+                    <Image
+                      source={Images.outsideperson}
+                      style={styles.Iconic}
+                    />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Người ngoài viện:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.ngoaivien?.map((item, index) => {
+                          return <Text key={index}>{item}</Text>;
+                        })}
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-              <View style={styles.bottomSheetContainer}>
-                <Text style={styles.titleBottomSheet}>Người tham gia</Text>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.registerperson} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Người đăng kí:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.name_user}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.insideperson} style={styles.Iconic} />
-                  <Text style={[styles.title, {width: '90%'}]}>
-                    Người trong viện:{' '}
-                    <Text style={styles.content}>
-                      {selectedItem.trongvien?.map((item, index) => {
-                        return <Text key={index}>{item.hoten}, </Text>;
-                      })}
-                    </Text>
+                <View style={styles.bottomSheetContainer}>
+                  <Text style={styles.titleBottomSheet}>
+                    Thông tin chuyến bay
                   </Text>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.outsideperson} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Người ngoài viện:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.ngoaivien?.map((item, index) => {
-                        return <Text key={index}>{item}</Text>;
-                      })}
-                    </Text>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.plane} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Hãng bay:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.hangbay}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.planeTicket} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Hạng vé:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.hangve}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.baggage} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Cân nặng hành lý:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.kygui}KG
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.takeoff} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Địa điểm đi:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.filterStartPlace}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.landing} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Địa điểm đến:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.filterEndPlace}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.datetime} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Khởi hành lúc:{'  '}</Text>
+                      <Text style={styles.content}>{selectedItem.ngaydi}</Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-              <View style={styles.bottomSheetContainer}>
-                <Text style={styles.titleBottomSheet}>
-                  Thông tin chuyến bay
-                </Text>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.plane} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Hãng bay:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.hangbay}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.planeTicket} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Hạng vé:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.hangve}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.baggage} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Cân nặng hành lý:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.kygui}KG
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.takeoff} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Địa điểm đi:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.filterStartPlace}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.landing} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Địa điểm đến:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.filterEndPlace}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.datetime} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Khởi hành lúc:{'  '}</Text>
-                    <Text style={styles.content}>{selectedItem.ngaydi}</Text>
-                  </View>
-                </View>
-              </View>
-            </BottomSheetScrollView>
-          </BottomSheetModal>
-        )}
-      </BottomSheetModalProvider>
-      <ApproveCancelModal
-        screenName={'registerTicket'}
-        toggleApproveModal={toggleModal}
-        setToggleApproveModal={setToggleModal}
-        checkInput={checkInput}
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
-        commnetInput={commentInput}
-        setCommentInput={setCommentInput}
-        reasonCancel={reasonCancel}
-        setReasonCancel={setReasonCancel}
-        eventFunc={handleApproveCancel}
-      />
-    </SafeAreaView>
+              </BottomSheetScrollView>
+            </BottomSheetModal>
+          )}
+        </BottomSheetModalProvider>
+        <ApproveCancelModal
+          screenName={'registerTicket'}
+          toggleApproveModal={toggleModal}
+          setToggleApproveModal={setToggleModal}
+          checkInput={checkInput}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+          commnetInput={commentInput}
+          setCommentInput={setCommentInput}
+          reasonCancel={reasonCancel}
+          setReasonCancel={setReasonCancel}
+          eventFunc={handleApproveCancel}
+        />
+      </SafeAreaView>
     </LinearGradient>
   );
 };

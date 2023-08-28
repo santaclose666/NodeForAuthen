@@ -419,6 +419,28 @@ export const cancelVehicle = async data => {
   }
 };
 
+export const returnVehicle = async data => {
+  try {
+    console.log(data);
+    const res = await axios.post(
+      `https://management.ifee.edu.vn/api/xe/traXe/${data.id}`,
+      {
+        ngayve: data.ngayve,
+        km_nhan: data.km_nhan,
+        phixangxe: data.phixangxe,
+        nguoimuaxang: data.nguoimuaxang,
+        phibaoduong: data.phibaoduong,
+        nguoibaoduong: data.nguoibaoduong,
+        file: data.file,
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /////////////////////  REGISTER PLANE DATA  ////////////////////
 
 export const registerPlaneTicket = async data => {
