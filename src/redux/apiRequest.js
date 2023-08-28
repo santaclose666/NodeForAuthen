@@ -492,6 +492,14 @@ export const getallNews = async dispatch => {
     const res = await axios.get(`https://ifee.edu.vn/api/tintuc/danhsach`);
 
     dispatch(getNewSuccess(res.data));
+    const data = [
+      res.data.data[0],
+      res.data.data[1],
+      res.data.data[2],
+      res.data.data[3],
+      res.data.data[4],
+    ];
+    return data;
   } catch (error) {
     dispatch(getNewFailed(error));
   }

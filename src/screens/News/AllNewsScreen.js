@@ -20,6 +20,9 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {useSelector} from 'react-redux';
 import {newsURL} from '../../contants/Variable';
 import {changeFormatDate} from '../../utils/serviceFunction';
+import LinearGradient from 'react-native-linear-gradient';
+import Header from '../../components/Header';
+import {fontDefault, mainURL} from '../../contants/Variable';
 
 const AllNewsScreen = ({navigation}) => {
   const [featureIndex, setFeatureIndex] = useState(0);
@@ -54,142 +57,118 @@ const AllNewsScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView showsVerticalScrollIndicator={false} style={styles.container}>
-      <View style={styles.searchFilterContainer}>
-        <TouchableOpacity
-          style={styles.headerContainer}
-          onPress={() => {
-            navigation.navigate('Home');
-          }}>
-          <Image style={styles.backImg} source={Images.back} />
-        </TouchableOpacity>
-        <View style={styles.searchTextInputContainer}>
-          <Icons.FontAwesome name="search" size={20} color="#888" />
-          <TextInput
-            onChangeText={e => handleSearch(e)}
-            value={input}
-            style={styles.searchTextInput}
-            placeholder="Tìm kiếm bài báo"
-          />
-        </View>
-      </View>
-      <View style={styles.featuresTitleContainer}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginHorizontal: Dimension.setWidth(4),
-          }}>
-          <Text
-            style={{
-              fontFamily: Fonts.SF_BOLD,
-              fontSize: 18,
-            }}>
-            Các lĩnh vực
-          </Text>
-        </View>
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}>
+        <Header title="Tin tức" navigation={navigation} replace={true} />
 
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {featureArr.map((item, index) => {
-            const pdRight =
-              index === featureArr.length - 1
-                ? {marginRight: Dimension.setWidth(3.6)}
-                : {marginRight: 0};
-            const colorFeature =
-              featureIndex === index
-                ? Colors.DEFAULT_GREEN
-                : Colors.DEFAULT_BLACK;
-            const fontFML =
-              featureIndex === index ? Fonts.SF_SEMIBOLD : Colors.SF_REGULAR;
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  handlePickFeature(item.id_category, index);
-                }}
-                style={[styles.featureTextContainer, {...pdRight}]}
-                key={index}>
-                <Text
-                  style={[
-                    styles.featureText,
-                    {color: colorFeature, opacity: 0.8, fontFamily: fontFML},
-                  ]}>
-                  {item.title}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-      </View>
-      <View style={styles.hotNewTextContainer}>
-        <Text
-          style={{
-            fontSize: 20,
-            fontFamily: Fonts.SF_BOLD,
-          }}>
-          Tin nổi bật
-        </Text>
-      </View>
-
-      <FlatList
-        data={newsFilter ? newsFilter : newsArr}
-        renderItem={({item, index}) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('DetailNews', {item: item});
-              }}
-              style={styles.hotNewsContainer}
-              key={index}>
-              <View
-                style={{
-                  marginTop: Dimension.setHeight(0.7),
-                  marginBottom: Dimension.setHeight(0.8),
-                }}>
-                <Image
-                  style={styles.newsImg}
-                  src={newsURL + item.avatar}
-                  resizeMode="cover"
-                />
-                <View
+        <View style={styles.featuresTitleContainer}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {featureArr.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    handlePickFeature(item.id_category, index);
+                  }}
                   style={{
-                    marginTop: Dimension.setHeight(0.6),
-                    marginHorizontal: Dimension.setWidth(2.2),
-                  }}>
+                    marginHorizontal: Dimension.setWidth(3),
+                    paddingVertical: 3,
+                    borderBottomWidth: featureIndex === index ? 2 : 0,
+                    borderBottomColor:
+                      featureIndex === index ? Colors.DEFAULT_GREEN : '#fff',
+                  }}
+                  key={index}>
                   <Text
-                    numberOfLines={2}
                     style={{
-                      fontFamily: Fonts.SF_SEMIBOLD,
-                      fontSize: 17,
-                      color: Colors.DARK_FOUR,
+                      fontFamily:
+                        featureIndex === index
+                          ? Fonts.SF_SEMIBOLD
+                          : Fonts.SF_REGULAR,
+                      fontSize: 16,
+                      opacity: 0.8,
+                      color:
+                        featureIndex === index
+                          ? Colors.DEFAULT_GREEN
+                          : Colors.DEFAULT_BLACK,
                     }}>
                     {item.title}
                   </Text>
-                  <Text
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+
+        <FlatList
+          data={newsFilter ? newsFilter : newsArr}
+          renderItem={({item, index}) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('DetailNews', {item: item});
+                }}
+                style={styles.hotNewsContainer}
+                key={index}>
+                <View
+                  style={{
+                    marginTop: Dimension.setHeight(0.7),
+                    marginBottom: Dimension.setHeight(0.8),
+                  }}>
+                  <Image
+                    style={styles.newsImg}
+                    src={newsURL + item.avatar}
+                    resizeMode="cover"
+                  />
+                  <View
                     style={{
-                      fontFamily: Fonts.SF_REGULAR,
-                      fontSize: 15,
-                      color: Colors.INACTIVE_GREY,
+                      marginTop: Dimension.setHeight(0.6),
+                      marginHorizontal: Dimension.setWidth(2.2),
                     }}>
-                    {changeFormatDate(item.date_created)}
-                  </Text>
+                    <Text
+                      numberOfLines={2}
+                      style={{
+                        fontFamily: Fonts.SF_SEMIBOLD,
+                        fontSize: 14,
+                        ...fontDefault,
+                        paddingHorizontal: Dimension.setHeight(1),
+                        textAlign: 'justify',
+                      }}>
+                      {item.title}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: Fonts.SF_REGULAR,
+                        color: Colors.DEFAULT_BLACK,
+                        opacity: 0.6,
+                        fontSize: 12,
+                        paddingHorizontal: Dimension.setHeight(1),
+                      }}>
+                      {changeFormatDate(item.date_created)}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          );
-        }}
-        initialNumToRender={6}
-        windowSize={6}
-        removeClippedSubviews={true}
-        refreshing={true}
-      />
-    </SafeAreaView>
+              </TouchableOpacity>
+            );
+          }}
+          initialNumToRender={6}
+          windowSize={6}
+          removeClippedSubviews={true}
+          refreshing={true}
+        />
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    padding: 3,
   },
 
   searchFilterContainer: {
@@ -243,12 +222,11 @@ const styles = StyleSheet.create({
   },
 
   featuresTitleContainer: {
-    marginTop: Dimension.setHeight(1),
+    marginVertical: Dimension.setHeight(1.5),
   },
 
   featureTextContainer: {
     marginTop: Dimension.setHeight(0.5),
-    height: Dimension.setHeight(4),
     marginLeft: Dimension.setWidth(4),
   },
 
@@ -270,8 +248,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 0.4,
     borderRadius: 10,
-    borderColor: Colors.INACTIVE_GREY,
-    backgroundColor: Colors.LIGHT_GREY,
+    borderColor: Colors.WHITE,
+    backgroundColor: Colors.WHITE,
     marginBottom: Dimension.setHeight(1.8),
     elevation: 5,
     ...shadowIOS,

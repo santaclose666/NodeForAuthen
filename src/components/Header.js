@@ -4,14 +4,17 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  StatusBar,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
+import {fontDefault, imgDefault} from '../contants/Variable';
 
-const Header = ({title, eventFunc, navigation, refreshData}) => {
+const Header = ({title, navigation, refreshData, replace = false}) => {
   const showCreateButton =
     title === 'Lịch sử nghỉ phép' ||
     title === 'Lịch sử đặt vé' ||
@@ -19,32 +22,38 @@ const Header = ({title, eventFunc, navigation, refreshData}) => {
     title === 'Lịch sử đăng kí xe';
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingVertical: Dimension.setHeight(2),
         paddingHorizontal: Dimension.setWidth(2),
-        backgroundColor: '#e4edfdff',
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+        marginHorizontal: Dimension.setHeight(1.4),
+        borderRadius: 25,
+        marginTop: Platform.OS == 'android' ? 10 : 0,
       }}>
-     
+      <StatusBar
+        translucent
+        // backgroundColor="#22a87e"
+        barStyle="light-content"
+      />
       <TouchableOpacity
         onPress={() => {
-          navigation.goBack();
+          replace == true ? navigation.navigate('Home') : navigation.goBack();
         }}>
         <Image
           source={Images.back}
-          style={{width: 25, height: 25, tintColor: Colors.DEFAULT_BLACK}}
+          style={{width: 25, height: 18, ...imgDefault}}
         />
       </TouchableOpacity>
       <View style={{flex: 1, alignItems: 'center'}}>
         <Text
           style={{
-            fontFamily: Fonts.SF_MEDIUM,
+            fontFamily: Fonts.SF_BOLD,
             fontSize: 18,
-            opacity: 0.8,
-            color: '#041d3b',
+            ...fontDefault,
           }}>
           {title}
         </Text>
@@ -70,12 +79,15 @@ const Header = ({title, eventFunc, navigation, refreshData}) => {
               });
             }
           }}>
-          <Image source={Images.adjust} style={{width: 30, height: 30}} />
+          <Image
+            source={Images.adjust}
+            style={{width: 30, height: 30, ...imgDefault}}
+          />
         </TouchableOpacity>
       ) : (
         <View style={{width: 30}} />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

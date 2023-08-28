@@ -13,8 +13,10 @@ import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import {useSelector} from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
+import Header from '../../components/Header';
 
-const NotifiScreen = () => {
+const NotifiScreen = ({navigation}) => {
   const notifiData = useSelector(
     state => state.notifi.notifications?.allNotifi,
   );
@@ -33,34 +35,13 @@ const NotifiScreen = () => {
   }, [notifiData]);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={styles.container}>
-        <View style={styles.notifiMenuContainer}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginHorizontal: Dimension.setWidth(2),
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.SF_BOLD,
-                fontSize: 26,
-              }}>
-              Thông báo
-            </Text>
-            <View style={{marginRight: Dimension.setWidth(2)}}>
-              <Image
-                source={Images.notification}
-                style={{
-                  width: 30,
-                  height: 30,
-                }}
-              />
-            </View>
-          </View>
-        </View>
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView style={styles.container}>
+        <Header title="Thông báo" navigation={navigation} replace={true} />
         <View style={styles.notifiItemContainer}>
           <FlatList
             data={notifiMenu}
@@ -68,10 +49,12 @@ const NotifiScreen = () => {
             horizontal={true}
             renderItem={({item, index}) => {
               const colorBorder =
-                notifiMenuId === index ? 'black' : 'rgba(255, 255, 255, 0)';
+                notifiMenuId === index ? Colors.DEFAULT_GREEN : Colors.WHITE;
               const colorText =
-                notifiMenuId === index ? 'black' : Colors.INACTIVE_GREY;
-              const bdWidth = notifiMenuId === index ? 2 : 0.6;
+                notifiMenuId === index
+                  ? Colors.DEFAULT_GREEN
+                  : Colors.DEFAULT_BLACK;
+              const bdWidth = notifiMenuId === index ? 2 : 0;
               return (
                 <View
                   key={index}
@@ -79,13 +62,23 @@ const NotifiScreen = () => {
                     marginLeft: Dimension.setWidth(4.4),
                     borderBottomWidth: bdWidth,
                     borderColor: colorBorder,
+                    marginBottom: 0,
+                    flex: 1,
+                    justifyContent: 'space-between',
                   }}>
                   <TouchableOpacity onPress={() => setNotifiMenuId(index)}>
                     <Text
                       style={{
-                        fontFamily: Fonts.SF_SEMIBOLD,
-                        fontSize: 18,
-                        color: colorText,
+                        fontFamily:
+                          notifiMenuId === index
+                            ? Fonts.SF_SEMIBOLD
+                            : Fonts.SF_REGULAR,
+                        fontSize: 16,
+                        opacity: 0.8,
+                        color:
+                          notifiMenuId === index
+                            ? Colors.DEFAULT_GREEN
+                            : Colors.DEFAULT_BLACK,
                       }}>
                       {item}
                     </Text>
@@ -130,14 +123,15 @@ const NotifiScreen = () => {
             />
           )}
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 3,
   },
 
   notifiMenuContainer: {
@@ -147,10 +141,9 @@ const styles = StyleSheet.create({
   },
 
   notifiItemContainer: {
-    flex: 1.1,
+    flex: 1,
     marginHorizontal: Dimension.setWidth(3.6),
-    borderBottomWidth: 0.6,
-    borderColor: Colors.INACTIVE_GREY,
+    marginVertical: 3,
   },
 
   allNotifiContainer: {

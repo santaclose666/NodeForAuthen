@@ -37,6 +37,7 @@ import {ApproveCancelModal} from '../../components/Modal';
 import {ToastWarning} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
 import FilterStatusUI from '../../components/FilterStatusUI';
+import LinearGradient from 'react-native-linear-gradient';
 
 const HistoryRegisterTicketScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -312,6 +313,11 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
   });
 
   return (
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{ flex: 1 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}>
     <SafeAreaView style={styles.container}>
       <Header
         title="Lịch sử đặt vé"
@@ -584,13 +590,14 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
         eventFunc={handleApproveCancel}
       />
     </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    padding: 3,
   },
 
   containerEachLine: {

@@ -29,7 +29,7 @@ const DisplayPDF = ({navigation, route}) => {
           }}>
           <Image
             source={Images.back}
-            style={{width: 25, height: 25, tintColor: Colors.DARK_FIVE}}
+            style={{width: 18, height: 16, tintColor: Colors.WHITE}}
           />
         </TouchableOpacity>
       </View>
@@ -50,9 +50,12 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     position: 'absolute',
-    left: Dimension.setWidth(4),
-    top: Dimension.setHeight(7),
+    left: 10,
+    top: 10,
     zIndex: 999,
+    padding: 10,
+    borderRadius: 100,
+    backgroundColor: Colors.DEFAULT_GREEN,
   },
 });
 

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   SafeAreaView,
   useWindowDimensions,
+  Platform,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -43,7 +44,7 @@ const DetailNewsScreen = ({navigation, route}) => {
           src={newsURL + item.avatar}
           style={{
             width: Dimension.setWidth(100),
-            height: Dimension.setHeight(40),
+            height: Dimension.setHeight(26),
           }}
         />
       </View>
@@ -54,7 +55,7 @@ const DetailNewsScreen = ({navigation, route}) => {
           onPress={() => navigation.goBack()}>
           <Image
             source={Images.back}
-            style={{width: 20, height: 20, tintColor: '#fff'}}
+            style={{width: 18, height: 16, tintColor: '#fff'}}
           />
         </TouchableOpacity>
       </View>
@@ -65,7 +66,7 @@ const DetailNewsScreen = ({navigation, route}) => {
         <View style={styles.titleContainer}>
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 18,
               fontFamily: Fonts.SF_SEMIBOLD,
               textAlign: 'justify',
               ...fontDefault,
@@ -74,9 +75,11 @@ const DetailNewsScreen = ({navigation, route}) => {
           </Text>
           <Text
             style={{
-              fontSize: 15,
+              fontSize: 14,
               fontFamily: Fonts.SF_REGULAR,
-              color: Colors.INACTIVE_GREY,
+              color: Colors.DEFAULT_BLACK,
+              opacity: 0.6,
+              marginTop: Dimension.setHeight(1),
             }}>
             {item.date_created}
           </Text>
@@ -106,40 +109,35 @@ const DetailNewsScreen = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
     flex: 1,
-    backgroundColor: '#f2f2f2',
   },
 
   mainImgContainer: {
     position: 'absolute',
-    height: Dimension.setHeight(40),
+    height: Dimension.setHeight(26),
   },
 
   backHeartContainer: {
-    position: 'absolute',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    width: 60,
+    height: 60,
+    left: 10,
+    top: Platform.OS == 'ios' ? -20 : 0,
+    justifyContent: 'center',
     alignItems: 'center',
-    width: '90%',
-    marginHorizontal: Dimension.setWidth(5),
-    marginTop: Dimension.setHeight(3),
   },
 
   headerBtn: {
     padding: 10,
+    borderRadius: 100,
     backgroundColor: Colors.DEFAULT_GREEN,
-    borderRadius: 12,
-    elevation: 10,
-    ...shadowIOS,
   },
 
   contentDetailContainer: {
     flex: 1,
     position: 'absolute',
     width: '100%',
-    height: Dimension.setHeight(70),
-    top: Dimension.setHeight(33),
+    height: Dimension.setHeight(100),
+    top: Dimension.setHeight(22),
     backgroundColor: '#fff',
     borderRadius: 36,
     borderWidth: 0.8,
@@ -152,13 +150,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: Dimension.setHeight(2.2),
     marginHorizontal: Dimension.setWidth(6),
-    marginVertical: Dimension.setHeight(2),
   },
 
   descriptionContainer: {
-    marginBottom: Dimension.setHeight(4),
-    flexWrap: 'wrap',
-    flexDirection: 'row',
+    marginBottom: Dimension.setHeight(20),
     flex: 1,
     paddingHorizontal: Dimension.setWidth(3),
   },

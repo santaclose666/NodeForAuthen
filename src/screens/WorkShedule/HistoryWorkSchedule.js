@@ -55,6 +55,7 @@ import StaggerUI from '../../components/StaggerUI';
 import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert} from '../../components/Toast';
+import LinearGradient from 'react-native-linear-gradient';
 
 const approveArr = [
   {
@@ -311,7 +312,7 @@ const HistoryWorkShedule = ({navigation}) => {
         : Images.cancel;
 
     const finishStatus =
-      item.kt_congtac == 1 && item.nhanxet_duyetve == null
+      item.kt_congtac == 1
         ? 'Chờ duyệt k/t'
         : item.kt_congtac == 2 && item.nhanxet_duyetve !== null
         ? 'Đã duyệt k/t'
@@ -527,408 +528,417 @@ const HistoryWorkShedule = ({navigation}) => {
   });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header
-        title="Lịch sử công tác"
-        navigation={navigation}
-        refreshData={fetchWorkSchedule}
-      />
-      <View
-        style={{
-          borderBottomWidth: 0.6,
-          borderBlockColor: Colors.INACTIVE_GREY,
-          alignItems: 'center',
-          justifyContent: 'space-around',
-          width: '100%',
-          height: Dimension.setHeight(10),
-          flexDirection: 'row',
-        }}>
-        {approveArr.map((item, index) => {
-          return (
-            <TouchableOpacity
-              onPress={() => handlePickOption(index)}
-              key={index}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingTop: Dimension.setHeight(2.2),
-                paddingBottom: Dimension.setHeight(1.5),
-                paddingHorizontal: Dimension.setWidth(3),
-                height: '100%',
-                borderBottomWidth: indexPicker === index ? 1.6 : null,
-                borderBlockColor: indexPicker === index ? item.color : null,
-              }}>
-              <Image
-                source={item.icon}
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView style={styles.container}>
+        <Header
+          title="Lịch sử công tác"
+          navigation={navigation}
+          refreshData={fetchWorkSchedule}
+        />
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            width: '100%',
+            height: Dimension.setHeight(10),
+            flexDirection: 'row',
+          }}>
+          {approveArr.map((item, index) => {
+            return (
+              <TouchableOpacity
+                onPress={() => handlePickOption(index)}
+                key={index}
                 style={{
-                  height: 25,
-                  width: 25,
-                  tintColor: indexPicker === index ? item.color : item.color,
-                }}
-              />
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_MEDIUM,
-                  fontSize: 16,
-                  opacity: 0.8,
-                  color: indexPicker === index ? item.color : '#041d3b',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingTop: Dimension.setHeight(2.2),
+                  paddingBottom: Dimension.setHeight(1.5),
+                  paddingHorizontal: Dimension.setWidth(3),
+                  height: '100%',
+                  borderBottomWidth: indexPicker === index ? 2 : 0,
+                  borderBottomColor:
+                    indexPicker === index ? Colors.DEFAULT_GREEN : '#fff',
                 }}>
-                {item.title}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-      <BottomSheetModalProvider>
-        {handleFilter(indexPicker)?.length !== 0 ? (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            style={{
-              flex: 1,
-              paddingTop: Dimension.setHeight(3),
-            }}
-            data={handleFilter(indexPicker)}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({item, index}) => (
-              <RenderWorkScheduleData item={item} index={index} />
-            )}
-            initialNumToRender={6}
-            windowSize={6}
-            removeClippedSubviews={true}
-            refreshing={true}
-            extraData={workSheduleData}
-          />
-        ) : (
-          <View
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text
+                <Image
+                  source={item.icon}
+                  style={{
+                    height: 25,
+                    width: 25,
+                    tintColor: indexPicker === index ? item.color : item.color,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_MEDIUM,
+                    fontSize: 16,
+                    opacity: 0.8,
+                    color: indexPicker === index ? item.color : '#041d3b',
+                  }}>
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        <BottomSheetModalProvider>
+          {handleFilter(indexPicker)?.length !== 0 ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
               style={{
-                fontSize: 20,
-                fontFamily: Fonts.SF_MEDIUM,
-                color: Colors.INACTIVE_GREY,
-              }}>
-              Không có dữ liệu nào được tìm thấy
-            </Text>
-          </View>
-        )}
-        {selectedItem && (
-          <BottomSheetModal
-            backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
-            ref={bottomSheetModalRef}
-            index={0}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}>
+                flex: 1,
+                paddingTop: Dimension.setHeight(3),
+              }}
+              data={handleFilter(indexPicker)}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <RenderWorkScheduleData item={item} index={index} />
+              )}
+              initialNumToRender={6}
+              windowSize={6}
+              removeClippedSubviews={true}
+              refreshing={true}
+              extraData={workSheduleData}
+            />
+          ) : (
             <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: Dimension.setHeight(1.2),
-                paddingBottom: Dimension.setHeight(1.5),
-                borderBottomWidth: 0.8,
-                borderBottomColor: Colors.INACTIVE_GREY,
-              }}>
+              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
               <Text
                 style={{
-                  fontFamily: Fonts.SF_BOLD,
                   fontSize: 20,
-                  color: selectedItem.colorStatus,
+                  fontFamily: Fonts.SF_MEDIUM,
+                  color: Colors.INACTIVE_GREY,
                 }}>
-                Thông tin chi tiết
+                Không có dữ liệu nào được tìm thấy
               </Text>
             </View>
-            <BottomSheetScrollView showsVerticalScrollIndicator={false}>
+          )}
+          {selectedItem && (
+            <BottomSheetModal
+              backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
+              ref={bottomSheetModalRef}
+              index={0}
+              snapPoints={snapPoints}
+              onChange={handleSheetChanges}>
               <View
-                style={[
-                  styles.bottomSheetContainer,
-                  {marginTop: Dimension.setHeight(2.5)},
-                ]}>
-                <Text style={styles.titleBottomSheet}>Chương trình</Text>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.work} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      flex: 1,
-                    }}>
-                    <Text ellipsizeMode="tail" style={styles.title}>
-                      Tên chương trình:{' '}
-                      <Text style={styles.content}>
-                        {selectedItem.thuocchuongtrinh}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: Dimension.setHeight(1.2),
+                  paddingBottom: Dimension.setHeight(1.5),
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: Colors.INACTIVE_GREY,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_BOLD,
+                    fontSize: 20,
+                    color: selectedItem.colorStatus,
+                  }}>
+                  Thông tin chi tiết
+                </Text>
+              </View>
+              <BottomSheetScrollView showsVerticalScrollIndicator={false}>
+                <View
+                  style={[
+                    styles.bottomSheetContainer,
+                    {marginTop: Dimension.setHeight(2.5)},
+                  ]}>
+                  <Text style={styles.titleBottomSheet}>Chương trình</Text>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.work} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                      }}>
+                      <Text ellipsizeMode="tail" style={styles.title}>
+                        Tên chương trình:{' '}
+                        <Text style={styles.content}>
+                          {selectedItem.thuocchuongtrinh}
+                        </Text>
                       </Text>
-                    </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.worklocation} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '66%',
+                      }}>
+                      <Text style={styles.title}>Địa điểm:</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.diadiem}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.content} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                      }}>
+                      <Text ellipsizeMode="tail" style={styles.title}>
+                        Nội dung:{' '}
+                        <Text style={styles.content}>
+                          {selectedItem.noidung}
+                        </Text>
+                      </Text>
+                    </View>
                   </View>
                 </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.worklocation} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Địa điểm:</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.diadiem}
-                    </Text>
+
+                <View style={styles.bottomSheetContainer}>
+                  <Text style={styles.titleBottomSheet}>
+                    Thông tin công tác
+                  </Text>
+                  <View style={styles.containerEachLine}>
+                    <Image
+                      src={mainURL + selectedItem.avatar}
+                      style={styles.Iconic}
+                    />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                      }}>
+                      <Text style={styles.title}>Người công tác:{''}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.name_user}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.note} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                      }}>
+                      <Text style={styles.title}>Bộ môn:{''}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.subject}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerEachLine}>
+                    <Image source={Images.datetime} style={styles.Iconic} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={styles.title}>Thời gian:{''}</Text>
+                      <Text style={styles.content}>
+                        {changeFormatDate(selectedItem.tungay)}
+                      </Text>
+                      <Separation />
+                      <Text style={styles.content}>
+                        {changeFormatDate(selectedItem.denngay)}
+                      </Text>
+                    </View>
                   </View>
                 </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.content} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      flex: 1,
-                    }}>
-                    <Text ellipsizeMode="tail" style={styles.title}>
-                      Nội dung:{' '}
-                      <Text style={styles.content}>{selectedItem.noidung}</Text>
-                    </Text>
-                  </View>
+              </BottomSheetScrollView>
+            </BottomSheetModal>
+          )}
+          <ApproveCancelModal
+            screenName={'registerWorkSchedule'}
+            toggleApproveModal={toggleConfirmModal}
+            setToggleApproveModal={setToggleConfirmModal}
+            checkInput={checkInput}
+            selectedItem={selectedItem}
+            setSelectedItem={setSelectedItem}
+            commnetInput={commentInput}
+            setCommentInput={setCommentInput}
+            reasonCancel={reasonCancel}
+            setReasonCancel={setReasonCancel}
+            eventFunc={handleSendNonAdjust}
+          />
+
+          <ApproveCancelModal
+            screenName={'finishRequestWork'}
+            toggleApproveModal={toggleHandleFinishModal}
+            setToggleApproveModal={setToggleHandleFinishModal}
+            checkInput={checkInput}
+            selectedItem={selectedItem}
+            setSelectedItem={setSelectedItem}
+            commnetInput={commentInput}
+            setCommentInput={setCommentInput}
+            reasonCancel={reasonCancel}
+            setReasonCancel={setReasonCancel}
+            eventFunc={handleApproveCancelFinish}
+          />
+
+          <Modal
+            isVisible={toggleFinishModal}
+            animationIn="fadeInUp"
+            animationInTiming={1}
+            animationOut="fadeOutDown"
+            animationOutTiming={1}
+            avoidKeyboard={true}>
+            <View
+              style={{
+                flex: 1,
+                position: 'absolute',
+                alignSelf: 'center',
+                backgroundColor: '#fef4eb',
+                width: Dimension.setWidth(85),
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 14,
+                paddingHorizontal: Dimension.setWidth(3),
+                paddingBottom: Dimension.setHeight(1),
+              }}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginVertical: Dimension.setHeight(1),
+                  borderBottomWidth: 0.8,
+                  borderBlockColor: Colors.INACTIVE_GREY,
+                  width: '100%',
+                  height: Dimension.setHeight(4.5),
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_BOLD,
+                    fontSize: 20,
+                    color: '#f9a86a',
+                  }}>
+                  Yêu cầu kết thúc
+                </Text>
+              </View>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingVertical: Dimension.setHeight(1.5),
+                  paddingHorizontal: Dimension.setWidth(3),
+                }}>
+                <Image
+                  source={Images.workSchedule}
+                  style={{height: 55, width: 55}}
+                />
+                <Text
+                  style={{
+                    marginLeft: Dimension.setWidth(3),
+                    fontSize: 18,
+                    fontFamily: Fonts.SF_SEMIBOLD,
+                  }}>
+                  {selectedItem?.thuocchuongtrinh}
+                </Text>
+              </View>
+              <View style={styles.lineContainerModal}>
+                <View style={styles.itemContainerModal}>
+                  <Text style={styles.titleModal}>Ngày về</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setDateTime('date');
+                      setToggleDatePicker(true);
+                    }}
+                    style={styles.dateModalContainer}>
+                    <Text style={styles.contentModal}>{formatDate(date)}</Text>
+                    <View
+                      style={[
+                        styles.imgModalContainer,
+                        {backgroundColor: '#7cc985'},
+                      ]}>
+                      <Image
+                        source={Images.calendarBlack}
+                        style={styles.imgDate}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.itemContainerModal}>
+                  <Text style={styles.titleModal}>Giờ về</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setDateTime('time');
+                      setToggleDatePicker(true);
+                    }}
+                    style={styles.dateModalContainer}>
+                    <Text style={styles.contentModal}>{time}</Text>
+                    <View
+                      style={[
+                        styles.imgModalContainer,
+                        {backgroundColor: '#e3c242'},
+                      ]}>
+                      <Image source={Images.time} style={styles.imgDate} />
+                    </View>
+                  </TouchableOpacity>
                 </View>
               </View>
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  left: '5%',
+                  top: '5%',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+                onPress={() => setToggleFinishModal(false)}>
+                <Image source={Images.minusclose} style={styles.btnModal} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleRequestFinish}
+                style={{
+                  position: 'absolute',
+                  right: '5%',
+                  top: '5%',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image source={Images.confirm} style={styles.btnModal} />
+              </TouchableOpacity>
+            </View>
+            <DateTimePickerModal
+              isVisible={toggleDatePicker}
+              mode={dateTime}
+              onConfirm={handlePickDate}
+              onCancel={() => {
+                setToggleDatePicker(false);
+              }}
+            />
+          </Modal>
 
-              <View style={styles.bottomSheetContainer}>
-                <Text style={styles.titleBottomSheet}>Thông tin công tác</Text>
-                <View style={styles.containerEachLine}>
-                  <Image
-                    src={mainURL + selectedItem.avatar}
-                    style={styles.Iconic}
-                  />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      flex: 1,
-                    }}>
-                    <Text style={styles.title}>Người công tác:{''}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.name_user}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.note} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      flex: 1,
-                    }}>
-                    <Text style={styles.title}>Bộ môn:{''}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.subject}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.datetime} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={styles.title}>Thời gian:{''}</Text>
-                    <Text style={styles.content}>
-                      {changeFormatDate(selectedItem.tungay)}
-                    </Text>
-                    <Separation />
-                    <Text style={styles.content}>
-                      {changeFormatDate(selectedItem.denngay)}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </BottomSheetScrollView>
-          </BottomSheetModal>
-        )}
-        <ApproveCancelModal
-          screenName={'registerWorkSchedule'}
-          toggleApproveModal={toggleConfirmModal}
-          setToggleApproveModal={setToggleConfirmModal}
-          checkInput={checkInput}
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-          commnetInput={commentInput}
-          setCommentInput={setCommentInput}
-          reasonCancel={reasonCancel}
-          setReasonCancel={setReasonCancel}
-          eventFunc={handleSendNonAdjust}
-        />
-
-        <ApproveCancelModal
-          screenName={'finishRequestWork'}
-          toggleApproveModal={toggleHandleFinishModal}
-          setToggleApproveModal={setToggleHandleFinishModal}
-          checkInput={checkInput}
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-          commnetInput={commentInput}
-          setCommentInput={setCommentInput}
-          reasonCancel={reasonCancel}
-          setReasonCancel={setReasonCancel}
-          eventFunc={handleApproveCancelFinish}
-        />
-
-        <Modal
-          isVisible={toggleFinishModal}
-          animationIn="fadeInUp"
-          animationInTiming={1}
-          animationOut="fadeOutDown"
-          animationOutTiming={1}
-          avoidKeyboard={true}>
           <View
             style={{
               flex: 1,
               position: 'absolute',
-              alignSelf: 'center',
-              backgroundColor: '#fef4eb',
-              width: Dimension.setWidth(85),
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 14,
-              paddingHorizontal: Dimension.setWidth(3),
-              paddingBottom: Dimension.setHeight(1),
+              bottom: Dimension.setHeight(4.5),
+              right: Dimension.setWidth(6),
             }}>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginVertical: Dimension.setHeight(1),
-                borderBottomWidth: 0.8,
-                borderBlockColor: Colors.INACTIVE_GREY,
-                width: '100%',
-                height: Dimension.setHeight(4.5),
-              }}>
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_BOLD,
-                  fontSize: 20,
-                  color: '#f9a86a',
-                }}>
-                Yêu cầu kết thúc
-              </Text>
-            </View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingVertical: Dimension.setHeight(1.5),
-                paddingHorizontal: Dimension.setWidth(3),
-              }}>
-              <Image
-                source={Images.workSchedule}
-                style={{height: 55, width: 55}}
-              />
-              <Text
-                style={{
-                  marginLeft: Dimension.setWidth(3),
-                  fontSize: 18,
-                  fontFamily: Fonts.SF_SEMIBOLD,
-                }}>
-                {selectedItem?.thuocchuongtrinh}
-              </Text>
-            </View>
-            <View style={styles.lineContainerModal}>
-              <View style={styles.itemContainerModal}>
-                <Text style={styles.titleModal}>Ngày về</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setDateTime('date');
-                    setToggleDatePicker(true);
-                  }}
-                  style={styles.dateModalContainer}>
-                  <Text style={styles.contentModal}>{formatDate(date)}</Text>
-                  <View
-                    style={[
-                      styles.imgModalContainer,
-                      {backgroundColor: '#7cc985'},
-                    ]}>
-                    <Image
-                      source={Images.calendarBlack}
-                      style={styles.imgDate}
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.itemContainerModal}>
-                <Text style={styles.titleModal}>Giờ về</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setDateTime('time');
-                    setToggleDatePicker(true);
-                  }}
-                  style={styles.dateModalContainer}>
-                  <Text style={styles.contentModal}>{time}</Text>
-                  <View
-                    style={[
-                      styles.imgModalContainer,
-                      {backgroundColor: '#e3c242'},
-                    ]}>
-                    <Image source={Images.time} style={styles.imgDate} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <TouchableOpacity
-              style={{
-                position: 'absolute',
-                left: '5%',
-                top: '5%',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              onPress={() => setToggleFinishModal(false)}>
-              <Image source={Images.minusclose} style={styles.btnModal} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleRequestFinish}
-              style={{
-                position: 'absolute',
-                right: '5%',
-                top: '5%',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Image source={Images.confirm} style={styles.btnModal} />
-            </TouchableOpacity>
+            <StaggerUI
+              eventFunc1={handleRedirectMyWorkSchedule}
+              eventFunc2={handleRedirectCreate}
+            />
           </View>
-          <DateTimePickerModal
-            isVisible={toggleDatePicker}
-            mode={dateTime}
-            onConfirm={handlePickDate}
-            onCancel={() => {
-              setToggleDatePicker(false);
-            }}
-          />
-        </Modal>
-
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            bottom: Dimension.setHeight(4.5),
-            right: Dimension.setWidth(6),
-          }}>
-          <StaggerUI
-            eventFunc1={handleRedirectMyWorkSchedule}
-            eventFunc2={handleRedirectCreate}
-          />
-        </View>
-      </BottomSheetModalProvider>
-    </SafeAreaView>
+        </BottomSheetModalProvider>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    padding: 3,
   },
 
   containerEachLine: {

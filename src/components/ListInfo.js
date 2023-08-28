@@ -6,6 +6,7 @@ import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
 import {shadowIOS} from '../contants/propsIOS';
 import {fontDefault} from '../contants/Variable';
+import { opacity } from 'react-native-reanimated';
 
 const ListInfo = ({info, index}) => {
   const role =
@@ -47,8 +48,7 @@ const ListInfo = ({info, index}) => {
                 justifyContent: 'center',
                 marginTop: Dimension.setHeight(0.6),
               }}>
-              <Text style={styles.roleTeamTittle}>Quyền truy cập</Text>
-              <Text style={styles.roleTeamText}>{role}</Text>
+              <Text style={styles.roleTeamTittle}>{role}</Text>
             </View>
           </View>
         </View>
@@ -64,7 +64,7 @@ const ListInfo = ({info, index}) => {
             }
           />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {...fontDefault}]}>
+            <Text style={[styles.titleText]}>
               {info?.userName !== undefined ? 'Tên người dùng' : 'Chức danh'}
             </Text>
             <Text style={styles.contentText}>
@@ -75,7 +75,7 @@ const ListInfo = ({info, index}) => {
         <View style={styles.wrap}>
           <Image style={[styles.img]} source={Images.hr} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {opacity: 0.8, color: '#041d3b'}]}>
+            <Text style={[styles.titleText]}>
               Bộ phận
             </Text>
             <Text style={styles.contentText}>{info?.hr}</Text>
@@ -84,7 +84,7 @@ const ListInfo = ({info, index}) => {
         <View style={styles.wrap}>
           <Image style={[styles.img]} source={Images.year} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {opacity: 0.8, color: '#041d3b'}]}>
+            <Text style={[styles.titleText]}>
               Sinh nhật
             </Text>
             <Text style={styles.contentText}>{info?.birthday}</Text>
@@ -93,14 +93,14 @@ const ListInfo = ({info, index}) => {
         <View style={styles.wrap}>
           <Image style={[styles.img]} source={Images.email} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {...fontDefault}]}>Email</Text>
+            <Text style={[styles.titleText]}>Email</Text>
             <Text style={styles.contentText}>{info?.email}</Text>
           </View>
         </View>
         <View style={styles.wrap}>
           <Image style={[styles.img]} source={Images.phone} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText, {...fontDefault}]}>
+            <Text style={[styles.titleText]}>
               Số điện thoại
             </Text>
             <Text style={styles.contentText}>0{info?.phone}</Text>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
 
   avatarContainer: {
-    marginTop: Dimension.setHeight(2.3),
+    marginTop: Dimension.setHeight(3.6),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -154,19 +154,21 @@ const styles = StyleSheet.create({
 
   fullNameIfee: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 24,
+    fontSize: 20,
+    ...fontDefault
   },
 
   ifee: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 16,
-    color: Colors.INACTIVE_GREY,
+    fontSize: 14,
+    color: Colors.DEFAULT_BLACK,
+    opacity: 0.6
   },
 
   roleTeamTittle: {
-    fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 15,
-    color: Colors.INACTIVE_GREY,
+    fontFamily: Fonts.SF_BOLD,
+    fontSize: 16,
+    color: Colors.DEFAULT_RED,
   },
 
   roleTeamText: {
@@ -213,14 +215,16 @@ const styles = StyleSheet.create({
 
   titleText: {
     fontSize: 15,
-    fontFamily: Fonts.SF_BOLD,
+    fontFamily: Fonts.SF_MEDIUM,
+    color: Colors.DEFAULT_BLACK,
+    opacity: 0.5,
   },
 
   contentText: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: Fonts.SF_BOLD,
     ...fontDefault,
-    marginVertical: Dimension.setHeight(1),
+    marginVertical: Dimension.setHeight(0.2),
   },
 });
 
