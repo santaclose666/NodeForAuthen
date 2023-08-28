@@ -17,7 +17,9 @@ import Colors from '../../contants/Colors';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import {shadowIOS} from '../../contants/propsIOS';
-import {DocumentData, DocumentURL} from '../../contants/Variable';
+import LinearGradient from 'react-native-linear-gradient';
+import {DocumentData, DocumentURL, fontDefault} from '../../contants/Variable';
+import Header from '../../components/Header';
 
 const DocumentListScreen = ({navigation}) => {
   const [pickFileIndex, setpickFileIndex] = useState(null);
@@ -89,7 +91,11 @@ const DocumentListScreen = ({navigation}) => {
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 16}}>
+                style={{
+                  fontFamily: Fonts.SF_SEMIBOLD,
+                  fontSize: 16,
+                  ...fontDefault,
+                }}>
                 {item.SoHieu}
               </Text>
             </View>
@@ -171,99 +177,86 @@ const DocumentListScreen = ({navigation}) => {
   });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
-          style={{marginVertical: 10, marginRight: 10}}
-          onPress={() => {
-            navigation.goBack();
-          }}>
-          <Image source={Images.back} style={{width: 25, height: 25}} />
-        </TouchableOpacity>
-        <Text style={{fontFamily: Fonts.SF_BOLD, fontSize: 24}}>
-          Danh mục tài liệu
-        </Text>
-      </View>
-      <View style={styles.searchInput}>
-        <Icons.Feather name="search" size={25} color={Colors.INACTIVE_GREY} />
-        <TextInput
-          onChangeText={e => handleSearch(e)}
-          value={input}
-          placeholder="Tìm văn bản"
-          style={{
-            fontFamily: Fonts.SF_REGULAR,
-            marginLeft: 10,
-            width: '80%',
-          }}
-        />
-      </View>
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView style={styles.container}>
+        <Header title="Danh mục tài liệu" navigation={navigation} />
+        <View style={styles.searchInput}>
+          <Icons.Feather name="search" size={25} color={Colors.INACTIVE_GREY} />
+          <TextInput
+            onChangeText={e => handleSearch(e)}
+            value={input}
+            placeholder="Tìm văn bản"
+            style={{
+              fontFamily: Fonts.SF_REGULAR,
+              marginLeft: 10,
+              width: '80%',
+            }}
+          />
+        </View>
 
-      <View style={styles.optionContainer}>
-        <Text
-          style={{
-            fontFamily: Fonts.SF_SEMIBOLD,
-            fontSize: 22,
-            marginBottom: Dimension.setHeight(0.5),
-          }}>
-          Loại văn bản
-        </Text>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {groupOption.map((item, index) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  handlePickOption(item, index);
-                }}
-                key={index}
-                style={{marginRight: Dimension.setWidth(4.4)}}>
-                <Text
+        <View style={styles.optionContainer}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {groupOption.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    handlePickOption(item, index);
+                  }}
+                  key={index}
                   style={{
-                    fontFamily: Fonts.SF_REGULAR,
-                    fontSize: 17,
-                    color:
-                      pickOptionIndex === index
-                        ? '#49d0ef'
-                        : Colors.INACTIVE_GREY,
+                    marginRight: Dimension.setWidth(4.4),
+                    paddingVertical: 3,
+                    borderBottomWidth: pickOptionIndex === index ? 2 : 0,
+                    borderBottomColor:
+                      pickOptionIndex === index ? Colors.DEFAULT_GREEN : '#fff',
                   }}>
-                  {item}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-      </View>
+                  <Text
+                    style={{
+                      fontFamily:
+                        pickOptionIndex === index
+                          ? Fonts.SF_SEMIBOLD
+                          : Fonts.SF_REGULAR,
+                      fontSize: 16,
+                      opacity: 0.8,
+                      color:
+                        pickOptionIndex === index
+                          ? Colors.DEFAULT_GREEN
+                          : Colors.DEFAULT_BLACK,
+                    }}>
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
 
-      <View style={styles.fileListContainer}>
-        <Text
-          style={{
-            fontFamily: Fonts.SF_SEMIBOLD,
-            fontSize: 22,
-            marginBottom: Dimension.setHeight(1),
-          }}>
-          Văn bản, tài liệu
-        </Text>
-
-        <VirtualizedList
-          data={data}
-          keyExtractor={item => item.ID.toString()}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item, index}) => (
-            <RenderDocument item={item} index={index} />
-          )}
-          getItemCount={() => data.length}
-          getItem={(data, index) => data[index]}
-          getItemLayout={(data, index) => ({
-            length: Dimension.setHeight(14),
-            offset: Dimension.setHeight(14) * index,
-            index,
-          })}
-          initialNumToRender={10}
-          windowSize={6}
-          removeClippedSubviews={true}
-        />
-      </View>
-    </SafeAreaView>
+        <View style={styles.fileListContainer}>
+          <VirtualizedList
+            data={data}
+            keyExtractor={item => item.ID.toString()}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}) => (
+              <RenderDocument item={item} index={index} />
+            )}
+            getItemCount={() => data.length}
+            getItem={(data, index) => data[index]}
+            getItemLayout={(data, index) => ({
+              length: Dimension.setHeight(14),
+              offset: Dimension.setHeight(14) * index,
+              index,
+            })}
+            initialNumToRender={10}
+            windowSize={6}
+            removeClippedSubviews={true}
+          />
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
@@ -271,7 +264,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#ffffff',
   },
 
   headerContainer: {
@@ -320,12 +312,14 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: Fonts.SF_BOLD,
     fontSize: 14,
+    ...fontDefault,
   },
 
   content: {
     fontFamily: Fonts.SF_REGULAR,
     fontSize: 14,
     marginLeft: Dimension.setWidth(2),
+    textAlign: 'justify',
   },
   searchInput: {
     alignSelf: 'center',
@@ -338,6 +332,7 @@ const styles = StyleSheet.create({
     height: Dimension.setHeight(5.5),
     justifyContent: 'flex-start',
     paddingHorizontal: Dimension.setWidth(3),
+    marginTop: 10,
   },
 
   flatListItemContainer: {

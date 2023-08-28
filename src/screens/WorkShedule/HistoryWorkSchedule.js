@@ -27,28 +27,138 @@ import {
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
 import {shadowIOS} from '../../contants/propsIOS';
-import {getAllWorkSchedule} from '../../redux/apiRequest';
+import {
+  approveWorkSchedule,
+  cancelWorkSchedule,
+  getAllWorkSchedule,
+} from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import FilterStatusUI from '../../components/FilterStatusUI';
 import {changeFormatDate} from '../../utils/serviceFunction';
+import StatusUI from '../../components/StatusUI';
+import {defaultIFEE, defaultXMG, mainURL} from '../../contants/Variable';
+import {ApproveCancelModal} from '../../components/Modal';
+import {ToastWarning} from '../../components/Toast';
+import StaggerUI from '../../components/StaggerUI';
 
-const HistoryWorkShedule = ({navigation, route}) => {
-  const refresh = route.params?.refresh;
+const approveArr = [
+  {
+    title: 'Tất cả',
+    color: '#618cf2',
+    bgColor: 'rgba(254, 244, 235, 0.3)',
+    icon: Images.all,
+  },
+  {
+    title: 'Chờ duyệt',
+    color: '#f0b263',
+    bgColor: 'rgba(254, 244, 235, 0.3)',
+    icon: Images.pending1,
+  },
+  {
+    title: 'Đã duyệt',
+    color: '#57b85d',
+    bgColor: 'rgba(222, 248, 237, 0.3)',
+    icon: Images.approved1,
+  },
+  {
+    title: 'Hủy bỏ',
+    inActiveColor: '',
+    color: '#f25157',
+    bgColor: 'rgba(249, 223, 224, 0.3)',
+    icon: Images.cancelled,
+  },
+];
+
+const HistoryWorkShedule = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const dispatch = useDispatch();
+  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const workSheduleData = useSelector(
-    state => state.workShedule?.worksSchedule?.data,
+    state => state.workSchedule?.worksSchedule?.data,
   );
-  const [refreshComponent, setRefreshComponent] = useState(false);
   const [indexPicker, setIndexPicker] = useState(0);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [checkInput, setCheckInput] = useState(null);
+  const [commentInput, setCommentInput] = useState('');
+  const [reasonCancel, setReasonCancel] = useState('');
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
-  const handleSheetChanges = useCallback(() => {
-    setSelectedItem(null);
+  const handleBottomSheet = useCallback(
+    (item, subject, avatar, bgColorStatus, colorStatus) => {
+      setSelectedItem({
+        ...item,
+        subject,
+        avatar,
+        bgColorStatus,
+        colorStatus,
+      });
+      setTimeout(() => {
+        handlePresentModalPress();
+      });
+    },
+    [selectedItem],
+  );
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
   }, []);
+
+  const handleSheetChanges = useCallback(index => {
+    if (index < 0) {
+      setSelectedItem(null);
+    }
+  }, []);
+
+  const handleApprove = useCallback(
+    item => {
+      setSelectedItem(item);
+      setCheckInput(true);
+      setToggleModal(true);
+    },
+    [selectedItem],
+  );
+
+  const handleCancel = useCallback(
+    item => {
+      setSelectedItem(item);
+      setCheckInput(false);
+      setToggleModal(true);
+    },
+    [selectedItem],
+  );
+
+  const handleSendNonAdjust = () => {
+    if (checkInput && commentInput !== '' && selectedItem !== null) {
+      const data = {
+        id_lichcongtac: selectedItem.id,
+        nhanxet: commentInput,
+      };
+
+      approveWorkSchedule(data);
+      setCommentInput(null);
+      setToggleModal(false);
+      setTimeout(() => {
+        fetchWorkSchedule();
+      });
+    } else if (!checkInput && reasonCancel !== '' && selectedItem !== null) {
+      const data = {
+        id_lichcongtac: selectedItem.id,
+        lydo: reasonCancel,
+      };
+
+      cancelWorkSchedule(data);
+      setReasonCancel(null);
+      setToggleModal(false);
+      setTimeout(() => {
+        fetchWorkSchedule();
+      });
+    } else {
+      ToastWarning('Nhập đầy đủ thông tin!');
+    }
+  };
 
   const handlePickOption = useCallback(
     index => {
@@ -73,15 +183,21 @@ const HistoryWorkShedule = ({navigation, route}) => {
     [workSheduleData],
   );
 
-  const fetchWorkSchedule = () => {
-    getAllWorkSchedule(dispatch, user?.id);
+  const handleRedirectCreate = () => {
+    navigation.navigate('CreateWorkSchedule');
   };
+
+  const handleRedirectMyWorkSchedule = useCallback(() => {
+    navigation.navigate('MyWorkSchedule');
+  }, []);
+
+  const fetchWorkSchedule = useCallback(() => {
+    getAllWorkSchedule(dispatch, user?.id);
+  }, []);
 
   useLayoutEffect(() => {
     fetchWorkSchedule();
-
-    console.log(workSheduleData[0].id);
-  }, [refresh, refreshComponent]);
+  }, []);
 
   const RenderWorkScheduleData = memo(({item, index}) => {
     const colorStatus =
@@ -101,14 +217,41 @@ const HistoryWorkShedule = ({navigation, route}) => {
         ? Images.approve
         : Images.cancel;
 
+    const filterUser = IFEEstaffs.filter(staff => staff.id === item.id_user)[0];
+    const subject =
+      filterUser?.tenphong === undefined
+        ? 'Không xác định'
+        : filterUser?.tenphong;
+    const avatar =
+      filterUser?.path === undefined
+        ? user?.tendonvi === 'IFEE'
+          ? defaultIFEE
+          : defaultXMG
+        : filterUser?.path;
+
+    const checkRole = () => {
+      return (
+        (item.status === 0 &&
+          item.id_user !== user?.id &&
+          user?.vitri_ifee === 3 &&
+          filterUser.vitri_ifee > 3) ||
+        (user?.vitri_ifee == 1 && item.status === 0)
+      );
+    };
+
+    const checkStatus = () => {
+      return (
+        item.status !== 0 ||
+        user?.vitri_ifee > 3 ||
+        item.id_user === user?.id ||
+        (user?.id === 1 && item.status !== 0)
+      );
+    };
+
     return (
       <TouchableOpacity
         onPress={() => {
-          setSelectedItem({
-            ...item,
-            colorStatus: colorStatus,
-            bgColorStatus: bgColorStatus,
-          });
+          handleBottomSheet(item, subject, avatar, bgColorStatus, colorStatus);
         }}
         key={index}
         style={{
@@ -119,13 +262,16 @@ const HistoryWorkShedule = ({navigation, route}) => {
           ...shadowIOS,
           borderRadius: 15,
           paddingHorizontal: Dimension.setWidth(5),
-          paddingVertical: Dimension.setHeight(2),
+          paddingTop: Dimension.setHeight(2),
+          paddingBottom: Dimension.setHeight(1),
         }}>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
+            width: '66%',
+            marginBottom: Dimension.setHeight(0.5),
           }}>
           <Text
             numberOfLines={2}
@@ -133,37 +279,54 @@ const HistoryWorkShedule = ({navigation, route}) => {
             style={{
               fontFamily: Fonts.SF_SEMIBOLD,
               fontSize: 19,
-              width: '70%',
             }}>
             {item.thuocchuongtrinh}
           </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingVertical: Dimension.setHeight(0.5),
-              paddingHorizontal: Dimension.setWidth(1.4),
-              borderRadius: 8,
-              backgroundColor: bgColorStatus,
-            }}>
-            <Image
-              source={icon}
-              style={{
-                height: 16,
-                width: 16,
-                marginRight: Dimension.setWidth(1),
-                tintColor: colorStatus,
-              }}
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            right: '5%',
+            top: '7%',
+            zIndex: 9999,
+          }}>
+          {checkStatus() && (
+            <StatusUI
+              status={status}
+              colorStatus={colorStatus}
+              bgColorStatus={bgColorStatus}
+              icon={icon}
             />
-            <Text
+          )}
+          {checkRole() && (
+            <View
               style={{
-                color: colorStatus,
-                fontSize: 14,
-                fontFamily: Fonts.SF_MEDIUM,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: Dimension.setWidth(17),
+                alignSelf: 'center',
               }}>
-              {status}
-            </Text>
-          </View>
+              <TouchableOpacity
+                onPress={() => {
+                  handleApprove(item);
+                }}>
+                <Image
+                  source={Images.approved}
+                  style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  handleCancel(item);
+                }}>
+                <Image
+                  source={Images.cancelled}
+                  style={[styles.approvedIcon, {tintColor: '#f25157'}]}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         <Text
           style={{
@@ -175,7 +338,10 @@ const HistoryWorkShedule = ({navigation, route}) => {
           {item.diadiem}
         </Text>
         <View style={styles.containerEachLine}>
-          <Image source={Images.insideperson} style={styles.Iconic} />
+          <Image
+            src={mainURL + avatar}
+            style={[styles.Iconic, {borderRadius: 50}]}
+          />
           <Text
             numberOfLines={2}
             ellipsizeMode="tail"
@@ -197,11 +363,57 @@ const HistoryWorkShedule = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Lịch sử công tác" navigation={navigation} />
-      <FilterStatusUI
-        handlePickOption={handlePickOption}
-        indexPicker={indexPicker}
+      <Header
+        title="Lịch sử công tác"
+        navigation={navigation}
+        refreshData={fetchWorkSchedule}
       />
+      <View
+        style={{
+          borderBottomWidth: 0.6,
+          borderBlockColor: Colors.INACTIVE_GREY,
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          width: '100%',
+          height: Dimension.setHeight(10),
+          flexDirection: 'row',
+        }}>
+        {approveArr.map((item, index) => {
+          return (
+            <TouchableOpacity
+              onPress={() => handlePickOption(index)}
+              key={index}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingTop: Dimension.setHeight(2.2),
+                paddingBottom: Dimension.setHeight(1.5),
+                paddingHorizontal: Dimension.setWidth(3),
+                height: '100%',
+                borderBottomWidth: indexPicker === index ? 1.6 : null,
+                borderBlockColor: indexPicker === index ? item.color : null,
+              }}>
+              <Image
+                source={item.icon}
+                style={{
+                  height: 25,
+                  width: 25,
+                  tintColor: indexPicker === index ? item.color : item.color,
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: 16,
+                  opacity: 0.8,
+                  color: indexPicker === index ? item.color : '#041d3b',
+                }}>
+                {item.title}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
       <BottomSheetModalProvider>
         {handleFilter(indexPicker)?.length !== 0 ? (
           <FlatList
@@ -276,7 +488,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
                     <Text ellipsizeMode="tail" style={styles.title}>
                       Tên chương trình:{' '}
                       <Text style={styles.content}>
-                        {selectedItem.programName}
+                        {selectedItem.thuocchuongtrinh}
                       </Text>
                     </Text>
                   </View>
@@ -293,7 +505,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.location}
+                      {selectedItem.diadiem}
                     </Text>
                   </View>
                 </View>
@@ -306,7 +518,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
                     }}>
                     <Text ellipsizeMode="tail" style={styles.title}>
                       Nội dung:{' '}
-                      <Text style={styles.content}>{selectedItem.content}</Text>
+                      <Text style={styles.content}>{selectedItem.noidung}</Text>
                     </Text>
                   </View>
                 </View>
@@ -315,7 +527,10 @@ const HistoryWorkShedule = ({navigation, route}) => {
               <View style={styles.bottomSheetContainer}>
                 <Text style={styles.titleBottomSheet}>Thông tin công tác</Text>
                 <View style={styles.containerEachLine}>
-                  <Image source={Images.insideperson} style={styles.Iconic} />
+                  <Image
+                    src={mainURL + selectedItem.avatar}
+                    style={styles.Iconic}
+                  />
                   <View
                     style={{
                       flexDirection: 'row',
@@ -326,7 +541,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.fullName}
+                      {selectedItem.name_user}
                     </Text>
                   </View>
                 </View>
@@ -354,15 +569,45 @@ const HistoryWorkShedule = ({navigation, route}) => {
                       alignItems: 'center',
                     }}>
                     <Text style={styles.title}>Thời gian:{''}</Text>
-                    <Text style={styles.content}>{selectedItem.startDay}</Text>
+                    <Text style={styles.content}>
+                      {changeFormatDate(selectedItem.tungay)}
+                    </Text>
                     <Separation />
-                    <Text style={styles.content}>{selectedItem.endDay}</Text>
+                    <Text style={styles.content}>
+                      {changeFormatDate(selectedItem.denngay)}
+                    </Text>
                   </View>
                 </View>
               </View>
             </BottomSheetScrollView>
           </BottomSheetModal>
         )}
+        <ApproveCancelModal
+          screenName={'registerWorkSchedule'}
+          toggleApproveModal={toggleModal}
+          setToggleApproveModal={setToggleModal}
+          checkInput={checkInput}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+          commnetInput={commentInput}
+          setCommentInput={setCommentInput}
+          reasonCancel={reasonCancel}
+          setReasonCancel={setReasonCancel}
+          eventFunc={handleSendNonAdjust}
+        />
+
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            bottom: Dimension.setHeight(4.5),
+            right: Dimension.setWidth(6),
+          }}>
+          <StaggerUI
+            eventFunc1={handleRedirectMyWorkSchedule}
+            eventFunc2={handleRedirectCreate}
+          />
+        </View>
       </BottomSheetModalProvider>
     </SafeAreaView>
   );
@@ -371,7 +616,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#b6c987',
+    backgroundColor: '#f2f2f2',
   },
 
   containerEachLine: {
@@ -396,6 +641,7 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     fontFamily: Fonts.SF_SEMIBOLD,
+    color: '#747476',
     marginLeft: Dimension.setWidth(1),
   },
 
@@ -416,6 +662,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1.6),
+  },
+
+  approvedIcon: {
+    width: 30,
+    height: 30,
   },
 });
 

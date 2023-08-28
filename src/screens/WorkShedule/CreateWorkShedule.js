@@ -28,6 +28,7 @@ import {useDispatch} from 'react-redux';
 import {getAllWorkName, registerWorkSchedule} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
+import Loading from '../../components/LoadingUI';
 
 const optionData = [
   {
@@ -47,7 +48,7 @@ const workData = [
   },
 ];
 
-const CreateWorkSchedule = ({navigation}) => {
+const CreateWorkSchedule = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const workNameData = useSelector(state => state.work.works?.data);
   const [optionValue, setOptionValue] = useState(optionData[0].value);
@@ -64,6 +65,7 @@ const CreateWorkSchedule = ({navigation}) => {
   const [startDay, setStartDay] = useState(formatDate(new Date()));
   const [endDay, setEndDay] = useState(null);
   const [apiCall, setApiCall] = useState(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const fetchWorkNameData = async () => {
@@ -105,7 +107,7 @@ const CreateWorkSchedule = ({navigation}) => {
     }
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const checkOp =
       workValue === 1
         ? {op1_tenchuongtrinh: workNameValue}
@@ -133,9 +135,21 @@ const CreateWorkSchedule = ({navigation}) => {
       noteInput !== '' &&
       (workValue === 2 ? ortherWorkInput !== '' : workNameValue !== '')
     ) {
-      registerWorkSchedule(data);
-      ToastSuccess('Đăng kí lịch công tác thành công');
-      navigation.navigate('HistoryWorkShedule', {refresh: true});
+      setLoading(true);
+
+      try {
+        const res = await registerWorkSchedule(data);
+
+        if (res) {
+          ToastSuccess('Đăng kí lịch công tác thành công');
+          navigation.goBack();
+          route.params?.refreshData();
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       ToastAlert('Thiếu thông tin!');
     }
@@ -401,6 +415,7 @@ const CreateWorkSchedule = ({navigation}) => {
           <RegisterBtn nameBtn={'Thực hiện'} onEvent={handleRegister} />
         </KeyboardAwareScrollView>
       </ScrollView>
+      {loading === true && <Loading />}
     </SafeAreaView>
   );
 };
@@ -408,7 +423,7 @@ const CreateWorkSchedule = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f2f2f2',
   },
 
   containerEachLine: {

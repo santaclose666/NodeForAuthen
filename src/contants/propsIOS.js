@@ -2,9 +2,8 @@ import Dimension from './Dimension';
 import Colors from './Colors';
 
 export const shadowIOS = {
-  shadowColor: '#000',
-  shadowOffset: {width: 0, height: 2},
-  shadowOpacity: 0.3,
-  shadowRadius: 4,
-  shadowColor: 'black',
+  shadowColor: '#171717',
+  shadowOffset: {width: -2, height: 4},
+  shadowOpacity: 0.2,
+  shadowRadius: 3,
 };

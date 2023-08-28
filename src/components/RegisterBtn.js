@@ -16,7 +16,7 @@ const RegisterBtn = ({nameBtn, onEvent}) => {
         justifyContent: 'center',
         borderRadius: 8,
         width: Dimension.setWidth(28),
-        height: Dimension.setHeight(6),
+        height: Dimension.setHeight(5),
         marginTop: Dimension.setHeight(1),
         marginBottom: Dimension.setHeight(2.5),
       }}>

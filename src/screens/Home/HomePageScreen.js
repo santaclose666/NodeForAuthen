@@ -7,7 +7,6 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  StatusBar,
   SafeAreaView,
   Platform,
   PermissionsAndroid,
@@ -22,14 +21,15 @@ import {
   getVietnameseDayOfWeek,
   getFormattedDate,
 } from '../../utils/serviceFunction';
-import {getAllStaffs, getWeatherData} from '../../redux/apiRequest';
+import {getWeatherData, getAllStaffs} from '../../redux/apiRequest';
 import {getToken, notificationListener} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
-import LinearGradient from 'react-native-linear-gradient';
 import {shadowIOS} from '../../contants/propsIOS';
-import {mainURL} from '../../contants/Variable';
+import {fontDefault, mainURL} from '../../contants/Variable';
+import {ToastAlert} from '../../components/Toast';
+import LinearGradient from 'react-native-linear-gradient';
 
 const requestPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -55,9 +55,7 @@ const requestPermissions = async () => {
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
-  const notifiData = useSelector(
-    state => state.notifi.notifications?.allNotifi,
-  );
+
   const dispatch = useDispatch();
   const [interval, setInTerVal] = useState(null);
   const [newsArr, setNewArr] = useState([
@@ -109,13 +107,24 @@ const HomePageScreen = ({navigation}) => {
 
   const fetchImportantData = async () => {
     await requestPermissions();
-    await getAllStaffs(dispatch);
     await getWeatherData(dispatch);
+  };
+
+  const fetchAllStaff = () => {
+    getAllStaffs(dispatch);
   };
 
   const notificationHandle = async () => {
     await getToken();
     await notificationListener(notifiData, navigation, dispatch);
+  };
+
+  const handleLimitedFeature = routeName => {
+    if (user) {
+      navigation.navigate(routeName);
+    } else {
+      ToastAlert('Đăng nhập để sử dụng tính năng này');
+    }
   };
 
   useEffect(() => {
@@ -129,14 +138,16 @@ const HomePageScreen = ({navigation}) => {
       fetchImportantData();
     }
 
-    notificationHandle();
+    fetchAllStaff();
+
+    // notificationHandle();
 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <LinearGradient
-      colors={['rgba(238,174,202,1)', 'rgba(148,187,233,1)']}
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
       style={styles.container}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}>
@@ -145,7 +156,6 @@ const HomePageScreen = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={false}
           style={styles.container}>
-          <StatusBar barStyle="dark-content" backgroundColor="transparent" />
           <View style={styles.userInforContainer}>
             <View style={styles.userNameContainer}>
               <Text style={styles.userNameText}>Welcome, {user?.hoten} </Text>
@@ -159,7 +169,7 @@ const HomePageScreen = ({navigation}) => {
                 style={styles.avatarUserContainer}>
                 <Image
                   src={`${mainURL + user?.path}`}
-                  style={styles.avatarUserImg}
+                  style={[styles.avatarUserImg, {borderRadius: 50}]}
                 />
               </TouchableOpacity>
             ) : (
@@ -225,7 +235,9 @@ const HomePageScreen = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
-                  fontSize: 18,
+                  fontSize: 16,
+                  color: Colors.DEFAULT_BLACK,
+                  opacity: 0.9,
                 }}>
                 Công cụ tiện ích
               </Text>
@@ -242,6 +254,28 @@ const HomePageScreen = ({navigation}) => {
                 />
                 <Text style={styles.featureText}>Văn bản</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  navigation.navigate('SelectWMSLayer');
+                }}>
+                <Image source={Images.map} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Bản đồ số</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}>
+                <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
+                    navigation.navigate('ListBio');
+                  }}>
+                  <Image
+                    source={Images.biodiversity}
+                    style={styles.featureBtn}
+                  />
+                  <Text style={styles.featureText}>ĐDSH</Text>
+                </TouchableOpacity>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
             </View>
           </View>
           <View style={styles.featureBtnContainer}>
@@ -249,7 +283,9 @@ const HomePageScreen = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
-                  fontSize: 18,
+                  fontSize: 16,
+                  color: Colors.DEFAULT_BLACK,
+                  opacity: 0.9,
                 }}>
                 IFEE Management
               </Text>
@@ -258,7 +294,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('StaffList');
+                  handleLimitedFeature('StaffList');
                 }}>
                 <Image source={Images.staff} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Nhân sự</Text>
@@ -266,15 +302,17 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('HistoryWorkShedule');
+                  handleLimitedFeature('HistoryWorkShedule');
                 }}>
                 <Image source={Images.calendar2} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Lịch công tác</Text>
+                <Text style={[styles.featureText, {alignSelf: 'center'}]}>
+                  Lịch công tác
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('HistoryApplyLeave');
+                  handleLimitedFeature('HistoryApplyLeave');
                 }}>
                 <Image source={Images.busy} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Nghỉ phép</Text>
@@ -288,7 +326,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('HistoryRegisterVehicle');
+                  handleLimitedFeature('HistoryRegisterVehicle');
                 }}>
                 <Image
                   source={Images.registervehicle}
@@ -299,7 +337,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('HistoryPlaneTicket');
+                  handleLimitedFeature('HistoryPlaneTicket');
                 }}>
                 <Image
                   source={Images.registerticket}
@@ -307,6 +345,8 @@ const HomePageScreen = ({navigation}) => {
                 />
                 <Text style={styles.featureText}>Đăng kí vé</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
             </View>
           </View>
           <View style={styles.newTextContainer}>
@@ -322,6 +362,7 @@ const HomePageScreen = ({navigation}) => {
             data={newsArr}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
+            style={{marginHorizontal: 2.5}}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
@@ -375,14 +416,15 @@ const styles = StyleSheet.create({
 
   userNameText: {
     fontFamily: Fonts.SF_BOLD,
-    color: Colors.INACTIVE_GREY,
-    fontSize: 17,
+    ...fontDefault,
+    fontSize: 16,
   },
 
   companyText: {
     fontSize: 24,
     fontFamily: Fonts.SF_BOLD,
     color: '#388a60',
+    letterSpacing: 1,
   },
 
   avatarUserContainer: {
@@ -424,12 +466,14 @@ const styles = StyleSheet.create({
   dayInWeekText: {
     fontSize: 18,
     fontFamily: Fonts.SF_BOLD,
+    ...fontDefault,
   },
 
   calendarText: {
     fontSize: 13,
     fontFamily: Fonts.SF_BOLD,
-    color: Colors.INACTIVE_GREY,
+    ...fontDefault,
+    opacity: 0.6,
   },
 
   weatherContainer: {
@@ -452,82 +496,92 @@ const styles = StyleSheet.create({
 
   featureBtnContainer: {
     marginBottom: 10,
-    marginHorizontal: 18,
+    marginHorizontal: Dimension.setWidth(3.6),
   },
 
   btnContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
+    marginBottom: Dimension.setHeight(1.4),
   },
 
   buttonFuc: {
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: '3%',
-    borderRadius: 8,
-    width: '20%',
   },
 
   featureBtn: {
-    width: 50,
-    height: 50,
+    width: 44,
+    height: 44,
   },
 
   featureText: {
-    fontFamily: Fonts.SF_SEMIBOLD,
+    fontFamily: Fonts.SF_MEDIUM,
     alignContent: 'center',
+    textAlign: 'center',
+    fontSize: 14,
+    marginTop: 1,
+    ...fontDefault,
   },
 
   newTextContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 3,
     marginHorizontal: Dimension.setWidth(2.5),
   },
 
   newsText: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 17,
+    fontSize: 16,
     marginVertical: Dimension.setHeight(0.2),
+    color: Colors.DEFAULT_BLACK,
+    opacity: 0.9,
   },
 
   viewAllText: {
     fontFamily: Fonts.SF_SEMIBOLD,
-    color: Colors.INACTIVE_GREY,
-    fontSize: 15,
+    fontSize: 14,
+    color: Colors.DEFAULT_BLACK,
+    opacity: 0.6,
   },
 
   newsContainer: {
     marginBottom: Dimension.setHeight(1),
     borderWidth: 0.4,
-    borderRadius: 18,
+    borderRadius: 20,
     backgroundColor: '#f5f5ff',
-    borderColor: Colors.INACTIVE_GREY,
-    elevation: 5,
+    borderColor: Colors.WHITE,
+    elevation: 10,
     ...shadowIOS,
-    marginLeft: Dimension.setWidth(2),
-    marginRight: Dimension.setWidth(0.5),
-    width: Dimension.setWidth(71),
-    paddingVertical: Dimension.setHeight(1),
-    paddingHorizontal: Dimension.setWidth(2),
+    marginHorizontal: 5,
+    width: Dimension.setWidth(72),
+    paddingVertical: Dimension.setHeight(1.2),
+    paddingHorizontal: Dimension.setWidth(1.2),
   },
 
   newsImg: {
-    width: Dimension.setWidth(68),
+    width: Dimension.setWidth(66.5),
     height: Dimension.setHeight(18),
     borderRadius: 18,
   },
 
   newsTitleText: {
     fontFamily: Fonts.SF_SEMIBOLD,
-    fontSize: 16,
+    fontSize: 14,
+    ...fontDefault,
+    paddingHorizontal: Dimension.setHeight(1),
+    textAlign: 'justify',
   },
 
   newsLocationText: {
     fontFamily: Fonts.SF_REGULAR,
-    color: Colors.INACTIVE_GREY,
-    fontSize: 14,
+    color: Colors.DEFAULT_BLACK,
+    opacity: 0.6,
+    fontSize: 12,
+    paddingHorizontal: Dimension.setHeight(1),
   },
 });
 

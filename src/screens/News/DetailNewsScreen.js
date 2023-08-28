@@ -14,14 +14,13 @@ import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import {shadowIOS} from '../../contants/propsIOS';
+import {fontDefault} from '../../contants/Variable';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
-  console.log(item);
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <View style={styles.mainImgContainer}>
         <Image
           resizeMode="cover"
@@ -37,14 +36,11 @@ const DetailNewsScreen = ({navigation, route}) => {
         <TouchableOpacity
           style={styles.headerBtn}
           onPress={() => navigation.goBack()}>
-          <Image source={Images.back} style={{width: 20, height: 20}} />
-        </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.headerBtn}>
           <Image
-            source={Images.heart}
-            style={{width: 20, height: 20, tintColor: 'red'}}
+            source={Images.back}
+            style={{width: 18, height: 16, tintColor: '#fff'}}
           />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -53,32 +49,23 @@ const DetailNewsScreen = ({navigation, route}) => {
         <View style={styles.titleContainer}>
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 18,
               fontFamily: Fonts.SF_SEMIBOLD,
+              textAlign: 'justify',
+              ...fontDefault,
             }}>
             {item.name}
           </Text>
           <Text
             style={{
-              fontSize: 15,
+              fontSize: 14,
               fontFamily: Fonts.SF_REGULAR,
-              color: Colors.INACTIVE_GREY,
+              color: Colors.DEFAULT_BLACK,
+              opacity: 0.6,
+              marginVertical: Dimension.setHeight(1),
             }}>
             {item.date}
           </Text>
-          {item.subImg && (
-            <View>
-              <Image
-                resizeMode="cover"
-                source={item.subImg}
-                style={{
-                  width: '100%',
-                  height: Dimension.setHeight(25),
-                  borderRadius: 6,
-                }}
-              />
-            </View>
-          )}
         </View>
 
         <View style={styles.descriptionContainer}>
@@ -96,6 +83,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     flex: 1,
+    backgroundColor: '#f2f2f2',
   },
 
   mainImgContainer: {
@@ -104,21 +92,18 @@ const styles = StyleSheet.create({
   },
 
   backHeartContainer: {
-    position: 'absolute',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    width: 60,
+    height: 60,
+    left: 10,
+    top: -20,
+    justifyContent: 'center',
     alignItems: 'center',
-    width: '90%',
-    marginHorizontal: Dimension.setWidth(5),
-    marginTop: Dimension.setHeight(3),
   },
 
   headerBtn: {
     padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    elevation: 10,
-    ...shadowIOS,
+    borderRadius: 100,
+    backgroundColor: Colors.DEFAULT_GREEN,
   },
 
   contentDetailContainer: {
@@ -139,6 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: Dimension.setHeight(2.2),
     marginHorizontal: Dimension.setWidth(6),
+    marginVertical: Dimension.setHeight(2),
   },
 
   descriptionContainer: {
@@ -164,6 +150,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginVertical: 5,
     textAlign: 'justify',
+    ...fontDefault,
   },
 });
 

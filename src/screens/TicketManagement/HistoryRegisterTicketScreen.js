@@ -38,8 +38,7 @@ import {ToastWarning} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
 import FilterStatusUI from '../../components/FilterStatusUI';
 
-const HistoryRegisterTicketScreen = ({navigation, route}) => {
-  const refresh = route?.params?.refresh;
+const HistoryRegisterTicketScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const ticketPlaneData = useSelector(
     state => state.ticketPlane.ticketPlane?.data,
@@ -50,7 +49,6 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
   const [checkInput, setCheckInput] = useState(null);
   const [commentInput, setCommentInput] = useState('');
   const [reasonCancel, setReasonCancel] = useState('');
-  const [refreshComponent, setRefreshComponent] = useState(false);
   const [indexPicker, setIndexPicker] = useState(0);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
@@ -116,8 +114,14 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
       (commentInput.length !== 0 || reasonCancel.length !== 0) &&
       selectedItem !== null
     ) {
-      checkInput ? approvePlaneTicket(data) : cancelPlaneTicket(data);
-      setRefreshComponent(!refreshComponent);
+      if (checkInput) {
+        approvePlaneTicket(data);
+      } else {
+        cancelPlaneTicket(data);
+      }
+      setTimeout(() => {
+        fetchPlaneData();
+      });
       setToggleModal(false);
     } else {
       ToastWarning('Nhập đầy đủ thông tin');
@@ -135,25 +139,23 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
     index => {
       switch (index) {
         case 0:
-          return ticketPlaneData;
+          return ticketPlaneData?.filter(item => item.status === 0);
         case 1:
-          return ticketPlaneData.filter(item => item.status === 0);
+          return ticketPlaneData?.filter(item => item.status === 1);
         case 2:
-          return ticketPlaneData.filter(item => item.status === 1);
-        case 3:
-          return ticketPlaneData.filter(item => item.status === 2);
+          return ticketPlaneData?.filter(item => item.status === 2);
       }
     },
     [ticketPlaneData],
   );
 
-  const fetchPlaneData = async () => {
-    await getAllPlaneData(dispatch);
+  const fetchPlaneData = () => {
+    getAllPlaneData(dispatch);
   };
 
   useLayoutEffect(() => {
     fetchPlaneData();
-  }, [refreshComponent, refresh]);
+  }, []);
 
   const RenderTicketData = memo(({item, index}) => {
     const colorStatus =
@@ -223,12 +225,14 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             width: '66%',
+            marginBottom: Dimension.setHeight(0.5),
           }}>
           <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18}}>
             {item.chuongtrinh}
           </Text>
         </View>
-        <View style={{position: 'absolute', right: '5%', top: '7%'}}>
+        <View
+          style={{position: 'absolute', right: '5%', top: '7%', zIndex: 9999}}>
           {checktStatus() && (
             <StatusUI
               status={status}
@@ -245,7 +249,6 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
                 justifyContent: 'space-between',
                 width: Dimension.setWidth(17),
                 alignSelf: 'center',
-                zIndex: 9999,
               }}>
               <TouchableOpacity
                 onPress={() => {
@@ -268,7 +271,6 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
             </View>
           )}
         </View>
-
         <Text
           style={{
             fontSize: 16,
@@ -310,7 +312,11 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Lịch sử đặt vé" navigation={navigation} />
+      <Header
+        title="Lịch sử đặt vé"
+        navigation={navigation}
+        refreshData={fetchPlaneData}
+      />
       <BottomSheetModalProvider>
         <FilterStatusUI
           handlePickOption={handlePickOption}
@@ -564,7 +570,7 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
         )}
       </BottomSheetModalProvider>
       <ApproveCancelModal
-        screenName={'registerVehicalAndTicket'}
+        screenName={'registerTicket'}
         toggleApproveModal={toggleModal}
         setToggleApproveModal={setToggleModal}
         checkInput={checkInput}
@@ -583,7 +589,7 @@ const HistoryRegisterTicketScreen = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#b6c987',
+    backgroundColor: '#f2f2f2',
   },
 
   containerEachLine: {
@@ -608,7 +614,7 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     fontFamily: Fonts.SF_SEMIBOLD,
-    color: 'black',
+    color: '#747476',
   },
 
   bottomSheetContainer: {

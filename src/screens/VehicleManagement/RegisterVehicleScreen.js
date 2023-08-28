@@ -16,7 +16,6 @@ import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {
   formatTime,
@@ -26,45 +25,42 @@ import {
   formatTimeToPost,
   formatDateToPost,
 } from '../../utils/serviceFunction';
-import {ToastAlert} from '../../components/Toast';
+import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import RegisterBtn from '../../components/RegisterBtn';
 import {registerVehicle} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
+import Loading from '../../components/LoadingUI';
 
-const RegisterVehicleScreen = ({navigation}) => {
+const RegisterVehicleScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const typeVehicle = useSelector(
-    state => state.vehicle?.vehicle?.data.khadung,
+    state => state.vehicle?.vehicle?.availableCarData,
   );
-  const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [dateTime, setDateTime] = useState(null);
-  const [vehicleValue, setVehicleValue] = useState(typeVehicle[0]?.id);
+  const [vehicleValue, setVehicleValue] = useState(null);
+  const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [dateStart, setDateStart] = useState(formatDate(new Date()));
   const [receiveDate, setReceiveDate] = useState(formatDate(new Date()));
   const [receiveTime, setReceiveTime] = useState(getCurrentTime());
   const [check, setCheck] = useState(null);
   const [placeInput, setPlaceInput] = useState('');
   const [contentInput, setContentInput] = useState('');
-
-  const mainURL = 'https://forestry.ifee.edu.vn/';
+  const [loading, setLoading] = useState(false);
 
   const handlePickDate = date => {
-    const message = 'Ngày được chọn không hợp lệ!';
+    const message = 'Ngày nhận xe không hợp lệ!';
     setToggleDatePicker(false);
     if (check === 'startDate') {
       const startDate = formatDate(date);
-      if (compareDate(formatDate(new Date()), startDate)) {
-        setDateStart(startDate);
-        setReceiveDate(startDate);
-      } else {
-        ToastAlert(message);
-      }
+      compareDate(receiveDate, startDate)
+        ? setDateStart(startDate)
+        : ToastAlert(message);
     } else if (check === 'receiveTime') {
       setReceiveTime(formatTime(date));
     } else {
       const dateReceive = formatDate(date);
-      compareDate(dateStart, dateReceive)
+      compareDate(dateReceive, dateStart)
         ? setReceiveDate(dateReceive)
         : ToastAlert(message);
     }
@@ -88,7 +84,8 @@ const RegisterVehicleScreen = ({navigation}) => {
     setToggleDatePicker(true);
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    console.log(vehicleValue, placeInput, contentInput);
     const data = {
       id_user: user.id,
       loaixe: vehicleValue,
@@ -98,7 +95,25 @@ const RegisterVehicleScreen = ({navigation}) => {
       gionhan: formatTimeToPost(receiveTime),
       ngaynhan: formatDateToPost(receiveDate),
     };
-    registerVehicle(data);
+
+    if (vehicleValue !== null && placeInput !== '' && contentInput !== '') {
+      setLoading(true);
+      try {
+        const res = await registerVehicle(data);
+        console.log(res);
+        if (res) {
+          ToastSuccess('Đăng kí thành công');
+          navigation.goBack();
+          route.params?.refreshData();
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      ToastAlert('Thiếu thông tin!');
+    }
   };
 
   return (
@@ -136,7 +151,7 @@ const RegisterVehicleScreen = ({navigation}) => {
           </View>
           <View style={styles.containerEachLine}>
             <Text style={styles.title}>Loại xe</Text>
-            {typeVehicle != null ? (
+            {typeVehicle?.length === 0 ? (
               <Text style={styles.nocar}>
                 Hiện tại đang không còn xe khả dụng
               </Text>
@@ -154,6 +169,7 @@ const RegisterVehicleScreen = ({navigation}) => {
                 itemTextStyle={styles.itemText}
                 fontFamily={Fonts.SF_MEDIUM}
                 activeColor="#eef2feff"
+                placeholder="Chọn loại xe"
                 data={typeVehicle}
                 maxHeight={Dimension.setHeight(30)}
                 labelField="loaixe"
@@ -276,38 +292,10 @@ const RegisterVehicleScreen = ({navigation}) => {
             />
           </View>
 
-          {typeVehicle != null && (
-            <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
-          )}
-
-          {/* {toggleDatePicker && (
-            <TouchableOpacity
-              style={{
-                width: '100%',
-                height: '100%',
-                zIndex: 997,
-                position: 'absolute',
-              }}
-              onPress={() => {
-                setToggleDatePicker(false);
-                handlePickDate({type: 'set'}, new Date());
-              }}>
-              <View style={styles.calendarView}>
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={new Date()}
-                  mode={dateTime}
-                  display={Platform.OS === 'ios' ? 'inline' : 'default'}
-                  textColor="light"
-                  themeVariant="light"
-                  style={{}}
-                  onChange={handlePickDate}
-                />
-              </View>
-            </TouchableOpacity>
-          )} */}
+          <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
         </KeyboardAwareScrollView>
       </ScrollView>
+      {loading === true && <Loading />}
     </SafeAreaView>
   );
 };
@@ -315,7 +303,7 @@ const RegisterVehicleScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f2f2f2',
   },
 
   containerEachLine: {
@@ -402,7 +390,12 @@ const styles = StyleSheet.create({
     height: 20,
     marginRight: Dimension.setWidth(1.3),
   },
-  nocar: {fontSize: 16, fontWeight: 'bold', color: 'red'},
+  nocar: {
+    fontSize: 16,
+    fontFamily: Fonts.SF_SEMIBOLD,
+    color: 'red',
+    alignSelf: 'center',
+  },
 });
 
 export default RegisterVehicleScreen;

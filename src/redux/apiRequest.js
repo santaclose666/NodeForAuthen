@@ -27,7 +27,6 @@ import {
   getVehicleFailed,
 } from './vehicleSlice';
 import {getWorkFailed, getWorkStart, getWorkSuccess} from './workSlice';
-import {ToastAlert, ToastSuccess} from '../components/Toast';
 import {
   getTicketPlaneFailed,
   getTicketPlaneStart,
@@ -38,6 +37,12 @@ import {
   getWorkScheduleStart,
   getWorkScheduleSuccess,
 } from './workScheduleSlice';
+import {
+  getMyWorkFailed,
+  getMyWorkStart,
+  getMyWorkSuccess,
+} from './myWorkScheduleSlice';
+import {saveSuccess} from './credentialSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -45,7 +50,7 @@ const resetAction = CommonActions.reset({
 });
 
 /////////////////////  USER DATA  ////////////////////
-export const loginUser = async (user, dispatch, navigation) => {
+export const loginUser = async (user, dispatch, navigation, save) => {
   dispatch(loginStart());
   try {
     const res = await axios.post(
@@ -60,6 +65,8 @@ export const loginUser = async (user, dispatch, navigation) => {
     } else {
       navigation.dispatch(resetAction);
       navigation.navigate('BottomTab');
+
+      save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));
     }
   } catch (err) {
     console.log(err);
@@ -81,13 +88,7 @@ export const getAllStaffs = async dispatch => {
 
     const data = res.data;
 
-    dispatch(
-      getStaffSuccess(
-        data.sort((a, b) => {
-          return a.id - b.id;
-        }),
-      ),
-    );
+    dispatch(getStaffSuccess(data));
   } catch (err) {
     dispatch(getStaffFailed());
   }
@@ -125,10 +126,16 @@ export const getWeatherData = async dispatch => {
 /////////////////////  ON LEAVE DATA  ////////////////////
 export const registerOnLeave = async data => {
   try {
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/nghiphep/reg/${data.id_user}`,
-      {tungay: data.tungay, tong: data.tong, lydo: data.lydo},
+      {
+        tungay: data.tungay,
+        tong: data.tong,
+        lydo: data.lydo,
+      },
     );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }
@@ -153,11 +160,12 @@ export const getAllOnLeaveData = async (id, dispatch) => {
 
 export const resolveLeaveRequest = async data => {
   try {
-    console.log('resolve', data);
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/nghiphep/duyet/${data.id_nghiphep}`,
       {id_user: data.id_user, nhanxet: data.nhanxet},
     );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }
@@ -165,11 +173,12 @@ export const resolveLeaveRequest = async data => {
 
 export const rejectLeaveRequest = async data => {
   try {
-    console.log('reject', data);
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/nghiphep/tuchoi/${data.id_nghiphep}`,
       {id_user: data.id_user, lydo: data.lydo},
     );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }
@@ -228,9 +237,14 @@ export const getAllWorkName = async dispatch => {
 
 export const registerWorkSchedule = async data => {
   try {
-    await axios.post(`https://management.ifee.edu.vn/api/lichcongtac/reg`, {
-      ...data,
-    });
+    const res = await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/reg`,
+      {
+        ...data,
+      },
+    );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }
@@ -245,7 +259,9 @@ export const getAllWorkSchedule = async (dispatch, id) => {
 
     const pendingArr = res.data.pheduyet;
     const approvedArr = res.data.dapheduyet;
-    const data = approvedArr.concat(pendingArr);
+    const cancelArr = res.data.tuchoi;
+
+    const data = approvedArr.concat(pendingArr.concat(cancelArr));
 
     dispatch(
       getWorkScheduleSuccess(
@@ -256,6 +272,45 @@ export const getAllWorkSchedule = async (dispatch, id) => {
     );
   } catch (error) {
     dispatch(getWorkScheduleFailed());
+  }
+};
+
+export const approveWorkSchedule = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/dongy/${data.id_lichcongtac}`,
+      {nhanxet: data.nhanxet},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelWorkSchedule = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/lichcongtac/tuchoi/${data.id_lichcongtac}`,
+      {lydo: data.lydo},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getMyWorkSchedule = async (id, dispatch) => {
+  dispatch(getMyWorkStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/lichcongtac/canhan/${id}`,
+    );
+
+    const data = res.data.sort((a, b) => {
+      return a.id - b.id;
+    });
+
+    dispatch(getMyWorkSuccess(data));
+  } catch (error) {
+    dispatch(getMyWorkFailed());
   }
 };
 
@@ -276,8 +331,7 @@ export const getVehicleData = async (dispatch, id) => {
 
 export const registerVehicle = async data => {
   try {
-    console.log(data);
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/xe/reg/${data.id_user}`,
       {
         loaixe: data.loaixe,
@@ -288,9 +342,31 @@ export const registerVehicle = async data => {
         ngaynhan: data.ngaynhan,
       },
     );
-    ToastSuccess('Thành công');
+
+    return res.data;
   } catch (error) {
-    ToastAlert('Gửi đề nghị thất bại!');
+    console.log(error);
+  }
+};
+
+export const approveVehicle = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/xe/pheduyet/${data.id_dulieu}`,
+      {id_user: data.id_user},
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelVehicle = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/xe/tuchoi/${data.id_dulieu}?id_user=${data.id_user}`,
+    );
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -298,8 +374,7 @@ export const registerVehicle = async data => {
 
 export const registerPlaneTicket = async data => {
   try {
-    console.log(data);
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/vemaybay/reg/${data.id_user}`,
       {
         ds_ns: data.ds_ns,
@@ -313,6 +388,8 @@ export const registerPlaneTicket = async data => {
         kygui: data.kygui,
       },
     );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }

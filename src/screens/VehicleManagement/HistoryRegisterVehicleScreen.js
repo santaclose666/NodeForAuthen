@@ -1,12 +1,18 @@
-import React, {useRef, useState, useCallback, useMemo, useEffect} from 'react';
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+  useLayoutEffect,
+} from 'react';
 import {
   View,
   Text,
   Image,
   StyleSheet,
   SafeAreaView,
-  ScrollView,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -22,193 +28,299 @@ import {useDispatch} from 'react-redux';
 import Separation from '../../components/Separation';
 import Colors from '../../contants/Colors';
 import {
+  cancelVehicle,
   getVehicleData,
-  resolveVehicleRequest,
-  rejectVehicleRequest,
+  approveVehicle,
 } from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
-import {ApproveCancelModal} from '../../components/Modal';
+import StatusUI from '../../components/StatusUI';
+import {changeFormatDate} from '../../utils/serviceFunction';
+
+export const approveArr = [
+  {
+    title: 'Sử dụng',
+    color: '#618cf2',
+    bgColor: 'rgba(254, 244, 235, 0.3)',
+    icon: Images.all,
+  },
+  {
+    title: 'Chờ duyệt',
+    color: '#f0b263',
+    bgColor: 'rgba(254, 244, 235, 0.3)',
+    icon: Images.pending1,
+  },
+  {
+    title: 'Đã trả',
+    color: '#57b85d',
+    bgColor: 'rgba(222, 248, 237, 0.3)',
+    icon: Images.approved1,
+  },
+  {
+    title: 'Hủy bỏ',
+    color: '#f25157',
+    bgColor: 'rgba(249, 223, 224, 0.3)',
+    icon: Images.cancelled,
+  },
+];
 
 const HistoryRegisterVehicleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
-  const [registedVehicleData, setRegistedVehicleData] = useState([]);
-  const [toggleApproveModal, setToggleApproveModal] = useState(false);
-  const [commnetInput, setCommentInput] = useState(null);
-  const [reasonCancel, setReasonCancel] = useState(null);
-  const [checkInput, setCheckInput] = useState(null);
-  const waitRequest = useSelector(
-    state => state.vehicle?.vehicle?.data?.data_pheduyet,
+  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const allVehicleData = useSelector(
+    state => state.vehicle?.vehicle?.statusData,
   );
-  const processedRequest = useSelector(
-    state => state.vehicle?.vehicle?.data?.data_dapheduyet,
-  );
-  const [usingVehicle, setsingVehicle] = useState([]);
-  const [rejectVehicle, setRejectVehicle] = useState([]);
-  const [doneVehicle, setDoneVehicle] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [rerender, setRerender] = useState(false);
   const [indexPicker, setIndexPicker] = useState(0);
   const [refreshComponent, setRefreshComponent] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
-  const approveArr = [
-    {
-      title: 'Chờ duyệt',
-      color: '#f0b263',
-      bgColor: 'rgba(254, 244, 235, 0.3)',
-      icon: Images.pending1,
-    },
-    {
-      title: 'Sử dụng',
-      color: '#57b85d',
-      bgColor: 'rgba(222, 248, 237, 0.3)',
-      icon: Images.job,
-    },
-    {
-      title: 'Từ chối',
-      color: '#f25157',
-      bgColor: 'rgba(249, 223, 224, 0.3)',
-      icon: Images.cancelled,
-    },
-    {
-      title: 'Đã trả',
-      color: '#618cf2',
-      bgColor: 'rgba(254, 244, 235, 0.3)',
-      icon: Images.approved1,
-    },
-  ];
-
-  useEffect(() => {
-    getAllData();
-    classifiedData();
-    if (rerender) {
-      bottomSheetModalRef.current?.present();
-      setRerender(false);
-    }
-  }, [rerender, selectedItem]);
-
   const handlePresentModalPress = useCallback(() => {
-    setRerender(true);
-  }, [selectedItem]);
+    bottomSheetModalRef.current?.present();
+  }, []);
 
-  const handleSheetChanges = useCallback(index => {}, []);
-
-  const getAllData = async () => {
-    await getVehicleData(dispatch, user.id);
-  };
-
-  const classifiedData = () => {
-    var usingVehicleArr = [];
-    var rejectVehicleArr = [];
-    var doneVehicleArr = [];
-    for (let i = 0; i < processedRequest.length; i++) {
-      if (processedRequest[i].pheduyet == '0') {
-        rejectVehicleArr.push(processedRequest[i]);
-      } else if (processedRequest[i].pheduyet == '1') {
-        if (processedRequest[i].km_nhan > 0) {
-          doneVehicleArr.push(processedRequest[i]);
-        } else {
-          usingVehicleArr.push(processedRequest[i]);
-        }
-      }
+  const handleSheetChanges = useCallback(index => {
+    if (index < 0) {
+      setSelectedItem(null);
     }
-    setRegistedVehicleData(waitRequest);
-    setsingVehicle(usingVehicleArr);
-    setRejectVehicle(rejectVehicleArr);
-    setDoneVehicle(doneVehicleArr);
-  };
+  }, []);
 
-  const handleSendNonAdjust = () => {
-    const importantData = {
-      idVehicle: selectedItem.id,
+  const handleBottomSheet = useCallback(
+    (item, colorStatus, bgColorStatus) => {
+      setSelectedItem({
+        ...item,
+        colorStatus,
+        bgColorStatus,
+      });
+      setTimeout(() => {
+        handlePresentModalPress();
+      });
+    },
+    [selectedItem],
+  );
+
+  const handleApprove = useCallback(item => {
+    const data = {
+      id_dulieu: item.id,
       id_user: user?.id,
     };
-    if (!checkInput && selectedItem !== null) {
-      const data = {
-        ...importantData,
-        lydo: reasonCancel,
-      };
-      rejectVehicleRequest(data);
-      setReasonCancel(null);
-      setRefreshComponent(!refreshComponent);
-      setToggleApproveModal(false);
-    } else if (checkInput && selectedItem !== null) {
-      const data = {
-        ...importantData,
-        nhanxet: commnetInput,
-      };
-      resolveVehicleRequest(data);
-      setCommentInput(null);
-      setRefreshComponent(!refreshComponent);
-      setToggleApproveModal(false);
-    } else {
-      ToastWarning('Nhập đầy đủ lý do');
-    }
-  };
 
-  const getUserParth = id => {
-    for (let i = 0; i < staffs.length; i++) {
-      if (staffs[i].id === id) {
-        console.log(staffs[i].path);
-        return staffs[i].path;
-      }
-    }
-  };
+    approveVehicle(data);
+    setTimeout(() => {
+      fetchVehicleData();
+    });
+  }, []);
 
-  const getStaffByID = id => {
-    for (let i = 0; i < staffs.length; i++) {
-      if (staffs[i].id === id) {
-        console.log(staffs[i].hoten);
-        return staffs[i].hoten;
-      }
-    }
-  };
+  const handleCancel = useCallback(item => {
+    const data = {
+      id_dulieu: item.id,
+      id_user: user?.id,
+    };
 
-  const handlePickItem = item => {
-    setSelectedItem(item);
-    setToggleApproveModal(true);
-  };
-
-  const handleNonAdjust = (check, item) => {
-    setCheckInput(check);
-    handlePickItem(item);
-  };
+    cancelVehicle(data);
+    setTimeout(() => {
+      fetchVehicleData();
+    });
+  }, []);
 
   const handlePickOption = useCallback(
     index => {
       setIndexPicker(index);
-      switch (index) {
-        case 0:
-          setRegistedVehicleData(waitRequest);
-          break;
-        case 1:
-          setRegistedVehicleData(usingVehicle);
-          break;
-        case 2:
-          setRegistedVehicleData(rejectVehicle);
-          break;
-        case 3:
-          setRegistedVehicleData(doneVehicle);
-          break;
-      }
     },
     [indexPicker],
   );
 
+  const handleFilter = useCallback(
+    index => {
+      switch (index) {
+        case 0:
+          return allVehicleData?.filter(
+            item => item.km_nhan === 0 && item.pheduyet === '1',
+          );
+        case 1:
+          return allVehicleData?.filter(item => item.pheduyet === null);
+        case 2:
+          return allVehicleData?.filter(
+            item => item.pheduyet === '1' && item.km_nhan !== 0,
+          );
+        case 3:
+          return allVehicleData?.filter(item => item.pheduyet === '0');
+      }
+    },
+    [allVehicleData],
+  );
+
+  const fetchVehicleData = () => {
+    getVehicleData(dispatch, user?.id);
+  };
+
+  useLayoutEffect(() => {
+    fetchVehicleData();
+  }, []);
+
+  const RenderVehicleData = ({item, index}) => {
+    const colorStatus =
+      item.pheduyet === null
+        ? '#f9a86a'
+        : item.pheduyet === '1'
+        ? '#57b85d'
+        : '#f25157';
+    const bgColorStatus =
+      item.pheduyet === null
+        ? '#fef4eb'
+        : item.pheduyet === '1'
+        ? '#def8ed'
+        : '#f9dfe0';
+    const status =
+      item.pheduyet === '1'
+        ? 'Phê duyệt'
+        : item.pheduyet === '0'
+        ? 'Từ chối'
+        : 'Chờ phê duyệt';
+    const icon =
+      item.pheduyet === null
+        ? Images.pending
+        : item.pheduyet === '1'
+        ? Images.approve
+        : Images.cancel;
+
+    const checktStatus = () => {
+      return (
+        ((user?.id === 2 || user?.id === 8) && item.pheduyet !== null) ||
+        (user?.id !== 2 && user?.id !== 8)
+      );
+    };
+
+    const checkRole = () => {
+      return (user?.id === 2 || user?.id === 8) && item.pheduyet === null;
+    };
+
+    const userFilter = IFEEstaffs.filter(user => item.id_user === user.id)[0];
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          handleBottomSheet(item, colorStatus, bgColorStatus);
+        }}
+        key={index}
+        style={{
+          marginHorizontal: Dimension.setWidth(3),
+          marginBottom: Dimension.setHeight(2),
+          backgroundColor: '#ffffff',
+          elevation: 5,
+          ...shadowIOS,
+          borderRadius: 15,
+          paddingHorizontal: Dimension.setWidth(5),
+          paddingTop: Dimension.setHeight(2),
+          paddingBottom: Dimension.setHeight(1),
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '66%',
+          }}>
+          <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18}}>
+            {item.loaixe}
+          </Text>
+        </View>
+        <View
+          style={{position: 'absolute', right: '5%', top: '7%', zIndex: 9999}}>
+          {checktStatus() && (
+            <StatusUI
+              status={status}
+              colorStatus={colorStatus}
+              bgColorStatus={bgColorStatus}
+              icon={icon}
+            />
+          )}
+          {checkRole() && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: Dimension.setWidth(17),
+                alignSelf: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  handleApprove(item);
+                }}>
+                <Image
+                  source={Images.approved}
+                  style={[styles.approvedIcon, {tintColor: '#57b85d'}]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  handleCancel(item);
+                }}>
+                <Image
+                  source={Images.cancelled}
+                  style={[styles.approvedIcon, {tintColor: '#f25157'}]}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        <View
+          style={{
+            padding: 5,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: Fonts.SF_MEDIUM,
+              color: '#747476',
+              marginBottom: Dimension.setHeight(0.8),
+            }}>
+            {item.noiden}
+          </Text>
+        </View>
+
+        <View style={styles.containerEachLine}>
+          <Image
+            src={mainURL + userFilter?.path}
+            style={[styles.Iconic, {borderRadius: 50}]}
+          />
+          <Text style={styles.title}>Đăng kí: </Text>
+          <Text style={styles.content}>{item.hoten}</Text>
+        </View>
+
+        <View style={styles.containerEachLine}>
+          <Image source={Images.datetime} style={styles.Iconic} />
+          <Text style={styles.title}>Mượn từ:{'  '}</Text>
+          <Text style={styles.content}>{changeFormatDate(item.ngaydi)}</Text>
+          <Separation />
+          <Text style={styles.content}>
+            {changeFormatDate(item.ngayve) !== 'Invalid date'
+              ? changeFormatDate(item.ngayve)
+              : 'Không xác định'}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Lịch sử đăng kí xe" navigation={navigation} />
+      <Header
+        title="Lịch sử đăng kí xe"
+        navigation={navigation}
+        refreshData={fetchVehicleData}
+      />
       <View
         style={{
           flex: 0.1,
           flexDirection: 'row',
           justifyContent: 'space-evenly',
         }}>
-        {approveArr.map((item, index) => {
+        {approveArr?.map((item, index) => {
           return (
             <TouchableOpacity
               onPress={() => handlePickOption(index)}
@@ -229,14 +341,16 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   padding: 5,
                   height: 25,
                   width: 25,
-                  tintColor: indexPicker === index ? item.color : '#edf2ed',
+                  tintColor: indexPicker === index ? item.color : item.color,
                 }}
               />
               <Text
                 style={{
                   fontFamily: Fonts.SF_MEDIUM,
                   fontSize: 16,
-                  color: indexPicker === index ? item.color : '#edf2ed',
+                  opacity: 0.8,
+                  color:
+                    indexPicker === index ? item.color : Colors.DEFAULT_BLACK,
                 }}>
                 {item.title}
               </Text>
@@ -246,172 +360,38 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
       </View>
 
       <BottomSheetModalProvider>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{flex: 1, marginTop: Dimension.setHeight(2)}}>
-          {registedVehicleData.map((item, index) => {
-            const colorStatus =
-              item.pheduyet === null
-                ? '#f9a86a'
-                : item.pheduyet === '1'
-                ? '#57b85d'
-                : '#f25157';
-            const bgColorStatus =
-              item.pheduyet === null
-                ? '#fef4eb'
-                : item.pheduyet === '1'
-                ? '#def8ed'
-                : '#f9dfe0';
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedItem({
-                    ...item,
-                    colorStatus: colorStatus,
-                    bgColorStatus: bgColorStatus,
-                  });
-                  handlePresentModalPress();
-                }}
-                key={index}
-                style={{
-                  marginHorizontal: Dimension.setWidth(3),
-                  marginBottom: Dimension.setHeight(2),
-                  backgroundColor: '#ffffff',
-                  elevation: 5,
-                  ...shadowIOS,
-                  borderRadius: 15,
-                  paddingHorizontal: Dimension.setWidth(5),
-                  paddingVertical: Dimension.setHeight(2),
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 19}}>
-                    {`${item.loaixe}: ${item.noidung}`}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    padding: 5,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontFamily: Fonts.SF_MEDIUM,
-                      color: '#747476',
-                      marginBottom: Dimension.setHeight(0.8),
-                    }}>
-                    {item.noiden ? item.noiden : 'Không xác định'}
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      paddingVertical: Dimension.setHeight(0.5),
-                      paddingHorizontal: Dimension.setWidth(1.4),
-                      borderRadius: 8,
-                      backgroundColor: bgColorStatus,
-                    }}>
-                    <Image
-                      source={
-                        item.pheduyet === null
-                          ? Images.pending
-                          : item.pheduyet === '1'
-                          ? Images.approve
-                          : Images.cancel
-                      }
-                      style={{
-                        height: 16,
-                        width: 16,
-                        marginRight: Dimension.setWidth(1),
-                        tintColor: colorStatus,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        color: colorStatus,
-                        fontSize: 14,
-                        fontFamily: Fonts.SF_MEDIUM,
-                      }}>
-                      {item.pheduyet === '1'
-                        ? 'Phê duyệt'
-                        : item.pheduyet === '0'
-                        ? 'Từ chối'
-                        : 'Chờ phê duyệt'}
-                    </Text>
-                  </View>
-                </View>
-
-                <View style={styles.containerEachLine}>
-                  <Image
-                    src={
-                      user != null
-                        ? `${mainURL + getUserParth(item.id_user)}`
-                        : Images.registerperson
-                    }
-                    style={styles.Iconic}
-                  />
-                  <Text style={styles.title}>Đăng kí: </Text>
-                  <Text style={styles.content}>{item.hoten}</Text>
-                </View>
-
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.datetime} style={styles.Iconic} />
-                  <Text style={styles.title}>Mượn từ:{'  '}</Text>
-                  <Text style={styles.content}>{item.ngaydi}</Text>
-                  <Separation />
-                  <Text style={styles.content}>{item.ngayve}</Text>
-                </View>
-                {(user?.id == 2 || user?.id == 8) && item.pheduyet == null && (
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        handleNonAdjust(true, item);
-                      }}
-                      style={[
-                        styles.buttonItem,
-                        {backgroundColor: 'rgba(0, 181, 32, 0.32)'},
-                      ]}>
-                      <Text style={{color: 'rgba(0, 84, 15, 1)'}}>
-                        Phê duyệt
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        handleNonAdjust(false, item);
-                      }}
-                      style={[
-                        styles.buttonItem,
-                        {backgroundColor: 'rgba(233, 0, 0, 0.32)'},
-                      ]}>
-                      <Text style={{color: 'rgba(233, 0, 0, 0.9)'}}>
-                        Từ chối
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </TouchableOpacity>
-            );
-          })}
-
-          <ApproveCancelModal
-            screenName={'registerVehicle'}
-            toggleApproveModal={toggleApproveModal}
-            setToggleApproveModal={setToggleApproveModal}
-            checkInput={checkInput}
-            selectedItem={selectedItem}
-            commnetInput={commnetInput}
-            setCommentInput={setCommentInput}
-            reasonCancel={reasonCancel}
-            setReasonCancel={setReasonCancel}
-            eventFunc={handleSendNonAdjust}
+        {handleFilter(indexPicker)?.length !== 0 ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            style={{
+              flex: 1,
+              paddingTop: Dimension.setHeight(3),
+            }}
+            data={handleFilter(indexPicker)}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <RenderVehicleData item={item} index={index} />
+            )}
+            initialNumToRender={6}
+            windowSize={6}
+            removeClippedSubviews={true}
+            refreshing={true}
+            extraData={allVehicleData}
           />
-        </ScrollView>
+        ) : (
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontFamily: Fonts.SF_MEDIUM,
+                color: Colors.INACTIVE_GREY,
+              }}>
+              Không có dữ liệu nào được tìm thấy
+            </Text>
+          </View>
+        )}
+
         {selectedItem && (
           <BottomSheetModal
             backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
@@ -478,30 +458,32 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                 </View>
                 <View style={styles.containerEachLine}>
                   <Image source={Images.datetime} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Mượn từ:{'  '}</Text>
-                    <Text style={styles.content}>{selectedItem.ngaydi}</Text>
-                    <Separation />
-                    <Text style={styles.content}>{selectedItem.ngayve}</Text>
-                  </View>
+                  <Text style={styles.title}>Mượn từ:{'  '}</Text>
+                  <Text style={styles.content}>
+                    {changeFormatDate(selectedItem.ngaydi)}
+                  </Text>
+                  <Separation />
+                  <Text style={styles.content}>
+                    {changeFormatDate(selectedItem.ngayve) !== 'Invalid date'
+                      ? changeFormatDate(selectedItem.ngayve)
+                      : 'Không xác định'}
+                  </Text>
                 </View>
                 <View style={styles.containerEachLine}>
                   <Image source={Images.content} style={styles.Iconic} />
                   <View
                     style={{
                       flexDirection: 'row',
-                      width: '66%',
+                      width: '90%',
                     }}>
-                    <Text style={styles.title}>Nội dung:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {selectedItem.noidung}
+                    <Text style={styles.title}>
+                      Nội dung:{'  '}
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {selectedItem.noidung}
+                      </Text>
                     </Text>
                   </View>
                 </View>
@@ -527,23 +509,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   </View>
                 </View>
                 <View style={styles.containerEachLine}>
-                  <Image source={Images.admin} style={styles.Iconic} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '66%',
-                    }}>
-                    <Text style={styles.title}>Người duyệt:{'  '}</Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.content}>
-                      {getStaffByID(selectedItem.id_nguoiduyet)}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.containerEachLine}>
-                  <Image source={Images.outsideperson} style={styles.Iconic} />
+                  <Image source={Images.datetime} style={styles.Iconic} />
                   <View
                     style={{
                       flexDirection: 'row',
@@ -554,7 +520,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.content}>
-                      {selectedItem.ngayduyet}
+                      {changeFormatDate(selectedItem.ngayduyet)}
                     </Text>
                   </View>
                 </View>
@@ -570,7 +536,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#b6c987',
+    backgroundColor: '#f2f2f2',
   },
 
   containerEachLine: {
@@ -587,7 +553,6 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    alignSelf: 'center',
     color: '#747476',
     fontSize: 15,
     fontFamily: Fonts.SF_MEDIUM,
@@ -596,6 +561,7 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     fontFamily: Fonts.SF_SEMIBOLD,
+    color: '#747476',
   },
 
   bottomSheetContainer: {
@@ -629,6 +595,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 15,
     height: Dimension.setHeight(3.5),
+  },
+
+  approvedIcon: {
+    width: 30,
+    height: 30,
   },
 });
 

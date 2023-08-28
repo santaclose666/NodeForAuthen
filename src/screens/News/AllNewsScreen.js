@@ -156,14 +156,6 @@ const AllNewsScreen = ({navigation}) => {
             placeholder="Tìm kiếm bài báo"
           />
         </View>
-        {/* <View style={styles.filerImgContainer}>
-          <TouchableOpacity
-            style={{
-              padding: 8,
-            }}>
-            <Image style={styles.filterImg} source={Images.filter} />
-          </TouchableOpacity>
-        </View> */}
       </View>
       <View style={styles.featuresTitleContainer}>
         <View
@@ -188,7 +180,11 @@ const AllNewsScreen = ({navigation}) => {
                 ? {marginRight: Dimension.setWidth(3.6)}
                 : {marginRight: 0};
             const colorFeature =
-              featureIndex === index ? '#85d4ee' : Colors.INACTIVE_GREY;
+              featureIndex === index
+                ? Colors.DEFAULT_GREEN
+                : Colors.DEFAULT_BLACK;
+            const fontFML =
+              featureIndex === index ? Fonts.SF_SEMIBOLD : Colors.SF_REGULAR;
             return (
               <TouchableOpacity
                 onPress={() => {
@@ -196,7 +192,11 @@ const AllNewsScreen = ({navigation}) => {
                 }}
                 style={[styles.featureTextContainer, {...pdRight}]}
                 key={index}>
-                <Text style={[styles.featureText, {color: colorFeature}]}>
+                <Text
+                  style={[
+                    styles.featureText,
+                    {color: colorFeature, opacity: 0.8, fontFamily: fontFML},
+                  ]}>
                   {item}
                 </Text>
               </TouchableOpacity>
@@ -265,7 +265,7 @@ const AllNewsScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fcfcfc',
+    backgroundColor: '#f2f2f2',
   },
 
   searchFilterContainer: {
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
   },
 
   featureText: {
-    fontFamily: Fonts.SF_S,
+    fontFamily: Fonts.SF_REGULAR,
     fontSize: 16,
   },
 

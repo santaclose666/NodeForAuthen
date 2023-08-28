@@ -16,7 +16,7 @@ const Images = {
   weather: require('../assets/images/weather.png'),
   menu: require('../assets/images/menu.png'),
   confirm: require('../assets/images/confirm.png'),
-  adjust: require('../assets/images/adjust.png'),
+  adjust: require('../assets/images/edit_fn.png'),
   test1: require('../assets/images/nhatho.png'),
   test2: require('../assets/images/langBac.png'),
   test3: require('../assets/images/temple1.png'),
@@ -92,6 +92,7 @@ const Images = {
   vehicleplate: require('../assets/images/vehicleplate.png'),
   content: require('../assets/images/content.png'),
   admin: require('../assets/images/admin.png'),
+  logo: require('../assets/images/logo.jpeg'),
   select: require('../assets/images/select.png'),
   clue: require('../assets/images/clue.png'),
   content: require('../assets/images/content.png'),
@@ -108,6 +109,11 @@ const Images = {
   motorbike: require('../assets/images/motorbike.png'),
   approved: require('../assets/images/approved.png'),
   cancelled: require('../assets/images/cancelled.png'),
+  addFile: require('../assets/images/addfile.png'),
+  personal: require('../assets/images/personal.png'),
+  map: require('../assets/images/map.png'),
+  biodiversity: require('../assets/images/biodiversity.png'),
+  worldwide: require('../assets/images/worldwide.png'),
 };
 
 export default Images;

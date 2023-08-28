@@ -31,141 +31,13 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {registerPlaneTicket} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
+import {planeCompany, ticketType, airplane} from '../../contants/Variable';
+import Loading from '../../components/LoadingUI';
 
-const planeCompany = [
-  {
-    label: 'Vietnam AirLine',
-    value: 'Vietnam AirLine',
-  },
-  {
-    label: 'Vietjet Air',
-    value: 'Vietjet Air',
-  },
-  {
-    label: 'Jetstar Pacific AirLines',
-    value: 'Jetstar Pacific AirLines',
-  },
-  {
-    label: 'Bambo Airways',
-    value: 'Bambo Airways',
-  },
-];
-
-const ticketType = [
-  {
-    label: 'Hạng nhất',
-    value: 'Hạng nhất',
-  },
-  {
-    label: 'Thương gia',
-    value: 'Thương gia',
-  },
-  {
-    label: 'Phổ thông',
-    value: 'Phổ thông',
-  },
-  {
-    label: 'Phổ thông đặc biệt',
-    value: 'Phổ thông đặc biệt',
-  },
-];
-
-const airplane = [
-  {
-    label: 'Hà Nội (HAN), Sân bay QT Nội Bài',
-    value: 'Hà Nội (HAN), Sân bay QT Nội Bài',
-  },
-  {
-    label: 'Sài Gòn (SGN), Sân bay QT Tân Sơn Nhất',
-    value: 'Sài Gòn (SGN), Sân bay QT Tân Sơn Nhất',
-  },
-  {
-    label: 'Đà Nẵng (DAD), Sân bay QT Đà Nẵng',
-    value: 'Đà Nẵng (DAD), Sân bay QT Đà Nẵng',
-  },
-  {
-    label: 'Quảng Ninh (VDO), Sân bay QT Vân Đồn',
-    value: 'Quảng Ninh (VDO), Sân bay QT Vân Đồn',
-  },
-  {
-    label: 'Hải Phòng (HPH), Sân bay QT Cát Bi',
-    value: 'Hải Phòng (HPH), Sân bay QT Cát Bi',
-  },
-  {
-    label: 'Nghệ An (VII), Sân bay QT Vinh',
-    value: 'Nghệ An (VII), Sân bay QT Vinh',
-  },
-  {
-    label: 'Huế (HUI), Sân bay QT Phú Bài',
-    value: 'Huế (HUI), Sân bay QT Phú Bài',
-  },
-  {
-    label: 'Khánh Hòa (CXR), Sân bay QT Cam Ranh',
-    value: 'Khánh Hòa (CXR), Sân bay QT Cam Ranh',
-  },
-  {
-    label: 'Lâm Đồng (DLI), Sân bay QT Liên Khương',
-    value: 'Lâm Đồng (DLI), Sân bay QT Liên Khương',
-  },
-  {
-    label: 'Bình Định (UIH), Sân bay QT Phù Cát',
-    value: 'Bình Định (UIH), Sân bay QT Phù Cát',
-  },
-  {
-    label: 'Cần Thơ (VCA), Sân bay QT Cần Thơ',
-    value: 'Cần Thơ (VCA), Sân bay QT Cần Thơ',
-  },
-  {
-    label: 'Kiên Giang (PQC), Sân bay QT Phú Quốc',
-    value: 'Kiên Giang (PQC), Sân bay QT Phú Quốc',
-  },
-  {
-    label: 'Điện Biên (DIN), Sân bay Điện Biên Phủ',
-    value: 'Điện Biên (DIN), Sân bay Điện Biên Phủ',
-  },
-  {
-    label: 'Thanh Hóa (THD), Sân bay Thọ Xuân',
-    value: 'Thanh Hóa (THD), Sân bay Thọ Xuân',
-  },
-  {
-    label: 'Quảng Bình (VDH), Sân bay Đồng Hới',
-    value: 'Quảng Bình (VDH), Sân bay Đồng Hới',
-  },
-  {
-    label: 'Quảng Nam (VCL), Sân bay Chu Lai',
-    value: 'Quảng Nam (VCL), Sân bay Chu Lai',
-  },
-  {
-    label: 'Phú Yên (TBB), Sân bay Tuy Hòa',
-    value: 'Phú Yên (TBB), Sân bay Tuy Hòa',
-  },
-  {
-    label: 'Gia Lai (PXU), Sân bay Pleiku',
-    value: 'Gia Lai (PXU), Sân bay Pleiku',
-  },
-  {
-    label: 'Đắk Lắk (BMV), Sân bay Buôn Mê Thuột',
-    value: 'Đắk Lắk (BMV), Sân bay Buôn Mê Thuột',
-  },
-  {
-    label: 'Kiên Giang (VKG), Sân bay Rạch Giá',
-    value: 'Kiên Giang (VKG), Sân bay Rạch Giá',
-  },
-  {
-    label: 'Cà Mau (CAH), Sân bay Cà Mau',
-    value: 'Cà Mau (CAH), Sân bay Cà Mau',
-  },
-  {
-    label: 'Bà Rịa Vũng Tàu (VCS), Sân bay Côn Đảo',
-    value: 'Bà Rịa Vũng Tàu (VCS), Sân bay Côn Đảo',
-  },
-];
-
-const RegisterPlaneScreen = ({navigation}) => {
+const RegisterPlaneScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
-  const data = staffs.filter(item => item.tendonvi === 'VST');
-  const allStaffs = data.map(item => {
+  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const allStaffs = IFEEstaffs.map(item => {
     return {label: item.hoten, value: item.id};
   });
   const [multiStaff, setMultiStaff] = useState([]);
@@ -183,8 +55,8 @@ const RegisterPlaneScreen = ({navigation}) => {
     moment(new Date()).format('DD/MM/YYYY'),
   );
   const [timeValue, setTimeValue] = useState(getCurrentTime());
-  const [kgNumber, setKgNumber] = useState(0);
-  
+  const [kgNumber, setKgNumber] = useState(10);
+  const [loading, setLoading] = useState(false);
 
   const handlePickDate = date => {
     if (dateTime === 'date') {
@@ -198,7 +70,7 @@ const RegisterPlaneScreen = ({navigation}) => {
     setToggleDatePicker(false);
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const data = {
       id_user: user?.id,
       ds_ns: multiStaff,
@@ -213,9 +85,20 @@ const RegisterPlaneScreen = ({navigation}) => {
     };
 
     if (multiStaff.length !== 0 && workName.length !== 0) {
-      ToastSuccess('Đăng kí thành công');
-      registerPlaneTicket(data);
-      navigation.navigate('HistoryPlaneTicket', {refresh: true});
+      setLoading(true);
+      try {
+        const res = await registerPlaneTicket(data);
+
+        if (res) {
+          ToastSuccess('Đăng kí thành công');
+          navigation.goBack();
+          route.params?.refreshData();
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       ToastAlert('Thiếu thông tin!');
     }
@@ -278,10 +161,7 @@ const RegisterPlaneScreen = ({navigation}) => {
               showsVerticalScrollIndicator={false}
               placeholderStyle={styles.placeholderStyle}
               selectedStyle={styles.selectedStyle}
-              selectedTextStyle={[
-                styles.selectedTextStyle,
-                {fontSize: 13},
-              ]}
+              selectedTextStyle={[styles.selectedTextStyle, {fontSize: 13}]}
               containerStyle={styles.containerOptionStyle}
               iconStyle={styles.iconStyle}
               itemContainerStyle={styles.itemContainer}
@@ -577,6 +457,7 @@ const RegisterPlaneScreen = ({navigation}) => {
           <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
         </KeyboardAwareScrollView>
       </ScrollView>
+      {loading === true && <Loading />}
     </SafeAreaView>
   );
 };
@@ -584,7 +465,7 @@ const RegisterPlaneScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f2f2f2',
   },
 
   containerEachLine: {

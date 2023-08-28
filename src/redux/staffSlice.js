@@ -4,7 +4,8 @@ const staffSlice = createSlice({
   name: 'staff',
   initialState: {
     staffs: {
-      allStaff: null,
+      IFEEStaff: null,
+      XMGStaff: null,
       isFetching: false,
       err: false,
     },
@@ -16,7 +17,12 @@ const staffSlice = createSlice({
     },
     getStaffSuccess: (state, action) => {
       state.staffs.isFetching = false;
-      state.staffs.allStaff = action.payload;
+      state.staffs.IFEEStaff = action.payload.ifee.sort((a, b) => {
+        return a.vitri_ifee - b.vitri_ifee;
+      });
+      state.staffs.XMGStaff = action.payload.xmg.sort((a, b) => {
+        return a.info_phong[0].vitri_ifee - b.info_phong[0].vitri_ifee;
+      });
     },
     getStaffFailed: state => {
       state.staffs.isFetching = false;

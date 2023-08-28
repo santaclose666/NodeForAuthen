@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,33 +6,46 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  StatusBar,
+  Dimensions,
 } from 'react-native';
+import {Switch, VStack} from 'native-base';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import {loginUser} from '../../redux/apiRequest';
 import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ToastAlert} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
+  const credential = useSelector(
+    state => state.credential.credential?.emailPwd,
+  );
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [checkShowHide, setCheckShowHide] = useState(true);
+  const [save, setSave] = useState(true);
 
   const handleLogin = () => {
     if (email !== '' && password !== '') {
       const data = {email, password};
-      loginUser(data, dispatch, navigation);
+      loginUser(data, dispatch, navigation, save);
     } else {
       const mess = 'Vui lòng nhập đầy đủ thông tin!';
       ToastAlert(mess);
     }
   };
+
+  useLayoutEffect(() => {
+    if (credential) {
+      setEmail(credential.email);
+      setPassword(credential.password);
+    }
+  }, []);
 
   return (
     <KeyboardAwareScrollView
@@ -40,21 +53,23 @@ const LoginScreen = ({navigation}) => {
       enableResetScrollToCoords={true}
       enableOnAndroid={true}
       behavior="padding"
-      style={{flex: 1, backgroundColor: '#ffffff'}}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+      style={{flex: 1, backgroundColor: '#f2f2f2'}}>
       <View style={styles.themeContainer}>
         <TouchableOpacity
           style={styles.headerBtn}
           onPress={() => navigation.goBack()}>
-          <Image source={Images.back} style={{width: 20, height: 20}} />
+          <Image
+            source={Images.back}
+            style={{width: 18, height: 18, tintColor: '#fff'}}
+          />
         </TouchableOpacity>
         <Image
-          source={Images.loginTheme}
+          source={Images.logo}
           resizeMode="cover"
           style={{
-            width: Dimension.setWidth(90),
-            height: Dimension.setHeight(36),
-            transform: [{rotate: '-4deg'}],
+            width: Dimensions.get('screen').width / 1.8,
+            height: Dimensions.get('screen').width / 1.8,
+            borderRadius: 30,
           }}
         />
       </View>
@@ -153,6 +168,15 @@ const LoginScreen = ({navigation}) => {
             </View>
           </View>
         </View>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Switch
+            size={'sm'}
+            colorScheme="emerald"
+            isChecked={save}
+            onChange={val => setSave(val.nativeEvent.value)}
+          />
+          <Text style={{fontFamily: Fonts.SF_MEDIUM}}>Lưu thông tin</Text>
+        </View>
         <TouchableOpacity
           onPress={handleLogin}
           style={{
@@ -160,7 +184,7 @@ const LoginScreen = ({navigation}) => {
             justifyContent: 'center',
             marginTop: Dimension.setHeight(2),
             borderColor: Colors.INACTIVE_GREY,
-            backgroundColor: 'rgba(120, 255,100, 1)',
+            backgroundColor: '#22a87e',
             borderRadius: 10,
             paddingVertical: Dimension.setHeight(1.6),
             elevation: 5,
@@ -170,7 +194,7 @@ const LoginScreen = ({navigation}) => {
             style={{
               fontSize: 18,
               fontFamily: Fonts.SF_BOLD,
-              color: '#333',
+              color: '#fff',
             }}>
             Truy cập
           </Text>
@@ -224,7 +248,7 @@ const styles = StyleSheet.create({
   },
   headerBtn: {
     padding: 10,
-    backgroundColor: 'rgba(120, 255,100, 1)',
+    backgroundColor: '#22a87e',
     borderRadius: 12,
     elevation: 6,
     ...shadowIOS,

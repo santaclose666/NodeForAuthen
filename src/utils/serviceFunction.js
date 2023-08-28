@@ -16,6 +16,16 @@ export const getVietnameseDayOfWeek = () => {
   return vietnameseDays[dayOfWeek];
 };
 
+export const getFirstDateOfWeek = () => {
+  const firstDay = formatDateToPost(moment().isoWeekday(1));
+  const lastDay = formatDateToPost(moment().isoWeekday(7));
+
+  return {
+    firstDay,
+    lastDay,
+  };
+};
+
 export const getFormattedDate = () => {
   const today = new Date();
   const day = String(today.getDate()).padStart(2, '0');
@@ -75,6 +85,13 @@ export const changeFormatDate = date => {
 export const formatDateToPost = date => {
   const postFormat = moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
   return postFormat;
+};
+
+export const formatTimeToPost = time => {
+  const parseTime = moment(time, 'HH:mm a');
+  const formatTime = parseTime.format('HH:mm:ss');
+
+  return formatTime;
 };
 
 export const compareDate = (date1, date2) => {

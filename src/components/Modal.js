@@ -28,10 +28,8 @@ export const ApproveCancelModal = ({
   setReasonCancel,
   eventFunc,
 }) => {
-  const staffs = useSelector(state => state.staffs?.staffs?.allStaff);
-  const avatar = staffs.filter(
-    item => item.id === selectedItem?.id_nhansu && item.tendonvi === 'VST',
-  );
+  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const avatar = IFEEstaffs.filter(item => item.id === selectedItem?.id_nhansu);
 
   return (
     <Modal
@@ -139,6 +137,57 @@ export const ApproveCancelModal = ({
             </Text>
           </View>
         )}
+        {screenName === 'registerVehicle' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image
+              source={
+                selectedItem?.loaixe?.includes('WAVE')
+                  ? Images.motorbike
+                  : Images.vehicles
+              }
+              style={{height: 55, width: 55}}
+            />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: 18,
+                fontFamily: Fonts.SF_SEMIBOLD,
+              }}>
+              {selectedItem?.loaixe}
+            </Text>
+          </View>
+        )}
+
+        {screenName === 'registerWorkSchedule' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image
+              source={Images.workSchedule}
+              style={{height: 55, width: 55}}
+            />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: 18,
+                fontFamily: Fonts.SF_SEMIBOLD,
+              }}>
+              {selectedItem?.thuocchuongtrinh}
+            </Text>
+          </View>
+        )}
 
         <View style={styles.containerEachLine}>
           <Image source={Images.comment} style={styles.iconic} />
@@ -174,7 +223,6 @@ export const ApproveCancelModal = ({
         </View>
         <TouchableOpacity
           onPress={() => {
-            setSelectedItem(null);
             setToggleApproveModal(false);
           }}
           style={{position: 'absolute', right: '5%', top: '5%'}}>
