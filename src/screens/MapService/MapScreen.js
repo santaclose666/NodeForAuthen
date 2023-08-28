@@ -51,10 +51,12 @@ const listDisplayLabelExplant = [
   'Quy hoạch',
 ];
 
-const MapScreen = navigation => {
+const MapScreen = ({navigation}) => {
   const route = useRoute();
   const data = route.params;
-  console.log(navigation);
+
+  console.log(data.WMSLink[0]);
+
   const [mapType, setMapType] = useState('satellite');
   const [initialRegion, setInitialRegion] = useState({
     latitude: data.centerPoint.y,
@@ -89,7 +91,6 @@ const MapScreen = navigation => {
     )}&height=${Math.round(mapViewHeight)}&x=${Math.round(x)}&y=${Math.round(
       y,
     )}`;
-    console.log(linkAPIGetInfoFull);
     return linkAPIGetInfoFull;
   };
 

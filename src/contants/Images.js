@@ -113,6 +113,7 @@ const Images = {
   personal: require('../assets/images/personal.png'),
   map: require('../assets/images/map.png'),
   biodiversity: require('../assets/images/biodiversity.png'),
+  worldwide: require('../assets/images/worldwide.png'),
 };
 
 export default Images;

@@ -151,6 +151,8 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
   const _getLinkWMS = () => {
     let layerData = _getLayer();
 
+    console.log(layerData);
+
     let queryLayer = _getQueryLayer(
       layerData.cql_filter,
       layerData.nameProvinCodeCol,
@@ -309,7 +311,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
               renderLeftIcon={() => {
                 return (
                   <Image
-                    source={Images.motorbike}
+                    source={Images.worldwide}
                     style={styles.leftIconDropdown}
                   />
                 );
@@ -320,6 +322,13 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
                 setListProvinces([]);
                 setListDistricts([]);
                 setListCommunes([]);
+                setSelectYear(undefined);
+                setSelectProvince(undefined);
+                setSelectProvinceCode(undefined);
+                setSelectDistrict(undefined);
+                setSelectDistrictCode(undefined);
+                setSelectCommune(undefined);
+                setSelectCommuneCode(undefined);
                 setCenterPoint(null);
                 getListYear(item.value);
               }}
@@ -349,7 +358,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
               renderLeftIcon={() => {
                 return (
                   <Image
-                    source={Images.motorbike}
+                    source={Images.worldwide}
                     style={styles.leftIconDropdown}
                   />
                 );
@@ -360,6 +369,12 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
                 setListProvinces([]);
                 setListDistricts([]);
                 setListCommunes([]);
+                setSelectProvince(undefined);
+                setSelectProvinceCode(undefined);
+                setSelectDistrict(undefined);
+                setSelectDistrictCode(undefined);
+                setSelectCommune(undefined);
+                setSelectCommuneCode(undefined);
                 setCenterPoint(null);
                 getListProvince(item.value);
               }}
@@ -389,7 +404,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
               renderLeftIcon={() => {
                 return (
                   <Image
-                    source={Images.motorbike}
+                    source={Images.worldwide}
                     style={styles.leftIconDropdown}
                   />
                 );
@@ -399,6 +414,10 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
                 setSelectProvinceCode(item.value);
                 setListDistricts([]);
                 setListCommunes([]);
+                setSelectDistrict(undefined);
+                setSelectDistrictCode(undefined);
+                setSelectCommune(undefined);
+                setSelectCommuneCode(undefined);
                 setCenterPoint({x: item.provinX, y: item.provinY});
                 getListDistrict(item.value);
               }}
@@ -428,7 +447,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
               renderLeftIcon={() => {
                 return (
                   <Image
-                    source={Images.motorbike}
+                    source={Images.worldwide}
                     style={styles.leftIconDropdown}
                   />
                 );
@@ -437,6 +456,8 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
                 setSelectDistrict(item.value);
                 setSelectDistrictCode(item.value);
                 setListCommunes([]);
+                setSelectCommune(undefined);
+                setSelectCommuneCode(undefined);
                 setCenterPoint({x: item.districtX, y: item.districtY});
                 getListCommune(item.value);
               }}
@@ -467,7 +488,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
               renderLeftIcon={() => {
                 return (
                   <Image
-                    source={Images.motorbike}
+                    source={Images.worldwide}
                     style={styles.leftIconDropdown}
                   />
                 );
@@ -479,8 +500,13 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
               }}
             />
           </View>
-
-          <RegisterBtn nameBtn={'Đăng kí'} onEvent={() => onPressSelectMap()} />
+          <View
+            style={{flexDirection: 'row', alignItems: 'center', width: '100%'}}>
+            <RegisterBtn
+              nameBtn={'Mở bản đồ'}
+              onEvent={() => onPressSelectMap()}
+            />
+          </View>
         </KeyboardAwareScrollView>
       </ScrollView>
     </SafeAreaView>
@@ -494,13 +520,13 @@ const styles = StyleSheet.create({
   },
 
   containerEachLine: {
-    marginBottom: Dimension.setHeight(2),
+    marginBottom: Dimension.setHeight(0.5),
     backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: '#e6e6e6',
     borderRadius: 12,
-    paddingVertical: Dimension.setHeight(1.6),
-    paddingHorizontal: Dimension.setWidth(3),
+    paddingVertical: Dimension.setHeight(1),
+    paddingHorizontal: Dimension.setWidth(2),
   },
 
   title: {
@@ -519,7 +545,7 @@ const styles = StyleSheet.create({
   leftIconDropdown: {
     width: 20,
     height: 20,
-    marginRight: Dimension.setWidth(1.3),
+    marginRight: Dimension.setWidth(1.8),
   },
   itemContainer: {
     borderRadius: 12,

@@ -263,7 +263,11 @@ const HomePageScreen = ({navigation}) => {
                 <Text style={styles.featureText}>Bản đồ số</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.buttonFuc}>
-                <TouchableOpacity style={styles.buttonFuc}>
+                <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
+                    navigation.navigate('ListBio');
+                  }}>
                   <Image
                     source={Images.biodiversity}
                     style={styles.featureBtn}
