@@ -68,16 +68,17 @@ const SpecieDetailScreen = ({navigation}) => {
           }}>
           <Image style={styles.backImg} source={Images.back} />
         </TouchableOpacity>
-        <Text
-          style={{
-            width: '90%',
-            fontFamily: Fonts.SF_BOLD,
-            fontSize: 18,
-            alignSelf: 'center',
-            ...fontDefault,
-          }}>
-          Thông tin chi tiết loài
-        </Text>
+        <View style={{flex: 6, alignItems: 'center'}}>
+          <Text
+            style={{
+              fontFamily: Fonts.SF_BOLD,
+              fontSize: 18,
+              alignItems: 'center',
+              ...fontDefault,
+            }}>
+            THÔNG TIN CHI TIẾT LOÀI
+          </Text>
+        </View>
       </View>
 
       {images.length > 0 && (
@@ -571,7 +572,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
   },
   searchFilterContainer: {
-    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
