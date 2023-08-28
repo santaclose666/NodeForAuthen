@@ -85,6 +85,7 @@ const RegisterVehicleScreen = ({navigation, route}) => {
   };
 
   const handleRegister = async () => {
+    console.log(vehicleValue, placeInput, contentInput);
     const data = {
       id_user: user.id,
       loaixe: vehicleValue,
@@ -100,7 +101,6 @@ const RegisterVehicleScreen = ({navigation, route}) => {
       try {
         const res = await registerVehicle(data);
         console.log(res);
-
         if (res) {
           ToastSuccess('Đăng kí thành công');
           navigation.goBack();

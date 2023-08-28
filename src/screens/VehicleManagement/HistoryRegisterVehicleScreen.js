@@ -72,6 +72,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   );
   const [selectedItem, setSelectedItem] = useState(null);
   const [indexPicker, setIndexPicker] = useState(0);
+  const [refreshComponent, setRefreshComponent] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
