@@ -123,6 +123,14 @@ const Images = {
   map: require('../assets/images/map.png'),
   biodiversity: require('../assets/images/biodiversity.png'),
   worldwide: require('../assets/images/worldwide.png'),
+  baseSatellite: require('../assets/images/basemap.png'),
+  baseHybrid: require('../assets/images/Hibirth.png'),
+  baseTerrain: require('../assets/images/Terrain.png'),
+  baseStandard: require('../assets/images/Trafict.png'),
+  trees: require('../assets/images/trees.png'),
+  trees1: require('../assets/images/trees1.png'),
+  forest: require('../assets/images/forest.png'),
+  standard: require('../assets/images/standard.png'),
 };
 
 export default Images;
