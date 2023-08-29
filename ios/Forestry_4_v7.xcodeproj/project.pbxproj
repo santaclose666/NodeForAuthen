@@ -21,6 +21,7 @@
 		9BEC7B3C348B40BAB6DC9A90 /* SFProDisplay-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 40E0A3B7C4FE477998ADAF8B /* SFProDisplay-Heavy.otf */; };
 		B0A81BC93980478DB356F210 /* SFProDisplay-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = A542D1EE08B54A6AB498AFD7 /* SFProDisplay-Thin.otf */; };
 		B5EB3E40CCC47A1776F47922 /* Pods_Forestry_4_v7_Forestry_4_v7Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C66DDB6995C633CDF4E0E82B /* Pods_Forestry_4_v7_Forestry_4_v7Tests.framework */; };
+		BAFFD8982A9DE2FF003D99A1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BAFFD8972A9DE2FE003D99A1 /* GoogleService-Info.plist */; };
 		D47BB8B8131A52AABA388DF9 /* Pods_Forestry_4_v7.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83C1910958B5F279F6AD795C /* Pods_Forestry_4_v7.framework */; };
 		D651EBDBCA034DA9B0759680 /* SFProDisplay-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94510F9408DD4187BE11E76D /* SFProDisplay-Bold.otf */; };
 		F7B437F42A8241090058AF6E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7B437F32A8241090058AF6E /* GoogleService-Info.plist */; };
@@ -59,6 +60,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-Forestry_4_v7-Forestry_4_v7Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Forestry_4_v7-Forestry_4_v7Tests.release.xcconfig"; path = "Target Support Files/Pods-Forestry_4_v7-Forestry_4_v7Tests/Pods-Forestry_4_v7-Forestry_4_v7Tests.release.xcconfig"; sourceTree = "<group>"; };
 		94510F9408DD4187BE11E76D /* SFProDisplay-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Bold.otf"; path = "../src/assets/fonts/SFProDisplay-Bold.otf"; sourceTree = "<group>"; };
 		A542D1EE08B54A6AB498AFD7 /* SFProDisplay-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Thin.otf"; path = "../src/assets/fonts/SFProDisplay-Thin.otf"; sourceTree = "<group>"; };
+		BAFFD8972A9DE2FE003D99A1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C66DDB6995C633CDF4E0E82B /* Pods_Forestry_4_v7_Forestry_4_v7Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Forestry_4_v7_Forestry_4_v7Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9FEBBA2E02A470F9555FA44 /* SFProDisplay-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Regular.otf"; path = "../src/assets/fonts/SFProDisplay-Regular.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -113,6 +115,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				BAFFD8972A9DE2FE003D99A1 /* GoogleService-Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = Forestry_4_v7;
@@ -283,6 +286,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAFFD8982A9DE2FF003D99A1 /* GoogleService-Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				5D355B274BA6498083F38F9A /* SFProDisplay-Black.otf in Resources */,

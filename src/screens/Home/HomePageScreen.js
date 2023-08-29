@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   Platform,
   PermissionsAndroid,
+  StatusBar,
 } from 'react-native';
 import {HStack, Spinner} from 'native-base';
 import Images from '../../contants/Images';
@@ -123,7 +124,16 @@ const HomePageScreen = ({navigation}) => {
       style={styles.container}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}>
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
+        }}>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="light-content"
+        />
         <ScrollView
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={false}

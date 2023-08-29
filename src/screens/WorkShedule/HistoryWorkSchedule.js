@@ -285,7 +285,6 @@ const HistoryWorkShedule = ({navigation}) => {
 
   const fetchWorkSchedule = useCallback(() => {
     getAllWorkSchedule(dispatch, user?.id);
-    totalWorkSchedule(dispatch);
   }, []);
 
   useLayoutEffect(() => {

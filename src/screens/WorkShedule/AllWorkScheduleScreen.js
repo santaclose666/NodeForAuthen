@@ -11,28 +11,21 @@ import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
-import Colors from '../../contants/Colors';
 import {shadowIOS} from '../../contants/propsIOS';
-import {
-  approveWorkSchedule,
-  cancelWorkSchedule,
-  getAllWorkSchedule,
-  warningWorkSchedule,
-} from '../../redux/apiRequest';
+import {totalWorkSchedule, warningWorkSchedule} from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import FilterStatusUI from '../../components/FilterStatusUI';
 import {
-  changeFormatDate,
   formatDateToPost,
   getFirstDateOfWeek,
 } from '../../utils/serviceFunction';
-import {defaultIFEE, mainURL} from '../../contants/Variable';
 import {WarningModal} from '../../components/Modal';
 import {Agenda} from 'react-native-calendars';
+import Loading from '../../components/LoadingUI';
 
 const AllWorkScheduleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const dispatch = useDispatch();
   const totalWorkData = useSelector(
     state => state.totalWork.totalWorkSchedule?.data,
   );
@@ -42,20 +35,43 @@ const AllWorkScheduleScreen = ({navigation}) => {
   const [toggleWarningModal, setToggleWarningModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [reasonInput, setReasonInput] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handlePickItem = useCallback(item => {
     setSelectedItem(item);
     setToggleWarningModal(true);
   }, []);
 
-  const handleWarning = useCallback((id, reason) => {
-    const data = {
-      id_lichchitiet: id,
-      lydo: reason,
-    };
+  const handleWarning = useCallback(async (id, reason) => {
+    try {
+      setToggleWarningModal(false);
+      setLoading(true);
+      const data = {
+        id_lichchitiet: id,
+        lydo: reason,
+      };
 
-    warningWorkSchedule(data);
-    setToggleWarningModal(false);
+      await warningWorkSchedule(data);
+
+      setLoading(false);
+      setTimeout(() => {
+        fetTotalWorkSchedule();
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const fetTotalWorkSchedule = useCallback(async () => {
+    try {
+      await totalWorkSchedule(dispatch);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    fetTotalWorkSchedule();
   }, []);
 
   const RenderTaskOfDay = useCallback((day, item) => {
@@ -140,8 +156,6 @@ const AllWorkScheduleScreen = ({navigation}) => {
         selected={currentDate}
         minDate={dayOfWeek.firstDay}
         maxDate={dayOfWeek.lastDay}
-        theme={{}}
-        refreshing={true}
         renderDay={RenderTaskOfDay}
         rowHasChanged={(r1, r2) => {
           return r1.id !== r2.id;
@@ -160,6 +174,8 @@ const AllWorkScheduleScreen = ({navigation}) => {
         setReasonInput={setReasonInput}
         handleWarning={handleWarning}
       />
+
+      {loading && <Loading />}
     </SafeAreaView>
   );
 };

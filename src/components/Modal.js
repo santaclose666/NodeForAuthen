@@ -440,7 +440,7 @@ export const WarningModal = ({
               borderRadius: 10,
               fontFamily: Fonts.SF_REGULAR,
               width: '70%',
-              height: Dimension.setHeight(5),
+              height: Dimension.setHeight(6),
               maxHeight: Dimension.setHeight(9),
             }}
             onChangeText={e => setReasonInput(e)}
@@ -466,7 +466,7 @@ export const WarningModal = ({
           onPress={() => {
             setToggleModal(false);
           }}
-          style={{position: 'absolute', right: '5%', top: '5%'}}>
+          style={{position: 'absolute', right: 8, top: 8}}>
           <Image source={Images.minusclose} style={styles.btnModal} />
         </TouchableOpacity>
       </View>

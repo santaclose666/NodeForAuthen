@@ -32,11 +32,11 @@ const Header = ({title, navigation, refreshData, replace = false}) => {
         backgroundColor: 'rgba(255, 255, 255, 0.3)',
         marginHorizontal: Dimension.setHeight(1.4),
         borderRadius: 25,
-        marginTop: Platform.OS == 'android' ? 10 : 0,
+        marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
       }}>
       <StatusBar
         translucent
-        // backgroundColor="#22a87e"
+        backgroundColor="transparent"
         barStyle="light-content"
       />
       <TouchableOpacity
