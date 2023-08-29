@@ -401,8 +401,7 @@ export const registerVehicle = async data => {
 export const approveVehicle = async data => {
   try {
     await axios.get(
-      `https://management.ifee.edu.vn/api/xe/pheduyet/${data.id_dulieu}`,
-      {id_user: data.id_user},
+      `https://management.ifee.edu.vn/api/xe/pheduyet/${data.id_dulieu}?id_user=${data.id_user}`,
     );
   } catch (error) {
     console.log(error);
@@ -422,16 +421,23 @@ export const cancelVehicle = async data => {
 export const returnVehicle = async data => {
   try {
     console.log(data);
+    const formData = new FormData();
+
+    formData.append('file', data.file);
+    formData.append('ngayve', data.ngayve);
+    formData.append('km_nhan', data.km_nhan);
+    formData.append('phixangxe', data.phixangxe);
+    formData.append('nguoimuaxang', data.nguoimuaxang);
+    formData.append('phibaoduong', data.phibaoduong);
+    formData.append('nguoibaoduong', data.nguoibaoduong);
+
     const res = await axios.post(
       `https://management.ifee.edu.vn/api/xe/traXe/${data.id}`,
+      formData,
       {
-        ngayve: data.ngayve,
-        km_nhan: data.km_nhan,
-        phixangxe: data.phixangxe,
-        nguoimuaxang: data.nguoimuaxang,
-        phibaoduong: data.phibaoduong,
-        nguoibaoduong: data.nguoibaoduong,
-        file: data.file,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
     );
 

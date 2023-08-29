@@ -1,6 +1,5 @@
 import React from 'react';
 import {Spinner} from 'native-base';
-import {BlurView} from '@react-native-community/blur';
 import {View} from 'react-native';
 
 const Loading = () => {
@@ -14,14 +13,9 @@ const Loading = () => {
         left: 0,
         bottom: 0,
         right: 0,
+        backgroundColor: 'rgba(85, 106, 115, 0.40)',
       }}>
-      <BlurView
-        blurType="light"
-        blurAmount={30}
-        reducedTransparencyFallbackColor="white"
-        overlayColor="transparent">
-        <Spinner size="lg" color="emerald.500" />
-      </BlurView>
+      <Spinner size="lg" color="emerald.500" />
     </View>
   );
 };

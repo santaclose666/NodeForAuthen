@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,13 +9,13 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Dropdown } from 'react-native-element-dropdown';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -26,14 +26,14 @@ import {
   formatTimeToPost,
   formatDateToPost,
 } from '../../utils/serviceFunction';
-import { ToastAlert, ToastSuccess } from '../../components/Toast';
+import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import RegisterBtn from '../../components/RegisterBtn';
-import { registerVehicle } from '../../redux/apiRequest';
-import { shadowIOS } from '../../contants/propsIOS';
-import { mainURL } from '../../contants/Variable';
+import {registerVehicle} from '../../redux/apiRequest';
+import {shadowIOS} from '../../contants/propsIOS';
+import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
 
-const RegisterVehicleScreen = ({ navigation, route }) => {
+const RegisterVehicleScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const typeVehicle = useSelector(
     state => state.vehicle?.vehicle?.availableCarData,
@@ -120,9 +120,9 @@ const RegisterVehicleScreen = ({ navigation, route }) => {
   return (
     <LinearGradient
       colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{ flex: 1 }}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}>
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
       <SafeAreaView style={styles.container}>
         <Header title="Đăng kí sử dụng xe" navigation={navigation} />
         <ScrollView>
@@ -140,10 +140,10 @@ const RegisterVehicleScreen = ({ navigation, route }) => {
             }}>
             <View style={styles.containerEachLine}>
               <Text style={styles.title}>Người đăng kí</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
                   src={mainURL + user?.path}
-                  style={{ height: 40, width: 40 }}
+                  style={{height: 40, width: 40}}
                 />
                 <Text
                   style={{
@@ -207,7 +207,7 @@ const RegisterVehicleScreen = ({ navigation, route }) => {
                 <View
                   style={[
                     styles.dateTimeImgContainer,
-                    { backgroundColor: '#dbd265' },
+                    {backgroundColor: '#dbd265'},
                   ]}>
                   <Image
                     source={Images.calendarBlack}
@@ -224,14 +224,14 @@ const RegisterVehicleScreen = ({ navigation, route }) => {
               }}>
               <TouchableOpacity
                 onPress={handlePickReceiveTime}
-                style={[styles.containerEachLine, { width: '48%' }]}>
+                style={[styles.containerEachLine, {width: '48%'}]}>
                 <Text style={styles.title}>Giờ nhận xe</Text>
                 <View style={styles.dateTimePickerContainer}>
                   <Text style={styles.dateTimeText}>{receiveTime}</Text>
                   <View
                     style={[
                       styles.dateTimeImgContainer,
-                      { backgroundColor: '#96d1d9' },
+                      {backgroundColor: '#96d1d9'},
                     ]}>
                     <Image source={Images.time} style={styles.dateTimeImg} />
                   </View>
@@ -239,14 +239,14 @@ const RegisterVehicleScreen = ({ navigation, route }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handelePickReceiveDate}
-                style={[styles.containerEachLine, { width: '48%' }]}>
+                style={[styles.containerEachLine, {width: '48%'}]}>
                 <Text style={styles.title}>Ngày nhận xe</Text>
                 <View style={styles.dateTimePickerContainer}>
                   <Text style={styles.dateTimeText}>{receiveDate}</Text>
                   <View
                     style={[
                       styles.dateTimeImgContainer,
-                      { backgroundColor: '#dbd265' },
+                      {backgroundColor: '#dbd265'},
                     ]}>
                     <Image
                       source={Images.calendarBlack}
@@ -291,7 +291,7 @@ const RegisterVehicleScreen = ({ navigation, route }) => {
                   marginHorizontal: Dimension.setWidth(1.6),
                   fontFamily: Fonts.SF_MEDIUM,
                   fontSize: 16,
-                  height: Dimension.setHeight(5),
+                  height: Dimension.setHeight(6),
                 }}
                 value={contentInput}
                 onChangeText={e => setContentInput(e)}
@@ -310,7 +310,7 @@ const RegisterVehicleScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 3
+    padding: 3,
   },
 
   containerEachLine: {

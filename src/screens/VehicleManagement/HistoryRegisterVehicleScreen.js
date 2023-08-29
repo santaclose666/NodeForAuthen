@@ -50,7 +50,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert} from '../../components/Toast';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Loading from '../../components/LoadingUI';
-import ImageViewer from 'react-native-image-zoom-viewer';
+import ImageView from 'react-native-image-viewing';
 
 export const approveArr = [
   {
@@ -188,7 +188,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
 
   const handleReturnVehicle = async () => {
     if (filePicker && km != '') {
-      setLoading(false);
+      setLoading(true);
       const data = {
         id: selectedItem.id,
         ngayve: formatDateToPost(endDate),
@@ -203,13 +203,18 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
           name: filePicker.fileName,
         },
       };
-      const res = await returnVehicle(data);
+      try {
+        const res = await returnVehicle(data);
 
-      if (res == 1) {
-        setTimeout(() => {
-          fetchVehicleData();
-        });
-        setLoading(false);
+        if (res) {
+          setToggleReturnModal(false);
+          setLoading(false);
+          setTimeout(() => {
+            fetchVehicleData();
+          });
+        }
+      } catch (error) {
+        console.log(error);
       }
     } else {
       console.log('missing');
@@ -376,7 +381,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
               }}>
               <Image
                 source={Images.returncar}
-                style={{width: 40, height: 40}}
+                style={{width: 36, height: 36}}
               />
             </TouchableOpacity>
           )}
@@ -737,7 +742,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       marginHorizontal: Dimension.setWidth(1.6),
                       fontFamily: Fonts.SF_MEDIUM,
                       fontSize: 16,
-                      height: Dimension.setHeight(5),
+                      height: Dimension.setHeight(6),
                       width: '85%',
                     }}
                     value={personBuyGas}
@@ -746,7 +751,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   <View
                     style={[
                       styles.imgModalContainer,
-                      {backgroundColor: '#e8af66'},
+                      {backgroundColor: '#619ac4'},
                     ]}>
                     <Image source={Images.staffgas} style={[styles.imgDate]} />
                   </View>
@@ -788,7 +793,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       marginHorizontal: Dimension.setWidth(1.6),
                       fontFamily: Fonts.SF_MEDIUM,
                       fontSize: 16,
-                      height: Dimension.setHeight(5),
+                      height: Dimension.setHeight(6),
                       width: '65%',
                     }}
                     inputMode="numeric"
@@ -798,7 +803,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   <View
                     style={[
                       styles.imgModalContainer,
-                      {backgroundColor: '#e8af66'},
+                      {backgroundColor: '#61c4b2'},
                     ]}>
                     <Image source={Images.km} style={[styles.imgDate]} />
                   </View>
@@ -821,7 +826,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       marginHorizontal: Dimension.setWidth(1.6),
                       fontFamily: Fonts.SF_MEDIUM,
                       fontSize: 16,
-                      height: Dimension.setHeight(5),
+                      height: Dimension.setHeight(6),
                       width: '85%',
                     }}
                     value={maintenancePerson}
@@ -830,11 +835,11 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   <View
                     style={[
                       styles.imgModalContainer,
-                      {backgroundColor: '#e8af66'},
+                      {backgroundColor: '#ed9d8b'},
                     ]}>
                     <Image
                       source={Images.maintenanceguy}
-                      style={[styles.imgDate]}
+                      style={styles.imgDate}
                     />
                   </View>
                 </View>
@@ -852,7 +857,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       marginHorizontal: Dimension.setWidth(1.6),
                       fontFamily: Fonts.SF_MEDIUM,
                       fontSize: 16,
-                      height: Dimension.setHeight(5),
+                      height: Dimension.setHeight(6),
                       width: '65%',
                     }}
                     inputMode="numeric"
@@ -862,7 +867,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   <View
                     style={[
                       styles.imgModalContainer,
-                      {backgroundColor: '#e8af66'},
+                      {backgroundColor: '#edcb8b'},
                     ]}>
                     <Image source={Images.petro} style={[styles.imgDate]} />
                   </View>
@@ -878,7 +883,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       marginHorizontal: Dimension.setWidth(1.6),
                       fontFamily: Fonts.SF_MEDIUM,
                       fontSize: 16,
-                      height: Dimension.setHeight(5),
+                      height: Dimension.setHeight(6),
                       width: '65%',
                     }}
                     inputMode="numeric"
@@ -888,7 +893,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   <View
                     style={[
                       styles.imgModalContainer,
-                      {backgroundColor: '#e8af66'},
+                      {backgroundColor: '#7f8cd1'},
                     ]}>
                     <Image
                       source={Images.maintenance}
@@ -963,31 +968,15 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
             }}
           />
 
-          <Modal isVisible={zoomImg}>
-            <TouchableOpacity
-              onPress={() => {
-                setZoomImg(false);
-              }}
-              style={{
-                marginBottom: Dimension.setHeight(1.6),
-                alignItems: 'flex-end',
-              }}>
-              <Image
-                source={Images.cancel}
-                style={{width: 28, height: 28, tintColor: '#fff'}}
-              />
-            </TouchableOpacity>
-            <ImageViewer
-              onSwipeDown={() => {
-                setZoomImg(false);
-              }}
-              enableImageZoom={true}
-              imageUrls={[{url: filePicker?.uri}]}
-            />
-          </Modal>
-        </Modal>
+          <ImageView
+            images={[{uri: filePicker?.uri}]}
+            imageIndex={0}
+            visible={zoomImg}
+            onRequestClose={() => setZoomImg(false)}
+          />
 
-        {loading && <Loading />}
+          {loading && <Loading />}
+        </Modal>
       </SafeAreaView>
     </LinearGradient>
   );
