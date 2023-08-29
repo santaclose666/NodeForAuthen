@@ -50,7 +50,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
   const [toggleApproveModal, setToggleApproveModal] = useState(false);
   const [toggleEditModal, setToggleEditModal] = useState(false);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
-  const [datePicker, setDatePicker] = useState(formatDate(new Date()));
+  const [datePicker, setDatePicker] = useState('Chọn ngày');
   const [reasonCancelAdjust, setReasonCancelAdjust] = useState(null);
   const [toggleCancelAdjust, setToggleCancelAdjust] = useState(false);
   const [refreshComponent, setRefreshComponent] = useState(false);
@@ -113,13 +113,13 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
     setToggleEditModal(true);
   }, []);
 
-  const handlePickDate = useCallback(date => {
-    setToggleDatePicker(false);
+  const handlePickDate = date => {
     const message = 'Ngày điều chỉnh không hợp lệ';
-    compareDate(new Date(), date)
+    compareDate(changeFormatDate(selectedItem.denngay), date)
       ? setDatePicker(formatDate(date))
       : ToastAlert(message);
-  }, []);
+    setToggleDatePicker(false);
+  };
 
   const handleAdjust = () => {
     const data = {

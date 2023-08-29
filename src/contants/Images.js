@@ -121,8 +121,11 @@ const Images = {
   maintenance: require('../assets/images/maintenance.png'),
   staffgas: require('../assets/images/staffgas.png'),
   map: require('../assets/images/map.png'),
+  close: require('../assets/images/close.png'),
   biodiversity: require('../assets/images/biodiversity.png'),
   worldwide: require('../assets/images/worldwide.png'),
+  uploadimg: require('../assets/images/uploadimg.png'),
+  maintenanceguy: require('../assets/images/maintenanceguy.png'),
 };
 
 export default Images;

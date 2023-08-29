@@ -50,6 +50,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert} from '../../components/Toast';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Loading from '../../components/LoadingUI';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 export const approveArr = [
   {
@@ -97,6 +98,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const [maintenancePrice, setMaintenancePrice] = useState('');
   const [maintenancePerson, setMaintenancePerson] = useState(null);
   const [filePicker, setFilePicker] = useState(null);
+  const [zoomImg, setZoomImg] = useState(false);
   const [loading, setLoading] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const dispatch = useDispatch();
@@ -830,7 +832,10 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       styles.imgModalContainer,
                       {backgroundColor: '#e8af66'},
                     ]}>
-                    <Image source={Images.staffgas} style={[styles.imgDate]} />
+                    <Image
+                      source={Images.maintenanceguy}
+                      style={[styles.imgDate]}
+                    />
                   </View>
                 </View>
               </View>
@@ -894,24 +899,46 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
               </View>
             </View>
 
-            <View style={styles.lineContainerModal}>
+            <View
+              style={[
+                styles.lineContainerModal,
+                {justifyContent: 'flex-start'},
+              ]}>
               <View style={styles.itemContainerModal}>
                 <Text style={styles.titleModal}>File ảnh </Text>
                 <TouchableOpacity
                   onPress={handlePickImg}
                   style={styles.dateModalContainer}>
+                  <Text
+                    style={{
+                      alignSelf: 'center',
+                      fontFamily: Fonts.SF_REGULAR,
+                      color: '#cddef1',
+                    }}>
+                    Upload...
+                  </Text>
                   <View
                     style={[
                       styles.imgModalContainer,
-                      {backgroundColor: '#7cc985'},
+                      {backgroundColor: '#cddef1'},
                     ]}>
-                    <Image
-                      source={Images.calendarBlack}
-                      style={styles.imgDate}
-                    />
+                    <Image source={Images.uploadimg} style={styles.imgDate} />
                   </View>
                 </TouchableOpacity>
               </View>
+
+              {filePicker && (
+                <TouchableOpacity
+                  style={styles.itemContainerModal}
+                  onPress={() => {
+                    setZoomImg(true);
+                  }}>
+                  <Image
+                    source={{uri: filePicker.uri}}
+                    style={{width: 66, height: 66, borderRadius: 6}}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
 
             <TouchableOpacity
@@ -935,6 +962,29 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
               setToggleDatePicker(false);
             }}
           />
+
+          <Modal isVisible={zoomImg}>
+            <TouchableOpacity
+              onPress={() => {
+                setZoomImg(false);
+              }}
+              style={{
+                marginBottom: Dimension.setHeight(1.6),
+                alignItems: 'flex-end',
+              }}>
+              <Image
+                source={Images.cancel}
+                style={{width: 28, height: 28, tintColor: '#fff'}}
+              />
+            </TouchableOpacity>
+            <ImageViewer
+              onSwipeDown={() => {
+                setZoomImg(false);
+              }}
+              enableImageZoom={true}
+              imageUrls={[{url: filePicker?.uri}]}
+            />
+          </Modal>
         </Modal>
 
         {loading && <Loading />}
