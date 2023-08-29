@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   Dimensions,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import unidecode from 'unidecode';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -20,36 +21,37 @@ import Icons from '../../contants/Icons';
 import {shadowIOS} from '../../contants/propsIOS';
 import Loading from '../../components/LoadingUI';
 import {FlatList} from 'native-base';
+import {Dropdown} from 'react-native-element-dropdown';
 
 export const dataLocation = [
   {
     key: '1',
-    name: 'VQG Cúc Phương',
+    name: 'Bộ dữ liệu: Thực vật VQG Cúc Phương',
     ma: 'cp',
   },
   {
     key: '2',
-    name: 'VQG Ba Vì',
+    name: 'Bộ dữ liệu: Thực vật VQG Ba Vì',
     ma: 'bv',
   },
   {
     key: '3',
-    name: 'VQG Tam Đảo',
+    name: 'Bộ dữ liệu: Thực vật VQG Tam Đảo',
     ma: 'td',
   },
   {
     key: '4',
-    name: 'VQG Bạch Mã',
+    name: 'Bộ dữ liệu: Thực vật VQG Bạch Mã',
     ma: 'bm',
   },
   {
     key: '1',
-    name: 'VQG Cát Tiên',
+    name: ' Bộ dữ liệu: Thực vật VQG Cát Tiên',
     ma: 'ct',
   },
   {
     key: '6',
-    name: 'VQG Yok Đôn',
+    name: 'Bộ dữ liệu: Thực vật VQG Yok Đôn',
     ma: 'yd',
   },
 ];
@@ -60,13 +62,15 @@ const ListBioScreen = ({navigation}) => {
   const [input, setInput] = useState('');
   const [speciesFilled, setSpeciesFilled] = useState(null);
   const [speciesArr, setSpeciesArr] = useState([]);
-  const [loading, setLoading] = useState([false]);
+  const [loading, setLoading] = useState(false);
+  const [nameBioSource, setNameBioSrc] = useState(dataLocation[0].name);
+  const [isSelectLocation, setIsSelectLocation] = useState(false);
 
   useEffect(() => {
-    getListSpecies(location);
+    getListSpecies();
   }, []);
 
-  const getListSpecies = async location => {
+  const getListSpecies = async () => {
     setLoading(true);
     await fetch(
       `http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/${location.ma}`,
@@ -87,6 +91,31 @@ const ListBioScreen = ({navigation}) => {
       unidecode(item.loaitv.toLowerCase()).includes(text.toLowerCase()),
     );
     setSpeciesFilled(data);
+  };
+
+  const fomatLatinName = text => {
+    const words = text.split(' ');
+    let formattedText;
+    if (words.length > 1 && (words[1] === 'sp' || words[1] === 'sp.')) {
+      formattedText = (
+        <Text>
+          <Text>
+            <Text style={{fontStyle: 'italic'}}>{words[0]}</Text>{' '}
+            {words.slice(1).join(' ')}
+          </Text>
+        </Text>
+      );
+    } else {
+      formattedText = (
+        <Text>
+          <Text style={{fontStyle: 'italic'}}>
+            {words[0]} {words[1]}
+          </Text>{' '}
+          {words.slice(2).join(' ')}
+        </Text>
+      );
+    }
+    return formattedText;
   };
 
   const RenderItem = ({item}) => {
@@ -112,18 +141,7 @@ const ListBioScreen = ({navigation}) => {
             />
           </View>
 
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontStyle: 'italic',
-              paddingHorizontal: 10,
-              paddingTop: 10,
-              paddingBottom: 5,
-              textAlign: 'center',
-              fontSize: 14,
-            }}>
-            {item.loailatin}
-          </Text>
+          <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
           <Text
             style={{
               paddingBottom: 10,
@@ -158,9 +176,16 @@ const ListBioScreen = ({navigation}) => {
             placeholder="Tìm kiếm loài"
           />
         </View>
-        <TouchableOpacity style={styles.filterData}>
+        <TouchableOpacity
+          onPress={() => {
+            setIsSelectLocation(true);
+          }}
+          style={styles.filterData}>
           <Image style={{width: 25, height: 25}} source={Images.filter} />
         </TouchableOpacity>
+      </View>
+      <View style={styles.tileContainer}>
+        <Text style={styles.tile}>{nameBioSource}</Text>
       </View>
 
       <FlatList
@@ -181,6 +206,62 @@ const ListBioScreen = ({navigation}) => {
         refreshing={true}
         extraData={speciesFilled ? speciesFilled : speciesArr}
       />
+      <Modal
+        isVisible={isSelectLocation}
+        animationIn="fadeInUp"
+        animationInTiming={1}
+        animationOut="fadeOutDown"
+        animationOutTiming={1}
+        style={{flex: 1}}>
+        <TouchableOpacity
+          onPress={() => {
+            setIsSelectLocation(false);
+          }}
+          style={styles.modalBack}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.tile}>Chọn dữ liệu</Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                alignSelf: 'flex-start',
+                padding: 5,
+              }}>
+              Chọn khu vực:
+            </Text>
+            <Dropdown
+              style={styles.dropdown}
+              autoScroll={false}
+              showsVerticalScrollIndicator={false}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              containerStyle={styles.containerOptionStyle}
+              itemContainerStyle={styles.itemContainer}
+              itemTextStyle={styles.itemText}
+              fontFamily={Fonts.SF_MEDIUM}
+              activeColor="#eef2feff"
+              placeholder="Vùng"
+              data={dataLocation}
+              maxHeight={Dimension.setHeight(30)}
+              labelField="name"
+              valueField="ma"
+              value={location}
+              onChange={item => {
+                setLocation(item);
+              }}
+            />
+            <TouchableOpacity
+              style={styles.btnSelect}
+              onPress={() => {
+                getListSpecies();
+                setIsSelectLocation(false);
+                setNameBioSrc(location.name);
+              }}>
+              <Text>Chọn</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
       {loading === true && <Loading />}
     </SafeAreaView>
   );
@@ -298,6 +379,51 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     marginRight: Dimension.setWidth(2),
+  },
+  tileContainer: {
+    padding: 5,
+    marginLeft: 10,
+  },
+  tile: {fontWeight: 'bold', fontSize: 19, color: Colors.DEFAULT_GREEN},
+  nameLatin: {
+    fontWeight: 'bold',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 5,
+    textAlign: 'center',
+    fontSize: 14,
+  },
+  modalContainer: {
+    width: '95%',
+    height: '30%',
+    borderRadius: 8,
+    backgroundColor: 'white',
+    padding: 15,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  modalBack: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  itemContainer: {
+    borderRadius: 12,
+  },
+  dropdown: {
+    width: '100%',
+  },
+  btnSelect: {
+    backgroundColor: Colors.DEFAULT_YELLOW,
+    width: Dimension.setWidth(30),
+    height: Dimension.setHeight(4),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: Colors.DEFAULT_BLACK,
+    borderRadius: 15,
+    borderWidth: 1,
+    marginTop: 40,
   },
 });
 

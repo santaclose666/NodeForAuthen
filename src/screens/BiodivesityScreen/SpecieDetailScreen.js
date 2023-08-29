@@ -24,6 +24,29 @@ const SpecieDetailScreen = ({navigation}) => {
   const [isImageViewVisible, setImageViewVisible] = useState(false);
   const route = useRoute();
   const item = route.params;
+
+  const words = item.loailatin.split(' ');
+  let formattedText;
+  if (words.length > 1 && (words[1] === 'sp' || words[1] === 'sp.')) {
+    formattedText = (
+      <Text style={{fontWeight: '600'}}>
+        <Text>
+          <Text style={{fontStyle: 'italic'}}>{words[0]}</Text>{' '}
+          {words.slice(1).join(' ')}
+        </Text>
+      </Text>
+    );
+  } else {
+    formattedText = (
+      <Text style={{fontWeight: '600'}}>
+        <Text style={{fontStyle: 'italic'}}>
+          {words[0]} {words[1]}
+        </Text>{' '}
+        {words.slice(2).join(' ')}
+      </Text>
+    );
+  }
+
   console.log(item);
 
   const getListImage = () => {
@@ -111,10 +134,7 @@ const SpecieDetailScreen = ({navigation}) => {
               fontSize: 16,
               marginHorizontal: 8,
             }}>
-            <Text style={{fontStyle: 'italic', fontWeight: '600'}}>
-              {' '}
-              {item.loailatin}
-            </Text>
+            {formattedText}
           </Text>
 
           {(item.iucn != null) | (item.sachdo != null) | (item.nd != null) ? (
