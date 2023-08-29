@@ -8,10 +8,11 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import MapView, {WMSTile} from 'react-native-maps';
+import MapView, {WMSTile, Polygon, MAP_TYPES} from 'react-native-maps';
 import {useRoute} from '@react-navigation/native';
 import Colors from '../../contants/Colors';
 import Images from '../../contants/Images';
+import Dimension from '../../contants/Dimension';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -57,7 +58,7 @@ const MapScreen = ({navigation}) => {
 
   console.log(data.WMSLink[0]);
 
-  const [mapType, setMapType] = useState('satellite');
+  const [mapType, setMapType] = useState(MAP_TYPES.SATELLITE);
   const [initialRegion, setInitialRegion] = useState({
     latitude: data.centerPoint.y,
     longitude: data.centerPoint.x,
@@ -69,6 +70,9 @@ const MapScreen = ({navigation}) => {
   const [viewFullInfo, setViewFullInfo] = useState(false);
   const [regionFeatureInfo, setRegionFeatureInfo] = useState(null);
   const [loadingWMSGetInfo, setLoadingWMSGetInfo] = useState(false);
+  const [selectRegion, setSelectRegion] = useState([]);
+  const [expainBasemap, setExpainBaeMap] = useState(false);
+  const [currentBaseImg, setCurrentBaseImg] = useState(Images.baseSatellite);
 
   const [region, setRegion] = useState({
     latitude: LATITUDE,
@@ -76,6 +80,13 @@ const MapScreen = ({navigation}) => {
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA,
   });
+
+  const listBaseMap = [
+    {type: MAP_TYPES.STANDARD, image: Images.baseStandard},
+    {type: MAP_TYPES.HYBRID, image: Images.baseHybrid},
+    {type: MAP_TYPES.SATELLITE, image: Images.baseSatellite},
+    {type: MAP_TYPES.TERRAIN, image: Images.baseTerrain},
+  ];
 
   // ham lay link api quyery data tu WMS
   const _getWMSInfoAPILink = (x, y) => {
@@ -100,6 +111,9 @@ const MapScreen = ({navigation}) => {
       const ApiCall = await fetch(linkAPIGetInfoFull);
       const regionFeatureInfo = await ApiCall.json();
       let disPlayData = '';
+      // Dat vung to mau
+      setSelectRegion(regionFeatureInfo.features[0].geometry.coordinates[0][0]);
+      // lay tt thuoc tinh
       for (let [key, value] of Object.entries(
         regionFeatureInfo.features[0].properties,
       )) {
@@ -148,16 +162,7 @@ const MapScreen = ({navigation}) => {
       );
     } catch (err) {
       console.log(err);
-      Alert.alert(
-        'Thông tin đối tượng',
-        'Không lấy được thông tin đối tượng',
-        [
-          {
-            text: 'Huỷ',
-          },
-        ],
-        {cancelable: false},
-      );
+      setSelectRegion([]);
     }
   };
 
@@ -176,6 +181,15 @@ const MapScreen = ({navigation}) => {
     setMapViewWidth(width);
     setMapViewHeight(height);
   };
+
+  const fomatCoordinate = coor => {
+    const polygon = coor.map(coordsArr => ({
+      latitude: coordsArr[1],
+      longitude: coordsArr[0],
+    }));
+    return polygon;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.backHeartContainer}>
@@ -190,6 +204,31 @@ const MapScreen = ({navigation}) => {
           />
         </TouchableOpacity>
       </View>
+      <TouchableOpacity
+        style={styles.baseMapView}
+        onPress={() => {
+          setExpainBaeMap(!expainBasemap);
+        }}>
+        <Image source={currentBaseImg} style={styles.btnBaseMap} />
+      </TouchableOpacity>
+      {expainBasemap && (
+        <View style={styles.baseMapContainer}>
+          {listBaseMap.map(item => {
+            return (
+              <TouchableOpacity
+                style={styles.baseMapOption}
+                onPress={() => {
+                  setMapType(item.type);
+                  setCurrentBaseImg(item.image);
+                  setExpainBaeMap(false);
+                }}>
+                <Image source={item.image} style={styles.btnBaseMap} />
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      )}
+
       <MapView
         onLayout={event => onLayout(event)}
         style={styles.map}
@@ -197,9 +236,21 @@ const MapScreen = ({navigation}) => {
         provider="google"
         initialRegion={initialRegion}
         onPress={handleMapPress}
+        showsMyLocationButton={false}
+        showsPointsOfInterest={true}
+        showsCompass={true}
         onRegionChangeComplete={Region => {
           setRegion(Region);
         }}>
+        {selectRegion.length > 2 && (
+          <Polygon
+            coordinates={fomatCoordinate(selectRegion)}
+            strokeColor={'red'}
+            fillColor={'rgba(242, 227, 235, 0.3)'}
+            strokeWidth={2}
+            zIndex={200}
+          />
+        )}
         <WMSTile
           urlTemplate={data.WMSLink[0]}
           opacity={1}
@@ -236,6 +287,38 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 100,
     backgroundColor: Colors.DEFAULT_GREEN,
+  },
+  baseMapView: {
+    width: 50,
+    height: 50,
+    position: 'absolute',
+    zIndex: 1000,
+    left: 9,
+    bottom: 35,
+  },
+  baseMapContainer: {
+    height: 60,
+    position: 'absolute',
+    zIndex: 1000,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    bottom: 94,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignSelf: 'flex-start',
+  },
+  btnBaseMap: {
+    width: 50,
+    height: 50,
+    borderWidth: 1.2,
+    borderColor: 'white',
+    borderRadius: 7,
+  },
+  baseMapOption: {
+    width: 50,
+    height: 50,
+    marginHorizontal: 7,
   },
 });
 

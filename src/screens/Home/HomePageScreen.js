@@ -113,7 +113,7 @@ const HomePageScreen = ({navigation}) => {
     fetchAllNews();
     fetchAllStaff();
 
-    // notificationHandle();
+    notificationHandle();
 
     return () => clearInterval(interval);
   }, []);
@@ -244,18 +244,31 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.map} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Bản đồ số</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}>
-                <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    navigation.navigate('ListBio');
-                  }}>
-                  <Image
-                    source={Images.biodiversity}
-                    style={styles.featureBtn}
-                  />
-                  <Text style={styles.featureText}>ĐDSH</Text>
-                </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  navigation.navigate('ListBio');
+                }}>
+                <Image source={Images.biodiversity} style={styles.featureBtn} />
+                <Text style={styles.featureText}>ĐDSH</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
+                <Image source={Images.forest} style={styles.featureBtn} />
+                <Text style={styles.featureText}>QLRBV</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.btnContainer}>
+              <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
+                <Image source={Images.trees1} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Khung giá rừng</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
+                <Image source={Images.trees} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Kiểm kê rừng</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
+                <Image source={Images.standard} style={styles.featureBtn} />
+                <Text style={styles.featureText}>TCVN</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
             </View>
