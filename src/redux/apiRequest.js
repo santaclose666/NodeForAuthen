@@ -306,8 +306,9 @@ export const totalWorkSchedule = async dispatch => {
     );
 
     const data = res.data;
-
     dispatch(getTotalWorkSuccess(data));
+
+    return data;
   } catch (error) {
     dispatch(getTotalWorkFailed());
   }
@@ -315,11 +316,11 @@ export const totalWorkSchedule = async dispatch => {
 
 export const warningWorkSchedule = async data => {
   try {
-    await axios.post(
+    const res = await axios.post(
       `https://management.ifee.edu.vn/api/lichcongtac/canhbao/${data.id_lichchitiet}?lydo=${data.lydo}`,
     );
 
-    console.log(data);
+    return res.data;
   } catch (error) {
     console.log(error);
   }
