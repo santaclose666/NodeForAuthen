@@ -44,6 +44,7 @@ import {
 } from './totalWorkScheduleSlice';
 import {saveSuccess} from './credentialSlice';
 import {getNewFailed, getNewStart, getNewSuccess} from './newSlice';
+import {getToken} from '../utils/firebaseNotifi';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -66,6 +67,7 @@ export const loginUser = async (user, dispatch, navigation, save) => {
     } else {
       navigation.dispatch(resetAction);
       navigation.navigate('BottomTab');
+      postToken();
 
       save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));
     }
@@ -531,5 +533,19 @@ export const getallNews = async dispatch => {
     return data;
   } catch (error) {
     dispatch(getNewFailed(error));
+  }
+};
+
+///////////////////// SEND TOKEN ////////////////////
+export const postToken = async id_ht => {
+  try {
+    const token = await getToken();
+    await axios.post(
+      `https://forestry.ifee.edu.vn/api/device_token/${id_ht}?device_token=${token}`,
+    );
+
+    console.log(token);
+  } catch (error) {
+    console.log(error);
   }
 };

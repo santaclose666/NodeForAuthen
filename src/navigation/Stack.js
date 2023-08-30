@@ -18,6 +18,7 @@ import SelectWMSLayerScreen from '../screens/MapService/SelectWMSLayerScreen1';
 import MapScreen from '../screens/MapService/MapScreen';
 import ListBioScreen from '../screens/BiodivesityScreen/ListBioScreen';
 import SpecieDetailScreen from '../screens/BiodivesityScreen/SpecieDetailScreen';
+import AboutUs from '../screens/MoreInfo/aboutUsScreen';
 
 const Stack = createStackNavigator();
 
@@ -59,6 +60,7 @@ const StactNavigator = () => {
       <Stack.Screen name="MapWMS" component={MapScreen} />
       <Stack.Screen name="ListBio" component={ListBioScreen} />
       <Stack.Screen name="SpecieDetail" component={SpecieDetailScreen} />
+      <Stack.Screen name="AboutUs" component={AboutUs} />
     </Stack.Navigator>
   );
 };

@@ -17,7 +17,8 @@ export const getToken = async () => {
   try {
     await messaging().registerDeviceForRemoteMessages();
     const token = await messaging().getToken();
-    console.log('Token', token);
+
+    return token;
   } catch (error) {
     console.log(error);
   }

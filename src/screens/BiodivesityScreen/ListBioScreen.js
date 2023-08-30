@@ -22,6 +22,7 @@ import {shadowIOS} from '../../contants/propsIOS';
 import Loading from '../../components/LoadingUI';
 import {FlatList} from 'native-base';
 import {Dropdown} from 'react-native-element-dropdown';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const dataLocation = [
   {
@@ -121,6 +122,7 @@ const ListBioScreen = ({navigation}) => {
   const RenderItem = ({item}) => {
     return (
       <TouchableOpacity
+        style={styles.renderItemBg}
         activeOpacity={0.8}
         onPress={() => {
           navigation.navigate('SpecieDetail', item);
@@ -157,120 +159,129 @@ const ListBioScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView showsVerticalScrollIndicator={false} style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
-      <View style={styles.searchFilterContainer}>
-        <TouchableOpacity
-          style={styles.headerContainer}
-          onPress={() => {
-            navigation.goBack();
-          }}>
-          <Image style={styles.backImg} source={Images.back} />
-        </TouchableOpacity>
-        <View style={styles.searchTextInputContainer}>
-          <Icons.FontAwesome name="search" size={20} color="#888" />
-          <TextInput
-            onChangeText={e => handleSearch(e)}
-            value={input}
-            style={styles.searchTextInput}
-            placeholder="Tìm kiếm loài"
-          />
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            setIsSelectLocation(true);
-          }}
-          style={styles.filterData}>
-          <Image style={{width: 25, height: 25}} source={Images.filter} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.tileContainer}>
-        <Text style={styles.tile}>{nameBioSource}</Text>
-      </View>
-
-      <FlatList
-        columnWrapperStyle={{justifyContent: 'space-between'}}
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          marginTop: 10,
-          paddingBottom: 50,
-        }}
-        numColumns={2}
-        data={speciesFilled ? speciesFilled : speciesArr}
-        renderItem={({item}) => {
-          return <RenderItem item={item} navigation={navigation} />;
-        }}
-        initialNumToRender={12}
-        windowSize={12}
-        removeClippedSubviews={true}
-        refreshing={true}
-        extraData={speciesFilled ? speciesFilled : speciesArr}
-      />
-      <Modal
-        isVisible={isSelectLocation}
-        animationIn="fadeInUp"
-        animationInTiming={1}
-        animationOut="fadeOutDown"
-        animationOutTiming={1}
-        style={{flex: 1}}>
-        <TouchableOpacity
-          onPress={() => {
-            setIsSelectLocation(false);
-          }}
-          style={styles.modalBack}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.tile}>Chọn dữ liệu</Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                alignSelf: 'flex-start',
-                padding: 5,
-              }}>
-              Chọn khu vực:
-            </Text>
-            <Dropdown
-              style={styles.dropdown}
-              autoScroll={false}
-              showsVerticalScrollIndicator={false}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              containerStyle={styles.containerOptionStyle}
-              itemContainerStyle={styles.itemContainer}
-              itemTextStyle={styles.itemText}
-              fontFamily={Fonts.SF_MEDIUM}
-              activeColor="#eef2feff"
-              placeholder="Vùng"
-              data={dataLocation}
-              maxHeight={Dimension.setHeight(30)}
-              labelField="name"
-              valueField="ma"
-              value={location}
-              onChange={item => {
-                setLocation(item);
-              }}
+        style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+        <View style={styles.searchFilterContainer}>
+          <TouchableOpacity
+            style={styles.headerContainer}
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <Image style={styles.backImg} source={Images.back} />
+          </TouchableOpacity>
+          <View style={styles.searchTextInputContainer}>
+            <Icons.FontAwesome name="search" size={20} color="#888" />
+            <TextInput
+              onChangeText={e => handleSearch(e)}
+              value={input}
+              style={styles.searchTextInput}
+              placeholder="Tìm kiếm loài"
             />
-            <TouchableOpacity
-              style={styles.btnSelect}
-              onPress={() => {
-                getListSpecies();
-                setIsSelectLocation(false);
-                setNameBioSrc(location.name);
-              }}>
-              <Text>Chọn</Text>
-            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-      </Modal>
-      {loading === true && <Loading />}
-    </SafeAreaView>
+          <TouchableOpacity
+            onPress={() => {
+              setIsSelectLocation(true);
+            }}
+            style={styles.filterData}>
+            <Image style={{width: 25, height: 25}} source={Images.filter} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.tileContainer}>
+          <Text style={styles.tile}>{nameBioSource}</Text>
+        </View>
+
+        <FlatList
+          columnWrapperStyle={{justifyContent: 'space-between'}}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            marginTop: 10,
+            paddingBottom: 50,
+          }}
+          numColumns={2}
+          data={speciesFilled ? speciesFilled : speciesArr}
+          renderItem={({item}) => {
+            return <RenderItem item={item} navigation={navigation} />;
+          }}
+          initialNumToRender={12}
+          windowSize={12}
+          removeClippedSubviews={true}
+          refreshing={true}
+          extraData={speciesFilled ? speciesFilled : speciesArr}
+        />
+        <Modal
+          isVisible={isSelectLocation}
+          animationIn="fadeInUp"
+          animationInTiming={1}
+          animationOut="fadeOutDown"
+          animationOutTiming={1}
+          style={{flex: 1}}>
+          <TouchableOpacity
+            onPress={() => {
+              setIsSelectLocation(false);
+            }}
+            style={styles.modalBack}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.tile}>Chọn dữ liệu</Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  alignSelf: 'flex-start',
+                  padding: 5,
+                }}>
+                Chọn khu vực:
+              </Text>
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                placeholder="Vùng"
+                data={dataLocation}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="name"
+                valueField="ma"
+                value={location}
+                onChange={item => {
+                  setLocation(item);
+                }}
+              />
+              <TouchableOpacity
+                style={styles.btnSelect}
+                onPress={() => {
+                  getListSpecies();
+                  setIsSelectLocation(false);
+                  setNameBioSrc(location.name);
+                }}>
+                <Text>Chọn</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+        {loading === true && <Loading />}
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
   },
 
   searchFilterContainer: {
@@ -302,6 +313,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     height: Dimension.setHeight(4),
     marginRight: Dimension.setWidth(2),
+    backgroundColor: 'white',
   },
 
   searchTextInput: {
@@ -424,6 +436,10 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 1,
     marginTop: 40,
+  },
+  renderItemBg: {
+    ...shadowIOS,
+    elevation: 5,
   },
 });
 

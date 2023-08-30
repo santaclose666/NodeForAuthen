@@ -134,6 +134,11 @@ const Images = {
   trees1: require('../assets/images/trees1.png'),
   forest: require('../assets/images/forest.png'),
   standard: require('../assets/images/standard.png'),
+  information: require('../assets/images/information.png'),
+  IFEELogo: require('../assets/images/IFEELogo.jpg'),
+  XMGLogo: require('../assets/images/XMGLogo.jpg'),
+  IFEETeam: require('../assets/images/TapTheIFEE.jpg'),
+  XMGTeam: require('../assets/images/TapTheXMG.jpg'),
 };
 
 export default Images;

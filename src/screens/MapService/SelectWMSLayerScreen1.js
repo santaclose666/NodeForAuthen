@@ -15,8 +15,9 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
 import RegisterBtn from '../../components/RegisterBtn';
 import {shadowIOS} from '../../contants/propsIOS';
-import Loading from '../../components/LoadingUI';
 import {ToastAlert} from '../../components/Toast';
+import LinearGradient from 'react-native-linear-gradient';
+
 const vnRegionMapData = require('../../utils/VnRegionMap.json');
 const listLayerWMS = require('../../utils/listLayerWMSGeoPfes.json');
 
@@ -272,251 +273,261 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
   // Rest of your functions
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="Chọn lớp bản đồ" navigation={navigation} />
-      <ScrollView>
-        <KeyboardAwareScrollView
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{
-            backgroundColor: '#fbfbfd',
-            borderRadius: 12,
-            marginHorizontal: Dimension.setWidth(3),
-            marginVertical: Dimension.setHeight(3),
-            paddingHorizontal: Dimension.setWidth(3),
-            paddingTop: Dimension.setHeight(3),
-            elevation: 5,
-            ...shadowIOS,
-          }}>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Loại bản đồ</Text>
-            <Dropdown
-              style={styles.dropdown}
-              autoScroll={false}
-              showsVerticalScrollIndicator={false}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              containerStyle={styles.containerOptionStyle}
-              imageStyle={styles.imageStyle}
-              iconStyle={styles.iconStyle}
-              itemContainerStyle={styles.itemContainer}
-              itemTextStyle={styles.itemText}
-              fontFamily={Fonts.SF_MEDIUM}
-              activeColor="#eef2feff"
-              placeholder="Chọn loại bản đồ"
-              data={listTypeMap}
-              maxHeight={Dimension.setHeight(30)}
-              labelField="nameLayer"
-              valueField="value"
-              value={selectTypeMapCode}
-              renderLeftIcon={() => {
-                return (
-                  <Image
-                    source={Images.worldwide}
-                    style={styles.leftIconDropdown}
-                  />
-                );
-              }}
-              onChange={item => {
-                setSelectTypeMapCode(item.value);
-                setListYear([]);
-                setListProvinces([]);
-                setListDistricts([]);
-                setListCommunes([]);
-                setSelectYear(undefined);
-                setSelectProvince(undefined);
-                setSelectProvinceCode(undefined);
-                setSelectDistrict(undefined);
-                setSelectDistrictCode(undefined);
-                setSelectCommune(undefined);
-                setSelectCommuneCode(undefined);
-                setCenterPoint(null);
-                getListYear(item.value);
-              }}
-            />
-          </View>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Chọn Năm dữ liệu</Text>
-            <Dropdown
-              style={styles.dropdown}
-              autoScroll={false}
-              showsVerticalScrollIndicator={false}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              containerStyle={styles.containerOptionStyle}
-              imageStyle={styles.imageStyle}
-              iconStyle={styles.iconStyle}
-              itemContainerStyle={styles.itemContainer}
-              itemTextStyle={styles.itemText}
-              fontFamily={Fonts.SF_MEDIUM}
-              activeColor="#eef2feff"
-              placeholder="Chọn năm"
-              data={listYear}
-              maxHeight={Dimension.setHeight(30)}
-              labelField="label"
-              valueField="value"
-              value={selectYear}
-              renderLeftIcon={() => {
-                return (
-                  <Image
-                    source={Images.worldwide}
-                    style={styles.leftIconDropdown}
-                  />
-                );
-              }}
-              onChange={item => {
-                setSelectYear(item.value);
-                setNameRegionCol(item.value);
-                setListProvinces([]);
-                setListDistricts([]);
-                setListCommunes([]);
-                setSelectProvince(undefined);
-                setSelectProvinceCode(undefined);
-                setSelectDistrict(undefined);
-                setSelectDistrictCode(undefined);
-                setSelectCommune(undefined);
-                setSelectCommuneCode(undefined);
-                setCenterPoint(null);
-                getListProvince(item.value);
-              }}
-            />
-          </View>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Chọn Tỉnh/Thành phố</Text>
-            <Dropdown
-              style={styles.dropdown}
-              autoScroll={false}
-              showsVerticalScrollIndicator={false}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              containerStyle={styles.containerOptionStyle}
-              imageStyle={styles.imageStyle}
-              iconStyle={styles.iconStyle}
-              itemContainerStyle={styles.itemContainer}
-              itemTextStyle={styles.itemText}
-              fontFamily={Fonts.SF_MEDIUM}
-              activeColor="#eef2feff"
-              placeholder="Tỉnh"
-              data={listProvinces}
-              maxHeight={Dimension.setHeight(30)}
-              labelField="label"
-              valueField="value"
-              value={selectProvince}
-              renderLeftIcon={() => {
-                return (
-                  <Image
-                    source={Images.worldwide}
-                    style={styles.leftIconDropdown}
-                  />
-                );
-              }}
-              onChange={item => {
-                setSelectProvince(item.value);
-                setSelectProvinceCode(item.value);
-                setListDistricts([]);
-                setListCommunes([]);
-                setSelectDistrict(undefined);
-                setSelectDistrictCode(undefined);
-                setSelectCommune(undefined);
-                setSelectCommuneCode(undefined);
-                setCenterPoint({x: item.provinX, y: item.provinY});
-                getListDistrict(item.value);
-              }}
-            />
-          </View>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Chọn Quận/Huyện/Thị xã</Text>
-            <Dropdown
-              style={styles.dropdown}
-              autoScroll={false}
-              showsVerticalScrollIndicator={false}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              containerStyle={styles.containerOptionStyle}
-              imageStyle={styles.imageStyle}
-              iconStyle={styles.iconStyle}
-              itemContainerStyle={styles.itemContainer}
-              itemTextStyle={styles.itemText}
-              fontFamily={Fonts.SF_MEDIUM}
-              activeColor="#eef2feff"
-              placeholder="Quận/huyện/thị xã"
-              data={listDistricts}
-              maxHeight={Dimension.setHeight(30)}
-              labelField="label"
-              valueField="value"
-              value={selectDistrict}
-              renderLeftIcon={() => {
-                return (
-                  <Image
-                    source={Images.worldwide}
-                    style={styles.leftIconDropdown}
-                  />
-                );
-              }}
-              onChange={item => {
-                setSelectDistrict(item.value);
-                setSelectDistrictCode(item.value);
-                setListCommunes([]);
-                setSelectCommune(undefined);
-                setSelectCommuneCode(undefined);
-                setCenterPoint({x: item.districtX, y: item.districtY});
-                getListCommune(item.value);
-              }}
-            />
-          </View>
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView style={styles.container}>
+        <Header title="Chọn lớp bản đồ" navigation={navigation} />
+        <ScrollView>
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+              backgroundColor: '#fbfbfd',
+              borderRadius: 12,
+              marginHorizontal: Dimension.setWidth(3),
+              marginVertical: Dimension.setHeight(3),
+              paddingHorizontal: Dimension.setWidth(3),
+              paddingTop: Dimension.setHeight(3),
+              elevation: 5,
+              ...shadowIOS,
+            }}>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Loại bản đồ</Text>
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                imageStyle={styles.imageStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                placeholder="Chọn loại bản đồ"
+                data={listTypeMap}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="nameLayer"
+                valueField="value"
+                value={selectTypeMapCode}
+                renderLeftIcon={() => {
+                  return (
+                    <Image
+                      source={Images.worldwide}
+                      style={styles.leftIconDropdown}
+                    />
+                  );
+                }}
+                onChange={item => {
+                  setSelectTypeMapCode(item.value);
+                  setListYear([]);
+                  setListProvinces([]);
+                  setListDistricts([]);
+                  setListCommunes([]);
+                  setSelectYear(undefined);
+                  setSelectProvince(undefined);
+                  setSelectProvinceCode(undefined);
+                  setSelectDistrict(undefined);
+                  setSelectDistrictCode(undefined);
+                  setSelectCommune(undefined);
+                  setSelectCommuneCode(undefined);
+                  setCenterPoint(null);
+                  getListYear(item.value);
+                }}
+              />
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Chọn Năm dữ liệu</Text>
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                imageStyle={styles.imageStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                placeholder="Chọn năm"
+                data={listYear}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="label"
+                valueField="value"
+                value={selectYear}
+                renderLeftIcon={() => {
+                  return (
+                    <Image
+                      source={Images.worldwide}
+                      style={styles.leftIconDropdown}
+                    />
+                  );
+                }}
+                onChange={item => {
+                  setSelectYear(item.value);
+                  setNameRegionCol(item.value);
+                  setListProvinces([]);
+                  setListDistricts([]);
+                  setListCommunes([]);
+                  setSelectProvince(undefined);
+                  setSelectProvinceCode(undefined);
+                  setSelectDistrict(undefined);
+                  setSelectDistrictCode(undefined);
+                  setSelectCommune(undefined);
+                  setSelectCommuneCode(undefined);
+                  setCenterPoint(null);
+                  getListProvince(item.value);
+                }}
+              />
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Chọn Tỉnh/Thành phố</Text>
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                imageStyle={styles.imageStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                placeholder="Tỉnh"
+                data={listProvinces}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="label"
+                valueField="value"
+                value={selectProvince}
+                renderLeftIcon={() => {
+                  return (
+                    <Image
+                      source={Images.worldwide}
+                      style={styles.leftIconDropdown}
+                    />
+                  );
+                }}
+                onChange={item => {
+                  setSelectProvince(item.value);
+                  setSelectProvinceCode(item.value);
+                  setListDistricts([]);
+                  setListCommunes([]);
+                  setSelectDistrict(undefined);
+                  setSelectDistrictCode(undefined);
+                  setSelectCommune(undefined);
+                  setSelectCommuneCode(undefined);
+                  setCenterPoint({x: item.provinX, y: item.provinY});
+                  getListDistrict(item.value);
+                }}
+              />
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Chọn Quận/Huyện/Thị xã</Text>
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                imageStyle={styles.imageStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                placeholder="Quận/huyện/thị xã"
+                data={listDistricts}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="label"
+                valueField="value"
+                value={selectDistrict}
+                renderLeftIcon={() => {
+                  return (
+                    <Image
+                      source={Images.worldwide}
+                      style={styles.leftIconDropdown}
+                    />
+                  );
+                }}
+                onChange={item => {
+                  setSelectDistrict(item.value);
+                  setSelectDistrictCode(item.value);
+                  setListCommunes([]);
+                  setSelectCommune(undefined);
+                  setSelectCommuneCode(undefined);
+                  setCenterPoint({x: item.districtX, y: item.districtY});
+                  getListCommune(item.value);
+                }}
+              />
+            </View>
 
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Chọn Xã/Phường/Thị trấn</Text>
-            <Dropdown
-              style={styles.dropdown}
-              autoScroll={false}
-              showsVerticalScrollIndicator={false}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              containerStyle={styles.containerOptionStyle}
-              imageStyle={styles.imageStyle}
-              iconStyle={styles.iconStyle}
-              itemContainerStyle={styles.itemContainer}
-              itemTextStyle={styles.itemText}
-              fontFamily={Fonts.SF_MEDIUM}
-              activeColor="#eef2feff"
-              placeholder="Xã/Phường/Thị trấn"
-              data={listCommunes}
-              maxHeight={Dimension.setHeight(30)}
-              labelField="label"
-              valueField="value"
-              value={selectCommune}
-              renderLeftIcon={() => {
-                return (
-                  <Image
-                    source={Images.worldwide}
-                    style={styles.leftIconDropdown}
-                  />
-                );
-              }}
-              onChange={item => {
-                setSelectCommune(item.value);
-                setSelectCommuneCode(item.value);
-                setCenterPoint({x: item.communeX, y: item.communeY});
-              }}
-            />
-          </View>
-          <View
-            style={{flexDirection: 'row', alignItems: 'center', width: '100%'}}>
-            <RegisterBtn
-              nameBtn={'Mở bản đồ'}
-              onEvent={() => onPressSelectMap()}
-            />
-          </View>
-        </KeyboardAwareScrollView>
-      </ScrollView>
-    </SafeAreaView>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Chọn Xã/Phường/Thị trấn</Text>
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                imageStyle={styles.imageStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                placeholder="Xã/Phường/Thị trấn"
+                data={listCommunes}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="label"
+                valueField="value"
+                value={selectCommune}
+                renderLeftIcon={() => {
+                  return (
+                    <Image
+                      source={Images.worldwide}
+                      style={styles.leftIconDropdown}
+                    />
+                  );
+                }}
+                onChange={item => {
+                  setSelectCommune(item.value);
+                  setSelectCommuneCode(item.value);
+                  setCenterPoint({x: item.communeX, y: item.communeY});
+                }}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: '100%',
+              }}>
+              <RegisterBtn
+                nameBtn={'Mở bản đồ'}
+                onEvent={() => onPressSelectMap()}
+              />
+            </View>
+          </KeyboardAwareScrollView>
+        </ScrollView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
   },
 
   containerEachLine: {

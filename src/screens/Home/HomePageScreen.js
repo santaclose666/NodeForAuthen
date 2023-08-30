@@ -23,7 +23,12 @@ import {
   getFormattedDate,
   changeFormatDate,
 } from '../../utils/serviceFunction';
-import {getWeatherData, getAllStaffs, getallNews} from '../../redux/apiRequest';
+import {
+  getWeatherData,
+  getAllStaffs,
+  getallNews,
+  postToken,
+} from '../../redux/apiRequest';
 import {getToken, notificationListener} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -83,7 +88,6 @@ const HomePageScreen = ({navigation}) => {
   };
 
   const notificationHandle = async () => {
-    await getToken();
     await notificationListener(notifiData, navigation, dispatch);
   };
 
@@ -270,7 +274,14 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.standard} style={styles.featureBtn} />
                 <Text style={styles.featureText}>TCVN</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  navigation.navigate('AboutUs');
+                }}>
+                <Image source={Images.information} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Tác giả</Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.featureBtnContainer}>
