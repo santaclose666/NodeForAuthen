@@ -4,8 +4,9 @@ const documentSlice = createSlice({
   name: 'document',
   initialState: {
     documentSlice: {
-      category: null,
-      data: null,
+      forestData: null,
+      forestryData: null,
+      QLRBVData: null,
       isFetching: false,
       err: false,
     },
@@ -16,15 +17,37 @@ const documentSlice = createSlice({
       state.documentSlice.isFetching = true;
     },
     getDocumentSuccess: (state, action) => {
-      const arr = ['Tất cả'];
-      action.payload.forEach(item => {
-        if (!arr.includes(item.loaivanban)) {
-          arr.push(item.loaivanban);
+      const forestCategory = ['Tất cả'];
+      const forestryCategory = ['Tất cả'];
+      const QLRBVCategory = ['Tất cả'];
+      action.payload.dinhgiarung.forEach(item => {
+        if (!forestCategory.includes(item.loaivanban)) {
+          forestCategory.push(item.loaivanban);
+        }
+      });
+      action.payload.dinhgiarung.forEach(item => {
+        if (!forestryCategory.includes(item.loaivanban)) {
+          forestryCategory.push(item.loaivanban);
+        }
+      });
+      action.payload.qlrbv.forEach(item => {
+        if (!QLRBVCategory.includes(item.loaivanban)) {
+          QLRBVCategory.push(item.loaivanban);
         }
       });
       state.documentSlice.isFetching = false;
-      state.documentSlice.data = action.payload;
-      state.documentSlice.category = arr;
+      state.documentSlice.forestData = {
+        category: forestCategory,
+        data: action.payload.dinhgiarung,
+      };
+      state.documentSlice.forestryData = {
+        category: forestryCategory,
+        data: action.payload.lamsinh,
+      };
+      state.documentSlice.QLRBVData = {
+        category: QLRBVCategory,
+        data: action.payload.qlrbv,
+      };
     },
     getDocumentFailed: state => {
       state.documentSlice.isFetching = false;

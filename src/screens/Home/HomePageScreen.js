@@ -294,13 +294,21 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.biodiversity} style={styles.featureBtn} />
                 <Text style={styles.featureText}>ĐDSH</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('QLRBV');
+                }}>
                 <Image source={Images.forest} style={styles.featureBtn} />
                 <Text style={styles.featureText}>QLRBV</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.btnContainer}>
-              <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('ForestPrice');
+                }}>
                 <Image source={Images.trees1} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Khung giá rừng</Text>
               </TouchableOpacity>
@@ -341,17 +349,21 @@ const HomePageScreen = ({navigation}) => {
               </Text>
             </View>
             <View style={styles.btnContainer}>
-              <TouchableOpacity style={styles.buttonFuc}>
+              <TouchableOpacity
+                onPress={() => {
+                  handleNavigate('Forestry');
+                }}
+                style={styles.buttonFuc}>
                 <Image
                   source={Images.logo_LamHoc}
-                  style={[styles.featureBtn, {borderRadius: 10}]}
+                  style={[styles.featureBtn, {borderRadius: 50}]}
                 />
                 <Text style={styles.featureText}> Khoa Lâm học</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
                 <Image
                   source={Images.logo_KTQTKD}
-                  style={[styles.featureBtn, {borderRadius: 10}]}
+                  style={[styles.featureBtn, {borderRadius: 50}]}
                 />
                 <Text style={styles.featureText}>Khoa KT-QTKD</Text>
               </TouchableOpacity>

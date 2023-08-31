@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useLayoutEffect, useState} from 'react';
+import React, {memo, useCallback} from 'react';
 import {
   View,
   Text,
@@ -7,35 +7,33 @@ import {
   TextInput,
   StyleSheet,
   SafeAreaView,
-  VirtualizedList,
   ScrollView,
   FlatList,
 } from 'react-native';
 import unidecode from 'unidecode';
-import Images from '../../contants/Images';
-import Icons from '../../contants/Icons';
-import Colors from '../../contants/Colors';
-import Fonts from '../../contants/Fonts';
-import Dimension from '../../contants/Dimension';
-import {shadowIOS} from '../../contants/propsIOS';
+import Images from '../contants/Images';
+import Icons from '../contants/Icons';
+import Colors from '../contants/Colors';
+import Fonts from '../contants/Fonts';
+import Dimension from '../contants/Dimension';
+import {shadowIOS} from '../contants/propsIOS';
 import LinearGradient from 'react-native-linear-gradient';
-import {fontDefault} from '../../contants/Variable';
-import Header from '../../components/Header';
-import {useSelector} from 'react-redux';
-import {useDispatch} from 'react-redux';
-import {getAllDocument} from '../../redux/apiRequest';
+import {fontDefault} from '../contants/Variable';
+import Header from '../components/Header';
 
-const ForestryPrice = ({navigation}) => {
-  const dispatch = useDispatch();
-  const [pickFileIndex, setpickFileIndex] = useState(null);
-  const [pickOptionIndex, setPickOptionIndex] = useState(0);
-  const [input, setInput] = useState('');
-  const groupOption = useSelector(
-    state => state.document.documentSlice?.category,
-  );
-  const data = useSelector(state => state.document.documentSlice?.data);
-  const [document, setDocument] = useState(data);
-
+const DocumentTemplate = ({
+  navigation,
+  pickFileIndex,
+  setpickFileIndex,
+  pickOptionIndex,
+  setPickOptionIndex,
+  input,
+  setInput,
+  data,
+  groupOption,
+  document,
+  setDocument,
+}) => {
   const handleSearch = useCallback(
     text => {
       setInput(text);
@@ -166,11 +164,6 @@ const ForestryPrice = ({navigation}) => {
                 <Image source={Images.dot} style={styles.dot} />
                 <Text style={styles.title}>Năm ban hành: </Text>
                 <Text style={styles.content}>{item?.nam}</Text>
-              </View>
-              <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
-                <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Chức năng: </Text>
-                <Text style={[styles.content]}>{item?.chucnang}</Text>
               </View>
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
@@ -359,4 +352,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ForestryPrice;
+export default DocumentTemplate;
