@@ -545,9 +545,11 @@ export const getallNews = async dispatch => {
 export const postToken = async id_ht => {
   try {
     const token = await getToken();
-    await axios.post(
-      `https://forestry.ifee.edu.vn/api/device_token/${id_ht}?device_token=${token}`,
-    );
+    if (token) {
+      await axios.post(
+        `https://forestry.ifee.edu.vn/api/device_token/${id_ht}?device_token=${token}`,
+      );
+    }
 
     console.log('OK Token', token);
   } catch (error) {
