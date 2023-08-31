@@ -146,6 +146,7 @@ const HistoryWorkShedule = ({navigation}) => {
   };
 
   const handleRequestFinish = () => {
+    bottomSheetModalRef.current?.dismiss();
     const data = {
       id_lichcongtac: selectedItem.id,
       ngayve: formatDateToPost(date),
@@ -161,6 +162,7 @@ const HistoryWorkShedule = ({navigation}) => {
 
   const handleApprove = useCallback(
     item => {
+      bottomSheetModalRef.current?.dismiss();
       setSelectedItem(item);
       setCheckInput(true);
       item.kt_congtac == 1
@@ -172,6 +174,7 @@ const HistoryWorkShedule = ({navigation}) => {
 
   const handleCancel = useCallback(
     item => {
+      bottomSheetModalRef.current?.dismiss();
       setSelectedItem(item);
       setCheckInput(false);
       item.kt_congtac == 1

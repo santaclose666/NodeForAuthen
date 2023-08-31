@@ -51,6 +51,7 @@ import {ToastAlert} from '../../components/Toast';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Loading from '../../components/LoadingUI';
 import ImageView from 'react-native-image-viewing';
+import {Dropdown} from 'react-native-element-dropdown';
 
 export const approveArr = [
   {
@@ -91,7 +92,6 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const [toggleConfirmModal, setToggleConfirmModal] = useState(false);
   const [toggleReturnModal, setToggleReturnModal] = useState(false);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
-  const [personBuyGas, setPersonBuyGas] = useState(null);
   const [endDate, setEndDate] = useState(formatDate(new Date()));
   const [km, setKm] = useState('');
   const [gasPrice, setGasPrice] = useState('');
@@ -100,6 +100,10 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const [filePicker, setFilePicker] = useState(null);
   const [zoomImg, setZoomImg] = useState(false);
   const [loading, setLoading] = useState(false);
+  const allStaffs = IFEEstaffs.map(item => {
+    return {name: item.hoten};
+  });
+  const [staffValue, setStaffValue] = useState(null);
   const bottomSheetModalRef = useRef(null);
   const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
@@ -129,6 +133,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   );
 
   const handlePickItem = useCallback((item, status) => {
+    bottomSheetModalRef.current?.dismiss();
     setSelectedItem(item);
     setIsConfirm(status);
     setToggleConfirmModal(true);
@@ -161,6 +166,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   }, []);
 
   const handleToggleReturnModal = item => {
+    bottomSheetModalRef.current?.dismiss();
     setSelectedItem(item);
     setToggleReturnModal(true);
   };
@@ -188,13 +194,14 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
 
   const handleReturnVehicle = async () => {
     if (filePicker && km != '') {
+      setToggleReturnModal(false);
       setLoading(true);
       const data = {
         id: selectedItem.id,
         ngayve: formatDateToPost(endDate),
         km_nhan: km,
         phixangxe: gasPrice,
-        nguoimuaxang: personBuyGas,
+        nguoimuaxang: staffValue,
         phibaoduong: maintenancePrice,
         nguoibaoduong: maintenancePerson,
         file: {
@@ -207,7 +214,6 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
         const res = await returnVehicle(data);
 
         if (res) {
-          setToggleReturnModal(false);
           setLoading(false);
           setTimeout(() => {
             fetchVehicleData();
@@ -217,7 +223,6 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
         console.log(error);
       }
     } else {
-      console.log('missing');
       ToastAlert('Thiếu thông tin!');
     }
 
@@ -444,6 +449,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
             flex: 0.1,
             flexDirection: 'row',
             justifyContent: 'space-between',
+            marginTop: Dimension.setHeight(1.8),
           }}>
           {approveArr?.map((item, index) => {
             return (
@@ -454,8 +460,6 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   paddingHorizontal: Dimension.setWidth(3),
-                  paddingVertical: 8,
-                  marginTop: 10,
                   height: '100%',
                   borderBottomWidth: indexPicker === index ? 1.6 : null,
                   borderBlockColor: indexPicker === index ? item.color : null,
@@ -728,33 +732,45 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
             </View>
 
             <View style={styles.lineContainerModal}>
-              <View style={styles.itemContainerModal}>
+              <View style={[styles.itemContainerModal, {width: '100%'}]}>
                 <Text style={styles.titleModal}>Người mua xăng</Text>
-                <View
-                  style={[
-                    styles.dateModalContainer,
-                    {width: Dimension.setWidth(75)},
-                  ]}>
-                  <TextInput
-                    style={{
-                      borderBottomWidth: 0.6,
-                      borderBottomColor: 'gray',
-                      marginHorizontal: Dimension.setWidth(1.6),
-                      fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: 16,
-                      height: Dimension.setHeight(6),
-                      width: '85%',
+                <View style={styles.containerEachLine1}>
+                  <Dropdown
+                    style={styles.dropdown}
+                    autoScroll={false}
+                    showsVerticalScrollIndicator={false}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedStyle={styles.selectedStyle}
+                    selectedTextStyle={[
+                      styles.selectedTextStyle,
+                      {fontSize: 13},
+                    ]}
+                    containerStyle={styles.containerOptionStyle}
+                    iconStyle={styles.iconStyle}
+                    itemContainerStyle={styles.itemContainer}
+                    itemTextStyle={styles.itemText}
+                    fontFamily={Fonts.SF_MEDIUM}
+                    search
+                    searchPlaceholder="Tìm kiếm..."
+                    activeColor="#eef2feff"
+                    data={allStaffs}
+                    maxHeight={Dimension.setHeight(30)}
+                    labelField="name"
+                    valueField="name"
+                    placeholder="Chọn người công tác"
+                    value={staffValue}
+                    renderLeftIcon={() => {
+                      return (
+                        <Image
+                          source={Images.person}
+                          style={styles.leftIconDropdown}
+                        />
+                      );
                     }}
-                    value={personBuyGas}
-                    onChangeText={e => setPersonBuyGas(e)}
+                    onChange={item => {
+                      setStaffValue(item.name);
+                    }}
                   />
-                  <View
-                    style={[
-                      styles.imgModalContainer,
-                      {backgroundColor: '#619ac4'},
-                    ]}>
-                    <Image source={Images.staffgas} style={[styles.imgDate]} />
-                  </View>
                 </View>
               </View>
             </View>
@@ -974,9 +990,8 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
             visible={zoomImg}
             onRequestClose={() => setZoomImg(false)}
           />
-
-          {loading && <Loading />}
         </Modal>
+        {loading && <Loading />}
       </SafeAreaView>
     </LinearGradient>
   );
@@ -1103,6 +1118,60 @@ const styles = StyleSheet.create({
   btnModal: {
     width: 28,
     height: 28,
+  },
+
+  containerEachLine1: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e6e6e6',
+    borderRadius: 12,
+    paddingVertical: Dimension.setHeight(1.6),
+    paddingHorizontal: Dimension.setWidth(3),
+  },
+
+  dropdown: {
+    height: Dimension.setHeight(4.5),
+    marginHorizontal: Dimension.setWidth(1.6),
+    borderBottomColor: 'gray',
+    borderBottomWidth: 0.5,
+  },
+  placeholderStyle: {
+    fontSize: 15,
+  },
+  selectedStyle: {
+    borderRadius: 12,
+    borderWidth: 0,
+  },
+  selectedTextStyle: {
+    color: '#277aaeff',
+    fontSize: 15,
+  },
+  imageStyle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  containerOptionStyle: {
+    borderRadius: 12,
+    backgroundColor: '#f6f6f8ff',
+    width: '110%',
+    alignSelf: 'center',
+  },
+  itemContainer: {
+    borderRadius: 12,
+  },
+  itemText: {
+    color: '#57575a',
+    fontSize: 14,
+  },
+  leftIconDropdown: {
+    width: 20,
+    height: 20,
+    marginRight: Dimension.setWidth(1.3),
   },
 });
 

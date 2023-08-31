@@ -91,6 +91,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
 
   const handleApprove = useCallback(
     item => {
+      bottomSheetModalRef.current?.dismiss();
       setSelectedItem(item);
       setCheckInput(true);
       setToggleModal(true);
@@ -100,6 +101,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
 
   const handleCancel = useCallback(
     item => {
+      bottomSheetModalRef.current?.dismiss();
       setSelectedItem(item);
       setCheckInput(false);
       setToggleModal(true);

@@ -21,6 +21,7 @@ const Images = {
   test2: require('../assets/images/langBac.png'),
   test3: require('../assets/images/temple1.png'),
   test4: require('../assets/images/test.png'),
+  love: require('../assets/images/love.png'),
   warning: require('../assets/images/warning.png'),
   heart: require('../assets/images/heart.png'),
   location: require('../assets/images/location.png'),
@@ -72,6 +73,8 @@ const Images = {
   datetime: require('../assets/images/datetime.png'),
   create: require('../assets/images/create.png'),
   done: require('../assets/images/done.png'),
+  mail: require('../assets/images/mail.png'),
+  title: require('../assets/images/title.png'),
   leaveDate: require('../assets/images/leaveDate.png'),
   cancel: require('../assets/images/cancel.png'),
   pending: require('../assets/images/pending.png'),
@@ -88,6 +91,10 @@ const Images = {
   person: require('../assets/images/person.png'),
   baggage: require('../assets/images/baggage.png'),
   work: require('../assets/images/work.png'),
+  fb: require('../assets/images/fb.png'),
+  youtube: require('../assets/images/youtube.png'),
+  feedback: require('../assets/images/feedback.png'),
+  contributor: require('../assets/images/contributor.png'),
   worklocation: require('../assets/images/worklocation.png'),
   registerperson: require('../assets/images/registerperson.png'),
   vehicles: require('../assets/images/vehicles.png'),
@@ -139,6 +146,10 @@ const Images = {
   XMGLogo: require('../assets/images/XMGLogo.jpg'),
   IFEETeam: require('../assets/images/TapTheIFEE.jpg'),
   XMGTeam: require('../assets/images/TapTheXMG.jpg'),
+  hpbd: require('../assets/images/hpbd.jpeg'),
+  avttest: require('../assets/images/avttest.png'),
+  logo_LamHoc: require('../assets/images/logo_LamHoc.jpg'),
+  logo_KTQTKD: require('../assets/images/logo_KTQTKD.png'),
 };
 
 export default Images;

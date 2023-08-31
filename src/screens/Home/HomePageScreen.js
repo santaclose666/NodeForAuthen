@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import {
   Platform,
   PermissionsAndroid,
   StatusBar,
+  Linking,
+  TextInput,
 } from 'react-native';
 import {HStack, Spinner} from 'native-base';
 import Images from '../../contants/Images';
@@ -27,7 +29,7 @@ import {
   getWeatherData,
   getAllStaffs,
   getallNews,
-  postToken,
+  sendFeedback,
 } from '../../redux/apiRequest';
 import {getToken, notificationListener} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
@@ -35,43 +37,54 @@ import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL, newsURL, fontDefault} from '../../contants/Variable';
-import {ToastAlert} from '../../components/Toast';
 import LinearGradient from 'react-native-linear-gradient';
-
-const requestPermissions = async () => {
-  if (Platform.OS === 'android') {
-    try {
-      await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-      ]);
-    } catch (err) {
-      console.log(err);
-    }
-  } else {
-    await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then(result => {
-      console.log(result);
-    });
-    const authStatus = await messaging().requestPermission();
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-  }
-};
+import Modal from 'react-native-modal';
+import {ToastAlert, ToastSuccess} from '../../components/Toast';
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
-
   const dispatch = useDispatch();
   const [interval, setInTerVal] = useState(null);
   const [newArr, setNewArr] = useState(null);
+  const [toggleFeedBack, setToggleFeedBack] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [titleInput, setTitleInput] = useState('');
+  const [contentInput, setContentInput] = useState('');
+  const [gmailInput, setGmailInput] = useState('');
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
     await requestPermissions();
     await getWeatherData(dispatch);
+  };
+
+  const requestPermissions = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        ]);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then(result => {
+        console.log(result);
+      });
+      const authStatus = await messaging().requestPermission({
+        alert: true,
+        criticalAlert: true,
+        badge: true,
+        sound: true,
+        announcement: true,
+      });
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    }
   };
 
   const fetchAllNews = async () => {
@@ -91,15 +104,38 @@ const HomePageScreen = ({navigation}) => {
     await notificationListener(notifiData, navigation, dispatch);
   };
 
-  const handleLimitedFeature = routeName => {
-    if (user) {
-      if (user?.tendonvi == 'XMG' && routeName !== 'StaffList') {
-        ToastAlert('Tính năng dành riêng cho IFEE');
-      } else {
-        navigation.navigate(routeName);
-      }
+  const handleNavigate = routeName => {
+    navigation.navigate(routeName);
+  };
+
+  const handleOpenApp = async link => {
+    try {
+      return Linking.openURL(link);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSendFeedback = () => {
+    if (
+      nameInput.length != 0 &&
+      gmailInput.length != 0 &&
+      titleInput.length != 0 &&
+      contentInput.length != 0
+    ) {
+      const data = {
+        hoten: nameInput,
+        email: gmailInput,
+        tieude: titleInput,
+        noidung: contentInput,
+      };
+
+      sendFeedback(data);
+
+      setToggleFeedBack(false);
+      ToastSuccess('Cảm ơn đã gửi góp ý cho chúng tôi!');
     } else {
-      ToastAlert('Đăng nhập để sử dụng tính năng này');
+      ToastAlert('Thiếu thông tin!');
     }
   };
 
@@ -274,85 +310,175 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.standard} style={styles.featureBtn} />
                 <Text style={styles.featureText}>TCVN</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  navigation.navigate('AboutUs');
-                }}>
-                <Image source={Images.information} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Tác giả</Text>
-              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
             </View>
           </View>
+
           <View style={styles.featureBtnContainer}>
-            <View style={styles.featureContainer}>
+            <View
+              style={[
+                styles.featureContainer,
+                {flexDirection: 'row', alignItems: 'center'},
+              ]}>
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
                   fontSize: 16,
                   color: Colors.DEFAULT_BLACK,
                   opacity: 0.9,
+                  marginRight: Dimension.setWidth(1),
                 }}>
-                IFEE Management
+                Trường Đại học Lâm nghiệp
               </Text>
             </View>
             <View style={styles.btnContainer}>
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  handleLimitedFeature('StaffList');
+                  setToggleFeedBack(true);
                 }}>
-                <Image source={Images.staff} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Nhân sự</Text>
+                <Image
+                  source={Images.logo_LamHoc}
+                  style={[styles.featureBtn, {borderRadius: 10}]}
+                />
+                <Text style={styles.featureText}> Khoa Lâm học</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleLimitedFeature('HistoryWorkShedule');
-                }}>
-                <Image source={Images.calendar2} style={styles.featureBtn} />
-                <Text style={[styles.featureText, {alignSelf: 'center'}]}>
-                  Lịch công tác
+              <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
+                <Image
+                  source={Images.logo_KTQTKD}
+                  style={[styles.featureBtn, {borderRadius: 10}]}
+                />
+                <Text style={styles.featureText}>Khoa KT-QTKD</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+            </View>
+          </View>
+
+          {user?.tendonvi === 'IFEE' && (
+            <View style={styles.featureBtnContainer}>
+              <View style={styles.featureContainer}>
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_BOLD,
+                    fontSize: 16,
+                    color: Colors.DEFAULT_BLACK,
+                    opacity: 0.9,
+                  }}>
+                  IFEE Management
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleLimitedFeature('HistoryApplyLeave');
+              </View>
+              <View style={styles.btnContainer}>
+                <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
+                    handleNavigate('StaffList');
+                  }}>
+                  <Image source={Images.staff} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>Nhân sự</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
+                    handleNavigate('HistoryWorkShedule');
+                  }}>
+                  <Image source={Images.calendar2} style={styles.featureBtn} />
+                  <Text style={[styles.featureText, {alignSelf: 'center'}]}>
+                    Lịch công tác
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
+                    handleNavigate('HistoryApplyLeave');
+                  }}>
+                  <Image source={Images.busy} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>Nghỉ phép</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonFuc}>
+                  <Image source={Images.morebtn} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>Thêm</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.btnContainer}>
+                <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
+                    handleNavigate('HistoryRegisterVehicle');
+                  }}>
+                  <Image
+                    source={Images.registervehicle}
+                    style={styles.featureBtn}
+                  />
+                  <Text style={styles.featureText}>Đăng kí xe</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
+                    handleNavigate('HistoryPlaneTicket');
+                  }}>
+                  <Image
+                    source={Images.registerticket}
+                    style={styles.featureBtn}
+                  />
+                  <Text style={styles.featureText}>Đăng kí vé</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          <View style={styles.featureBtnContainer}>
+            <View
+              style={[
+                styles.featureContainer,
+                {flexDirection: 'row', alignItems: 'center'},
+              ]}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: 16,
+                  color: Colors.DEFAULT_BLACK,
+                  opacity: 0.9,
+                  marginRight: Dimension.setWidth(1),
                 }}>
-                <Image source={Images.busy} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Nghỉ phép</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}>
-                <Image source={Images.morebtn} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Thêm</Text>
-              </TouchableOpacity>
+                Kết nối
+              </Text>
             </View>
             <View style={styles.btnContainer}>
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  handleLimitedFeature('HistoryRegisterVehicle');
+                  setToggleFeedBack(true);
                 }}>
-                <Image
-                  source={Images.registervehicle}
-                  style={styles.featureBtn}
-                />
-                <Text style={styles.featureText}>Đăng kí xe</Text>
+                <Image source={Images.feedback} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Phản hồi</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  handleLimitedFeature('HistoryPlaneTicket');
+                  handleOpenApp('fb://profile/100051879741625');
                 }}>
-                <Image
-                  source={Images.registerticket}
-                  style={styles.featureBtn}
-                />
-                <Text style={styles.featureText}>Đăng kí vé</Text>
+                <Image source={Images.fb} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Facebook</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleOpenApp('vnd.youtube:/@viensinhthairungvamoitruon4033');
+                }}>
+                <Image source={Images.youtube} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Youtube</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  navigation.navigate('Contributor');
+                }}>
+                <Image source={Images.information} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Tác giả</Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.newTextContainer}>
@@ -401,6 +527,165 @@ const HomePageScreen = ({navigation}) => {
             }}
             keyExtractor={(_, index) => index}
           />
+
+          <Modal
+            isVisible={toggleFeedBack}
+            animationIn="fadeInUp"
+            animationInTiming={100}
+            animationOut="fadeOutDown"
+            animationOutTiming={100}
+            avoidKeyboard={true}>
+            <View
+              style={{
+                flex: 1,
+                position: 'absolute',
+                alignSelf: 'center',
+                backgroundColor: '#def8ed',
+                width: Dimension.setWidth(85),
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 14,
+                paddingHorizontal: Dimension.setWidth(3),
+              }}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginVertical: Dimension.setHeight(1),
+                  borderBottomWidth: 0.8,
+                  borderBlockColor: Colors.INACTIVE_GREY,
+                  width: '100%',
+                  height: Dimension.setHeight(4.5),
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_BOLD,
+                    fontSize: 20,
+                    color: '#57b85d',
+                  }}>
+                  Phản hồi góp ý
+                </Text>
+              </View>
+
+              <View style={styles.lineContainerModal}>
+                <View style={styles.itemContainerModal}>
+                  <Text style={styles.titleModal}>Họ tên</Text>
+                  <View
+                    style={[
+                      styles.dateModalContainer,
+                      {width: Dimension.setWidth(75)},
+                    ]}>
+                    <TextInput
+                      style={{
+                        borderBottomWidth: 0.6,
+                        borderBottomColor: 'gray',
+                        marginHorizontal: Dimension.setWidth(1.6),
+                        fontFamily: Fonts.SF_MEDIUM,
+                        fontSize: 16,
+                        height: Dimension.setHeight(6),
+                        width: '85%',
+                      }}
+                      value={nameInput}
+                      onChangeText={e => setNameInput(e)}
+                    />
+                    <Image source={Images.person} style={styles.imgDate} />
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.lineContainerModal}>
+                <View style={styles.itemContainerModal}>
+                  <Text style={styles.titleModal}>Địa chỉ email</Text>
+                  <View
+                    style={[
+                      styles.dateModalContainer,
+                      {width: Dimension.setWidth(75)},
+                    ]}>
+                    <TextInput
+                      style={{
+                        borderBottomWidth: 0.6,
+                        borderBottomColor: 'gray',
+                        marginHorizontal: Dimension.setWidth(1.6),
+                        fontFamily: Fonts.SF_MEDIUM,
+                        fontSize: 16,
+                        height: Dimension.setHeight(6),
+                        width: '85%',
+                      }}
+                      value={gmailInput}
+                      onChangeText={e => setGmailInput(e)}
+                    />
+                    <Image source={Images.mail} style={styles.imgDate} />
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.lineContainerModal}>
+                <View style={styles.itemContainerModal}>
+                  <Text style={styles.titleModal}>Tiêu đề</Text>
+                  <View
+                    style={[
+                      styles.dateModalContainer,
+                      {width: Dimension.setWidth(75)},
+                    ]}>
+                    <TextInput
+                      style={{
+                        borderBottomWidth: 0.6,
+                        borderBottomColor: 'gray',
+                        marginHorizontal: Dimension.setWidth(1.6),
+                        fontFamily: Fonts.SF_MEDIUM,
+                        fontSize: 16,
+                        height: Dimension.setHeight(6),
+                        width: '85%',
+                      }}
+                      value={titleInput}
+                      onChangeText={e => setTitleInput(e)}
+                    />
+                    <Image source={Images.title} style={styles.imgDate} />
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.lineContainerModal}>
+                <View style={styles.itemContainerModal}>
+                  <Text style={styles.titleModal}>Nội dung</Text>
+                  <View
+                    style={[
+                      styles.dateModalContainer,
+                      {width: Dimension.setWidth(75)},
+                    ]}>
+                    <TextInput
+                      multiline={true}
+                      style={{
+                        borderBottomWidth: 0.6,
+                        borderBottomColor: 'gray',
+                        marginHorizontal: Dimension.setWidth(1.6),
+                        fontFamily: Fonts.SF_MEDIUM,
+                        fontSize: 16,
+                        height: Dimension.setHeight(12),
+                        width: '96%',
+                        textAlign: 'auto',
+                      }}
+                      value={contentInput}
+                      onChangeText={e => setContentInput(e)}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setToggleFeedBack(false);
+                }}
+                style={{position: 'absolute', left: 12, top: 12}}>
+                <Image source={Images.minusclose} style={styles.btnModal} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleSendFeedback}
+                style={{position: 'absolute', right: 12, top: 12}}>
+                <Image source={Images.confirm} style={styles.btnModal} />
+              </TouchableOpacity>
+            </View>
+          </Modal>
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -498,7 +783,7 @@ const styles = StyleSheet.create({
   },
 
   featureContainer: {
-    marginBottom: Dimension.setHeight(0.6),
+    marginBottom: Dimension.setHeight(0.8),
   },
 
   featureBtnContainer: {
@@ -589,6 +874,58 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     fontSize: 12,
     paddingHorizontal: Dimension.setHeight(1),
+  },
+
+  lineContainerModal: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+
+  itemContainerModal: {
+    paddingVertical: Dimension.setHeight(1),
+    paddingHorizontal: Dimension.setWidth(2),
+  },
+
+  titleModal: {
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: 14,
+    marginBottom: Dimension.setHeight(0.6),
+  },
+
+  dateModalContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 12,
+    backgroundColor: '#ffffff',
+    paddingHorizontal: Dimension.setWidth(2.2),
+    paddingVertical: Dimension.setHeight(0.8),
+    elevation: 5,
+    ...shadowIOS,
+    width: Dimension.setWidth(35),
+  },
+
+  contentModal: {
+    fontFamily: Fonts.SF_SEMIBOLD,
+    fontSize: 15,
+  },
+
+  imgModalContainer: {
+    padding: Dimension.setWidth(1.1),
+    borderRadius: 8,
+  },
+
+  imgDate: {
+    height: 25,
+    width: 25,
+  },
+
+  btnModal: {
+    width: 28,
+    height: 28,
   },
 });
 

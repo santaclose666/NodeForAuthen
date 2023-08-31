@@ -19,7 +19,7 @@ import Fonts from '../../contants/Fonts';
 import {imgDefault, fontDefault} from '../../contants/Variable';
 import Dimension from '../../contants/Dimension';
 
-const aboutUsScreen = ({navigation}) => {
+const ContributorScreen = ({navigation}) => {
   return (
     <LinearGradient
       colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
@@ -88,7 +88,7 @@ const aboutUsScreen = ({navigation}) => {
                   Công ty Cổ phần thương mại công nghệ Xuân Mai Green{' '}
                 </Text>
               </View>
-              {/* <Image source={Images.XMGTeam} style={styles.themeUnit} /> */}
+              <Image source={Images.XMGTeam} style={styles.themeUnit} />
             </View>
             <View style={styles.paragrap}>
               <Text style={styles.h1}>Nguồn dữ liệu</Text>
@@ -113,7 +113,7 @@ const aboutUsScreen = ({navigation}) => {
   );
 };
 
-export default aboutUsScreen;
+export default ContributorScreen;
 
 const styles = StyleSheet.create({
   headerContainer: {

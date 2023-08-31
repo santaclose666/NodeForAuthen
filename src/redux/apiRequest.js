@@ -67,7 +67,7 @@ export const loginUser = async (user, dispatch, navigation, save) => {
     } else {
       navigation.dispatch(resetAction);
       navigation.navigate('BottomTab');
-      postToken();
+      postToken(res.data.id_ht);
 
       save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));
     }
@@ -544,7 +544,18 @@ export const postToken = async id_ht => {
       `https://forestry.ifee.edu.vn/api/device_token/${id_ht}?device_token=${token}`,
     );
 
-    console.log(token);
+    console.log('OK Token', token);
+  } catch (error) {
+    console.log('Loi tocken', error);
+  }
+};
+
+/////////////////////  SEND FEEDBACK  ////////////////////
+
+export const sendFeedback = async data => {
+  try {
+    console.log(data);
+    await axios.post(`https://forestry.ifee.edu.vn/api/contact`, data);
   } catch (error) {
     console.log(error);
   }

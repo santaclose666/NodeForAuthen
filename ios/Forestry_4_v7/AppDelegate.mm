@@ -5,8 +5,7 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [FIRApp configure];
   [GMSServices provideAPIKey:@"AIzaSyA66KwUrjxcFG5u0exynlJ45CrbrNe3hEc"];
   self.moduleName = @"Forestry_4_v7";

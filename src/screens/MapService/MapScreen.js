@@ -60,8 +60,8 @@ const MapScreen = ({navigation}) => {
 
   const [mapType, setMapType] = useState(MAP_TYPES.SATELLITE);
   const [initialRegion, setInitialRegion] = useState({
-    latitude: data.centerPoint.y,
-    longitude: data.centerPoint.x,
+    latitude: Number(data.centerPoint.y),
+    longitude: Number(data.centerPoint.x),
     latitudeDelta: 0.3,
     longitudeDelta: 0.3,
   });
