@@ -19,6 +19,7 @@ import MapScreen from '../screens/MapService/MapScreen';
 import ListBioScreen from '../screens/BiodivesityScreen/ListBioScreen';
 import SpecieDetailScreen from '../screens/BiodivesityScreen/SpecieDetailScreen';
 import ContributorScreen from '../screens/Contributors/Contributors';
+import ForestryPrice from '../screens/ForestryPrice/ForestryPrice';
 
 const Stack = createStackNavigator();
 
@@ -61,6 +62,7 @@ const StactNavigator = () => {
       <Stack.Screen name="ListBio" component={ListBioScreen} />
       <Stack.Screen name="SpecieDetail" component={SpecieDetailScreen} />
       <Stack.Screen name="Contributor" component={ContributorScreen} />
+      <Stack.Screen name="ForestPrice" component={ForestryPrice} />
     </Stack.Navigator>
   );
 };

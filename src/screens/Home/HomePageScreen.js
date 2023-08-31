@@ -30,6 +30,7 @@ import {
   getAllStaffs,
   getallNews,
   sendFeedback,
+  getAllDocument,
 } from '../../redux/apiRequest';
 import {getToken, notificationListener} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
@@ -58,6 +59,7 @@ const HomePageScreen = ({navigation}) => {
   const fetchImportantData = async () => {
     await requestPermissions();
     await getWeatherData(dispatch);
+    await getAllDocument(dispatch);
   };
 
   const requestPermissions = async () => {

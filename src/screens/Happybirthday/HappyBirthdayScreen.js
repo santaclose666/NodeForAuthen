@@ -35,7 +35,7 @@ const HappyBirthdayScreen = () => {
             }}
           />
         </View>
-        <ConfettiCannon
+        {/* <ConfettiCannon
           testID="fetti1"
           count={300}
           origin={position}
@@ -59,7 +59,7 @@ const HappyBirthdayScreen = () => {
             setPosition({x: x, y: y});
             confettiCannonRef.current?.start();
           }}
-        />
+        /> */}
       </ImageBackground>
     </View>
   );

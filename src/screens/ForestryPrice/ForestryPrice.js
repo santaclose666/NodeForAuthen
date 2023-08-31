@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, {memo, useCallback, useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,44 +8,51 @@ import {
   StyleSheet,
   SafeAreaView,
   VirtualizedList,
+  ScrollView,
+  FlatList,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../../contants/Images';
-import {ScrollView} from 'react-native-gesture-handler';
 import Icons from '../../contants/Icons';
 import Colors from '../../contants/Colors';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import {shadowIOS} from '../../contants/propsIOS';
 import LinearGradient from 'react-native-linear-gradient';
-import {DocumentData, DocumentURL, fontDefault} from '../../contants/Variable';
+import {fontDefault} from '../../contants/Variable';
 import Header from '../../components/Header';
+import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
+import {getAllDocument} from '../../redux/apiRequest';
 
-const DocumentListScreen = ({navigation}) => {
+const ForestryPrice = ({navigation}) => {
+  const dispatch = useDispatch();
   const [pickFileIndex, setpickFileIndex] = useState(null);
   const [pickOptionIndex, setPickOptionIndex] = useState(0);
   const [input, setInput] = useState('');
-  const [groupOption, setGroupOption] = useState([
-    'Tất cả',
-    'Luật',
-    'Nghị định',
-    'Quyết định',
-    'Thông tư',
-    'Sổ tay',
-  ]);
-  const [data, setData] = useState(DocumentData);
+  const groupOption = useSelector(
+    state => state.document.documentSlice?.category,
+  );
+  const data = useSelector(state => state.document.documentSlice?.data);
+  const [document, setDocument] = useState(data);
 
   const handleSearch = useCallback(
     text => {
       setInput(text);
       setPickOptionIndex(null);
+      setpickFileIndex(null);
 
-      const filter = DocumentData.filter(
+      const filter = data.filter(
         item =>
-          unidecode(item.SoHieu.toLowerCase()).includes(text.toLowerCase()) ||
-          unidecode(item.TrichYeu.toLowerCase()).includes(text.toLowerCase()),
+          unidecode(item.tenvanban.toLowerCase()).includes(
+            text.toLowerCase(),
+          ) ||
+          unidecode(item.loaivanban.toLowerCase()).includes(
+            text.toLowerCase(),
+          ) ||
+          unidecode(item.chucnang.toLowerCase()).includes(text.toLowerCase()),
       );
-      setData(filter);
+      setDocument(filter);
     },
     [input],
   );
@@ -53,23 +60,24 @@ const DocumentListScreen = ({navigation}) => {
   const handlePickOption = useCallback(
     (keyWord, index) => {
       index === 0
-        ? setData(DocumentData)
-        : setData(DocumentData.filter(item => item.LoaiVB === keyWord));
+        ? setDocument(data)
+        : setDocument(data.filter(item => item.loaivanban === keyWord));
 
       setPickOptionIndex(index);
+      setpickFileIndex(null);
     },
     [pickOptionIndex],
   );
 
-  const handlePress = useCallback(fileName => {
-    navigation.navigate('PDF', {link: DocumentURL + fileName});
+  const handlePress = useCallback(path => {
+    navigation.navigate('PDF', {link: path});
   }, []);
 
   const RenderDocument = memo(({item, index}) => {
     return (
-      <View key={item.ID}>
+      <View key={item.id}>
         <TouchableOpacity
-          onPress={() => handlePress(item.TenFile)}
+          onPress={() => handlePress(item.path)}
           style={styles.flatListItemContainer}>
           <View
             style={{
@@ -89,14 +97,14 @@ const DocumentListScreen = ({navigation}) => {
                 style={{width: 45, height: 45, marginRight: 5}}
               />
               <Text
-                numberOfLines={1}
+                numberOfLines={2}
                 ellipsizeMode="tail"
                 style={{
                   fontFamily: Fonts.SF_SEMIBOLD,
                   fontSize: 16,
                   ...fontDefault,
                 }}>
-                {item.SoHieu}
+                {item.tenvanban}
               </Text>
             </View>
             <Text
@@ -105,7 +113,7 @@ const DocumentListScreen = ({navigation}) => {
                 fontSize: 15,
                 color: Colors.INACTIVE_GREY,
               }}>
-              {item.Ngay}
+              {item.nam}
             </Text>
           </View>
           <TouchableOpacity
@@ -151,23 +159,23 @@ const DocumentListScreen = ({navigation}) => {
             <View style={{padding: 10, marginLeft: Dimension.setWidth(3)}}>
               <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
                 <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Số hiệu: </Text>
-                <Text style={styles.content}>{item.SoHieu}</Text>
+                <Text style={styles.title}>Tên VB: </Text>
+                <Text style={styles.content}>{item?.tenvanban}</Text>
               </View>
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Ngày ban hành: </Text>
-                <Text style={styles.content}>{item.Ngay}</Text>
+                <Text style={styles.title}>Năm ban hành: </Text>
+                <Text style={styles.content}>{item?.nam}</Text>
               </View>
               <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
                 <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Trích dẫn: </Text>
-                <Text style={[styles.content]}>{item.TrichYeu}</Text>
+                <Text style={styles.title}>Chức năng: </Text>
+                <Text style={[styles.content]}>{item?.chucnang}</Text>
               </View>
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Nhóm văn bản: </Text>
-                <Text style={styles.content}>{item.LoaiVB}</Text>
+                <Text style={styles.title}>Loại văn bản: </Text>
+                <Text style={styles.content}>{item?.loaivanban}</Text>
               </View>
             </View>
           </View>
@@ -200,7 +208,7 @@ const DocumentListScreen = ({navigation}) => {
 
         <View style={styles.optionContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {groupOption.map((item, index) => {
+            {groupOption?.map((item, index) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
@@ -236,20 +244,13 @@ const DocumentListScreen = ({navigation}) => {
         </View>
 
         <View style={styles.fileListContainer}>
-          <VirtualizedList
-            data={data}
-            keyExtractor={item => item.ID.toString()}
+          <FlatList
+            data={document}
+            keyExtractor={item => item.id.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => (
               <RenderDocument item={item} index={index} />
             )}
-            getItemCount={() => data.length}
-            getItem={(data, index) => data[index]}
-            getItemLayout={(data, index) => ({
-              length: Dimension.setHeight(14),
-              offset: Dimension.setHeight(14) * index,
-              index,
-            })}
             initialNumToRender={10}
             windowSize={6}
             removeClippedSubviews={true}
@@ -358,4 +359,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DocumentListScreen;
+export default ForestryPrice;
