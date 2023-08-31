@@ -284,7 +284,7 @@ const HomePageScreen = ({navigation}) => {
                   handleNavigate('SelectWMSLayer');
                 }}>
                 <Image source={Images.map} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Bản đồ số</Text>
+                <Text style={styles.featureText}>DV bản đồ</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonFuc}
@@ -440,7 +440,17 @@ const HomePageScreen = ({navigation}) => {
                   />
                   <Text style={styles.featureText}>Đăng kí vé</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
+                    handleNavigate('SendNotification');
+                  }}>
+                  <Image
+                    source={Images.sendnotification}
+                    style={styles.featureBtn}
+                  />
+                  <Text style={styles.featureText}>Gửi thông báo</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
               </View>
             </View>

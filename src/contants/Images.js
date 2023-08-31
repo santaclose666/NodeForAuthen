@@ -151,6 +151,7 @@ const Images = {
   logo_LamHoc: require('../assets/images/logo_LamHoc.jpg'),
   logo_KTQTKD: require('../assets/images/logo_KTQTKD.png'),
   happybd: require('../assets/images/happybd.png'),
+  sendnotification: require('../assets/images/sendnotification.png'),
 };
 
 export default Images;

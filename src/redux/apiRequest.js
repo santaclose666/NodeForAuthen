@@ -541,7 +541,7 @@ export const getallNews = async dispatch => {
   }
 };
 
-///////////////////// SEND TOKEN ////////////////////
+///////////////////// SEND NOTIFCATION ////////////////////
 export const postToken = async id_ht => {
   try {
     const token = await getToken();
@@ -555,6 +555,17 @@ export const postToken = async id_ht => {
   } catch (error) {
     console.log('Loi tocken', error);
   }
+};
+
+export const postNotifcation = async data => {
+  try {
+    const res = await axios.post(
+      `https://forestry.ifee.edu.vn/api/notification/send`,
+      data,
+    );
+
+    return res.data;
+  } catch (error) {}
 };
 
 /////////////////////  SEND FEEDBACK  ////////////////////

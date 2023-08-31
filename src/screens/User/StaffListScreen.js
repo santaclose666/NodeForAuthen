@@ -10,42 +10,21 @@ import {
   SafeAreaView,
 } from 'react-native';
 import unidecode from 'unidecode';
-import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import Icons from '../../contants/Icons';
 import {useSelector} from 'react-redux';
-import {useDispatch} from 'react-redux';
 import {shadowIOS} from '../../contants/propsIOS';
 import {fontDefault, mainURL} from '../../contants/Variable';
 import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../components/Header';
+import {XMGGroup, IFEEGroup} from '../../contants/Variable';
 
 const StaffListScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const [input, setInput] = useState(null);
   const [allStaff, setAllStaff] = useState(null);
-  const XMGGroup = [
-    'Tất cả',
-    'Ban Giám đốc',
-    'Tổng hợp',
-    'Kỹ thuật',
-    'RnD',
-    'Kinh doanh',
-    'Đào tạo',
-  ];
 
-  const IFEEGroup = [
-    'Tất cả',
-    'Ban lãnh đạo',
-    'Tổng hợp',
-    'CNMT',
-    'RnD',
-    'STPTR',
-    'UDVT',
-    'TTDV',
-  ];
   const [selectId, setSelectId] = useState(0);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const XMGstaffs = useSelector(state => state.staffs?.staffs?.XMGStaff);

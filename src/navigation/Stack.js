@@ -22,6 +22,7 @@ import ContributorScreen from '../screens/Contributors/Contributors';
 import ForestPrice from '../screens/ForestPrice/ForestPrice';
 import QLRBVScreen from '../screens/QLRBV/QLRBV';
 import ForestryScreen from '../screens/Forestry/ForestryScreen';
+import SendNotification from '../screens/SendNotification/SendNotification';
 
 const Stack = createStackNavigator();
 
@@ -67,6 +68,7 @@ const StactNavigator = () => {
       <Stack.Screen name="ForestPrice" component={ForestPrice} />
       <Stack.Screen name="QLRBV" component={QLRBVScreen} />
       <Stack.Screen name="Forestry" component={ForestryScreen} />
+      <Stack.Screen name="SendNotification" component={SendNotification} />
     </Stack.Navigator>
   );
 };
