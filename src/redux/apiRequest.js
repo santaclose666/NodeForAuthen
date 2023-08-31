@@ -45,6 +45,11 @@ import {
 import {saveSuccess} from './credentialSlice';
 import {getNewFailed, getNewStart, getNewSuccess} from './newSlice';
 import {getToken} from '../utils/firebaseNotifi';
+import {
+  getDocumentFailed,
+  getDocumentStart,
+  getDocumentSuccess,
+} from './documentSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -558,5 +563,17 @@ export const sendFeedback = async data => {
     await axios.post(`https://forestry.ifee.edu.vn/api/contact`, data);
   } catch (error) {
     console.log(error);
+  }
+};
+
+/////////////////////  DOCUMENT DATA  ////////////////////
+export const getAllDocument = async dispatch => {
+  dispatch(getDocumentStart());
+  try {
+    const res = await axios.get(`https://forestry.ifee.edu.vn/api/vanban`);
+
+    dispatch(getDocumentSuccess(res.data));
+  } catch (error) {
+    dispatch(getDocumentFailed());
   }
 };

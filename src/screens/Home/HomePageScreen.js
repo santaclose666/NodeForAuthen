@@ -186,7 +186,7 @@ const HomePageScreen = ({navigation}) => {
             {user ? (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('DetailStaff');
+                  handleNavigate('DetailStaff');
                 }}
                 style={styles.avatarUserContainer}>
                 <Image
@@ -203,7 +203,7 @@ const HomePageScreen = ({navigation}) => {
                   paddingVertical: Dimension.setHeight(1.1),
                 }}
                 onPress={() => {
-                  navigation.navigate('Login');
+                  handleNavigate('Login');
                 }}>
                 <Text
                   style={{
@@ -268,7 +268,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('DocumentList');
+                  handleNavigate('DocumentList');
                 }}>
                 <Image
                   source={Images.documentation}
@@ -279,7 +279,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('SelectWMSLayer');
+                  handleNavigate('SelectWMSLayer');
                 }}>
                 <Image source={Images.map} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Bản đồ số</Text>
@@ -287,7 +287,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('ListBio');
+                  handleNavigate('ListBio');
                 }}>
                 <Image source={Images.biodiversity} style={styles.featureBtn} />
                 <Text style={styles.featureText}>ĐDSH</Text>
@@ -310,7 +310,14 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.standard} style={styles.featureBtn} />
                 <Text style={styles.featureText}>TCVN</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  handleNavigate('HappyBirthday');
+                }}
+                style={styles.buttonFuc}>
+                <Image source={Images.happybd} style={styles.featureBtn} />
+                <Text style={styles.featureText}>HPBD</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -332,11 +339,7 @@ const HomePageScreen = ({navigation}) => {
               </Text>
             </View>
             <View style={styles.btnContainer}>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  setToggleFeedBack(true);
-                }}>
+              <TouchableOpacity style={styles.buttonFuc}>
                 <Image
                   source={Images.logo_LamHoc}
                   style={[styles.featureBtn, {borderRadius: 10}]}

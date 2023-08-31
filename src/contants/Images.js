@@ -146,10 +146,11 @@ const Images = {
   XMGLogo: require('../assets/images/XMGLogo.jpg'),
   IFEETeam: require('../assets/images/TapTheIFEE.jpg'),
   XMGTeam: require('../assets/images/TapTheXMG.jpg'),
-  hpbd: require('../assets/images/hpbd.jpeg'),
+  hpbd: require('../assets/images/hpbd.png'),
   avttest: require('../assets/images/avttest.png'),
   logo_LamHoc: require('../assets/images/logo_LamHoc.jpg'),
   logo_KTQTKD: require('../assets/images/logo_KTQTKD.png'),
+  happybd: require('../assets/images/happybd.png'),
 };
 
 export default Images;

@@ -359,21 +359,20 @@ const HistoryWorkShedule = ({navigation}) => {
 
     const checkRole = () => {
       return (
-        ((item.status === 0 || item.kt_congtac === 1) &&
-          item.id_user !== user?.id &&
-          user?.vitri_ifee === 3 &&
+        ((item.status == 0 || item.kt_congtac == 1) &&
+          item.id_user != user?.id &&
+          user?.vitri_ifee == 3 &&
           filterUser.vitri_ifee > 3) ||
-        (user?.vitri_ifee == 1 && (item.status === 0 || item.kt_congtac === 1))
+        (user?.vitri_ifee == 1 && (item.status == 0 || item.kt_congtac == 1))
       );
     };
 
     const checkStatus = () => {
       return (
-        item.status !== 0 ||
-        item.kt_congtac !== 1 ||
+        (item.status != 0 && item.kt_congtac != 1) ||
         user?.vitri_ifee > 3 ||
-        item.id_user === user?.id ||
-        (user?.id === 1 && item.status !== 0)
+        item.id_user == user?.id ||
+        (user?.vitri_ifee == 1 && item.status != 0)
       );
     };
 

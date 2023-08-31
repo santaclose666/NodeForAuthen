@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import Dimension from '../../contants/Dimension';
 import {View, ImageBackground, Image} from 'react-native';
 import Images from '../../contants/Images';
@@ -21,14 +21,18 @@ const HappyBirthdayScreen = () => {
         <View
           style={{
             position: 'absolute',
-            width: Dimension.setWidth(46),
-            height: Dimension.setWidth(46),
-            top: Dimension.setHeight(16.7),
-            left: Dimension.setWidth(25.5),
+            width: '100%',
+            top: Dimension.setHeight(20),
+            left: Dimension.setWidth(0),
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
           <Image
-            source={Images.avttest}
-            style={{width: '100%', height: '100%'}}
+            source={Images.avatar}
+            style={{
+              width: Dimension.setWidth(33),
+              height: Dimension.setWidth(33),
+            }}
           />
         </View>
         <ConfettiCannon
@@ -36,8 +40,8 @@ const HappyBirthdayScreen = () => {
           count={300}
           origin={position}
           fadeOut={true}
-          fallSpeed={1800}
-          explosionSpeed={2800}
+          fallSpeed={1500}
+          explosionSpeed={2500}
           colors={[
             '#dbe8def5',
             '#e0dbe8f5',
@@ -46,7 +50,6 @@ const HappyBirthdayScreen = () => {
             '#d45ed2d6',
             '#d45e9bd6',
           ]}
-          autoStartDelay={0}
           autoStart={true}
           ref={confettiCannonRef}
           onAnimationEnd={() => {
