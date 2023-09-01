@@ -40,7 +40,7 @@
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-            	<true/>
+				<true/>
 				<key>NSIncludesSubdomains</key>
 				<true/>
 			</dict>
@@ -52,10 +52,10 @@
 	<string>Forestry muốn sử dụng Vị trí để xác định toạ độ thực nghiệm</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Forestry muốn sử dụng Vị trí để xác định vị trí thực nghiệm trong bản đồ</string>
-	<key>NSUserNotificationsUsageDescription</key>
-	<string>Forestry 4.0 muốn gửi thông báo cho bạn</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string></string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Forestry 4.0 muốn gửi thông báo cho bạn</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

@@ -34,7 +34,6 @@ import {
   cancelWorkSchedule,
   getAllWorkSchedule,
   requestFinishWorkSchedule,
-  totalWorkSchedule,
 } from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -146,6 +145,7 @@ const HistoryWorkShedule = ({navigation}) => {
   };
 
   const handleRequestFinish = () => {
+    bottomSheetModalRef.current?.dismiss();
     const data = {
       id_lichcongtac: selectedItem.id,
       ngayve: formatDateToPost(date),
@@ -161,6 +161,7 @@ const HistoryWorkShedule = ({navigation}) => {
 
   const handleApprove = useCallback(
     item => {
+      bottomSheetModalRef.current?.dismiss();
       setSelectedItem(item);
       setCheckInput(true);
       item.kt_congtac == 1
@@ -172,6 +173,7 @@ const HistoryWorkShedule = ({navigation}) => {
 
   const handleCancel = useCallback(
     item => {
+      bottomSheetModalRef.current?.dismiss();
       setSelectedItem(item);
       setCheckInput(false);
       item.kt_congtac == 1
@@ -356,21 +358,20 @@ const HistoryWorkShedule = ({navigation}) => {
 
     const checkRole = () => {
       return (
-        ((item.status === 0 || item.kt_congtac === 1) &&
-          item.id_user !== user?.id &&
-          user?.vitri_ifee === 3 &&
+        ((item.status == 0 || item.kt_congtac == 1) &&
+          item.id_user != user?.id &&
+          user?.vitri_ifee == 3 &&
           filterUser.vitri_ifee > 3) ||
-        (user?.vitri_ifee == 1 && (item.status === 0 || item.kt_congtac === 1))
+        (user?.vitri_ifee == 1 && (item.status == 0 || item.kt_congtac == 1))
       );
     };
 
     const checkStatus = () => {
       return (
-        item.status !== 0 ||
-        item.kt_congtac !== 1 ||
+        (item.status != 0 && item.kt_congtac != 1) ||
         user?.vitri_ifee > 3 ||
-        item.id_user === user?.id ||
-        (user?.id === 1 && item.status !== 0)
+        item.id_user == user?.id ||
+        (user?.vitri_ifee == 1 && item.status != 0)
       );
     };
 

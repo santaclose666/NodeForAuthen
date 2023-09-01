@@ -5,12 +5,11 @@ import {
   View,
   TouchableOpacity,
   Image,
-  SafeAreaView,
 } from 'react-native';
 import Pdf from 'react-native-pdf';
 import Images from '../../contants/Images';
-import Dimension from '../../contants/Dimension';
 import Colors from '../../contants/Colors';
+import Dimension from '../../contants/Dimension';
 
 const DisplayPDF = ({navigation, route}) => {
   const {link} = route.params;
@@ -21,18 +20,16 @@ const DisplayPDF = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
-          style={{}}
-          onPress={() => {
-            navigation.goBack();
-          }}>
-          <Image
-            source={Images.back}
-            style={{width: 18, height: 16, tintColor: Colors.WHITE}}
-          />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={styles.headerContainer}
+        onPress={() => {
+          navigation.goBack();
+        }}>
+        <Image
+          source={Images.back}
+          style={{width: 18, height: 18, tintColor: Colors.WHITE}}
+        />
+      </TouchableOpacity>
       <Pdf trustAllCerts={false} source={source} style={styles.pdf} />
     </View>
   );
@@ -50,8 +47,8 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     position: 'absolute',
-    left: 10,
-    top: 10,
+    left: Dimension.setWidth(5),
+    top: Dimension.setHeight(7),
     zIndex: 999,
     padding: 10,
     borderRadius: 100,

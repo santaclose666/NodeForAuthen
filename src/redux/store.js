@@ -11,6 +11,8 @@ import workScheduleReducer from './workScheduleSlice';
 import totalWorkScheduleReducer from './totalWorkScheduleSlice';
 import credentialReducer from './credentialSlice';
 import newReducer from './newSlice';
+import documentReducer from './documentSlice';
+import SpeciesReducer from './SpeciesSlice';
 import logger from 'redux-logger';
 import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -33,6 +35,8 @@ const rootReducer = combineReducers({
   totalWork: totalWorkScheduleReducer,
   credential: credentialReducer,
   news: newReducer,
+  document: documentReducer,
+  species: SpeciesReducer,
 });
 const persistedReducer = persistReducer(
   persistConfig,

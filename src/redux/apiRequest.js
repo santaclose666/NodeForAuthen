@@ -45,6 +45,16 @@ import {
 import {saveSuccess} from './credentialSlice';
 import {getNewFailed, getNewStart, getNewSuccess} from './newSlice';
 import {getToken} from '../utils/firebaseNotifi';
+import {
+  getDocumentFailed,
+  getDocumentStart,
+  getDocumentSuccess,
+} from './documentSlice';
+import {
+  getSpecieFailed,
+  getSpecieStart,
+  getSpecieSuccess,
+} from './SpeciesSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -67,7 +77,7 @@ export const loginUser = async (user, dispatch, navigation, save) => {
     } else {
       navigation.dispatch(resetAction);
       navigation.navigate('BottomTab');
-      postToken();
+      postToken(res.data.id_ht);
 
       save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));
     }
@@ -536,16 +546,66 @@ export const getallNews = async dispatch => {
   }
 };
 
-///////////////////// SEND TOKEN ////////////////////
+///////////////////// SEND NOTIFCATION ////////////////////
 export const postToken = async id_ht => {
   try {
     const token = await getToken();
-    await axios.post(
-      `https://forestry.ifee.edu.vn/api/device_token/${id_ht}?device_token=${token}`,
+    if (token) {
+      await axios.post(
+        `https://forestry.ifee.edu.vn/api/device_token/${id_ht}?device_token=${token}`,
+      );
+    }
+
+    console.log('OK Token', token);
+  } catch (error) {
+    console.log('Loi tocken', error);
+  }
+};
+
+export const postNotifcation = async data => {
+  try {
+    const res = await axios.post(
+      `https://forestry.ifee.edu.vn/api/notification/send`,
+      data,
     );
 
-    console.log(token);
+    return res.data;
+  } catch (error) {}
+};
+
+/////////////////////  SEND FEEDBACK  ////////////////////
+
+export const sendFeedback = async data => {
+  try {
+    console.log(data);
+    await axios.post(`https://forestry.ifee.edu.vn/api/contact`, data);
   } catch (error) {
     console.log(error);
+  }
+};
+
+/////////////////////  DOCUMENT DATA  ////////////////////
+export const getAllDocument = async dispatch => {
+  dispatch(getDocumentStart());
+  try {
+    const res = await axios.get(`https://forestry.ifee.edu.vn/api/vanban`);
+
+    dispatch(getDocumentSuccess(res.data));
+  } catch (error) {
+    dispatch(getDocumentFailed());
+  }
+};
+
+/////////////////////  SPECIES LIST  ////////////////////
+export const getListSpecies = async (data, dispatch) => {
+  dispatch(getSpecieStart());
+  try {
+    const res = await axios.get(
+      `http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/${data.ma}`,
+    );
+
+    dispatch(getSpecieSuccess(res.data));
+  } catch (error) {
+    dispatch(getSpecieFailed());
   }
 };

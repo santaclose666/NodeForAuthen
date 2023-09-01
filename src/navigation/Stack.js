@@ -18,7 +18,11 @@ import SelectWMSLayerScreen from '../screens/MapService/SelectWMSLayerScreen1';
 import MapScreen from '../screens/MapService/MapScreen';
 import ListBioScreen from '../screens/BiodivesityScreen/ListBioScreen';
 import SpecieDetailScreen from '../screens/BiodivesityScreen/SpecieDetailScreen';
-import AboutUs from '../screens/MoreInfo/aboutUsScreen';
+import ContributorScreen from '../screens/Contributors/Contributors';
+import ForestPrice from '../screens/ForestPrice/ForestPrice';
+import QLRBVScreen from '../screens/QLRBV/QLRBV';
+import ForestryScreen from '../screens/Forestry/ForestryScreen';
+import SendNotification from '../screens/SendNotification/SendNotification';
 
 const Stack = createStackNavigator();
 
@@ -60,7 +64,11 @@ const StactNavigator = () => {
       <Stack.Screen name="MapWMS" component={MapScreen} />
       <Stack.Screen name="ListBio" component={ListBioScreen} />
       <Stack.Screen name="SpecieDetail" component={SpecieDetailScreen} />
-      <Stack.Screen name="AboutUs" component={AboutUs} />
+      <Stack.Screen name="Contributor" component={ContributorScreen} />
+      <Stack.Screen name="ForestPrice" component={ForestPrice} />
+      <Stack.Screen name="QLRBV" component={QLRBVScreen} />
+      <Stack.Screen name="Forestry" component={ForestryScreen} />
+      <Stack.Screen name="SendNotification" component={SendNotification} />
     </Stack.Navigator>
   );
 };

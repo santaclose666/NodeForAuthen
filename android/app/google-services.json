@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "484044523003",
+    "project_id": "forestry-40",
+    "storage_bucket": "forestry-40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484044523003:android:8c6be27ed1dd8d6fa4775e",
+        "android_client_info": {
+          "package_name": "com.forestry_4_v7"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "484044523003-tu5oq5roldk96ill85ebj339vcibr3cf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmcJNpmeau25bpBKkZIhipiDzO3171R24"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "484044523003-tu5oq5roldk96ill85ebj339vcibr3cf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "484044523003-esc9d3sse9oahimsugi7eujjasjt50p8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.forestry"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

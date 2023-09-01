@@ -6,6 +6,8 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
+$FirebaseSDKVersion = '10.14.0'
+
 platform :ios, '13.0'
 
 prepare_react_native_project!
@@ -27,6 +29,9 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+use_frameworks! :linkage => :static
+$RNFirebaseAsStaticFramework = true
+
 target 'Forestry_4_v7' do
 
   # React Native Maps dependencies
@@ -40,8 +45,7 @@ pod 'react-native-google-maps', :path => rn_maps_path
   # Flags change depending on the env values.
   flags = get_default_flags()
 
-  use_frameworks! :linkage => :static
-  $RNFirebaseAsStaticFramework = true
+  
 
   use_react_native!(
     :path => config[:reactNativePath],

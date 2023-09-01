@@ -63,6 +63,8 @@ const totalWorkSlice = createSlice({
         action.payload.cn,
       ];
 
+      console.log(formatData());
+
       state.totalWorkSchedule.data = formatData(data);
     },
     getTotalWorkFailed: state => {

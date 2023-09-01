@@ -23,8 +23,11 @@ import Loading from '../../components/LoadingUI';
 import {FlatList} from 'native-base';
 import {Dropdown} from 'react-native-element-dropdown';
 import LinearGradient from 'react-native-linear-gradient';
+import {getListSpecies} from '../../redux/apiRequest';
+import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
-export const dataLocation = [
+const dataLocation = [
   {
     key: '1',
     name: 'Bộ dữ liệu: Thực vật VQG Cúc Phương',
@@ -59,36 +62,44 @@ export const dataLocation = [
 const width = Dimensions.get('window').width / 2 - 18;
 
 const ListBioScreen = ({navigation}) => {
+  const species = useSelector(state => state.species.specieSlice?.data);
+  const dispatch = useDispatch();
   const [location, setLocation] = useState(dataLocation[0]);
   const [input, setInput] = useState('');
   const [speciesFilled, setSpeciesFilled] = useState(null);
-  const [speciesArr, setSpeciesArr] = useState([]);
   const [loading, setLoading] = useState(false);
   const [nameBioSource, setNameBioSrc] = useState(dataLocation[0].name);
   const [isSelectLocation, setIsSelectLocation] = useState(false);
+  const [limited, setLimited] = useState(null);
 
   useEffect(() => {
-    getListSpecies();
+    if (species) {
+      setLimited(
+        setInterval(() => {
+          fetchListSpecies();
+        }, 3600000),
+      );
+    } else {
+      fetchListSpecies();
+    }
+
+    return () => clearInterval(limited);
   }, []);
 
-  const getListSpecies = async () => {
+  const fetchListSpecies = async () => {
     setLoading(true);
-    await fetch(
-      `http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/${location.ma}`,
-    )
-      .then(res => res.json())
-      .then(async resJSON => {
-        setSpeciesArr(resJSON);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+
+    try {
+      await getListSpecies(location, dispatch);
+    } catch (error) {
+      console.log(error);
+    }
     setLoading(false);
   };
 
   const handleSearch = text => {
     setInput(text);
-    const data = speciesArr.filter(item =>
+    const data = species.filter(item =>
       unidecode(item.loaitv.toLowerCase()).includes(text.toLowerCase()),
     );
     setSpeciesFilled(data);
@@ -122,6 +133,7 @@ const ListBioScreen = ({navigation}) => {
   const RenderItem = ({item}) => {
     return (
       <TouchableOpacity
+        key={item.id}
         style={styles.renderItemBg}
         activeOpacity={0.8}
         onPress={() => {
@@ -206,7 +218,7 @@ const ListBioScreen = ({navigation}) => {
             paddingBottom: 50,
           }}
           numColumns={2}
-          data={speciesFilled ? speciesFilled : speciesArr}
+          data={speciesFilled ? speciesFilled : species}
           renderItem={({item}) => {
             return <RenderItem item={item} navigation={navigation} />;
           }}
@@ -214,7 +226,7 @@ const ListBioScreen = ({navigation}) => {
           windowSize={12}
           removeClippedSubviews={true}
           refreshing={true}
-          extraData={speciesFilled ? speciesFilled : speciesArr}
+          extraData={speciesFilled ? speciesFilled : species}
         />
         <Modal
           isVisible={isSelectLocation}

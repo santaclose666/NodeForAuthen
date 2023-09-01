@@ -236,20 +236,20 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
 
     const checkRole = () => {
       return (
-        ((item.status === 0 || item.yc_update === 1) &&
-          user?.id !== item.id_nhansu &&
-          user?.vitri_ifee === 3 &&
+        ((item.status == 0 || item.yc_update == 1) &&
+          user?.id != item.id_nhansu &&
+          user?.vitri_ifee == 3 &&
           item.vitri_ifee > 3) ||
-        (user?.vitri_ifee == 1 && (item.status === 0 || item.yc_update === 1))
+        (user?.vitri_ifee == 1 && (item.status == 0 || item.yc_update == 1))
       );
     };
 
     const checkStatus = () => {
       return (
-        (item.status !== 0 && item.yc_update !== 1) ||
+        (item.status != 0 && item.yc_update != 1) ||
         user?.vitri_ifee > 3 ||
-        item.id_nhansu === user?.id ||
-        (user?.id === 1 && item.status !== 0 && item.yc_update !== 1)
+        item.id_nhansu == user?.id ||
+        (user?.id == 1 && item.status != 0 && item.yc_update != 1)
       );
     };
 

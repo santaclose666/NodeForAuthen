@@ -22,6 +22,8 @@ import {
 import {WarningModal} from '../../components/Modal';
 import {Agenda} from 'react-native-calendars';
 import Loading from '../../components/LoadingUI';
+import {defaultIFEE, fontDefault, mainURL} from '../../contants/Variable';
+import LinearGradient from 'react-native-linear-gradient';
 
 const AllWorkScheduleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -51,30 +53,28 @@ const AllWorkScheduleScreen = ({navigation}) => {
         lydo: reason,
       };
 
-      await warningWorkSchedule(data);
+      const res = await warningWorkSchedule(data);
 
-      setLoading(false);
-      setTimeout(() => {
-        fetTotalWorkSchedule();
-      });
+      if (res) {
+        setLoading(false);
+        setTimeout(() => {
+          fetTotalWorkSchedule();
+        });
+      }
     } catch (error) {
       console.log(error);
     }
   }, []);
 
-  const fetTotalWorkSchedule = useCallback(async () => {
-    try {
-      await totalWorkSchedule(dispatch);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const fetTotalWorkSchedule = async () => {
+    totalWorkSchedule(dispatch);
+  };
 
   useLayoutEffect(() => {
     fetTotalWorkSchedule();
   }, []);
 
-  const RenderTaskOfDay = useCallback((day, item) => {
+  const RenderTaskOfDay = useCallback(item => {
     const borderColorStatus =
       item.ct == 1
         ? '#f0b263'
@@ -95,37 +95,51 @@ const AllWorkScheduleScreen = ({navigation}) => {
       );
     };
 
+    const avt = filterUser?.path ? filterUser?.path : defaultIFEE;
+
     return (
       <View
         key={item.id}
-        style={[
-          styles.containerEachItem,
-          {
-            borderTopColor: borderColorStatus,
-            backgroundColor: bgColor,
-          },
-        ]}>
-        <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Họ tên: </Text>
-          <Text style={styles.content}>{item.name}</Text>
-        </View>
-        <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Địa điểm: </Text>
-          <Text style={styles.content}>{item.location}</Text>
-        </View>
-        <View style={styles.containerEachLine}>
-          <Text style={styles.title}>
-            Nội dung:{' '}
-            <Text numberOfLines={2} style={styles.content}>
-              {item.content}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          alignSelf: 'flex-end',
+          paddingHorizontal: Dimension.setWidth(4),
+          paddingVertical: Dimension.setHeight(2),
+          marginVertical: Dimension.setHeight(1.2),
+          marginRight: Dimension.setWidth(4),
+          borderRadius: 12,
+          elevation: 5,
+          ...shadowIOS,
+          borderTopWidth: 7,
+          borderTopColor: borderColorStatus,
+          backgroundColor: bgColor,
+          width: '96%',
+        }}>
+        <View
+          style={{
+            width: '66%',
+            marginRight: Dimension.setWidth(5),
+          }}>
+          <View style={styles.containerEachLine}>
+            <Text style={styles.title}>Họ tên: </Text>
+            <Text style={styles.content}>{item.name}</Text>
+          </View>
+          <View style={styles.containerEachLine}>
+            <Text style={styles.title}>Địa điểm: </Text>
+            <Text style={styles.content}>{item.location}</Text>
+          </View>
+          <View style={styles.containerEachLine}>
+            <Text numberOfLines={3} ellipsizeMode="tail" style={styles.title}>
+              Nội dung: <Text style={styles.content}>{item.content}</Text>
             </Text>
-          </Text>
+          </View>
         </View>
-        <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Thời gian: </Text>
-          <Text style={styles.content}>
-            {item.time ? item.time?.slice(0, 5) : 'Không xác định'}
-          </Text>
+        <View style={styles.avatarUserContainer}>
+          <Image
+            style={{width: 66, height: 66, borderRadius: 50}}
+            src={mainURL + avt}
+          />
         </View>
         {checkRole() && (
           <TouchableOpacity
@@ -149,69 +163,80 @@ const AllWorkScheduleScreen = ({navigation}) => {
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <Header title={'Tổng hợp lịch công tác'} navigation={navigation} />
-      <Agenda
-        items={totalWorkData}
-        selected={currentDate}
-        minDate={dayOfWeek.firstDay}
-        maxDate={dayOfWeek.lastDay}
-        renderDay={RenderTaskOfDay}
-        rowHasChanged={(r1, r2) => {
-          return r1.id !== r2.id;
-        }}
-        showClosingKnob={true}
-        pastScrollRange={1}
-        futureScrollRange={1}
-        showOnlySelectedDayItems={true}
-      />
+    <LinearGradient
+      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
+      style={styles.container}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView style={{flex: 1}}>
+        <Header title={'Tổng hợp lịch công tác'} navigation={navigation} />
+        <Agenda
+          items={totalWorkData}
+          selected={currentDate}
+          minDate={dayOfWeek.firstDay}
+          maxDate={dayOfWeek.lastDay}
+          renderItem={RenderTaskOfDay}
+          rowHasChanged={(r1, r2) => {
+            return r1.id !== r2.id;
+          }}
+          showClosingKnob={true}
+          pastScrollRange={1}
+          futureScrollRange={1}
+          initialNumToRender={6}
+          windowSize={6}
+          removeClippedSubviews={true}
+          style={{backgroundColor: 'transparent'}}
+          theme={{reservationsBackgroundColor: 'transparent'}}
+          onRefresh={fetTotalWorkSchedule}
+          extraData={totalWorkData}
+        />
 
-      <WarningModal
-        toggleModal={toggleWarningModal}
-        setToggleModal={setToggleWarningModal}
-        item={selectedItem}
-        reasonInput={reasonInput}
-        setReasonInput={setReasonInput}
-        handleWarning={handleWarning}
-      />
+        <WarningModal
+          toggleModal={toggleWarningModal}
+          setToggleModal={setToggleWarningModal}
+          item={selectedItem}
+          reasonInput={reasonInput}
+          setReasonInput={setReasonInput}
+          handleWarning={handleWarning}
+        />
 
-      {loading && <Loading />}
-    </SafeAreaView>
+        {loading && <Loading />}
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 styles = StyleSheet.create({
-  containerEachItem: {
-    paddingHorizontal: Dimension.setWidth(4),
-    paddingVertical: Dimension.setHeight(2),
-    marginVertical: Dimension.setHeight(1.3),
-    marginHorizontal: Dimension.setWidth(5),
-    borderRadius: 12,
-    elevation: 5,
-    ...shadowIOS,
-    width: Dimension.setWidth(90),
-    borderTopWidth: 7,
-    alignSelf: 'center',
+  container: {
+    flex: 1,
   },
-
   containerEachLine: {
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
 
   iconic: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
 
   title: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 16,
+    fontSize: 15,
   },
 
   content: {
     fontFamily: Fonts.SF_REGULAR,
     fontSize: 16,
+    textAlign: 'justify',
+    ...fontDefault,
+  },
+
+  avatarUserContainer: {
+    borderWidth: 1,
+    borderRadius: 50,
+    padding: 1,
+    borderColor: '#268fbe',
   },
 });
 
