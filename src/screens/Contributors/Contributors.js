@@ -88,7 +88,6 @@ const ContributorScreen = ({navigation}) => {
                   Công ty Cổ phần thương mại công nghệ Xuân Mai Green{' '}
                 </Text>
               </View>
-              <Image source={Images.XMGTeam} style={styles.themeUnit} />
             </View>
             <View style={styles.paragrap}>
               <Text style={styles.h1}>Nguồn dữ liệu</Text>

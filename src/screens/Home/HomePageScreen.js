@@ -32,7 +32,7 @@ import {
   sendFeedback,
   getAllDocument,
 } from '../../redux/apiRequest';
-import {getToken, notificationListener} from '../../utils/firebaseNotifi';
+import {notificationListener} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
@@ -139,6 +139,10 @@ const HomePageScreen = ({navigation}) => {
     } else {
       ToastAlert('Thiếu thông tin!');
     }
+  };
+
+  const handleAlert = () => {
+    ToastAlert('Chức năng đang được phát triển');
   };
 
   useLayoutEffect(() => {
@@ -312,22 +316,15 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.trees1} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Khung giá rừng</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
+              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
                 <Image source={Images.trees} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Kiểm kê rừng</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
+              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
                 <Image source={Images.standard} style={styles.featureBtn} />
                 <Text style={styles.featureText}>TCVN</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  handleNavigate('HappyBirthday');
-                }}
-                style={styles.buttonFuc}>
-                <Image source={Images.happybd} style={styles.featureBtn} />
-                <Text style={styles.featureText}>HPBD</Text>
-              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
             </View>
           </View>
 
@@ -360,7 +357,7 @@ const HomePageScreen = ({navigation}) => {
                 />
                 <Text style={styles.featureText}> Khoa Lâm học</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={() => {}}>
+              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
                 <Image
                   source={Images.logo_KTQTKD}
                   style={[styles.featureBtn, {borderRadius: 50}]}
@@ -412,7 +409,9 @@ const HomePageScreen = ({navigation}) => {
                   <Image source={Images.busy} style={styles.featureBtn} />
                   <Text style={styles.featureText}>Nghỉ phép</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonFuc}>
+                <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={handleAlert}>
                   <Image source={Images.morebtn} style={styles.featureBtn} />
                   <Text style={styles.featureText}>Thêm</Text>
                 </TouchableOpacity>
@@ -451,7 +450,15 @@ const HomePageScreen = ({navigation}) => {
                   />
                   <Text style={styles.featureText}>Gửi thông báo</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    // handleNavigate('HappyBirthday');
+                    handleAlert();
+                  }}
+                  style={styles.buttonFuc}>
+                  <Image source={Images.happybd} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>HPBD</Text>
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -594,109 +601,69 @@ const HomePageScreen = ({navigation}) => {
                 </Text>
               </View>
 
-              <View style={styles.lineContainerModal}>
-                <View style={styles.itemContainerModal}>
-                  <Text style={styles.titleModal}>Họ tên</Text>
-                  <View
-                    style={[
-                      styles.dateModalContainer,
-                      {width: Dimension.setWidth(75)},
-                    ]}>
-                    <TextInput
-                      style={{
-                        borderBottomWidth: 0.6,
-                        borderBottomColor: 'gray',
-                        marginHorizontal: Dimension.setWidth(1.6),
-                        fontFamily: Fonts.SF_MEDIUM,
-                        fontSize: 16,
-                        height: Dimension.setHeight(6),
-                        width: '85%',
-                      }}
-                      value={nameInput}
-                      onChangeText={e => setNameInput(e)}
-                    />
-                    <Image source={Images.person} style={styles.imgDate} />
-                  </View>
-                </View>
+              <View style={styles.containerEachLine}>
+                <Text style={styles.title}>Họ tên</Text>
+                <TextInput
+                  style={{
+                    borderBottomWidth: 0.6,
+                    borderBottomColor: 'gray',
+                    marginHorizontal: Dimension.setWidth(1.6),
+                    fontFamily: Fonts.SF_MEDIUM,
+                    fontSize: 16,
+                    height: Dimension.setHeight(6),
+                  }}
+                  placeholder="Nhập tên"
+                  value={nameInput}
+                  onChangeText={e => setNameInput(e)}
+                />
               </View>
-
-              <View style={styles.lineContainerModal}>
-                <View style={styles.itemContainerModal}>
-                  <Text style={styles.titleModal}>Địa chỉ email</Text>
-                  <View
-                    style={[
-                      styles.dateModalContainer,
-                      {width: Dimension.setWidth(75)},
-                    ]}>
-                    <TextInput
-                      style={{
-                        borderBottomWidth: 0.6,
-                        borderBottomColor: 'gray',
-                        marginHorizontal: Dimension.setWidth(1.6),
-                        fontFamily: Fonts.SF_MEDIUM,
-                        fontSize: 16,
-                        height: Dimension.setHeight(6),
-                        width: '85%',
-                      }}
-                      value={gmailInput}
-                      onChangeText={e => setGmailInput(e)}
-                    />
-                    <Image source={Images.mail} style={styles.imgDate} />
-                  </View>
-                </View>
+              <View style={styles.containerEachLine}>
+                <Text style={styles.title}>Địa chỉ email</Text>
+                <TextInput
+                  style={{
+                    borderBottomWidth: 0.6,
+                    borderBottomColor: 'gray',
+                    marginHorizontal: Dimension.setWidth(1.6),
+                    fontFamily: Fonts.SF_MEDIUM,
+                    fontSize: 16,
+                    height: Dimension.setHeight(6),
+                  }}
+                  placeholder="Nhập gmail"
+                  value={gmailInput}
+                  onChangeText={e => setGmailInput(e)}
+                />
               </View>
-
-              <View style={styles.lineContainerModal}>
-                <View style={styles.itemContainerModal}>
-                  <Text style={styles.titleModal}>Tiêu đề</Text>
-                  <View
-                    style={[
-                      styles.dateModalContainer,
-                      {width: Dimension.setWidth(75)},
-                    ]}>
-                    <TextInput
-                      style={{
-                        borderBottomWidth: 0.6,
-                        borderBottomColor: 'gray',
-                        marginHorizontal: Dimension.setWidth(1.6),
-                        fontFamily: Fonts.SF_MEDIUM,
-                        fontSize: 16,
-                        height: Dimension.setHeight(6),
-                        width: '85%',
-                      }}
-                      value={titleInput}
-                      onChangeText={e => setTitleInput(e)}
-                    />
-                    <Image source={Images.title} style={styles.imgDate} />
-                  </View>
-                </View>
+              <View style={styles.containerEachLine}>
+                <Text style={styles.title}>Tiêu đề</Text>
+                <TextInput
+                  style={{
+                    borderBottomWidth: 0.6,
+                    borderBottomColor: 'gray',
+                    marginHorizontal: Dimension.setWidth(1.6),
+                    fontFamily: Fonts.SF_MEDIUM,
+                    fontSize: 16,
+                    height: Dimension.setHeight(6),
+                  }}
+                  placeholder="Nhập tiêu đề"
+                  value={titleInput}
+                  onChangeText={e => setTitleInput(e)}
+                />
               </View>
-
-              <View style={styles.lineContainerModal}>
-                <View style={styles.itemContainerModal}>
-                  <Text style={styles.titleModal}>Nội dung</Text>
-                  <View
-                    style={[
-                      styles.dateModalContainer,
-                      {width: Dimension.setWidth(75)},
-                    ]}>
-                    <TextInput
-                      multiline={true}
-                      style={{
-                        borderBottomWidth: 0.6,
-                        borderBottomColor: 'gray',
-                        marginHorizontal: Dimension.setWidth(1.6),
-                        fontFamily: Fonts.SF_MEDIUM,
-                        fontSize: 16,
-                        height: Dimension.setHeight(12),
-                        width: '96%',
-                        textAlign: 'auto',
-                      }}
-                      value={contentInput}
-                      onChangeText={e => setContentInput(e)}
-                    />
-                  </View>
-                </View>
+              <View style={styles.containerEachLine}>
+                <Text style={styles.title}>Nội dung</Text>
+                <TextInput
+                  multiline
+                  style={{
+                    borderBottomWidth: 0.6,
+                    borderBottomColor: 'gray',
+                    marginHorizontal: Dimension.setWidth(1.6),
+                    fontFamily: Fonts.SF_MEDIUM,
+                    fontSize: 16,
+                    height: Dimension.setHeight(12),
+                  }}
+                  value={contentInput}
+                  onChangeText={e => setContentInput(e)}
+                />
               </View>
 
               <TouchableOpacity
@@ -953,6 +920,24 @@ const styles = StyleSheet.create({
   btnModal: {
     width: 28,
     height: 28,
+  },
+
+  containerEachLine: {
+    marginBottom: Dimension.setHeight(2),
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e6e6e6',
+    borderRadius: 12,
+    paddingVertical: Dimension.setHeight(1.6),
+    paddingHorizontal: Dimension.setWidth(3),
+    width: '100%',
+  },
+
+  title: {
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: 15,
+    color: '#8bc7bc',
+    marginBottom: Dimension.setHeight(1),
   },
 });
 

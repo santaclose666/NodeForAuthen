@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useCallback} from 'react';
 import Dimension from '../../contants/Dimension';
 import {View, ImageBackground, Image} from 'react-native';
 import Images from '../../contants/Images';
@@ -52,13 +52,13 @@ const HappyBirthdayScreen = () => {
           ]}
           autoStart={true}
           ref={confettiCannonRef}
-          onAnimationEnd={() => {
+          onAnimationEnd={useCallback(() => {
             let x = Math.random() * 200;
             let y = Math.random() * 400;
 
             setPosition({x: x, y: y});
             confettiCannonRef.current?.start();
-          }}
+          }, [])}
         /> */}
       </ImageBackground>
     </View>

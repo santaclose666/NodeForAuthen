@@ -50,6 +50,11 @@ import {
   getDocumentStart,
   getDocumentSuccess,
 } from './documentSlice';
+import {
+  getSpecieFailed,
+  getSpecieStart,
+  getSpecieSuccess,
+} from './SpeciesSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -588,5 +593,19 @@ export const getAllDocument = async dispatch => {
     dispatch(getDocumentSuccess(res.data));
   } catch (error) {
     dispatch(getDocumentFailed());
+  }
+};
+
+/////////////////////  SPECIES LIST  ////////////////////
+export const getListSpecies = async (data, dispatch) => {
+  dispatch(getSpecieStart());
+  try {
+    const res = await axios.get(
+      `http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/${data.ma}`,
+    );
+
+    dispatch(getSpecieSuccess(res.data));
+  } catch (error) {
+    dispatch(getSpecieFailed());
   }
 };
