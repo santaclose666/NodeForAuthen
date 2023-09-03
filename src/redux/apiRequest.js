@@ -609,3 +609,14 @@ export const getListSpecies = async (data, dispatch) => {
     dispatch(getSpecieFailed());
   }
 };
+
+/////////////////////  BIRTHDAY LIST  ////////////////////
+export const getBirthdayList = async () => {
+  try {
+    const res = await axios.get(`https://forestry.ifee.edu.vn/api/birthday`);
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

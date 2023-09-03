@@ -7,6 +7,7 @@ import DisplayPDF from '../screens/Document/DisplayPDFScreen';
 import DetailNewsScreen from '../screens/News/DetailNewsScreen';
 import LinearGradient from 'react-native-linear-gradient';
 import HappyBirthdayScreen from '../screens/Happybirthday/HappyBirthdayScreen';
+import HappyBirthdayList from '../screens/Happybirthday/HappyBirthdayList';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,10 @@ const RootNavigator = () => {
           <Stack.Screen name="PDF" component={DisplayPDF} />
           <Stack.Screen name="DetailNews" component={DetailNewsScreen} />
           <Stack.Screen name="HappyBirthday" component={HappyBirthdayScreen} />
+          <Stack.Screen
+            name="HappyBirthdayList"
+            component={HappyBirthdayList}
+          />
         </Stack.Navigator>
       </LinearGradient>
     </NavigationContainer>

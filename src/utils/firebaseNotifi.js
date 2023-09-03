@@ -15,7 +15,6 @@ export const saveNotification = async (notifiData, remoteMessage, dispatch) => {
 
 export const getToken = async () => {
   try {
-    //   await messaging().registerDeviceForRemoteMessages();
     const token = await messaging().getToken();
 
     return token;

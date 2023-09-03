@@ -26,6 +26,12 @@ export const getFirstDateOfWeek = () => {
   };
 };
 
+export const getCurrentYear = () => {
+  const date = moment().year();
+
+  return date;
+};
+
 export const getFormattedDate = () => {
   const today = new Date();
   const day = String(today.getDate()).padStart(2, '0');
