@@ -53,7 +53,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Forestry muốn sử dụng Vị trí để xác định vị trí thực nghiệm trong bản đồ</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Forestry 4.0 muốn gửi thông báo cho bạn</string>
 	<key>UIAppFonts</key>
@@ -79,6 +79,8 @@
 		<string>SFProDisplay-Semibold.otf</string>
 		<string>SFProDisplay-Thin.otf</string>
 		<string>SFProDisplay-Ultralight.otf</string>
+		<string>Lato-RegularItalic.ttf</string>
+		<string>Lato-Regular.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

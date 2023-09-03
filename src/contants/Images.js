@@ -152,6 +152,9 @@ const Images = {
   logo_KTQTKD: require('../assets/images/logo_KTQTKD.png'),
   happybd: require('../assets/images/happybd.png'),
   sendnotification: require('../assets/images/sendnotification.png'),
+  hpbdparty: require('../assets/images/hpbdparty.png'),
+  decoraction: require('../assets/images/decoraction.png'),
+  confetti: require('../assets/images/confetti.png'),
 };
 
 export default Images;

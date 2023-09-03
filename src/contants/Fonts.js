@@ -8,4 +8,6 @@ export default {
   SF_SEMIBOLD: 'SFProDisplay-Semibold',
   SF_THIN: 'SFPro-DisplayThin',
   SF_ULTRALIGHT: 'SFProDisplay-Ultralight',
+  LATO_REGULAR_ITALIC: 'Lato-RegularItalic',
+  LATO_REGULAR: 'Lato-Regular',
 };

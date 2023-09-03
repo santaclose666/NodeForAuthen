@@ -1,0 +1,12 @@
+{
+  "react-native": {
+    "messaging_ios_foreground_presentation_options": [
+      "badge",
+      "sound",
+      "list",
+      "banner"
+    ],
+    "messaging_android_headless_task_timeout": 30000,
+    "messaging_android_notification_channel_id": "high-priority"
+  }
+}

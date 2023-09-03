@@ -11,7 +11,6 @@ import {
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
-import Colors from '../contants/Colors';
 import {fontDefault, imgDefault} from '../contants/Variable';
 
 const Header = ({title, navigation, refreshData, replace = false}) => {

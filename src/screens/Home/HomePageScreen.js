@@ -452,8 +452,8 @@ const HomePageScreen = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    // handleNavigate('HappyBirthday');
-                    handleAlert();
+                    handleNavigate('HappyBirthdayList');
+                    // handleAlert();
                   }}
                   style={styles.buttonFuc}>
                   <Image source={Images.happybd} style={styles.featureBtn} />
