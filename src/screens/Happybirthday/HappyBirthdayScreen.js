@@ -80,9 +80,11 @@ const HappyBirthdayScreen = ({navigation, route}) => {
               marginHorizontal: Dimension.setWidth(6),
               color: '#755a68',
             }}>
-            Chúc mừng sinh nhật lần thứ {age} của {item.hoten}! Mong rằng{' '}
-            {singleName} sẽ tiếp tục đạt được những thành tựu mới và được trải
-            nghiệm thêm nhiều niềm vui trong cuộc sống và sự nghiệp của mình
+            Hôm nay là một ngày đặc biệt, thành viên đáng quý {item.hoten} của
+            đơn vị tròn {age} tuổi. Trong thời gian qua, bạn không chỉ hoàn
+            thành tốt công việc mà còn luôn giúp đỡ các thành viên khác trong
+            đơn vị. Tuổi mới hy vọng mọi điều tốt đẹp trong cuộc sống sẽ đến với
+            bạn!
             <Image source={Images.confetti} style={{width: 20, height: 20}} />
           </Text>
         </View>
