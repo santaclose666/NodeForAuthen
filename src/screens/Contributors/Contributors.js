@@ -3,14 +3,10 @@ import {
   Text,
   ScrollView,
   Image,
-  FlatList,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   Platform,
-  PermissionsAndroid,
-  StatusBar,
-  ImageBackground,
 } from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';

@@ -9,7 +9,7 @@ export const defaultIFEE = 'IFEE/ifee.png';
 export const defaultXMG = 'XMG/user/xmg.jpg';
 
 export const DocumentURL =
-  'https://management.ifee.edu.vn/2023_Forestry4.0App/VanBanSoTay/';
+  'https://forestry.ifee.edu.vn/2023_Forestry4.0App/VanBanSoTay/';
 
 export const XMGGroup = [
   'Tất cả',

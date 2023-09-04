@@ -16,7 +16,9 @@
 		502A260079F5498FBFF7A2EB /* SFProDisplay-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8403E1F8AC9044F98E891C46 /* SFProDisplay-Light.otf */; };
 		5D355B274BA6498083F38F9A /* SFProDisplay-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 508E3AEAEC404F9C94CC6818 /* SFProDisplay-Black.otf */; };
 		609E1F8C8A1B4FA38E60DA3A /* SFProDisplay-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = FB4AB16A2CCF469289375789 /* SFProDisplay-Semibold.otf */; };
+		6FF7B55A73664D5E9337848C /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B2693F39641411582ABAC71 /* Lato-Regular.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		82AE3952502D44998B3E10F4 /* Lato-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 758246BDCB7D4BB19CA3B22C /* Lato-RegularItalic.ttf */; };
 		8E4938969F1F42369A03D58A /* SFProDisplay-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D9FEBBA2E02A470F9555FA44 /* SFProDisplay-Regular.otf */; };
 		9BEC7B3C348B40BAB6DC9A90 /* SFProDisplay-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 40E0A3B7C4FE477998ADAF8B /* SFProDisplay-Heavy.otf */; };
 		B0A81BC93980478DB356F210 /* SFProDisplay-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = A542D1EE08B54A6AB498AFD7 /* SFProDisplay-Thin.otf */; };
@@ -24,8 +26,6 @@
 		D47BB8B8131A52AABA388DF9 /* Pods_Forestry_4_v7.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83C1910958B5F279F6AD795C /* Pods_Forestry_4_v7.framework */; };
 		D651EBDBCA034DA9B0759680 /* SFProDisplay-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94510F9408DD4187BE11E76D /* SFProDisplay-Bold.otf */; };
 		F7B443292A9F468900259591 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7B443282A9F468900259591 /* GoogleService-Info.plist */; };
-		82AE3952502D44998B3E10F4 /* Lato-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 758246BDCB7D4BB19CA3B22C /* Lato-RegularItalic.ttf */; };
-		6FF7B55A73664D5E9337848C /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B2693F39641411582ABAC71 /* Lato-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,11 +50,13 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Forestry_4_v7/main.m; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-Forestry_4_v7.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Forestry_4_v7.debug.xcconfig"; path = "Target Support Files/Pods-Forestry_4_v7/Pods-Forestry_4_v7.debug.xcconfig"; sourceTree = "<group>"; };
 		40E0A3B7C4FE477998ADAF8B /* SFProDisplay-Heavy.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Heavy.otf"; path = "../src/assets/fonts/SFProDisplay-Heavy.otf"; sourceTree = "<group>"; };
+		4B2693F39641411582ABAC71 /* Lato-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Regular.ttf"; path = "../src/assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
 		508E3AEAEC404F9C94CC6818 /* SFProDisplay-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Black.otf"; path = "../src/assets/fonts/SFProDisplay-Black.otf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Forestry_4_v7.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Forestry_4_v7.release.xcconfig"; path = "Target Support Files/Pods-Forestry_4_v7/Pods-Forestry_4_v7.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Forestry_4_v7-Forestry_4_v7Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Forestry_4_v7-Forestry_4_v7Tests.debug.xcconfig"; path = "Target Support Files/Pods-Forestry_4_v7-Forestry_4_v7Tests/Pods-Forestry_4_v7-Forestry_4_v7Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		6DB548CAA1AE44588ED714E0 /* SFProDisplay-Ultralight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Ultralight.otf"; path = "../src/assets/fonts/SFProDisplay-Ultralight.otf"; sourceTree = "<group>"; };
 		7145B4630688432699AD17D2 /* SFProDisplay-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Medium.otf"; path = "../src/assets/fonts/SFProDisplay-Medium.otf"; sourceTree = "<group>"; };
+		758246BDCB7D4BB19CA3B22C /* Lato-RegularItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-RegularItalic.ttf"; path = "../src/assets/fonts/Lato-RegularItalic.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Forestry_4_v7/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		83C1910958B5F279F6AD795C /* Pods_Forestry_4_v7.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Forestry_4_v7.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8403E1F8AC9044F98E891C46 /* SFProDisplay-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Light.otf"; path = "../src/assets/fonts/SFProDisplay-Light.otf"; sourceTree = "<group>"; };
@@ -67,8 +69,6 @@
 		F7B437ED2A81FEF40058AF6E /* Forestry_4_v7.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Forestry_4_v7.entitlements; path = Forestry_4_v7/Forestry_4_v7.entitlements; sourceTree = "<group>"; };
 		F7B443282A9F468900259591 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FB4AB16A2CCF469289375789 /* SFProDisplay-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Semibold.otf"; path = "../src/assets/fonts/SFProDisplay-Semibold.otf"; sourceTree = "<group>"; };
-		758246BDCB7D4BB19CA3B22C /* Lato-RegularItalic.ttf */ = {isa = PBXFileReference; name = "Lato-RegularItalic.ttf"; path = "../src/assets/fonts/Lato-RegularItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		4B2693F39641411582ABAC71 /* Lato-Regular.ttf */ = {isa = PBXFileReference; name = "Lato-Regular.ttf"; path = "../src/assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -560,7 +560,7 @@
 				CODE_SIGN_ENTITLEMENTS = Forestry_4_v7/Forestry_4_v7.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = 7L7FA98CYL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Forestry_4_v7/Info.plist;
@@ -594,7 +594,7 @@
 				CODE_SIGN_ENTITLEMENTS = Forestry_4_v7/Forestry_4_v7.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = 7L7FA98CYL;
 				INFOPLIST_FILE = Forestry_4_v7/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Forestry4.0;

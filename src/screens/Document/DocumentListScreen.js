@@ -32,6 +32,7 @@ const DocumentListScreen = ({navigation}) => {
     'Quyết định',
     'Thông tư',
     'Sổ tay',
+    'Tài liệu tham khảo',
   ]);
   const [data, setData] = useState(DocumentData);
 

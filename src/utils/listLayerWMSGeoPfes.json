@@ -67,7 +67,7 @@
     "linkRoot": "http://bando.ifee.edu.vn:8080/geoserver/geopfes/wms?service=WMS",
     "layers": "geopfes:rvb_2017",
     "version": "1.1.1",
-    "cql_filter": "tkman%3E0",
+    "cql_filter": "",
     "styles": "",
     "src": "EPSG:4326",
     "format": "image/png",

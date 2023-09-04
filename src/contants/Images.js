@@ -155,6 +155,9 @@ const Images = {
   hpbdparty: require('../assets/images/hpbdparty.png'),
   decoraction: require('../assets/images/decoraction.png'),
   confetti: require('../assets/images/confetti.png'),
+  seed: require('../assets/images/sprout.png'),
+  contribution: require('../assets/images/contribution.png'),
+  network: require('../assets/images/network.png'),
 };
 
 export default Images;

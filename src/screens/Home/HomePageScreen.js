@@ -12,6 +12,7 @@ import {
   PermissionsAndroid,
   StatusBar,
   Linking,
+  Share,
   TextInput,
 } from 'react-native';
 import {HStack, Spinner} from 'native-base';
@@ -116,6 +117,24 @@ const HomePageScreen = ({navigation}) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const _shareApp = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          Platform.OS == 'android'
+            ? 'https://play.google.com/store/apps/details?id=com.forestry&pli=1'
+            : 'https://apps.apple.com/vn/app/forestry-4-0/id6452552409?l=vi',
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+        } else {
+        }
+      } else if (result.action === Share.dismissedAction) {
+      }
+    } catch (error) {}
   };
 
   const handleSendFeedback = () => {
@@ -316,7 +335,11 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.trees1} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Khung giá rừng</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('KKR');
+                }}>
                 <Image source={Images.trees} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Kiểm kê rừng</Text>
               </TouchableOpacity>
@@ -324,7 +347,10 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.standard} style={styles.featureBtn} />
                 <Text style={styles.featureText}>TCVN</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
+                <Image source={Images.seed} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Giống LN</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -411,9 +437,14 @@ const HomePageScreen = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.buttonFuc}
-                  onPress={handleAlert}>
-                  <Image source={Images.morebtn} style={styles.featureBtn} />
-                  <Text style={styles.featureText}>Thêm</Text>
+                  onPress={() => {
+                    handleNavigate('SendNotification');
+                  }}>
+                  <Image
+                    source={Images.sendnotification}
+                    style={styles.featureBtn}
+                  />
+                  <Text style={styles.featureText}>Gửi thông báo</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.btnContainer}>
@@ -440,17 +471,6 @@ const HomePageScreen = ({navigation}) => {
                   <Text style={styles.featureText}>Đăng kí vé</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    handleNavigate('SendNotification');
-                  }}>
-                  <Image
-                    source={Images.sendnotification}
-                    style={styles.featureBtn}
-                  />
-                  <Text style={styles.featureText}>Gửi thông báo</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
                   onPress={() => {
                     handleNavigate('HappyBirthdayList');
                     // handleAlert();
@@ -459,6 +479,7 @@ const HomePageScreen = ({navigation}) => {
                   <Image source={Images.happybd} style={styles.featureBtn} />
                   <Text style={styles.featureText}>HPBD</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
               </View>
             </View>
           )}
@@ -484,6 +505,14 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
+                  navigation.navigate('Contributor');
+                }}>
+                <Image source={Images.information} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Tác giả</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
                   setToggleFeedBack(true);
                 }}>
                 <Image source={Images.feedback} style={styles.featureBtn} />
@@ -505,14 +534,26 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.youtube} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Youtube</Text>
               </TouchableOpacity>
+            </View>
+            <View style={styles.btnContainer}>
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('Contributor');
+                  navigation.navigate('ContributionData');
                 }}>
-                <Image source={Images.information} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Tác giả</Text>
+                <Image source={Images.contribution} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Vì cộng đồng</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  _shareApp();
+                }}>
+                <Image source={Images.network} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Chia sẻ</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
             </View>
           </View>
           <View style={styles.newTextContainer}>
