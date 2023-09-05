@@ -19,7 +19,7 @@ import {logoutUser} from '../../redux/apiRequest';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL, imgDefault, fontDefault} from '../../contants/Variable';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 
 const DetailStaffScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -73,11 +73,7 @@ const DetailStaffScreen = ({navigation, route}) => {
   }, []);
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1, padding: 3}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView
         style={{
           flex: 1,
@@ -203,7 +199,7 @@ const DetailStaffScreen = ({navigation, route}) => {
           </TouchableOpacity>
         )}
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

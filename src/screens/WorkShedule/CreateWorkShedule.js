@@ -29,7 +29,7 @@ import {getAllWorkName, registerWorkSchedule} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 
 const optionData = [
   {
@@ -157,11 +157,7 @@ const CreateWorkSchedule = ({navigation, route}) => {
   };
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Lập lịch công tác" navigation={navigation} />
         <ScrollView>
@@ -426,7 +422,7 @@ const CreateWorkSchedule = ({navigation, route}) => {
         </ScrollView>
         {loading === true && <Loading />}
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

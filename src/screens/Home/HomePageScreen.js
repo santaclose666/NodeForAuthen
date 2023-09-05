@@ -40,9 +40,9 @@ import {useDispatch} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL, newsURL, fontDefault} from '../../contants/Variable';
-import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modal';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import LinearGradientUI from '../../components/LinearGradientUI';
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -185,11 +185,7 @@ const HomePageScreen = ({navigation}) => {
   }, []);
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={styles.container}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView
         style={{
           flex: 1,
@@ -724,7 +720,7 @@ const HomePageScreen = ({navigation}) => {
           </Modal>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

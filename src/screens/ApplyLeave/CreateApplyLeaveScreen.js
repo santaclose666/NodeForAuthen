@@ -28,8 +28,7 @@ import {registerOnLeave} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
-import MyStatusBar from '../../components/MyStatusBar';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 0.5},
@@ -87,11 +86,7 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
   };
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={styles.container}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Đăng kí nghỉ phép" navigation={navigation} />
         <KeyboardAwareScrollView
@@ -257,7 +252,7 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
         </KeyboardAwareScrollView>
         {loading === true && <Loading />}
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

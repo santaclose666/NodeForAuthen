@@ -53,7 +53,7 @@ import StaggerUI from '../../components/StaggerUI';
 import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert} from '../../components/Toast';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 
 const approveArr = [
   {
@@ -527,11 +527,7 @@ const HistoryWorkShedule = ({navigation}) => {
   });
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header
           title="Lịch sử công tác"
@@ -930,7 +926,7 @@ const HistoryWorkShedule = ({navigation}) => {
           </View>
         </BottomSheetModalProvider>
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

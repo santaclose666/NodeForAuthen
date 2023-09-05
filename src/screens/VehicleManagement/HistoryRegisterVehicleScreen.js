@@ -43,7 +43,7 @@ import {
   formatDateToPost,
 } from '../../utils/serviceFunction';
 import {ConfirmModal} from '../../components/Modal';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 import Modal from 'react-native-modal';
 import {TextInput} from 'react-native-gesture-handler';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -433,11 +433,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   };
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header
           title="Lịch sử đăng kí xe"
@@ -993,7 +989,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
         </Modal>
         {loading && <Loading />}
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

@@ -22,7 +22,7 @@ import {shadowIOS} from '../../contants/propsIOS';
 import Loading from '../../components/LoadingUI';
 import {FlatList} from 'native-base';
 import {Dropdown} from 'react-native-element-dropdown';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 import {getListSpecies} from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -171,11 +171,7 @@ const ListBioScreen = ({navigation}) => {
   };
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView
         showsVerticalScrollIndicator={false}
         style={styles.container}>
@@ -286,7 +282,7 @@ const ListBioScreen = ({navigation}) => {
         </Modal>
         {loading === true && <Loading />}
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

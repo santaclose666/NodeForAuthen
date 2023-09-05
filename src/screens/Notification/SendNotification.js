@@ -21,8 +21,8 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
-import LinearGradient from 'react-native-linear-gradient';
 import {postNotifcation} from '../../redux/apiRequest';
+import LinearGradientUI from '../../components/LinearGradientUI';
 
 const group = [
   {
@@ -144,11 +144,7 @@ const SendNotification = ({navigation}) => {
   }, []);
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Gửi thông báo" navigation={navigation} />
         <ScrollView>
@@ -169,7 +165,7 @@ const SendNotification = ({navigation}) => {
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
                   src={mainURL + user?.path}
-                  style={{height: 40, width: 40}}
+                  style={{height: 40, width: 40, borderRadius: 50}}
                 />
                 <Text
                   style={{
@@ -291,7 +287,7 @@ const SendNotification = ({navigation}) => {
         </ScrollView>
         {loading === true && <Loading />}
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

@@ -15,7 +15,7 @@ import Dimension from '../../contants/Dimension';
 import {useSelector} from 'react-redux';
 import {shadowIOS} from '../../contants/propsIOS';
 import {fontDefault, mainURL} from '../../contants/Variable';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
 import {XMGGroup, IFEEGroup} from '../../contants/Variable';
 
@@ -159,7 +159,7 @@ const StaffListScreen = ({navigation}) => {
   });
 
   return (
-    <LinearGradient
+    <LinearGradientUI
       colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
       style={{flex: 1, padding: 3}}
       start={{x: 0, y: 0}}
@@ -223,7 +223,7 @@ const StaffListScreen = ({navigation}) => {
           removeClippedSubviews={true}
         />
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

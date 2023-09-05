@@ -17,7 +17,7 @@ import {Dropdown} from 'react-native-element-dropdown';
 import RegisterBtn from '../../components/RegisterBtn';
 import {shadowIOS} from '../../contants/propsIOS';
 import {ToastAlert} from '../../components/Toast';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 
 const vnRegionMapData = require('../../utils/VnRegionMap.json');
 const listLayerWMS = require('../../utils/listLayerWMSGeoPfes.json');
@@ -271,14 +271,8 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
     }
   };
 
-  // Rest of your functions
-
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Chọn lớp bản đồ" navigation={navigation} />
         <ScrollView>
@@ -521,7 +515,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
           </KeyboardAwareScrollView>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

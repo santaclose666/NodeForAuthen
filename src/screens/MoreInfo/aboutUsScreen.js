@@ -13,7 +13,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import React from 'react';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import {imgDefault, fontDefault} from '../../contants/Variable';
@@ -21,11 +21,7 @@ import Dimension from '../../contants/Dimension';
 
 const aboutUsScreen = ({navigation}) => {
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1, padding: 3}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView
         style={{
           flex: 1,
@@ -109,7 +105,7 @@ const aboutUsScreen = ({navigation}) => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

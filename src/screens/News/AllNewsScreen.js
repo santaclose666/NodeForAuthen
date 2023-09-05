@@ -20,9 +20,9 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {useSelector} from 'react-redux';
 import {newsURL} from '../../contants/Variable';
 import {changeFormatDate} from '../../utils/serviceFunction';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
-import {fontDefault, mainURL} from '../../contants/Variable';
+import {fontDefault} from '../../contants/Variable';
 
 const AllNewsScreen = ({navigation}) => {
   const [featureIndex, setFeatureIndex] = useState(0);
@@ -57,7 +57,7 @@ const AllNewsScreen = ({navigation}) => {
   };
 
   return (
-    <LinearGradient
+    <LinearGradientUI
       colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
       style={{flex: 1}}
       start={{x: 0, y: 0}}
@@ -161,7 +161,7 @@ const AllNewsScreen = ({navigation}) => {
           refreshing={true}
         />
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

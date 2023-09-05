@@ -38,7 +38,7 @@ import {ApproveCancelModal} from '../../components/Modal';
 import {shadowIOS} from '../../contants/propsIOS';
 import {defaultIFEE, mainURL} from '../../contants/Variable';
 import FilterStatusUI from '../../components/FilterStatusUI';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 
 const HistoryApplyLeaveScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -422,11 +422,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
   });
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header
           title="Lịch sử nghỉ phép"
@@ -704,7 +700,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
           </View>
         </Modal>
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

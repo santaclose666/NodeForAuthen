@@ -13,7 +13,7 @@ import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import {useSelector} from 'react-redux';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
 
 const NotifiScreen = ({navigation}) => {
@@ -35,11 +35,7 @@ const NotifiScreen = ({navigation}) => {
   }, [notifiData]);
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Thông báo" navigation={navigation} replace={true} />
         <View style={styles.notifiItemContainer}>
@@ -124,7 +120,7 @@ const NotifiScreen = ({navigation}) => {
           )}
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

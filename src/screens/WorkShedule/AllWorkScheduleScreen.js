@@ -23,7 +23,7 @@ import {WarningModal} from '../../components/Modal';
 import {Agenda} from 'react-native-calendars';
 import Loading from '../../components/LoadingUI';
 import {defaultIFEE, fontDefault, mainURL} from '../../contants/Variable';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 
 const AllWorkScheduleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -163,11 +163,7 @@ const AllWorkScheduleScreen = ({navigation}) => {
   }, []);
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={styles.container}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={{flex: 1}}>
         <Header title={'Tổng hợp lịch công tác'} navigation={navigation} />
         <Agenda
@@ -202,7 +198,7 @@ const AllWorkScheduleScreen = ({navigation}) => {
 
         {loading && <Loading />}
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

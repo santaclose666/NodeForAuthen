@@ -17,7 +17,7 @@ import Colors from '../../contants/Colors';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import {shadowIOS} from '../../contants/propsIOS';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
 import {DocumentData, DocumentURL, fontDefault} from '../../contants/Variable';
 import Header from '../../components/Header';
 
@@ -178,11 +178,7 @@ const DocumentListScreen = ({navigation}) => {
   });
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Danh mục tài liệu" navigation={navigation} />
         <View style={styles.searchInput}>
@@ -257,7 +253,7 @@ const DocumentListScreen = ({navigation}) => {
           />
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 

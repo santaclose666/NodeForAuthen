@@ -22,7 +22,7 @@ import ContributorScreen from '../screens/Contributors/Contributors';
 import ForestPrice from '../screens/ForestPrice/ForestPrice';
 import QLRBVScreen from '../screens/QLRBV/QLRBV';
 import ForestryScreen from '../screens/Forestry/ForestryScreen';
-import SendNotification from '../screens/SendNotification/SendNotification';
+import SendNotification from '../screens/Notification/SendNotification';
 import ContributionDataScreen from '../screens/ContributionData/ContributionData';
 import KKRScreen from '../screens/KKR/KKRScreen';
 

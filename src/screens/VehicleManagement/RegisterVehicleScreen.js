@@ -17,7 +17,6 @@ import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import LinearGradient from 'react-native-linear-gradient';
 import {
   formatTime,
   getCurrentTime,
@@ -32,6 +31,7 @@ import {registerVehicle} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
+import LinearGradientUI from '../../components/LinearGradientUI';
 
 const RegisterVehicleScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -118,11 +118,7 @@ const RegisterVehicleScreen = ({navigation, route}) => {
   };
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Đăng kí sử dụng xe" navigation={navigation} />
         <ScrollView>
@@ -303,7 +299,7 @@ const RegisterVehicleScreen = ({navigation, route}) => {
         </ScrollView>
         {loading === true && <Loading />}
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 
