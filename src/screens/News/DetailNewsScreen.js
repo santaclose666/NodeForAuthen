@@ -66,7 +66,7 @@ const DetailNewsScreen = ({navigation, route}) => {
         <View style={styles.titleContainer}>
           <Text
             style={{
-              fontSize: 18,
+              fontSize: Dimension.fontSize(18),
               fontFamily: Fonts.SF_SEMIBOLD,
               textAlign: 'justify',
               ...fontDefault,
@@ -75,7 +75,7 @@ const DetailNewsScreen = ({navigation, route}) => {
           </Text>
           <Text
             style={{
-              fontSize: 14,
+              fontSize: Dimension.fontSize(14),
               fontFamily: Fonts.SF_REGULAR,
               color: Colors.DEFAULT_BLACK,
               opacity: 0.6,
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    fontSize: 22,
+    fontSize: Dimension.fontSize(22),
     fontFamily: Fonts.SF_SEMIBOLD,
     marginTop: Dimension.setHeight(1),
     padding: 5,
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    fontSize: 18,
+    fontSize: Dimension.fontSize(18),
     fontFamily: Fonts.SF_REGULAR,
     justifyContent: 'space-around',
     marginVertical: 5,

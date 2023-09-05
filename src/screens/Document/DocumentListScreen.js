@@ -94,7 +94,7 @@ const DocumentListScreen = ({navigation}) => {
                 ellipsizeMode="tail"
                 style={{
                   fontFamily: Fonts.SF_SEMIBOLD,
-                  fontSize: 16,
+                  fontSize: Dimension.fontSize(16),
                   ...fontDefault,
                 }}>
                 {item.SoHieu}
@@ -103,7 +103,7 @@ const DocumentListScreen = ({navigation}) => {
             <Text
               style={{
                 fontFamily: Fonts.SF_SEMIBOLD,
-                fontSize: 15,
+                fontSize: Dimension.fontSize(15),
                 color: Colors.INACTIVE_GREY,
               }}>
               {item.Ngay}
@@ -131,7 +131,7 @@ const DocumentListScreen = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.SF_REGULAR,
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   color: Colors.INACTIVE_GREY,
                 }}>
                 {pickFileIndex === index ? 'Thu gọn' : 'Chi tiết'}
@@ -221,7 +221,7 @@ const DocumentListScreen = ({navigation}) => {
                         pickOptionIndex === index
                           ? Fonts.SF_SEMIBOLD
                           : Fonts.SF_REGULAR,
-                      fontSize: 16,
+                      fontSize: Dimension.fontSize(16),
                       opacity: 0.8,
                       color:
                         pickOptionIndex === index
@@ -312,13 +312,13 @@ const styles = StyleSheet.create({
 
   title: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     ...fontDefault,
   },
 
   content: {
     fontFamily: Fonts.SF_REGULAR,
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     marginLeft: Dimension.setWidth(2),
     textAlign: 'justify',
   },

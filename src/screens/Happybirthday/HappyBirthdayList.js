@@ -71,7 +71,7 @@ const HappyBirthdayList = ({navigation}) => {
             <Text
               style={{
                 fontFamily: Fonts.LATO_REGULAR_ITALIC,
-                fontSize: 25,
+                fontSize: Dimension.fontSize(25),
                 color: '#a91a22ff',
 
                 textDecorationLine: 'underline',
@@ -156,14 +156,14 @@ const styles = StyleSheet.create({
 
   nameText: {
     fontFamily: Fonts.LATO_REGULAR,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
     color: '#a91a22ff',
     textAlign: 'center',
   },
 
   birthdayText: {
     fontFamily: Fonts.LATO_REGULAR,
-    fontSize: 13,
+    fontSize: Dimension.fontSize(13),
     color: '#a91a22ff',
     textAlign: 'center',
   },

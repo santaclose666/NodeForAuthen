@@ -159,270 +159,273 @@ const CreateWorkSchedule = ({navigation, route}) => {
   return (
     <LinearGradient
       colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{ flex: 1 }}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}>
-    <SafeAreaView style={styles.container}>
-      <Header title="Lập lịch công tác" navigation={navigation} />
-      <ScrollView>
-        <KeyboardAwareScrollView
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{
-            backgroundColor: '#fbfbfd',
-            borderRadius: 12,
-            marginHorizontal: Dimension.setWidth(3),
-            marginVertical: Dimension.setHeight(3),
-            paddingHorizontal: Dimension.setWidth(4),
-            paddingTop: Dimension.setHeight(3),
-            elevation: 5,
-            ...shadowIOS,
-          }}>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Người đăng kí</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                src={mainURL + user?.path}
-                style={{height: 40, width: 40}}
-              />
-              <Text
-                style={{
-                  marginLeft: Dimension.setWidth(3),
-                  fontSize: 19,
-                  fontFamily: Fonts.SF_SEMIBOLD,
-                }}>
-                {user?.hoten}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Lựa chọn loại</Text>
-            <Dropdown
-              style={styles.dropdown}
-              autoScroll={false}
-              showsVerticalScrollIndicator={false}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              containerStyle={styles.containerOptionStyle}
-              iconStyle={styles.iconStyle}
-              itemContainerStyle={styles.itemContainer}
-              itemTextStyle={styles.itemText}
-              fontFamily={Fonts.SF_MEDIUM}
-              renderLeftIcon={() => {
-                return (
-                  <Image source={Images.work} style={styles.leftIconDropdown} />
-                );
-              }}
-              activeColor="#eef2feff"
-              data={optionData}
-              maxHeight={Dimension.setHeight(30)}
-              labelField="label"
-              valueField="value"
-              value={optionValue}
-              onChange={item => {
-                setOptionValue(item.value);
-              }}
-            />
-          </View>
-
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Địa điểm</Text>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Nhập địa điểm"
-              value={placeInput}
-              onChangeText={e => setPlaceInput(e)}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
+      style={{flex: 1}}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <SafeAreaView style={styles.container}>
+        <Header title="Lập lịch công tác" navigation={navigation} />
+        <ScrollView>
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+              backgroundColor: '#fbfbfd',
+              borderRadius: 12,
+              marginHorizontal: Dimension.setWidth(3),
+              marginVertical: Dimension.setHeight(3),
+              paddingHorizontal: Dimension.setWidth(4),
+              paddingTop: Dimension.setHeight(3),
+              elevation: 5,
+              ...shadowIOS,
             }}>
-            <TouchableOpacity
-              onPress={() => {
-                setCheckPick(true);
-                setToggleDatePicker(true);
-              }}
-              style={[
-                styles.containerEachLine,
-                {
-                  width: '48%',
-                },
-              ]}>
-              <Text style={styles.title}>Từ ngày</Text>
-              <View style={styles.dateTimePickerContainer}>
-                <Text style={styles.dateTimeText}>{startDay}</Text>
-                <View
-                  style={[
-                    styles.dateTimeImgContainer,
-                    {backgroundColor: '#dbd265'},
-                  ]}>
-                  <Image
-                    source={Images.calendarBlack}
-                    style={styles.dateTimeImg}
-                  />
-                </View>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                setCheckPick(false);
-                setToggleDatePicker(true);
-              }}
-              style={[
-                styles.containerEachLine,
-                {
-                  width: '48%',
-                },
-              ]}>
-              <Text style={styles.title}>Đến ngày</Text>
-              <View style={styles.dateTimePickerContainer}>
-                <Text style={styles.dateTimeText}>
-                  {endDay ? endDay : 'Chọn ngày'}
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Người đăng kí</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  src={mainURL + user?.path}
+                  style={{height: 40, width: 40}}
+                />
+                <Text
+                  style={{
+                    marginLeft: Dimension.setWidth(3),
+                    fontSize: Dimension.fontSize(19),
+                    fontFamily: Fonts.SF_SEMIBOLD,
+                  }}>
+                  {user?.hoten}
                 </Text>
-                <View
-                  style={[
-                    styles.dateTimeImgContainer,
-                    {backgroundColor: '#dbd265'},
-                  ]}>
-                  <Image
-                    source={Images.calendarBlack}
-                    style={styles.dateTimeImg}
-                  />
-                </View>
               </View>
-            </TouchableOpacity>
-          </View>
-          <DateTimePickerModal
-            isVisible={toggleDatePicker}
-            mode="date"
-            onConfirm={handlePickDate}
-            onCancel={() => {
-              setToggleDatePicker(false);
-            }}
-          />
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Thuộc chương trình</Text>
-            <Dropdown
-              style={styles.dropdown}
-              autoScroll={false}
-              showsVerticalScrollIndicator={false}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              containerStyle={styles.containerOptionStyle}
-              iconStyle={styles.iconStyle}
-              itemContainerStyle={styles.itemContainer}
-              itemTextStyle={styles.itemText}
-              fontFamily={Fonts.SF_MEDIUM}
-              activeColor="#eef2feff"
-              data={workData}
-              maxHeight={Dimension.setHeight(30)}
-              labelField="label"
-              valueField="value"
-              value={workValue}
-              onChange={item => {
-                setWorkValue(item.value);
-              }}
-            />
-          </View>
-
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Tên chương trình</Text>
-            {workValue === 1 && workNameData ? (
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Lựa chọn loại</Text>
               <Dropdown
                 style={styles.dropdown}
                 autoScroll={false}
                 showsVerticalScrollIndicator={false}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
-                selectedTextProps={{numberOfLines: 3}}
                 containerStyle={styles.containerOptionStyle}
                 iconStyle={styles.iconStyle}
                 itemContainerStyle={styles.itemContainer}
                 itemTextStyle={styles.itemText}
                 fontFamily={Fonts.SF_MEDIUM}
-                placeholder="Chọn chương trình"
-                search
-                searchPlaceholder="Tìm kiếm"
+                renderLeftIcon={() => {
+                  return (
+                    <Image
+                      source={Images.work}
+                      style={styles.leftIconDropdown}
+                    />
+                  );
+                }}
                 activeColor="#eef2feff"
-                data={workNameData}
-                maxHeight={Dimension.setHeight(40)}
-                labelField="tenhd"
-                valueField="id"
-                value={workNameValue}
+                data={optionData}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="label"
+                valueField="value"
+                value={optionValue}
                 onChange={item => {
-                  setWorkNameValue(item.id);
+                  setOptionValue(item.value);
                 }}
               />
-            ) : (
+            </View>
+
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Địa điểm</Text>
               <TextInput
                 style={styles.inputText}
-                placeholder="Nhập tên chương trình"
-                value={ortherWorkInput}
-                onChangeText={e => setOrtherWorkInput(e)}
-              />
-            )}
-          </View>
-
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Nội dung</Text>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Nhập nội dung"
-              value={contentInput}
-              onChangeText={e => setContentInput(e)}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View style={[styles.containerEachLine, {width: '48%'}]}>
-              <Text style={styles.title}>Đầu mối</Text>
-              <TextInput
-                style={styles.inputText}
-                value={clueInput}
-                onChangeText={e => setClueInput(e)}
+                placeholder="Nhập địa điểm"
+                value={placeInput}
+                onChangeText={e => setPlaceInput(e)}
               />
             </View>
 
             <View
-              style={[
-                styles.containerEachLine,
-                {
-                  width: '48%',
-                },
-              ]}>
-              <Text style={styles.title}>Thành phần</Text>
-              <TextInput
-                style={styles.inputText}
-                value={componentInput}
-                onChangeText={e => setComponentInput(e)}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setCheckPick(true);
+                  setToggleDatePicker(true);
+                }}
+                style={[
+                  styles.containerEachLine,
+                  {
+                    width: '48%',
+                  },
+                ]}>
+                <Text style={styles.title}>Từ ngày</Text>
+                <View style={styles.dateTimePickerContainer}>
+                  <Text style={styles.dateTimeText}>{startDay}</Text>
+                  <View
+                    style={[
+                      styles.dateTimeImgContainer,
+                      {backgroundColor: '#dbd265'},
+                    ]}>
+                    <Image
+                      source={Images.calendarBlack}
+                      style={styles.dateTimeImg}
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setCheckPick(false);
+                  setToggleDatePicker(true);
+                }}
+                style={[
+                  styles.containerEachLine,
+                  {
+                    width: '48%',
+                  },
+                ]}>
+                <Text style={styles.title}>Đến ngày</Text>
+                <View style={styles.dateTimePickerContainer}>
+                  <Text style={styles.dateTimeText}>
+                    {endDay ? endDay : 'Chọn ngày'}
+                  </Text>
+                  <View
+                    style={[
+                      styles.dateTimeImgContainer,
+                      {backgroundColor: '#dbd265'},
+                    ]}>
+                    <Image
+                      source={Images.calendarBlack}
+                      style={styles.dateTimeImg}
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <DateTimePickerModal
+              isVisible={toggleDatePicker}
+              mode="date"
+              onConfirm={handlePickDate}
+              onCancel={() => {
+                setToggleDatePicker(false);
+              }}
+            />
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Thuộc chương trình</Text>
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                data={workData}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="label"
+                valueField="value"
+                value={workValue}
+                onChange={item => {
+                  setWorkValue(item.value);
+                }}
               />
             </View>
-          </View>
 
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Ghi chú</Text>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Ghi chú"
-              value={noteInput}
-              onChangeText={e => setNoteInput(e)}
-            />
-          </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Tên chương trình</Text>
+              {workValue === 1 && workNameData ? (
+                <Dropdown
+                  style={styles.dropdown}
+                  autoScroll={false}
+                  showsVerticalScrollIndicator={false}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  selectedTextProps={{numberOfLines: 3}}
+                  containerStyle={styles.containerOptionStyle}
+                  iconStyle={styles.iconStyle}
+                  itemContainerStyle={styles.itemContainer}
+                  itemTextStyle={styles.itemText}
+                  fontFamily={Fonts.SF_MEDIUM}
+                  placeholder="Chọn chương trình"
+                  search
+                  searchPlaceholder="Tìm kiếm"
+                  activeColor="#eef2feff"
+                  data={workNameData}
+                  maxHeight={Dimension.setHeight(40)}
+                  labelField="tenhd"
+                  valueField="id"
+                  value={workNameValue}
+                  onChange={item => {
+                    setWorkNameValue(item.id);
+                  }}
+                />
+              ) : (
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Nhập tên chương trình"
+                  value={ortherWorkInput}
+                  onChangeText={e => setOrtherWorkInput(e)}
+                />
+              )}
+            </View>
 
-          <RegisterBtn nameBtn={'Thực hiện'} onEvent={handleRegister} />
-        </KeyboardAwareScrollView>
-      </ScrollView>
-      {loading === true && <Loading />}
-    </SafeAreaView>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Nội dung</Text>
+              <TextInput
+                style={styles.inputText}
+                placeholder="Nhập nội dung"
+                value={contentInput}
+                onChangeText={e => setContentInput(e)}
+              />
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View style={[styles.containerEachLine, {width: '48%'}]}>
+                <Text style={styles.title}>Đầu mối</Text>
+                <TextInput
+                  style={styles.inputText}
+                  value={clueInput}
+                  onChangeText={e => setClueInput(e)}
+                />
+              </View>
+
+              <View
+                style={[
+                  styles.containerEachLine,
+                  {
+                    width: '48%',
+                  },
+                ]}>
+                <Text style={styles.title}>Thành phần</Text>
+                <TextInput
+                  style={styles.inputText}
+                  value={componentInput}
+                  onChangeText={e => setComponentInput(e)}
+                />
+              </View>
+            </View>
+
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Ghi chú</Text>
+              <TextInput
+                style={styles.inputText}
+                placeholder="Ghi chú"
+                value={noteInput}
+                onChangeText={e => setNoteInput(e)}
+              />
+            </View>
+
+            <RegisterBtn nameBtn={'Thực hiện'} onEvent={handleRegister} />
+          </KeyboardAwareScrollView>
+        </ScrollView>
+        {loading === true && <Loading />}
+      </SafeAreaView>
     </LinearGradient>
   );
 };
@@ -445,7 +448,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1),
   },
@@ -470,7 +473,7 @@ const styles = StyleSheet.create({
 
   dateTimeText: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
   },
 
   inputText: {
@@ -478,7 +481,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'gray',
     marginHorizontal: Dimension.setWidth(1.6),
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     height: Dimension.setHeight(5),
   },
 
@@ -489,7 +492,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   placeholderStyle: {
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
   selectedStyle: {
     borderRadius: 12,
@@ -497,7 +500,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     color: '#277aaeff',
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
   imageStyle: {
     width: 24,
@@ -519,7 +522,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: '#57575a',
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
   },
   leftIconDropdown: {
     width: 20,

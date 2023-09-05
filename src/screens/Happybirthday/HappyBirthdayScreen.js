@@ -56,7 +56,7 @@ const HappyBirthdayScreen = ({navigation, route}) => {
           <Text
             style={{
               fontFamily: Fonts.LATO_REGULAR,
-              fontSize: 22,
+              fontSize: Dimension.fontSize(22),
               color: '#755a68',
               textDecorationLine: 'underline',
             }}>
@@ -75,7 +75,7 @@ const HappyBirthdayScreen = ({navigation, route}) => {
           <Text
             style={{
               fontFamily: Fonts.LATO_REGULAR_ITALIC,
-              fontSize: 16,
+              fontSize: Dimension.fontSize(16),
               textAlign: 'center',
               marginHorizontal: Dimension.setWidth(6),
               color: '#755a68',

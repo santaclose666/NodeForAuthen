@@ -270,7 +270,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
         <Text
           style={{
             fontFamily: Fonts.SF_SEMIBOLD,
-            fontSize: 18,
+            fontSize: Dimension.fontSize(18),
             width: '60%',
           }}>
           {item.lydo}
@@ -303,7 +303,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
               <Text
                 style={{
                   color: item.yc_update === 0 ? colorStatus : colorAdjustStatus,
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontFamily: Fonts.SF_MEDIUM,
                 }}>
                 {item.yc_update === 0 ? status : adjustStatus}
@@ -347,7 +347,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
         </View>
         <Text
           style={{
-            fontSize: 15,
+            fontSize: Dimension.fontSize(15),
             fontFamily: Fonts.SF_REGULAR,
             color: Colors.INACTIVE_GREY,
             marginBottom: Dimension.setHeight(0.8),
@@ -454,7 +454,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
             style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
             <Text
               style={{
-                fontSize: 20,
+                fontSize: Dimension.fontSize(20),
                 fontFamily: Fonts.SF_MEDIUM,
                 color: Colors.INACTIVE_GREY,
               }}>
@@ -510,7 +510,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
-                  fontSize: 20,
+                  fontSize: Dimension.fontSize(20),
                   color: '#f9a86a',
                 }}>
                 Điều chỉnh
@@ -530,7 +530,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
               <Text
                 style={{
                   marginLeft: Dimension.setWidth(3),
-                  fontSize: 18,
+                  fontSize: Dimension.fontSize(18),
                   fontFamily: Fonts.SF_SEMIBOLD,
                 }}>
                 {user?.hoten}
@@ -637,7 +637,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
-                  fontSize: 20,
+                  fontSize: Dimension.fontSize(20),
                   color: '#f25157',
                 }}>
                 Từ chối
@@ -654,7 +654,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
               <Text
                 style={{
                   marginLeft: Dimension.setWidth(3),
-                  fontSize: 18,
+                  fontSize: Dimension.fontSize(18),
                   fontFamily: Fonts.SF_SEMIBOLD,
                 }}>
                 {selectedItem?.hoten}
@@ -728,12 +728,12 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#747476',
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     fontFamily: Fonts.SF_MEDIUM,
   },
 
   content: {
-    fontSize: 17,
+    fontSize: Dimension.fontSize(17),
     fontFamily: Fonts.SF_SEMIBOLD,
   },
 
@@ -752,7 +752,7 @@ const styles = StyleSheet.create({
 
   titleModal: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 13,
+    fontSize: Dimension.fontSize(13),
   },
 
   dateModalContainer: {
@@ -770,7 +770,7 @@ const styles = StyleSheet.create({
 
   contentModal: {
     fontFamily: Fonts.SF_SEMIBOLD,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
 
   imgModalContainer: {

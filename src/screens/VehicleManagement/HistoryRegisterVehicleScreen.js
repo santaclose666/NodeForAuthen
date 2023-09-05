@@ -399,7 +399,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
           }}>
           <Text
             style={{
-              fontSize: 16,
+              fontSize: Dimension.fontSize(16),
               fontFamily: Fonts.SF_MEDIUM,
               color: '#747476',
               marginBottom: Dimension.setHeight(0.8),
@@ -476,7 +476,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                 <Text
                   style={{
                     fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: 16,
+                    fontSize: Dimension.fontSize(16),
                     opacity: 0.8,
                     color:
                       indexPicker === index ? item.color : Colors.DEFAULT_BLACK,
@@ -511,7 +511,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
               style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
               <Text
                 style={{
-                  fontSize: 20,
+                  fontSize: Dimension.fontSize(20),
                   fontFamily: Fonts.SF_MEDIUM,
                   color: Colors.INACTIVE_GREY,
                 }}>
@@ -539,7 +539,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                 <Text
                   style={{
                     fontFamily: Fonts.SF_BOLD,
-                    fontSize: 20,
+                    fontSize: Dimension.fontSize(20),
                     color: selectedItem.colorStatus,
                   }}>
                   Thông tin chi tiết
@@ -701,7 +701,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
-                  fontSize: 20,
+                  fontSize: Dimension.fontSize(20),
                   color: '#57b85d',
                 }}>
                 Trả xe
@@ -724,7 +724,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
               />
               <Text
                 style={{
-                  fontSize: 18,
+                  fontSize: Dimension.fontSize(18),
                   fontFamily: Fonts.SF_SEMIBOLD,
                 }}>
                 {user?.hoten}
@@ -808,7 +808,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       borderBottomColor: 'gray',
                       marginHorizontal: Dimension.setWidth(1.6),
                       fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: 16,
+                      fontSize: Dimension.fontSize(16),
                       height: Dimension.setHeight(6),
                       width: '65%',
                     }}
@@ -841,7 +841,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       borderBottomColor: 'gray',
                       marginHorizontal: Dimension.setWidth(1.6),
                       fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: 16,
+                      fontSize: Dimension.fontSize(16),
                       height: Dimension.setHeight(6),
                       width: '85%',
                     }}
@@ -872,7 +872,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       borderBottomColor: 'gray',
                       marginHorizontal: Dimension.setWidth(1.6),
                       fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: 16,
+                      fontSize: Dimension.fontSize(16),
                       height: Dimension.setHeight(6),
                       width: '65%',
                     }}
@@ -898,7 +898,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       borderBottomColor: 'gray',
                       marginHorizontal: Dimension.setWidth(1.6),
                       fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: 16,
+                      fontSize: Dimension.fontSize(16),
                       height: Dimension.setHeight(6),
                       width: '65%',
                     }}
@@ -1018,12 +1018,12 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#747476',
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
     fontFamily: Fonts.SF_MEDIUM,
   },
 
   content: {
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     fontFamily: Fonts.SF_SEMIBOLD,
     color: '#747476',
   },
@@ -1042,7 +1042,7 @@ const styles = StyleSheet.create({
 
   titleBottomSheet: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 17,
+    fontSize: Dimension.fontSize(17),
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1.6),
   },
@@ -1081,7 +1081,7 @@ const styles = StyleSheet.create({
 
   titleModal: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     marginBottom: Dimension.setHeight(0.6),
   },
 
@@ -1100,7 +1100,7 @@ const styles = StyleSheet.create({
 
   contentModal: {
     fontFamily: Fonts.SF_SEMIBOLD,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
 
   imgModalContainer: {
@@ -1136,7 +1136,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   placeholderStyle: {
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
   selectedStyle: {
     borderRadius: 12,
@@ -1144,7 +1144,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     color: '#277aaeff',
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
   imageStyle: {
     width: 24,
@@ -1166,7 +1166,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: '#57575a',
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
   },
   leftIconDropdown: {
     width: 20,

@@ -119,7 +119,7 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
               <Text
                 style={{
                   marginLeft: Dimension.setWidth(3),
-                  fontSize: 19,
+                  fontSize: Dimension.fontSize(19),
                   fontFamily: Fonts.SF_SEMIBOLD,
                 }}>
                 {user?.hoten}
@@ -221,7 +221,7 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
                     style={{
                       marginHorizontal: Dimension.setWidth(3),
                       fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: 16,
+                      fontSize: Dimension.fontSize(16),
                     }}>
                     {offNumber}
                   </Text>
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1),
   },
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   },
 
   dateText: {
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     fontFamily: Fonts.SF_MEDIUM,
     marginLeft: Dimension.setWidth(2),
     color: '#277aaeff',
@@ -316,11 +316,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
   },
   selectedTextStyle: {
     color: '#277aaeff',
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
   },
   iconStyle: {
     width: 20,
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
 
   dateTimeText: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
   },
 });
 

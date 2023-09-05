@@ -409,7 +409,7 @@ const HistoryWorkShedule = ({navigation}) => {
             ellipsizeMode="tail"
             style={{
               fontFamily: Fonts.SF_SEMIBOLD,
-              fontSize: 19,
+              fontSize: Dimension.fontSize(19),
             }}>
             {item.thuocchuongtrinh}
           </Text>
@@ -494,7 +494,7 @@ const HistoryWorkShedule = ({navigation}) => {
 
         <Text
           style={{
-            fontSize: 16,
+            fontSize: Dimension.fontSize(16),
             fontFamily: Fonts.SF_MEDIUM,
             color: '#747476',
             marginVertical: Dimension.setHeight(0.6),
@@ -573,7 +573,7 @@ const HistoryWorkShedule = ({navigation}) => {
                 <Text
                   style={{
                     fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: 16,
+                    fontSize: Dimension.fontSize(16),
                     opacity: 0.8,
                     color: indexPicker === index ? item.color : '#041d3b',
                   }}>
@@ -607,7 +607,7 @@ const HistoryWorkShedule = ({navigation}) => {
               style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
               <Text
                 style={{
-                  fontSize: 20,
+                  fontSize: Dimension.fontSize(20),
                   fontFamily: Fonts.SF_MEDIUM,
                   color: Colors.INACTIVE_GREY,
                 }}>
@@ -634,7 +634,7 @@ const HistoryWorkShedule = ({navigation}) => {
                 <Text
                   style={{
                     fontFamily: Fonts.SF_BOLD,
-                    fontSize: 20,
+                    fontSize: Dimension.fontSize(20),
                     color: selectedItem.colorStatus,
                   }}>
                   Thông tin chi tiết
@@ -816,7 +816,7 @@ const HistoryWorkShedule = ({navigation}) => {
                 <Text
                   style={{
                     fontFamily: Fonts.SF_BOLD,
-                    fontSize: 20,
+                    fontSize: Dimension.fontSize(20),
                     color: '#f9a86a',
                   }}>
                   Yêu cầu kết thúc
@@ -836,7 +836,7 @@ const HistoryWorkShedule = ({navigation}) => {
                 <Text
                   style={{
                     marginLeft: Dimension.setWidth(3),
-                    fontSize: 18,
+                    fontSize: Dimension.fontSize(18),
                     fontFamily: Fonts.SF_SEMIBOLD,
                   }}>
                   {selectedItem?.thuocchuongtrinh}
@@ -955,12 +955,12 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#747476',
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
     fontFamily: Fonts.SF_MEDIUM,
   },
 
   content: {
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     fontFamily: Fonts.SF_SEMIBOLD,
     color: '#747476',
     marginLeft: Dimension.setWidth(1),
@@ -980,7 +980,7 @@ const styles = StyleSheet.create({
 
   titleBottomSheet: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 17,
+    fontSize: Dimension.fontSize(17),
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1.6),
   },
@@ -1005,7 +1005,7 @@ const styles = StyleSheet.create({
 
   titleModal: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 13,
+    fontSize: Dimension.fontSize(13),
   },
 
   dateModalContainer: {
@@ -1023,7 +1023,7 @@ const styles = StyleSheet.create({
 
   contentModal: {
     fontFamily: Fonts.SF_SEMIBOLD,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
 
   imgModalContainer: {

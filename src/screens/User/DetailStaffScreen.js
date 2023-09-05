@@ -100,7 +100,7 @@ const DetailStaffScreen = ({navigation, route}) => {
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
-                  fontSize: 18,
+                  fontSize: Dimension.fontSize(18),
                   ...fontDefault,
                 }}>
                 Thông tin
@@ -123,12 +123,20 @@ const DetailStaffScreen = ({navigation, route}) => {
                 <AlertDialog.Content>
                   <AlertDialog.CloseButton />
                   <AlertDialog.Header>
-                    <Text style={{fontSize: 20, fontFamily: Fonts.SF_BOLD}}>
+                    <Text
+                      style={{
+                        fontSize: Dimension.fontSize(20),
+                        fontFamily: Fonts.SF_BOLD,
+                      }}>
                       Đăng Xuất
                     </Text>
                   </AlertDialog.Header>
                   <AlertDialog.Body>
-                    <Text style={{fontSize: 16, fontFamily: Fonts.SF_REGULAR}}>
+                    <Text
+                      style={{
+                        fontSize: Dimension.fontSize(16),
+                        fontFamily: Fonts.SF_REGULAR,
+                      }}>
                       Xác nhận đăng xuất tài khoản này?
                     </Text>
                   </AlertDialog.Body>
@@ -140,14 +148,17 @@ const DetailStaffScreen = ({navigation, route}) => {
                         onPress={onCloseConfirmOut}
                         ref={cancelRef}>
                         <Text
-                          style={{fontSize: 15, fontFamily: Fonts.SF_REGULAR}}>
+                          style={{
+                            fontSize: Dimension.fontSize(15),
+                            fontFamily: Fonts.SF_REGULAR,
+                          }}>
                           Hủy
                         </Text>
                       </Button>
                       <Button colorScheme="danger" onPress={handleLogout}>
                         <Text
                           style={{
-                            fontSize: 15,
+                            fontSize: Dimension.fontSize(15),
                             fontFamily: Fonts.SF_REGULAR,
                             color: '#ffffff',
                           }}>
@@ -181,7 +192,7 @@ const DetailStaffScreen = ({navigation, route}) => {
             }}>
             <Text
               style={{
-                fontSize: 20,
+                fontSize: Dimension.fontSize(20),
                 fontFamily: Fonts.SF_BOLD,
                 color: '#ffffff',
                 paddingHorizontal: Dimension.setWidth(3),

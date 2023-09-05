@@ -277,7 +277,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
         </View>
         <Text
           style={{
-            fontSize: 16,
+            fontSize: Dimension.fontSize(16),
             fontFamily: Fonts.SF_MEDIUM,
             color: '#747476',
             marginBottom: Dimension.setHeight(0.8),
@@ -355,7 +355,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
               style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
               <Text
                 style={{
-                  fontSize: 20,
+                  fontSize: Dimension.fontSize(20),
                   fontFamily: Fonts.SF_MEDIUM,
                   color: Colors.INACTIVE_GREY,
                 }}>
@@ -382,7 +382,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                 <Text
                   style={{
                     fontFamily: Fonts.SF_BOLD,
-                    fontSize: 20,
+                    fontSize: Dimension.fontSize(20),
                     color: selectedItem.colorStatus,
                   }}>
                   Thông tin chi tiết
@@ -623,12 +623,12 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#747476',
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
     fontFamily: Fonts.SF_MEDIUM,
   },
 
   content: {
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     fontFamily: Fonts.SF_SEMIBOLD,
     color: '#747476',
   },
@@ -647,7 +647,7 @@ const styles = StyleSheet.create({
 
   titleBottomSheet: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 17,
+    fontSize: Dimension.fontSize(17),
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1.6),
   },

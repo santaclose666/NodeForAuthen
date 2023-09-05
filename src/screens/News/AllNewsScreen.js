@@ -89,7 +89,7 @@ const AllNewsScreen = ({navigation}) => {
                         featureIndex === index
                           ? Fonts.SF_SEMIBOLD
                           : Fonts.SF_REGULAR,
-                      fontSize: 16,
+                      fontSize: Dimension.fontSize(16),
                       opacity: 0.8,
                       color:
                         featureIndex === index
@@ -133,7 +133,7 @@ const AllNewsScreen = ({navigation}) => {
                       numberOfLines={2}
                       style={{
                         fontFamily: Fonts.SF_SEMIBOLD,
-                        fontSize: 14,
+                        fontSize: Dimension.fontSize(14),
                         ...fontDefault,
                         paddingHorizontal: Dimension.setHeight(1),
                         textAlign: 'justify',
@@ -145,7 +145,7 @@ const AllNewsScreen = ({navigation}) => {
                         fontFamily: Fonts.SF_REGULAR,
                         color: Colors.DEFAULT_BLACK,
                         opacity: 0.6,
-                        fontSize: 12,
+                        fontSize: Dimension.fontSize(12),
                         paddingHorizontal: Dimension.setHeight(1),
                       }}>
                       {changeFormatDate(item.date_created)}
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
 
   searchTextInput: {
     marginLeft: 10,
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     width: '90%',
     fontFamily: Fonts.SF_REGULAR,
   },
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
 
   featureText: {
     fontFamily: Fonts.SF_REGULAR,
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
   },
 
   hotNewTextContainer: {

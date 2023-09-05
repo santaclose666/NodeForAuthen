@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,22 +7,22 @@ import {
   StyleSheet,
   TextInput,
   Dimensions,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
-import { Switch, VStack } from 'native-base';
+import {Switch, VStack} from 'native-base';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import { loginUser } from '../../redux/apiRequest';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { ToastAlert } from '../../components/Toast';
-import { shadowIOS } from '../../contants/propsIOS';
-import { fontDefault } from '../../contants/Variable';
+import {loginUser} from '../../redux/apiRequest';
+import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {ToastAlert} from '../../components/Toast';
+import {shadowIOS} from '../../contants/propsIOS';
+import {fontDefault} from '../../contants/Variable';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const credential = useSelector(
     state => state.credential.credential?.emailPwd,
@@ -34,7 +34,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = () => {
     if (email !== '' && password !== '') {
-      const data = { email, password };
+      const data = {email, password};
       loginUser(data, dispatch, navigation, save);
     } else {
       const mess = 'Vui lòng nhập đầy đủ thông tin!';
@@ -56,14 +56,14 @@ const LoginScreen = ({ navigation }) => {
         enableResetScrollToCoords={true}
         enableOnAndroid={true}
         behavior="padding"
-        style={{ flex: 1, backgroundColor: '#f2f2f2' }}>
+        style={{flex: 1, backgroundColor: '#f2f2f2'}}>
         <View style={styles.themeContainer}>
           <TouchableOpacity
             style={styles.headerBtn}
             onPress={() => navigation.goBack()}>
             <Image
               source={Images.back}
-              style={{ width: 18, height: 18, tintColor: '#fff' }}
+              style={{width: 18, height: 18, tintColor: '#fff'}}
             />
           </TouchableOpacity>
           <Image
@@ -80,7 +80,7 @@ const LoginScreen = ({ navigation }) => {
           <Text
             style={{
               fontFamily: Fonts.SF_SEMIBOLD,
-              fontSize: 25,
+              fontSize: Dimension.fontSize(25),
               ...fontDefault,
               marginLeft: Dimension.setWidth(2),
               marginBottom: Dimension.setHeight(1),
@@ -168,20 +168,24 @@ const LoginScreen = ({ navigation }) => {
                   }}>
                   <Image
                     source={checkShowHide === true ? Images.noEye : Images.eye}
-                    style={{ width: 22, height: 22, tintColor: Colors.DEFAULT_GREEN }}
+                    style={{
+                      width: 22,
+                      height: 22,
+                      tintColor: Colors.DEFAULT_GREEN,
+                    }}
                   />
                 </TouchableOpacity>
               </View>
             </View>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Switch
               size={'sm'}
               colorScheme="emerald"
               isChecked={save}
               onChange={val => setSave(val.nativeEvent.value)}
             />
-            <Text style={{ fontFamily: Fonts.SF_MEDIUM }}>Lưu thông tin</Text>
+            <Text style={{fontFamily: Fonts.SF_MEDIUM}}>Lưu thông tin</Text>
           </View>
           <TouchableOpacity
             onPress={handleLogin}
@@ -198,7 +202,7 @@ const LoginScreen = ({ navigation }) => {
             }}>
             <Text
               style={{
-                fontSize: 18,
+                fontSize: Dimension.fontSize(18),
                 fontFamily: Fonts.SF_BOLD,
                 color: '#fff',
               }}>

@@ -148,7 +148,7 @@ const RegisterVehicleScreen = ({navigation, route}) => {
                 <Text
                   style={{
                     marginLeft: Dimension.setWidth(3),
-                    fontSize: 19,
+                    fontSize: Dimension.fontSize(19),
                     fontFamily: Fonts.SF_SEMIBOLD,
                   }}>
                   {user?.hoten}
@@ -273,7 +273,7 @@ const RegisterVehicleScreen = ({navigation, route}) => {
                   borderBottomColor: 'gray',
                   marginHorizontal: Dimension.setWidth(1.6),
                   fontFamily: Fonts.SF_MEDIUM,
-                  fontSize: 16,
+                  fontSize: Dimension.fontSize(16),
                   height: Dimension.setHeight(6),
                 }}
                 value={placeInput}
@@ -290,7 +290,7 @@ const RegisterVehicleScreen = ({navigation, route}) => {
                   borderBottomColor: 'gray',
                   marginHorizontal: Dimension.setWidth(1.6),
                   fontFamily: Fonts.SF_MEDIUM,
-                  fontSize: 16,
+                  fontSize: Dimension.fontSize(16),
                   height: Dimension.setHeight(6),
                 }}
                 value={contentInput}
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1),
   },
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
 
   dateTimeText: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
   },
 
   dropdown: {
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   placeholderStyle: {
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
   selectedStyle: {
     borderRadius: 12,
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     color: '#277aaeff',
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
   imageStyle: {
     width: 24,
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: '#57575a',
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
   },
   leftIconDropdown: {
     width: 20,
@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
     marginRight: Dimension.setWidth(1.3),
   },
   nocar: {
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     fontFamily: Fonts.SF_SEMIBOLD,
     color: 'red',
     alignSelf: 'center',

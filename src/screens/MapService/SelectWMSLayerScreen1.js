@@ -543,7 +543,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1),
   },

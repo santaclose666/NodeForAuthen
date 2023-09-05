@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import {View, Text, Image} from 'react-native';
 import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 
-const StatusUI = ({ status, colorStatus, bgColorStatus, icon }) => {
+const StatusUI = ({status, colorStatus, bgColorStatus, icon}) => {
   return (
     <View
       style={{
@@ -27,7 +27,7 @@ const StatusUI = ({ status, colorStatus, bgColorStatus, icon }) => {
       <Text
         style={{
           color: colorStatus,
-          fontSize: 14,
+          fontSize: Dimension.fontSize(14),
           fontFamily: Fonts.SF_MEDIUM,
         }}>
         {status}

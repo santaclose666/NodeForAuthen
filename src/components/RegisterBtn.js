@@ -22,7 +22,7 @@ const RegisterBtn = ({nameBtn, onEvent}) => {
       }}>
       <Text
         style={{
-          fontSize: 17,
+          fontSize: Dimension.fontSize(17),
           fontFamily: Fonts.SF_SEMIBOLD,
           color: '#ffffff',
         }}>

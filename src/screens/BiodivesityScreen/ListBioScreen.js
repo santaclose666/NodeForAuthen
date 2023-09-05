@@ -161,7 +161,7 @@ const ListBioScreen = ({navigation}) => {
               paddingBottom: 10,
               paddingHorizontal: 10,
               textAlign: 'center',
-              fontSize: 14,
+              fontSize: Dimension.fontSize(14),
             }}>
             {item.loaitv}
           </Text>
@@ -244,7 +244,7 @@ const ListBioScreen = ({navigation}) => {
               <Text style={styles.tile}>Chọn dữ liệu</Text>
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize: Dimension.fontSize(16),
                   fontWeight: 'bold',
                   alignSelf: 'flex-start',
                   padding: 5,
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
 
   searchTextInput: {
     marginLeft: 10,
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     width: '90%',
     fontFamily: Fonts.SF_REGULAR,
   },
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
 
   featureText: {
     fontFamily: Fonts.SF_REGULAR,
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
   },
 
   hotNewTextContainer: {
@@ -408,14 +408,18 @@ const styles = StyleSheet.create({
     padding: 5,
     marginLeft: 10,
   },
-  tile: {fontWeight: 'bold', fontSize: 19, color: Colors.DEFAULT_GREEN},
+  tile: {
+    fontWeight: 'bold',
+    fontSize: Dimension.fontSize(19),
+    color: Colors.DEFAULT_GREEN,
+  },
   nameLatin: {
     fontWeight: 'bold',
     paddingHorizontal: 10,
     paddingTop: 10,
     paddingBottom: 5,
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
   },
   modalContainer: {
     width: '95%',

@@ -115,7 +115,7 @@ const StaffListScreen = ({navigation}) => {
             <Text
               style={{
                 fontFamily: Fonts.SF_SEMIBOLD,
-                fontSize: 19,
+                fontSize: Dimension.fontSize(19),
                 ...fontDefault,
               }}>
               {item.hoten}
@@ -126,7 +126,7 @@ const StaffListScreen = ({navigation}) => {
               style={{
                 color: Colors.INACTIVE_GREY,
                 fontFamily: Fonts.SF_REGULAR,
-                fontSize: 15,
+                fontSize: Dimension.fontSize(15),
                 width: Dimension.setWidth(45),
               }}>
               {item.email}
@@ -141,7 +141,7 @@ const StaffListScreen = ({navigation}) => {
           <Text
             style={{
               fontFamily: Fonts.SF_REGULAR,
-              fontSize: 16,
+              fontSize: Dimension.fontSize(16),
               color: Colors.INACTIVE_GREY,
             }}>
             Chức vụ
@@ -149,7 +149,7 @@ const StaffListScreen = ({navigation}) => {
           <Text
             style={{
               fontFamily: Fonts.SF_SEMIBOLD,
-              fontSize: 15,
+              fontSize: Dimension.fontSize(15),
               ...fontDefault,
             }}>
             {role}
@@ -197,7 +197,7 @@ const StaffListScreen = ({navigation}) => {
                         selectId === index
                           ? Fonts.SF_SEMIBOLD
                           : Fonts.SF_REGULAR,
-                      fontSize: 16,
+                      fontSize: Dimension.fontSize(16),
                       opacity: 0.8,
                       color:
                         selectId === index

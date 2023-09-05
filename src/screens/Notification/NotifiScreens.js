@@ -73,7 +73,7 @@ const NotifiScreen = ({navigation}) => {
                           notifiMenuId === index
                             ? Fonts.SF_SEMIBOLD
                             : Fonts.SF_REGULAR,
-                        fontSize: 16,
+                        fontSize: Dimension.fontSize(16),
                         opacity: 0.8,
                         color:
                           notifiMenuId === index
@@ -176,20 +176,20 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     color: '#3a5072',
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 18,
+    fontSize: Dimension.fontSize(18),
   },
 
   obj2: {
     flexWrap: 'wrap',
     color: '#7f84a1',
     fontFamily: Fonts.SF_REGULAR,
-    fontSize: 18,
+    fontSize: Dimension.fontSize(18),
   },
 
   time: {
     color: Colors.INACTIVE_GREY,
     fontFamily: Fonts.SF_REGULAR,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
 });
 

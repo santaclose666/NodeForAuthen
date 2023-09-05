@@ -42,7 +42,7 @@ const ContributorScreen = ({navigation}) => {
             <Text
               style={{
                 fontFamily: Fonts.SF_BOLD,
-                fontSize: 18,
+                fontSize: Dimension.fontSize(18),
                 ...fontDefault,
               }}>
               Thông tin tác giả
@@ -137,12 +137,12 @@ const styles = StyleSheet.create({
   h1: {
     padding: 12,
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 17,
+    fontSize: Dimension.fontSize(17),
     fontWeight: 'bold',
   },
   h2: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 17,
+    fontSize: Dimension.fontSize(17),
     paddingVertical: 1,
   },
   smallIcon: {

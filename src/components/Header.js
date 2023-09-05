@@ -51,7 +51,7 @@ const Header = ({title, navigation, refreshData, replace = false}) => {
         <Text
           style={{
             fontFamily: Fonts.SF_BOLD,
-            fontSize: 18,
+            fontSize: Dimension.fontSize(18),
             ...fontDefault,
           }}>
           {title}

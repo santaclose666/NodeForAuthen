@@ -222,12 +222,12 @@ styles = StyleSheet.create({
 
   title: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
 
   content: {
     fontFamily: Fonts.SF_REGULAR,
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     textAlign: 'justify',
     ...fontDefault,
   },

@@ -95,7 +95,7 @@ const SpecieDetailScreen = ({navigation}) => {
           <Text
             style={{
               fontFamily: Fonts.SF_BOLD,
-              fontSize: 18,
+              fontSize: Dimension.fontSize(18),
               alignItems: 'center',
               ...fontDefault,
             }}>
@@ -120,7 +120,7 @@ const SpecieDetailScreen = ({navigation}) => {
               textAlign: 'center',
               color: '#28a745',
               fontWeight: '600',
-              fontSize: 22,
+              fontSize: Dimension.fontSize(22),
               marginHorizontal: 8,
             }}>
             {item.loaitv}
@@ -131,7 +131,7 @@ const SpecieDetailScreen = ({navigation}) => {
               textAlign: 'center',
               color: '#28a745',
               fontWeight: '600',
-              fontSize: 16,
+              fontSize: Dimension.fontSize(16),
               marginHorizontal: 8,
             }}>
             {formattedText}
@@ -144,7 +144,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   marginLeft: 14,
                   marginTop: 14,
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 16,
+                  fontSize: Dimension.fontSize(16),
                   fontWeight: '700',
                 }}>
                 Cấp độ bảo tồn
@@ -162,7 +162,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   <Text
                     style={{
                       color: 'rgba(13, 15, 35, 0.8)',
-                      fontSize: 14,
+                      fontSize: Dimension.fontSize(14),
                     }}>
                     IUCN:
                   </Text>
@@ -171,7 +171,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   <Text
                     style={{
                       color: '#dc3545',
-                      fontSize: 14,
+                      fontSize: Dimension.fontSize(14),
                       fontWeight: 'bold',
                     }}>
                     {item.iucn}
@@ -191,7 +191,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   <Text
                     style={{
                       color: 'rgba(13, 15, 35, 0.8)',
-                      fontSize: 14,
+                      fontSize: Dimension.fontSize(14),
                     }}>
                     NĐ 84/2021:
                   </Text>
@@ -200,7 +200,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   <Text
                     style={{
                       color: '#dc3545',
-                      fontSize: 14,
+                      fontSize: Dimension.fontSize(14),
                       fontWeight: 'bold',
                     }}>
                     {item.nd}
@@ -220,7 +220,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   <Text
                     style={{
                       color: 'rgba(13, 15, 35, 0.8)',
-                      fontSize: 14,
+                      fontSize: Dimension.fontSize(14),
                     }}>
                     Sách đỏ:
                   </Text>
@@ -229,7 +229,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   <Text
                     style={{
                       color: '#dc3545',
-                      fontSize: 14,
+                      fontSize: Dimension.fontSize(14),
                       fontWeight: 'bold',
                     }}>
                     {item.sachdo}
@@ -244,7 +244,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                 }}>
                 Tên Ngành La Tinh:
               </Text>
@@ -253,7 +253,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
@@ -266,7 +266,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                 }}>
                 Tên Ngành Việt Nam:
               </Text>
@@ -275,7 +275,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
@@ -289,7 +289,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                 }}>
                 Tên Lớp La Tinh:
               </Text>
@@ -298,7 +298,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
@@ -312,7 +312,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                 }}>
                 Tên Lớp Việt Nam:
               </Text>
@@ -321,7 +321,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
@@ -335,7 +335,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                 }}>
                 Tên Bộ La Tinh:
               </Text>
@@ -344,7 +344,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
@@ -358,7 +358,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                 }}>
                 Tên Bộ Việt Nam:
               </Text>
@@ -367,7 +367,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
@@ -381,7 +381,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                 }}>
                 Tên Họ La Tinh:
               </Text>
@@ -390,7 +390,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                   fontStyle: 'italic',
                 }}>
@@ -404,7 +404,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                 }}>
                 Tên Họ Việt Nam:
               </Text>
@@ -413,7 +413,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                 }}>
                 {item.hotv}
@@ -426,7 +426,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                 }}>
                 Tên Chi La Tinh:
               </Text>
@@ -435,7 +435,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                   fontStyle: 'italic',
                 }}>
@@ -449,7 +449,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                 }}>
                 Tên Chi Việt Nam:
               </Text>
@@ -458,7 +458,7 @@ const SpecieDetailScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: 14,
+                  fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                 }}>
                 {item.chitv}
@@ -538,7 +538,7 @@ const SpecieDetailScreen = ({navigation}) => {
             style={{
               marginHorizontal: 14,
               color: 'rgba(13, 15, 35, 0.6)',
-              fontSize: 16,
+              fontSize: Dimension.fontSize(16),
               marginTop: 8,
               textAlign: 'justify',
             }}>
@@ -550,7 +550,7 @@ const SpecieDetailScreen = ({navigation}) => {
             style={{
               marginHorizontal: 14,
               color: 'rgba(13, 15, 35, 0.6)',
-              fontSize: 16,
+              fontSize: Dimension.fontSize(16),
               marginTop: 8,
               textAlign: 'justify',
             }}>
@@ -562,7 +562,7 @@ const SpecieDetailScreen = ({navigation}) => {
             style={{
               marginHorizontal: 14,
               color: 'rgba(13, 15, 35, 0.6)',
-              fontSize: 16,
+              fontSize: Dimension.fontSize(16),
               marginTop: 8,
               textAlign: 'justify',
             }}>
@@ -574,7 +574,7 @@ const SpecieDetailScreen = ({navigation}) => {
             style={{
               marginHorizontal: 14,
               color: 'rgba(13, 15, 35, 0.6)',
-              fontSize: 16,
+              fontSize: Dimension.fontSize(16),
               marginTop: 8,
               textAlign: 'left',
             }}>
@@ -635,14 +635,14 @@ const styles = StyleSheet.create({
     margin: 3,
   },
   titleText: {
-    fontSize: 28,
+    fontSize: Dimension.fontSize(28),
     textAlign: 'center',
     fontWeight: 'bold',
     color: '#655',
     paddingBottom: 10,
   },
   headingText: {
-    fontSize: 18,
+    fontSize: Dimension.fontSize(18),
     fontStyle: 'italic',
     fontWeight: 'bold',
     color: '#655',
@@ -664,7 +664,7 @@ const styles = StyleSheet.create({
     marginLeft: 14,
     marginTop: 14,
     color: 'rgba(13, 15, 35, 0.8)',
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     fontWeight: '700',
   },
 });

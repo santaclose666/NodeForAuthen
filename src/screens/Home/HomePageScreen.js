@@ -233,7 +233,7 @@ const HomePageScreen = ({navigation}) => {
                 }}>
                 <Text
                   style={{
-                    fontSize: 14,
+                    fontSize: Dimension.fontSize(14),
                     fontFamily: Fonts.SF_SEMIBOLD,
                     color: '#ffffff',
                   }}>
@@ -283,7 +283,7 @@ const HomePageScreen = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
-                  fontSize: 16,
+                  fontSize: Dimension.fontSize(16),
                   color: Colors.DEFAULT_BLACK,
                   opacity: 0.9,
                 }}>
@@ -364,7 +364,7 @@ const HomePageScreen = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
-                  fontSize: 16,
+                  fontSize: Dimension.fontSize(16),
                   color: Colors.DEFAULT_BLACK,
                   opacity: 0.9,
                   marginRight: Dimension.setWidth(1),
@@ -402,7 +402,7 @@ const HomePageScreen = ({navigation}) => {
                 <Text
                   style={{
                     fontFamily: Fonts.SF_BOLD,
-                    fontSize: 16,
+                    fontSize: Dimension.fontSize(16),
                     color: Colors.DEFAULT_BLACK,
                     opacity: 0.9,
                   }}>
@@ -494,7 +494,7 @@ const HomePageScreen = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
-                  fontSize: 16,
+                  fontSize: Dimension.fontSize(16),
                   color: Colors.DEFAULT_BLACK,
                   opacity: 0.9,
                   marginRight: Dimension.setWidth(1),
@@ -636,7 +636,7 @@ const HomePageScreen = ({navigation}) => {
                 <Text
                   style={{
                     fontFamily: Fonts.SF_BOLD,
-                    fontSize: 20,
+                    fontSize: Dimension.fontSize(20),
                     color: '#57b85d',
                   }}>
                   Phản hồi góp ý
@@ -651,7 +651,7 @@ const HomePageScreen = ({navigation}) => {
                     borderBottomColor: 'gray',
                     marginHorizontal: Dimension.setWidth(1.6),
                     fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: 16,
+                    fontSize: Dimension.fontSize(16),
                     height: Dimension.setHeight(6),
                   }}
                   placeholder="Nhập tên"
@@ -667,7 +667,7 @@ const HomePageScreen = ({navigation}) => {
                     borderBottomColor: 'gray',
                     marginHorizontal: Dimension.setWidth(1.6),
                     fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: 16,
+                    fontSize: Dimension.fontSize(16),
                     height: Dimension.setHeight(6),
                   }}
                   placeholder="Nhập gmail"
@@ -683,7 +683,7 @@ const HomePageScreen = ({navigation}) => {
                     borderBottomColor: 'gray',
                     marginHorizontal: Dimension.setWidth(1.6),
                     fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: 16,
+                    fontSize: Dimension.fontSize(16),
                     height: Dimension.setHeight(6),
                   }}
                   placeholder="Nhập tiêu đề"
@@ -700,7 +700,7 @@ const HomePageScreen = ({navigation}) => {
                     borderBottomColor: 'gray',
                     marginHorizontal: Dimension.setWidth(1.6),
                     fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: 16,
+                    fontSize: Dimension.fontSize(16),
                     height: Dimension.setHeight(12),
                   }}
                   value={contentInput}
@@ -745,11 +745,11 @@ const styles = StyleSheet.create({
   userNameText: {
     fontFamily: Fonts.SF_BOLD,
     ...fontDefault,
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
   },
 
   companyText: {
-    fontSize: 24,
+    fontSize: Dimension.fontSize(24),
     fontFamily: Fonts.SF_BOLD,
     color: '#388a60',
     letterSpacing: 1,
@@ -792,13 +792,13 @@ const styles = StyleSheet.create({
   },
 
   dayInWeekText: {
-    fontSize: 18,
+    fontSize: Dimension.fontSize(18),
     fontFamily: Fonts.SF_BOLD,
     ...fontDefault,
   },
 
   calendarText: {
-    fontSize: 13,
+    fontSize: Dimension.fontSize(13),
     fontFamily: Fonts.SF_BOLD,
     ...fontDefault,
     opacity: 0.6,
@@ -849,7 +849,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_MEDIUM,
     alignContent: 'center',
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     marginTop: 1,
     ...fontDefault,
   },
@@ -863,7 +863,7 @@ const styles = StyleSheet.create({
 
   newsText: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     marginVertical: Dimension.setHeight(0.2),
     color: Colors.DEFAULT_BLACK,
     opacity: 0.9,
@@ -871,7 +871,7 @@ const styles = StyleSheet.create({
 
   viewAllText: {
     fontFamily: Fonts.SF_SEMIBOLD,
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     color: Colors.DEFAULT_BLACK,
     opacity: 0.6,
   },
@@ -898,7 +898,7 @@ const styles = StyleSheet.create({
 
   newsTitleText: {
     fontFamily: Fonts.SF_SEMIBOLD,
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     ...fontDefault,
     paddingHorizontal: Dimension.setHeight(1),
     textAlign: 'justify',
@@ -908,7 +908,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_REGULAR,
     color: Colors.DEFAULT_BLACK,
     opacity: 0.6,
-    fontSize: 12,
+    fontSize: Dimension.fontSize(12),
     paddingHorizontal: Dimension.setHeight(1),
   },
 
@@ -927,7 +927,7 @@ const styles = StyleSheet.create({
 
   titleModal: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     marginBottom: Dimension.setHeight(0.6),
   },
 
@@ -946,7 +946,7 @@ const styles = StyleSheet.create({
 
   contentModal: {
     fontFamily: Fonts.SF_SEMIBOLD,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
 
   imgModalContainer: {
@@ -977,7 +977,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1),
   },

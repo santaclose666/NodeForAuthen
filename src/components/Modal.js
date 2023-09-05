@@ -66,7 +66,7 @@ export const ApproveCancelModal = ({
             <Text
               style={{
                 fontFamily: Fonts.SF_BOLD,
-                fontSize: 20,
+                fontSize: Dimension.fontSize(20),
                 color: checkInput ? '#57b85d' : '#f25157',
               }}>
               {checkInput ? 'Phê duyệt kết thúc' : 'Từ chối kết thúc'}
@@ -75,7 +75,7 @@ export const ApproveCancelModal = ({
             <Text
               style={{
                 fontFamily: Fonts.SF_BOLD,
-                fontSize: 20,
+                fontSize: Dimension.fontSize(20),
                 color: checkInput ? '#57b85d' : '#f25157',
               }}>
               {checkInput ? 'Phê duyệt' : 'Từ chối'}
@@ -96,7 +96,7 @@ export const ApproveCancelModal = ({
             />
             <Text
               style={{
-                fontSize: 18,
+                fontSize: Dimension.fontSize(18),
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
               {selectedItem?.hoten}
@@ -118,7 +118,7 @@ export const ApproveCancelModal = ({
             <Text
               style={{
                 marginLeft: Dimension.setWidth(3),
-                fontSize: 18,
+                fontSize: Dimension.fontSize(18),
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
               {selectedItem?.hoten}
@@ -140,7 +140,7 @@ export const ApproveCancelModal = ({
             />
             <Text
               style={{
-                fontSize: 18,
+                fontSize: Dimension.fontSize(18),
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
               {selectedItem?.chuongtrinh}
@@ -166,7 +166,7 @@ export const ApproveCancelModal = ({
             />
             <Text
               style={{
-                fontSize: 18,
+                fontSize: Dimension.fontSize(18),
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
               {selectedItem?.loaixe}
@@ -190,7 +190,7 @@ export const ApproveCancelModal = ({
             />
             <Text
               style={{
-                fontSize: 18,
+                fontSize: Dimension.fontSize(18),
                 fontFamily: Fonts.SF_SEMIBOLD,
               }}>
               {selectedItem?.thuocchuongtrinh}
@@ -287,7 +287,7 @@ export const ConfirmModal = ({
           <Text
             style={{
               fontFamily: Fonts.SF_BOLD,
-              fontSize: 20,
+              fontSize: Dimension.fontSize(20),
               color: status ? '#57b85d' : '#f25157',
             }}>
             {status ? 'Phê duyệt' : 'Từ chối'}
@@ -305,7 +305,7 @@ export const ConfirmModal = ({
           <Text
             style={{
               marginLeft: Dimension.setWidth(3),
-              fontSize: 18,
+              fontSize: Dimension.fontSize(18),
               fontFamily: Fonts.SF_SEMIBOLD,
             }}>
             {status ? approveMess : cancelMess}
@@ -394,7 +394,7 @@ export const WarningModal = ({
           <Text
             style={{
               fontFamily: Fonts.SF_BOLD,
-              fontSize: 20,
+              fontSize: Dimension.fontSize(20),
               color: '#f0b263',
             }}>
             Cảnh báo
@@ -415,14 +415,14 @@ export const WarningModal = ({
           />
           <Text
             style={{
-              fontSize: 16,
+              fontSize: Dimension.fontSize(16),
               fontFamily: Fonts.SF_SEMIBOLD,
             }}>
             {item?.name}
           </Text>
           <Text
             style={{
-              fontSize: 18,
+              fontSize: Dimension.fontSize(18),
               fontFamily: Fonts.SF_SEMIBOLD,
             }}>
             {item?.content}
@@ -493,7 +493,7 @@ const styles = StyleSheet.create({
     width: Dimension.setWidth(25),
   },
   textConfirm: {
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     fontFamily: Fonts.SF_MEDIUM,
   },
 
@@ -523,7 +523,7 @@ const styles = StyleSheet.create({
 
   titleModal: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: 13,
+    fontSize: Dimension.fontSize(13),
   },
 
   dateModalContainer: {
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
 
   contentModal: {
     fontFamily: Fonts.SF_SEMIBOLD,
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
   },
 
   imgModalContainer: {
