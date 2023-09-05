@@ -6,7 +6,6 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
   SafeAreaView,
 } from 'react-native';
 import unidecode from 'unidecode';

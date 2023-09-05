@@ -36,7 +36,7 @@ import {ToastWarning, ToastAlert} from '../../components/Toast';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ApproveCancelModal} from '../../components/Modal';
 import {shadowIOS} from '../../contants/propsIOS';
-import {mainURL} from '../../contants/Variable';
+import {defaultIFEE, mainURL} from '../../contants/Variable';
 import FilterStatusUI from '../../components/FilterStatusUI';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -56,6 +56,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
   const [refreshComponent, setRefreshComponent] = useState(false);
   const [indexPicker, setIndexPicker] = useState(0);
   const dispatch = useDispatch();
+  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
 
   useEffect(() => {
     handleGetAllLeaveData();
@@ -253,6 +254,14 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
       );
     };
 
+    const filterUser = IFEEstaffs.filter(user => user.id == item.id_nhansu)[0];
+
+    const avtUser = filterUser?.path ? filterUser?.path : defaultIFEE;
+
+    const approver = IFEEstaffs.filter(
+      user => user.hoten == item.nguoiduyet,
+    )[0];
+
     return (
       <View
         key={item.id}
@@ -355,13 +364,13 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
           {item.songay} ngày
         </Text>
         <View style={styles.containerEachLine}>
-          <Image source={Images.avatar} style={styles.iconic} />
+          <Image src={mainURL + avtUser} style={styles.iconic} />
           <Text style={styles.title}>Họ tên: </Text>
           <Text style={styles.content}>{item.hoten}</Text>
         </View>
         {item.status !== 0 && (
           <View style={styles.containerEachLine}>
-            <Image source={Images.avatar} style={styles.iconic} />
+            <Image src={mainURL + approver?.path} style={styles.iconic} />
             <Text style={styles.title}>
               {item.status !== 2 ? 'Người duyệt:' : 'Từ chối bởi:'}{' '}
             </Text>
@@ -388,10 +397,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
                     handleToggleAdjust(item);
                   }}
                   style={{
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    flex: 1,
+                    marginLeft: 3,
                   }}>
                   <Image
                     source={Images.adjust}
@@ -722,7 +728,6 @@ const styles = StyleSheet.create({
   iconic: {
     height: 33,
     width: 33,
-    borderRadius: 50,
     marginRight: Dimension.setWidth(2),
   },
 
