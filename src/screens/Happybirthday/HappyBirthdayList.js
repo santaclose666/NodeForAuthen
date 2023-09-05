@@ -1,4 +1,4 @@
-import React, {useState, useRef, useLayoutEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import Dimension from '../../contants/Dimension';
 import {
   View,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -28,6 +29,9 @@ const HappyBirthdayList = ({navigation}) => {
 
   useLayoutEffect(() => {
     fetchBirthdayList();
+
+    const {width, height} = Dimensions.get('window');
+    console.log(width, height);
   }, []);
 
   return (

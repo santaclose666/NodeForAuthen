@@ -6,7 +6,6 @@ import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
 import {shadowIOS} from '../contants/propsIOS';
 import {fontDefault} from '../contants/Variable';
-import { opacity } from 'react-native-reanimated';
 
 const ListInfo = ({info, index}) => {
   const role =
@@ -15,7 +14,9 @@ const ListInfo = ({info, index}) => {
     <View style={styles.container}>
       {index === 0 ? (
         <View style={styles.avatarContainer}>
-          <Image style={styles.avatarImg} src={info?.avatar} />
+          <View style={styles.avtContainer}>
+            <Image style={styles.avatarImg} src={info?.avatar} />
+          </View>
           <Text style={styles.fullNameText}>{info?.fullName}</Text>
         </View>
       ) : (
@@ -28,7 +29,7 @@ const ListInfo = ({info, index}) => {
               top: 0,
               left: 0,
               right: 0,
-              bottom: Dimension.setHeight(6.6),
+              bottom: Dimension.setHeight(5),
               margin: 'auto',
             }}>
             <View style={styles.avtContainer}>
@@ -75,18 +76,14 @@ const ListInfo = ({info, index}) => {
         <View style={styles.wrap}>
           <Image style={[styles.img]} source={Images.hr} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText]}>
-              Bộ phận
-            </Text>
+            <Text style={[styles.titleText]}>Bộ phận</Text>
             <Text style={styles.contentText}>{info?.hr}</Text>
           </View>
         </View>
         <View style={styles.wrap}>
           <Image style={[styles.img]} source={Images.year} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText]}>
-              Sinh nhật
-            </Text>
+            <Text style={[styles.titleText]}>Sinh nhật</Text>
             <Text style={styles.contentText}>{info?.birthday}</Text>
           </View>
         </View>
@@ -100,9 +97,7 @@ const ListInfo = ({info, index}) => {
         <View style={styles.wrap}>
           <Image style={[styles.img]} source={Images.phone} />
           <View style={styles.textContainer}>
-            <Text style={[styles.titleText]}>
-              Số điện thoại
-            </Text>
+            <Text style={[styles.titleText]}>Số điện thoại</Text>
             <Text style={styles.contentText}>0{info?.phone}</Text>
           </View>
         </View>
@@ -125,55 +120,60 @@ const styles = StyleSheet.create({
   avatarImg: {
     width: 90,
     height: 90,
-    marginBottom: Dimension.setHeight(0.6),
+    borderRadius: 50,
   },
 
   fullNameText: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 20,
+    fontSize: Dimension.fontSize(20),
   },
 
   ifeeAvatarContainer: {
     position: 'relative',
     borderRadius: 10,
     backgroundColor: '#ffffff',
-    width: Dimension.setWidth(80),
-    height: Dimension.setHeight(22),
+    height: Dimension.boxHeight(160),
     marginHorizontal: Dimension.setWidth(10),
     marginTop: Dimension.setHeight(8),
     elevation: 5,
     ...shadowIOS,
   },
 
+  avtContainer: {
+    borderWidth: 1,
+    borderRadius: 50,
+    padding: 1,
+    borderColor: '#268fbe',
+  },
+
   avatarIfee: {
     width: 90,
     height: 90,
     borderRadius: 50,
-    marginBottom: Dimension.setHeight(0.6),
   },
 
   fullNameIfee: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 20,
-    ...fontDefault
+    fontSize: Dimension.fontSize(20),
+    ...fontDefault,
   },
 
   ifee: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
     color: Colors.DEFAULT_BLACK,
-    opacity: 0.6
+    opacity: 0.6,
   },
 
   roleTeamTittle: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     color: Colors.DEFAULT_RED,
   },
 
   roleTeamText: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: 18,
+    fontSize: Dimension.fontSize(18),
     ...fontDefault,
     overflow: 'hidden',
   },
@@ -214,14 +214,14 @@ const styles = StyleSheet.create({
   },
 
   titleText: {
-    fontSize: 15,
+    fontSize: Dimension.fontSize(15),
     fontFamily: Fonts.SF_MEDIUM,
     color: Colors.DEFAULT_BLACK,
     opacity: 0.5,
   },
 
   contentText: {
-    fontSize: 16,
+    fontSize: Dimension.fontSize(16),
     fontFamily: Fonts.SF_BOLD,
     ...fontDefault,
     marginVertical: Dimension.setHeight(0.2),

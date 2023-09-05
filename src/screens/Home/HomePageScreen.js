@@ -14,6 +14,7 @@ import {
   Linking,
   Share,
   TextInput,
+  Dimensions,
 } from 'react-native';
 import {HStack, Spinner} from 'native-base';
 import Images from '../../contants/Images';
