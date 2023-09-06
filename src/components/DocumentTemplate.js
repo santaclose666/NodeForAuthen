@@ -45,10 +45,7 @@ const DocumentTemplate = ({
           unidecode(item.tenvanban.toLowerCase()).includes(
             text.toLowerCase(),
           ) ||
-          unidecode(item.loaivanban.toLowerCase()).includes(
-            text.toLowerCase(),
-          ) ||
-          unidecode(item.chucnang.toLowerCase()).includes(text.toLowerCase()),
+          unidecode(item.loaivanban.toLowerCase()).includes(text.toLowerCase()),
       );
       setDocument(filter);
     },
