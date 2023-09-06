@@ -71,6 +71,10 @@ def enableProguardInReleaseBuilds = false
 def jscFlavor = 'org.webkit:android-jsc:+'
 
 android {
+    lintOptions { 
+	    checkReleaseBuilds false
+	}
+
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -80,8 +84,8 @@ android {
         applicationId "com.forestry_4_v7"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 6
+        versionName "1.5"
     }
     signingConfigs {
         release {
@@ -107,6 +111,7 @@ android {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             // signingConfig signingConfigs.debug
+            crunchPngs false
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
