@@ -127,7 +127,7 @@ export const getWeatherData = async dispatch => {
     );
 
     const accuWeather = await axios.get(
-      `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${accuWeatherKey}&q=${coords.latitude}%2C%20${coords.longitude}&language=vi-VN`,
+      `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${accuWeatherKey}&q=${coords.latitude}%2C%20${coords.longitude}&language=vi-VN`,
     );
 
     console.log(accuWeather.data);

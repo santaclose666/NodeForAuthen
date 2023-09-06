@@ -101,7 +101,7 @@ const HomePageScreen = ({navigation}) => {
       const result = await Share.share({
         message:
           Platform.OS == 'android'
-            ? 'https://play.google.com/store/apps/details?id=com.forestry&pli=1'
+            ? 'https://play.google.com/store/apps/details?id=com.forestry_4_v7'
             : 'https://apps.apple.com/vn/app/forestry-4-0/id6452552409?l=vi',
       });
 
