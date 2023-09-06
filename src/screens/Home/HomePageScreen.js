@@ -9,19 +9,16 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Platform,
-  PermissionsAndroid,
   StatusBar,
   Linking,
   Share,
   TextInput,
-  Dimensions,
 } from 'react-native';
 import {HStack, Spinner} from 'native-base';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import {PERMISSIONS, request} from 'react-native-permissions';
 import {
   getVietnameseDayOfWeek,
   getFormattedDate,
@@ -34,19 +31,25 @@ import {
   sendFeedback,
   getAllDocument,
 } from '../../redux/apiRequest';
-import {notificationListener} from '../../utils/firebaseNotifi';
+import {
+  ForegroundListener,
+  notificationListener,
+} from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import messaging from '@react-native-firebase/messaging';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL, newsURL, fontDefault} from '../../contants/Variable';
 import Modal from 'react-native-modal';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import {requestPermissions} from '../../utils/permissionFunc';
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
+  const notifiData = useSelector(
+    state => state.notifi.notifications?.allNotifi,
+  );
   const dispatch = useDispatch();
   const [interval, setInTerVal] = useState(null);
   const [newArr, setNewArr] = useState(null);
@@ -62,33 +65,6 @@ const HomePageScreen = ({navigation}) => {
     await requestPermissions();
     await getWeatherData(dispatch);
     await getAllDocument(dispatch);
-  };
-
-  const requestPermissions = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-        ]);
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then(result => {
-        console.log(result);
-      });
-      const authStatus = await messaging().requestPermission({
-        alert: true,
-        criticalAlert: true,
-        badge: true,
-        sound: true,
-        announcement: true,
-      });
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    }
   };
 
   const fetchAllNews = async () => {
@@ -200,6 +176,7 @@ const HomePageScreen = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={false}
           style={styles.container}>
+          <ForegroundListener />
           <View style={styles.userInforContainer}>
             <View style={styles.userNameContainer}>
               <Text style={styles.userNameText}>Welcome, {user?.hoten} </Text>

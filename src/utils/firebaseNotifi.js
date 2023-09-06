@@ -1,6 +1,21 @@
+import {useEffect} from 'react';
 import {getAllNotifi} from '../redux/apiRequest';
 import {getCurrentTime} from './serviceFunction';
 import messaging from '@react-native-firebase/messaging';
+import PushNotification, {Importance} from 'react-native-push-notification';
+
+PushNotification.createChannel(
+  {
+    channelId: 'channel-id', // (required)
+    channelName: 'My channel', // (required)
+    channelDescription: 'A channel to categorise your notifications', // (optional) default: undefined.
+    playSound: false, // (optional) default: true
+    soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+    importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+    vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+  },
+  created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+);
 
 export const saveNotification = async (notifiData, remoteMessage, dispatch) => {
   if (remoteMessage) {
@@ -34,8 +49,29 @@ export const notificationListener = async (
   messaging().onNotificationOpenedApp(async remoteMessage => {
     await saveNotification(notifiData, remoteMessage, dispatch);
   });
+};
 
-  messaging().onMessage(async remoteMessage => {
-    await saveNotification(notifiData, remoteMessage, dispatch);
-  });
+export const ForegroundListener = () => {
+  useEffect(() => {
+    const unSubcribe = messaging().onMessage(async remoteMessage => {
+      // await saveNotification(notifiData, remoteMessage, dispatch);
+
+      const title = remoteMessage.notification.title;
+      const body = remoteMessage.notification.body;
+
+      PushNotification.localNotification({
+        channelId: 'channel-id',
+        channelName: 'My channel',
+        title: title,
+        message: body,
+        soundName: 'default',
+        vibrate: true,
+        playSound: true,
+      });
+    });
+
+    return unSubcribe;
+  }, []);
+
+  return null;
 };
