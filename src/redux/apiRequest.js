@@ -87,10 +87,21 @@ export const loginUser = async (user, dispatch, navigation, save) => {
   }
 };
 
-export const logoutUser = (dispatch, navigation) => {
-  dispatch(logoutSuccess());
-  navigation.dispatch(resetAction);
-  navigation.navigate('BottomTab');
+export const logoutUser = async (dispatch, navigation) => {
+  try {
+    const token = await getToken();
+    await axios.post(`https://forestry.ifee.edu.vn/api/logout`, {
+      token: token,
+    });
+
+    dispatch(logoutSuccess());
+    dispatch(getNotifiSuccess([]));
+
+    navigation.dispatch(resetAction);
+    navigation.navigate('BottomTab');
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 /////////////////////  STAFFS DATA  ////////////////////
@@ -115,7 +126,6 @@ export const getAllNotifi = (data, dispatch) => {
 /////////////////////  WEATHERS DATA  ////////////////////
 export const getWeatherData = async dispatch => {
   const apiKey = '1e52cb7b5a93a86d54181d1fa5724454';
-  const accuWeatherKey = 'c4xZhkePolmNN6pumUusg0mAQVy8fODv';
   dispatch(getWeatherStart());
   try {
     const coords = await getCoords();

@@ -25,6 +25,8 @@ import ForestryScreen from '../screens/Forestry/ForestryScreen';
 import SendNotification from '../screens/Notification/SendNotification';
 import ContributionDataScreen from '../screens/ContributionData/ContributionData';
 import KKRScreen from '../screens/KKR/KKRScreen';
+import TcvnScreen from '../screens/Tcvn/TcvnScreen';
+import TreeTypeScreen from '../screens/TreeType/TreeTypeScreen';
 
 const Stack = createStackNavigator();
 
@@ -76,6 +78,8 @@ const StactNavigator = () => {
         component={ContributionDataScreen}
       />
       <Stack.Screen name="KKR" component={KKRScreen} />
+      <Stack.Screen name="TCVN" component={TcvnScreen} />
+      <Stack.Screen name="TreeType" component={TreeTypeScreen} />
     </Stack.Navigator>
   );
 };

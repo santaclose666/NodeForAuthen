@@ -44,21 +44,19 @@ const DetailNewsScreen = ({navigation, route}) => {
           src={newsURL + item.avatar}
           style={{
             width: Dimension.setWidth(100),
-            height: Dimension.setHeight(26),
+            height: Dimension.setHeight(30),
           }}
         />
       </View>
 
-      <View style={styles.backHeartContainer}>
-        <TouchableOpacity
-          style={styles.headerBtn}
-          onPress={() => navigation.goBack()}>
-          <Image
-            source={Images.back}
-            style={{width: 18, height: 16, tintColor: '#fff'}}
-          />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={styles.backContainer}
+        onPress={() => navigation.goBack()}>
+        <Image
+          source={Images.back}
+          style={{width: 20, height: 20, tintColor: '#fff'}}
+        />
+      </TouchableOpacity>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -114,33 +112,33 @@ const styles = StyleSheet.create({
 
   mainImgContainer: {
     position: 'absolute',
-    height: Dimension.setHeight(26),
   },
 
-  backHeartContainer: {
-    width: 60,
-    height: 60,
-    left: 10,
-    top: Platform.OS == 'ios' ? -20 : 0,
-    justifyContent: 'center',
+  backContainer: {
+    marginTop: Dimension.setHeight(6),
+    marginLeft: Dimension.setWidth(5),
+    width: 45,
+    height: 45,
+    borderRadius: 50,
+    backgroundColor: Colors.DEFAULT_GREEN,
     alignItems: 'center',
+    justifyContent: 'center',
   },
 
   headerBtn: {
     padding: 10,
-    borderRadius: 100,
+    borderRadius: 50,
     backgroundColor: Colors.DEFAULT_GREEN,
   },
 
   contentDetailContainer: {
     flex: 1,
     position: 'absolute',
-    width: '100%',
     height: Dimension.setHeight(100),
-    top: Dimension.setHeight(22),
+    top: Dimension.setHeight(25),
     backgroundColor: '#fff',
     borderRadius: 36,
-    borderWidth: 0.8,
+    borderWidth: 0.5,
     borderColor: Colors.INACTIVE_GREY,
     elevation: 5,
     ...shadowIOS,

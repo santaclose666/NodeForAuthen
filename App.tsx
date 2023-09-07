@@ -5,15 +5,6 @@ import {Provider} from 'react-redux';
 import {store, persistor} from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import 'react-native-gesture-handler';
-import {connectToDevTools} from 'react-devtools-core';
-import HappyBirthdayScreen from './src/screens/Happybirthday/HappyBirthdayScreen';
-
-if (__DEV__) {
-  connectToDevTools({
-    host: 'localhost',
-    port: 8097,
-  });
-}
 
 const App = () => {
   return (
@@ -24,7 +15,6 @@ const App = () => {
         </NativeBaseProvider>
       </PersistGate>
     </Provider>
-    // <HappyBirthdayScreen />
   );
 };
 

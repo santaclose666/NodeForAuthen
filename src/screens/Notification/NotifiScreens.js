@@ -17,22 +17,13 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
 
 const NotifiScreen = ({navigation}) => {
-  const notifiData = useSelector(
-    state => state.notifi.notifications?.allNotifi,
-  );
+  const allNotifi = useSelector(state => state.notifi.notifications?.allNotifi);
   const [notifiMenu, setNotifiMenu] = useState([
     'Tất cả',
     'Yêu cầu',
     'Sự kiện',
   ]);
   const [notifiMenuId, setNotifiMenuId] = useState(0);
-  const [allNotifi, setAllNotifi] = useState([]);
-
-  useEffect(() => {
-    if (notifiData) {
-      setAllNotifi(notifiData);
-    }
-  }, [notifiData]);
 
   return (
     <LinearGradientUI>
@@ -46,10 +37,6 @@ const NotifiScreen = ({navigation}) => {
             renderItem={({item, index}) => {
               const colorBorder =
                 notifiMenuId === index ? Colors.DEFAULT_GREEN : Colors.WHITE;
-              const colorText =
-                notifiMenuId === index
-                  ? Colors.DEFAULT_GREEN
-                  : Colors.DEFAULT_BLACK;
               const bdWidth = notifiMenuId === index ? 2 : 0;
               return (
                 <View
@@ -91,33 +78,31 @@ const NotifiScreen = ({navigation}) => {
             marginHorizontal: Dimension.setWidth(2.5),
             marginTop: Dimension.setHeight(2),
           }}>
-          {allNotifi.length !== 0 && (
-            <FlatList
-              data={allNotifi}
-              keyExtractor={(_, index) => index}
-              showsVerticalScrollIndicator={false}
-              renderItem={({item, index}) => {
-                return (
-                  <View key={index} style={styles.notifiContainer}>
-                    <Image source={Images.avatar} style={styles.notifiImg} />
-                    <View
-                      style={{
-                        marginLeft: Dimension.setWidth(3),
-                        flexDirection: 'column',
-                      }}>
-                      <View style={styles.textContainer}>
-                        <Text style={styles.obj2}>
-                          <Text style={styles.obj1}>{item?.obj1}</Text>{' '}
-                          {item?.content} {item?.obj2}
-                        </Text>
-                      </View>
-                      <Text style={styles.time}>{item?.time}</Text>
+          <FlatList
+            data={allNotifi}
+            keyExtractor={(_, index) => index}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}) => {
+              return (
+                <View key={index} style={styles.notifiContainer}>
+                  <Image source={Images.avatar} style={styles.notifiImg} />
+                  <View
+                    style={{
+                      marginLeft: Dimension.setWidth(3),
+                      flexDirection: 'column',
+                    }}>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.obj2}>
+                        <Text style={styles.obj1}>{item?.obj1}</Text>{' '}
+                        {item?.content} {item?.obj2}
+                      </Text>
                     </View>
+                    <Text style={styles.time}>{item?.time}</Text>
                   </View>
-                );
-              }}
-            />
-          )}
+                </View>
+              );
+            }}
+          />
         </View>
       </SafeAreaView>
     </LinearGradientUI>

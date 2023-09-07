@@ -33,7 +33,8 @@ import {
 } from '../../redux/apiRequest';
 import {
   ForegroundListener,
-  notificationListener,
+  notificationOpenApp,
+  notificationListenerData,
 } from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -62,9 +63,9 @@ const HomePageScreen = ({navigation}) => {
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
+    await getAllDocument(dispatch);
     await requestPermissions();
     await getWeatherData(dispatch);
-    await getAllDocument(dispatch);
   };
 
   const fetchAllNews = async () => {
@@ -80,9 +81,13 @@ const HomePageScreen = ({navigation}) => {
     getAllStaffs(dispatch);
   };
 
-  // const notificationHandle = async () => {
-  //   await notificationListener(notifiData, navigation, dispatch);
-  // };
+  const notificationHandleListener = () => {
+    notificationListenerData(navigation, notifiData, dispatch);
+  };
+
+  const notificationHandleOpenApp = async () => {
+    await notificationOpenApp(navigation);
+  };
 
   const handleNavigate = routeName => {
     navigation.navigate(routeName);
@@ -155,7 +160,8 @@ const HomePageScreen = ({navigation}) => {
     fetchAllNews();
     fetchAllStaff();
 
-    // notificationHandle();
+    notificationHandleListener();
+    notificationHandleOpenApp();
 
     return () => clearInterval(interval);
   }, []);
@@ -317,11 +323,19 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.trees} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Kiểm kê rừng</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('TCVN');
+                }}>
                 <Image source={Images.standard} style={styles.featureBtn} />
                 <Text style={styles.featureText}>TCVN</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('TreeType');
+                }}>
                 <Image source={Images.seed} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Giống LN</Text>
               </TouchableOpacity>
@@ -447,7 +461,6 @@ const HomePageScreen = ({navigation}) => {
                 <TouchableOpacity
                   onPress={() => {
                     handleNavigate('HappyBirthdayList');
-                    // handleAlert();
                   }}
                   style={styles.buttonFuc}>
                   <Image source={Images.happybd} style={styles.featureBtn} />

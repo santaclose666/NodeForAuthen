@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Dimension from '../../contants/Dimension';
 import {
   View,
@@ -11,14 +11,40 @@ import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import {getCurrentYear} from '../../utils/serviceFunction';
 import {mainURL, imgDefault} from '../../contants/Variable';
+import Sound from 'react-native-sound';
 
 const HappyBirthdayScreen = ({navigation, route}) => {
   const item = route.params.item;
   const currYear = getCurrentYear();
   const birthYear = item.ngaysinh.slice(6, 10);
   const age = currYear - birthYear;
-  const filterName = item.hoten.split(' ');
-  const singleName = filterName[filterName.length - 1];
+
+  var sound = new Sound('hpbdpiano.mp3', Sound.MAIN_BUNDLE, error => {
+    if (error) {
+      console.log('failed to load the sound', error);
+      return;
+    }
+    console.log(
+      'duration in seconds: ' +
+        sound.getDuration() +
+        'number of channels: ' +
+        sound.getNumberOfChannels(),
+    );
+
+    sound.play(success => {
+      if (success) {
+        console.log('successfully finished playing');
+      } else {
+        console.log('playback failed due to audio decoding errors');
+      }
+    });
+  });
+
+  useEffect(() => {
+    return () => {
+      sound.release();
+    };
+  }, []);
 
   return (
     <View style={{flex: 1}}>

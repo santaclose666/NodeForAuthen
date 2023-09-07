@@ -1,6 +1,5 @@
 import {useEffect} from 'react';
 import {getAllNotifi} from '../redux/apiRequest';
-import {getCurrentTime} from './serviceFunction';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification, {Importance} from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
@@ -8,27 +7,16 @@ import {Platform} from 'react-native';
 
 PushNotification.createChannel(
   {
-    channelId: 'channel-id', // (required)
-    channelName: 'My channel', // (required)
-    channelDescription: 'A channel to categorise your notifications', // (optional) default: undefined.
-    playSound: false, // (optional) default: true
-    soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
-    importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-    vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+    channelId: 'channel-id',
+    channelName: 'My channel',
+    channelDescription: 'A channel to categorise your notifications',
+    playSound: false,
+    soundName: 'default',
+    importance: Importance.HIGH,
+    vibrate: true,
   },
-  created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+  created => console.log(`createChannel returned '${created}'`),
 );
-
-export const saveNotification = async (notifiData, remoteMessage, dispatch) => {
-  if (remoteMessage) {
-    const newObj = remoteMessage.data;
-    newObj.time = getCurrentTime();
-
-    let newNotifi = notifiData ? [newObj, ...notifiData] : [newObj];
-
-    getAllNotifi(newNotifi, dispatch);
-  }
-};
 
 export const getToken = async () => {
   try {
@@ -40,24 +28,89 @@ export const getToken = async () => {
   }
 };
 
-// export const notificationListener = async (
-//   notifiData,
-//   navigation,
-//   dispatch,
-// ) => {
-//   const notificationOpen = await messaging().getInitialNotification();
-//   await saveNotification(notifiData, notificationOpen, dispatch);
+export const navigateNotifi = navigation => {
+  navigation.navigate('Notification');
+};
 
-//   messaging().onNotificationOpenedApp(async remoteMessage => {
-//     await saveNotification(notifiData, remoteMessage, dispatch);
-//   });
-// };
+export const saveNotification = async (notifiData, remoteMessage, dispatch) => {
+  if (remoteMessage) {
+    const data = {
+      obj1: remoteMessage.obj1,
+      obj2: remoteMessage.obj2,
+      content: remoteMessage.content,
+      time: remoteMessage.time,
+    };
+
+    const newNotifi = [data, ...notifiData];
+
+    getAllNotifi(newNotifi, dispatch);
+  }
+};
+
+export const notificationListenerData = (navigation, notifiData, dispatch) => {
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('background and quit');
+    const data = remoteMessage.data;
+    if (Object.keys(data).length !== 0) {
+      saveNotification(notifiData, data, dispatch);
+    }
+  });
+
+  PushNotification.configure({
+    onRegister: token => {
+      console.log('TOKEN:', token);
+    },
+
+    onNotification: notification => {
+      console.log('foreground');
+      const data = notification.data;
+      console.log(notification);
+
+      if (Object.keys(data).length !== 0) {
+        saveNotification(notifiData, data, dispatch);
+      }
+
+      if (notification.userInteraction) {
+        navigation.navigate('Notification');
+      }
+      notification.finish(PushNotificationIOS.FetchResult.NoData);
+    },
+
+    onAction: notification => {
+      console.log('ACTION:', notification.action);
+      console.log('NOTIFICATION:', notification);
+    },
+
+    onRegistrationError: err => {
+      console.error(err.message, err);
+    },
+
+    permissions: {
+      alert: true,
+      badge: true,
+      sound: true,
+    },
+    popInitialNotification: true,
+    requestPermissions: true,
+  });
+};
+
+export const notificationOpenApp = async navigation => {
+  const notificationOpen = await messaging().getInitialNotification();
+  if (notificationOpen) {
+    navigateNotifi(navigation);
+  }
+
+  messaging().onNotificationOpenedApp(async remoteMessage => {
+    if (remoteMessage) {
+      navigateNotifi(navigation);
+    }
+  });
+};
 
 export const ForegroundListener = () => {
   useEffect(() => {
     const unSubcribe = messaging().onMessage(async remoteMessage => {
-      // await saveNotification(notifiData, remoteMessage, dispatch);
-
       const title = remoteMessage.notification.title;
       const body = remoteMessage.notification.body;
 

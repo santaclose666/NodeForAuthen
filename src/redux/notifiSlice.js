@@ -4,7 +4,7 @@ const notifiSlice = createSlice({
   name: 'notifi',
   initialState: {
     notifications: {
-      allNotifi: null,
+      allNotifi: [],
       isFetching: false,
       err: false,
     },
