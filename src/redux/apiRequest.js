@@ -6,7 +6,12 @@ import {
   logoutSuccess,
 } from './authSlice';
 import {getStaffStart, getStaffSuccess, getStaffFailed} from './staffSlice';
-import {getNotifiSuccess} from './notifiSlice';
+import {
+  deleteNotifiSuccess,
+  getNotifiFailed,
+  getNotifiStart,
+  getNotifiSuccess,
+} from './notifiSlice';
 import {CommonActions} from '@react-navigation/native';
 import {getCoords} from '../utils/serviceFunction';
 import {
@@ -95,7 +100,7 @@ export const logoutUser = async (dispatch, navigation) => {
     });
 
     dispatch(logoutSuccess());
-    dispatch(getNotifiSuccess([]));
+    dispatch(deleteNotifiSuccess(null));
 
     navigation.dispatch(resetAction);
     navigation.navigate('BottomTab');
@@ -119,8 +124,15 @@ export const getAllStaffs = async dispatch => {
 };
 
 /////////////////////  NOTIFICATION DATA  ////////////////////
-export const getAllNotifi = (data, dispatch) => {
-  dispatch(getNotifiSuccess(data));
+export const getAllNotifi = async (data, dispatch) => {
+  dispatch(getNotifiStart());
+  try {
+    console.log('notifi', data);
+
+    await dispatch(getNotifiSuccess(data));
+  } catch (error) {
+    dispatch(getNotifiFailed());
+  }
 };
 
 /////////////////////  WEATHERS DATA  ////////////////////

@@ -4,6 +4,7 @@ import messaging from '@react-native-firebase/messaging';
 import PushNotification, {Importance} from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import {Platform} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 PushNotification.createChannel(
   {
@@ -32,7 +33,7 @@ export const navigateNotifi = navigation => {
   navigation.navigate('Notification');
 };
 
-export const saveNotification = async (notifiData, remoteMessage, dispatch) => {
+export const saveNotification = async (remoteMessage, dispatch) => {
   if (remoteMessage) {
     const data = {
       obj1: remoteMessage.obj1,
@@ -41,18 +42,18 @@ export const saveNotification = async (notifiData, remoteMessage, dispatch) => {
       time: remoteMessage.time,
     };
 
-    const newNotifi = [data, ...notifiData];
+    
 
-    getAllNotifi(newNotifi, dispatch);
+    getAllNotifi(data, dispatch);
   }
 };
 
-export const notificationListenerData = (navigation, notifiData, dispatch) => {
+export const notificationListenerData = (navigation, dispatch) => {
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('background and quit');
     const data = remoteMessage.data;
     if (Object.keys(data).length !== 0) {
-      saveNotification(notifiData, data, dispatch);
+      saveNotification(data, dispatch);
     }
   });
 
@@ -64,10 +65,9 @@ export const notificationListenerData = (navigation, notifiData, dispatch) => {
     onNotification: notification => {
       console.log('foreground');
       const data = notification.data;
-      console.log(notification);
 
       if (Object.keys(data).length !== 0) {
-        saveNotification(notifiData, data, dispatch);
+        saveNotification(data, dispatch);
       }
 
       if (notification.userInteraction) {

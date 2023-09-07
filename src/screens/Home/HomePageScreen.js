@@ -48,9 +48,6 @@ import {requestPermissions} from '../../utils/permissionFunc';
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
-  const notifiData = useSelector(
-    state => state.notifi.notifications?.allNotifi,
-  );
   const dispatch = useDispatch();
   const [interval, setInTerVal] = useState(null);
   const [newArr, setNewArr] = useState(null);
@@ -82,7 +79,7 @@ const HomePageScreen = ({navigation}) => {
   };
 
   const notificationHandleListener = () => {
-    notificationListenerData(navigation, notifiData, dispatch);
+    notificationListenerData(navigation, dispatch);
   };
 
   const notificationHandleOpenApp = async () => {
