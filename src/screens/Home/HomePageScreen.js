@@ -80,9 +80,9 @@ const HomePageScreen = ({navigation}) => {
     getAllStaffs(dispatch);
   };
 
-  const notificationHandle = async () => {
-    await notificationListener(notifiData, navigation, dispatch);
-  };
+  // const notificationHandle = async () => {
+  //   await notificationListener(notifiData, navigation, dispatch);
+  // };
 
   const handleNavigate = routeName => {
     navigation.navigate(routeName);
@@ -155,7 +155,7 @@ const HomePageScreen = ({navigation}) => {
     fetchAllNews();
     fetchAllStaff();
 
-    notificationHandle();
+    // notificationHandle();
 
     return () => clearInterval(interval);
   }, []);

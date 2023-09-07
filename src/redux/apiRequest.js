@@ -126,17 +126,11 @@ export const getWeatherData = async dispatch => {
       `https://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&appid=${apiKey}`,
     );
 
-    const accuWeather = await axios.get(
-      `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${accuWeatherKey}&q=${coords.latitude}%2C%20${coords.longitude}&language=vi-VN`,
-    );
-
-    console.log(accuWeather.data);
-
     const data = res.data;
     const iconCode = data.weather[0].icon;
     const temp = (data.main.temp - 273.15).toFixed(0);
     const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`;
-    const name = accuWeather.data.LocalizedName;
+    const name = data.name;
     const weatherData = {temp, iconUrl, name};
 
     dispatch(getWeatherSuccess(weatherData));

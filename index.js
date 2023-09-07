@@ -13,20 +13,20 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
 });
 
 PushNotification.configure({
-  onRegister: function (token) {
+  onRegister: token => {
     console.log('TOKEN:', token);
   },
 
-  onNotification: function (notification) {
+  onNotification: notification => {
     console.log('NOTIFICATION:', notification);
   },
 
-  onAction: function (notification) {
+  onAction: notification => {
     console.log('ACTION:', notification.action);
     console.log('NOTIFICATION:', notification);
   },
 
-  onRegistrationError: function (err) {
+  onRegistrationError: err => {
     console.error(err.message, err);
   },
   popInitialNotification: true,
