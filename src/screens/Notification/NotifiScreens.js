@@ -17,6 +17,7 @@ import Header from '../../components/Header';
 import {getAllNotifi} from '../../redux/apiRequest';
 import Loading from '../../components/LoadingUI';
 import {mainURL} from '../../contants/Variable';
+import {DisplayNotificationModal} from '../../components/Modal';
 
 const NotifiScreen = ({navigation}) => {
   const [allNotifi, setAllNotifi] = useState([]);
@@ -27,6 +28,13 @@ const NotifiScreen = ({navigation}) => {
   ]);
   const [notifiMenuId, setNotifiMenuId] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [toggleNotifiModal, setToggleNotifiModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const handlePickItem = item => {
+    setSelectedItem(item);
+    setToggleNotifiModal(true);
+  };
 
   const fetchAllNotifi = async () => {
     try {
@@ -114,7 +122,12 @@ const NotifiScreen = ({navigation}) => {
             extraData={allNotifi}
             renderItem={({item, index}) => {
               return (
-                <TouchableOpacity key={index} style={styles.notifiContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    handlePickItem(item);
+                  }}
+                  key={index}
+                  style={styles.notifiContainer}>
                   <Image
                     src={mainURL + item?.avatar}
                     style={styles.notifiImg}
@@ -125,10 +138,8 @@ const NotifiScreen = ({navigation}) => {
                       flexDirection: 'column',
                     }}>
                     <View style={styles.textContainer}>
-                      <Text style={styles.obj2}>
-                        <Text numberOfLines={3} style={styles.obj1}>
-                          {item?.nguoigui}
-                        </Text>{' '}
+                      <Text numberOfLines={3} style={styles.obj2}>
+                        <Text style={styles.obj1}>{item?.nguoigui}</Text>{' '}
                         {item?.tieude} {item?.noidung}
                       </Text>
                     </View>
@@ -139,6 +150,11 @@ const NotifiScreen = ({navigation}) => {
             }}
           />
         </View>
+        <DisplayNotificationModal
+          toggleModal={toggleNotifiModal}
+          setToggleModal={setToggleNotifiModal}
+          item={selectedItem}
+        />
         {loading === true && <Loading />}
       </SafeAreaView>
     </LinearGradientUI>

@@ -159,6 +159,7 @@ const Images = {
   search1: require('../assets/images/search1.png'),
   forestFire: require('../assets/images/forestFire.png'),
   muavu: require('../assets/images/muavu.png'),
+  timecreate: require('../assets/images/timecreate.png'),
 };
 
 export default Images;

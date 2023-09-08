@@ -13,7 +13,7 @@ import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
 import {useSelector} from 'react-redux';
-import {mainURL} from '../contants/Variable';
+import {fontDefault, mainURL} from '../contants/Variable';
 import {shadowIOS} from '../contants/propsIOS';
 
 export const ApproveCancelModal = ({
@@ -474,116 +474,144 @@ export const WarningModal = ({
   );
 };
 
-export const DisplayNotificationModal = ({toggleModal, setToggleModal, item}) => {
-  <Modal
-    isVisible={toggleModal}
-    animationIn="fadeInUp"
-    animationInTiming={100}
-    animationOut="fadeOutDown"
-    animationOutTiming={100}
-    avoidKeyboard={true}>
-    <View
-      style={{
-        flex: 1,
-        position: 'absolute',
-        alignSelf: 'center',
-        width: Dimension.setWidth(85),
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 14,
-        paddingHorizontal: Dimension.setWidth(3),
-        backgroundColor: '#e6d2c0',
-      }}>
-      <View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginVertical: Dimension.setHeight(1),
-          borderBottomWidth: 0.8,
-          borderBlockColor: Colors.INACTIVE_GREY,
-          width: '100%',
-          height: Dimension.setHeight(4.5),
-        }}>
-        <Text
-          style={{
-            fontFamily: Fonts.SF_BOLD,
-            fontSize: Dimension.fontSize(20),
-            color: '#f0b263',
-          }}>
-          Chi tiết thông báo
-        </Text>
-      </View>
+export const DisplayNotificationModal = ({
+  toggleModal,
+  setToggleModal,
+  item,
+}) => {
+  console.log(typeof item?.giotao.slice(0, 2));
+  const filterTime = item?.giotao.slice(0, 5);
+  const halfDay = item?.giotao.slice(0, 2) >= 12 ? 'pm' : 'am';
 
+  return (
+    <Modal
+      isVisible={toggleModal}
+      animationIn="fadeInUp"
+      animationInTiming={100}
+      animationOut="fadeOutDown"
+      animationOutTiming={100}
+      avoidKeyboard={true}>
       <View
         style={{
+          flex: 1,
+          position: 'absolute',
+          alignSelf: 'center',
+          width: Dimension.setWidth(85),
           alignItems: 'center',
           justifyContent: 'center',
-          paddingVertical: Dimension.setHeight(1.5),
+          borderRadius: 14,
           paddingHorizontal: Dimension.setWidth(3),
-          width: '100%',
+          backgroundColor: 'rgba(23, 185, 231, 0.9)',
         }}>
-        <Image
-          src={mainURL + item?.path}
-          style={{height: 55, width: 55, borderRadius: 50}}
-        />
-        <Text
+        <View
           style={{
-            fontSize: Dimension.fontSize(16),
-            fontFamily: Fonts.SF_SEMIBOLD,
-          }}>
-          {item?.name}
-        </Text>
-        <Text
-          style={{
-            fontSize: Dimension.fontSize(18),
-            fontFamily: Fonts.SF_SEMIBOLD,
-          }}>
-          {item?.content}
-        </Text>
-      </View>
-
-      <View style={styles.containerEachLine}>
-        <Image source={Images.comment} style={styles.iconic} />
-        <TextInput
-          multiline={true}
-          placeholder="Lý do cảnh báo"
-          style={{
-            backgroundColor: '#ffffff',
-            paddingHorizontal: Dimension.setWidth(2),
-            borderRadius: 10,
-            fontFamily: Fonts.SF_REGULAR,
-            width: '70%',
-            height: Dimension.setHeight(6),
-            maxHeight: Dimension.setHeight(9),
-          }}
-          onChangeText={e => setReasonInput(e)}
-          value={reasonInput}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            handleWarning(item.id, reasonInput);
-          }}
-          style={{
-            backgroundColor: '#d9eafa',
-            padding: 6,
-            marginLeft: Dimension.setWidth(1.6),
-            borderRadius: 50,
             alignItems: 'center',
             justifyContent: 'center',
+            marginVertical: Dimension.setHeight(1),
+            borderBottomWidth: 0.8,
+            borderBlockColor: Colors.INACTIVE_GREY,
+            width: '100%',
+            height: Dimension.setHeight(4.5),
           }}>
-          <Image source={Images.send} style={{width: 25, height: 25}} />
+          <Text
+            style={{
+              fontFamily: Fonts.SF_BOLD,
+              fontSize: Dimension.fontSize(20),
+              ...fontDefault,
+            }}>
+            Chi tiết thông báo
+          </Text>
+        </View>
+
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingVertical: Dimension.setHeight(1.5),
+            paddingHorizontal: Dimension.setWidth(3),
+            width: '100%',
+          }}>
+          <View style={{alignItems: 'center', flexDirection: 'row'}}>
+            <View style={{elevation: 5, ...shadowIOS, borderRadius: 50}}>
+              <Image
+                src={mainURL + item?.avatar}
+                style={{
+                  height: 50,
+                  width: 50,
+                  borderRadius: 50,
+                  marginRight: Dimension.setWidth(2),
+                }}
+              />
+            </View>
+            <Text
+              style={{
+                fontSize: Dimension.fontSize(17),
+                fontFamily: Fonts.SF_SEMIBOLD,
+                color: '#fff',
+              }}>
+              {item?.nguoigui}
+            </Text>
+          </View>
+          <View style={{alignItems: 'center', flexDirection: 'row'}}>
+            <Image
+              source={Images.timecreate}
+              style={{
+                width: 18,
+                height: 18,
+                tintColor: '#59e9f1ff',
+                marginRight: Dimension.setWidth(1),
+              }}
+            />
+            <Text
+              style={{
+                fontSize: Dimension.fontSize(15),
+                fontFamily: Fonts.SF_REGULAR,
+                color: '#d5f0f9ff',
+              }}>
+              {`${filterTime} ${halfDay}`}
+            </Text>
+          </View>
+        </View>
+
+        <View
+          style={{
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            paddingVertical: Dimension.setHeight(1.5),
+            paddingHorizontal: Dimension.setWidth(3),
+            width: '100%',
+          }}>
+          <Text
+            style={{
+              fontSize: Dimension.fontSize(17),
+              fontFamily: Fonts.SF_SEMIBOLD,
+              ...fontDefault,
+              textAlign: 'left',
+            }}>
+            {item?.tieude}
+          </Text>
+          <Text
+            style={{
+              fontSize: Dimension.fontSize(15),
+              fontFamily: Fonts.SF_REGULAR,
+              color: '#fff',
+              textAlign: 'left',
+            }}>
+            {item?.noidung}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          onPress={() => {
+            setToggleModal(false);
+          }}
+          style={{position: 'absolute', right: 8, top: 8}}>
+          <Image source={Images.minusclose} style={styles.btnModal} />
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        onPress={() => {
-          setToggleModal(false);
-        }}
-        style={{position: 'absolute', right: 8, top: 8}}>
-        <Image source={Images.minusclose} style={styles.btnModal} />
-      </TouchableOpacity>
-    </View>
-  </Modal>;
+    </Modal>
+  );
 };
 
 const styles = StyleSheet.create({
