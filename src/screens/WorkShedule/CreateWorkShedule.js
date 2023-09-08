@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(1.6),
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: Dimension.fontSize(16),
-    height: Dimension.setHeight(5),
+    height: Dimension.setHeight(6),
   },
 
   dropdown: {

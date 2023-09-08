@@ -33,7 +33,8 @@ import {
 } from '../../redux/apiRequest';
 import {
   ForegroundListener,
-  notificationListener,
+  notificationOpenApp,
+  notificationListenerData,
 } from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -47,9 +48,6 @@ import {requestPermissions} from '../../utils/permissionFunc';
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const weather = useSelector(state => state.weather.weathers?.data);
-  const notifiData = useSelector(
-    state => state.notifi.notifications?.allNotifi,
-  );
   const dispatch = useDispatch();
   const [interval, setInTerVal] = useState(null);
   const [newArr, setNewArr] = useState(null);
@@ -62,9 +60,9 @@ const HomePageScreen = ({navigation}) => {
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
+    await getAllDocument(dispatch);
     await requestPermissions();
     await getWeatherData(dispatch);
-    await getAllDocument(dispatch);
   };
 
   const fetchAllNews = async () => {
@@ -80,8 +78,12 @@ const HomePageScreen = ({navigation}) => {
     getAllStaffs(dispatch);
   };
 
-  const notificationHandle = async () => {
-    await notificationListener(notifiData, navigation, dispatch);
+  const notificationHandleListener = () => {
+    notificationListenerData(navigation);
+  };
+
+  const notificationHandleOpenApp = async () => {
+    await notificationOpenApp(navigation);
   };
 
   const handleNavigate = routeName => {
@@ -155,7 +157,8 @@ const HomePageScreen = ({navigation}) => {
     fetchAllNews();
     fetchAllStaff();
 
-    notificationHandle();
+    notificationHandleListener();
+    notificationHandleOpenApp();
 
     return () => clearInterval(interval);
   }, []);
@@ -317,40 +320,58 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.trees} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Kiểm kê rừng</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('TCVN');
+                }}>
                 <Image source={Images.standard} style={styles.featureBtn} />
                 <Text style={styles.featureText}>TCVN</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('TreeType');
+                }}>
                 <Image source={Images.seed} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Giống LN</Text>
               </TouchableOpacity>
             </View>
-          </View>
 
-          <View style={styles.btnContainer}>
-            <TouchableOpacity
-              style={styles.buttonFuc}
-              onPress={() => {
-                handleNavigate('SelectProvinceFFW');
-              }}>
-              <Image source={Images.forestFire} style={styles.featureBtn} />
-              <Text style={styles.featureText}>Cảnh báo cháy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonFuc}
-              onPress={() => {
-                handleAlert;
-              }}>
-              <Image source={Images.muavu} style={styles.featureBtn} />
-              <Text style={styles.featureText}>Mùa vụ</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonFuc}
-              onPress={handleAlert}></TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonFuc}
-              onPress={handleAlert}></TouchableOpacity>
+            <View style={styles.btnContainer}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('DMKTKT');
+                }}>
+                <Image source={Images.norms} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Định mức KTKT</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('VP809');
+                }}>
+                <Image source={Images.book} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Văn Phòng 809</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('SelectProvinceFFW');
+                }}>
+                <Image source={Images.forestFire} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Cảnh báo cháy</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleAlert;
+                }}>
+                <Image source={Images.muavu} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Mùa vụ</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.featureBtnContainer}>
@@ -472,7 +493,6 @@ const HomePageScreen = ({navigation}) => {
                 <TouchableOpacity
                   onPress={() => {
                     handleNavigate('HappyBirthdayList');
-                    // handleAlert();
                   }}
                   style={styles.buttonFuc}>
                   <Image source={Images.happybd} style={styles.featureBtn} />
@@ -828,8 +848,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    flex: 1,
+    alignItems: 'flex-start',
     marginBottom: Dimension.setHeight(1.4),
   },
 

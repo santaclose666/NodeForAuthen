@@ -6,7 +6,12 @@ import {
   logoutSuccess,
 } from './authSlice';
 import {getStaffStart, getStaffSuccess, getStaffFailed} from './staffSlice';
-import {getNotifiSuccess} from './notifiSlice';
+import {
+  deleteNotifiSuccess,
+  getNotifiFailed,
+  getNotifiStart,
+  getNotifiSuccess,
+} from './notifiSlice';
 import {CommonActions} from '@react-navigation/native';
 import {getCoords} from '../utils/serviceFunction';
 import {
@@ -87,10 +92,21 @@ export const loginUser = async (user, dispatch, navigation, save) => {
   }
 };
 
-export const logoutUser = (dispatch, navigation) => {
-  dispatch(logoutSuccess());
-  navigation.dispatch(resetAction);
-  navigation.navigate('BottomTab');
+export const logoutUser = async (dispatch, navigation) => {
+  try {
+    const token = await getToken();
+    await axios.post(`https://forestry.ifee.edu.vn/api/logout`, {
+      token: token,
+    });
+
+    dispatch(logoutSuccess());
+    dispatch(deleteNotifiSuccess(null));
+
+    navigation.dispatch(resetAction);
+    navigation.navigate('BottomTab');
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 /////////////////////  STAFFS DATA  ////////////////////
@@ -107,15 +123,9 @@ export const getAllStaffs = async dispatch => {
   }
 };
 
-/////////////////////  NOTIFICATION DATA  ////////////////////
-export const getAllNotifi = (data, dispatch) => {
-  dispatch(getNotifiSuccess(data));
-};
-
 /////////////////////  WEATHERS DATA  ////////////////////
 export const getWeatherData = async dispatch => {
   const apiKey = '1e52cb7b5a93a86d54181d1fa5724454';
-  const accuWeatherKey = 'c4xZhkePolmNN6pumUusg0mAQVy8fODv';
   dispatch(getWeatherStart());
   try {
     const coords = await getCoords();
@@ -126,17 +136,11 @@ export const getWeatherData = async dispatch => {
       `https://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&appid=${apiKey}`,
     );
 
-    const accuWeather = await axios.get(
-      `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${accuWeatherKey}&q=${coords.latitude}%2C%20${coords.longitude}&language=vi-VN`,
-    );
-
-    console.log(accuWeather.data);
-
     const data = res.data;
     const iconCode = data.weather[0].icon;
     const temp = (data.main.temp - 273.15).toFixed(0);
     const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`;
-    const name = accuWeather.data.LocalizedName;
+    const name = data.name;
     const weatherData = {temp, iconUrl, name};
 
     dispatch(getWeatherSuccess(weatherData));
@@ -580,6 +584,16 @@ export const postNotifcation = async data => {
 
     return res.data;
   } catch (error) {}
+};
+
+export const getAllNotifi = async () => {
+  try {
+    const res = await axios.get(`https://forestry.ifee.edu.vn/api/thongbao`);
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 /////////////////////  SEND FEEDBACK  ////////////////////

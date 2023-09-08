@@ -4,7 +4,7 @@ const notifiSlice = createSlice({
   name: 'notifi',
   initialState: {
     notifications: {
-      allNotifi: null,
+      allNotifi: [],
       isFetching: false,
       err: false,
     },
@@ -16,7 +16,12 @@ const notifiSlice = createSlice({
     },
     getNotifiSuccess: (state, action) => {
       state.notifications.isFetching = false;
+
       state.notifications.allNotifi = action.payload;
+    },
+    deleteNotifiSuccess: state => {
+      state.notifications.isFetching = false;
+      state.notifications.allNotifi = null;
     },
     getNotifiFailed: state => {
       state.notifications.isFetching = false;
@@ -25,7 +30,11 @@ const notifiSlice = createSlice({
   },
 });
 
-export const {getNotifiStart, getNotifiSuccess, getNotifiFailed} =
-  notifiSlice.actions;
+export const {
+  getNotifiStart,
+  getNotifiSuccess,
+  getNotifiFailed,
+  deleteNotifiSuccess,
+} = notifiSlice.actions;
 
 export default notifiSlice.reducer;

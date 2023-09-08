@@ -1,9 +1,8 @@
-import React, {useCallback, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
   Image,
-  TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   TextInput,
@@ -114,6 +113,7 @@ const SendNotification = ({navigation}) => {
   const handleSendNotification = async () => {
     if (title.length != 0 && content != 0) {
       const data = {
+        id_nguoigui: user?.id_ht,
         id: dataPicker,
         title: title,
         content: content,
