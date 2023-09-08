@@ -289,18 +289,18 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  handleNavigate('ListBio');
+                  handleNavigate('SelectProvinceFFW');
                 }}>
-                <Image source={Images.biodiversity} style={styles.featureBtn} />
-                <Text style={styles.featureText}>ĐDSH</Text>
+                <Image source={Images.forestFire} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Cảnh báo cháy</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  handleNavigate('QLRBV');
+                  handleNavigate('ListBio');
                 }}>
-                <Image source={Images.forest} style={styles.featureBtn} />
-                <Text style={styles.featureText}>QLRBV</Text>
+                <Image source={Images.biodiversity} style={styles.featureBtn} />
+                <Text style={styles.featureText}>ĐDSH</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.btnContainer}>
@@ -355,19 +355,16 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.book} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Văn Phòng 809</Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  handleNavigate('SelectProvinceFFW');
+                  handleNavigate('QLRBV');
                 }}>
-                <Image source={Images.forestFire} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Cảnh báo cháy</Text>
+                <Image source={Images.forest} style={styles.featureBtn} />
+                <Text style={styles.featureText}>QLRBV</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleAlert;
-                }}>
+              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
                 <Image source={Images.muavu} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Mùa vụ</Text>
               </TouchableOpacity>
@@ -401,14 +398,14 @@ const HomePageScreen = ({navigation}) => {
                   source={Images.logo_LamHoc}
                   style={[styles.featureBtn, {borderRadius: 50}]}
                 />
-                <Text style={styles.featureText}> Khoa Lâm học</Text>
+                <Text style={styles.featureText}> Lâm học</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
                 <Image
                   source={Images.logo_KTQTKD}
                   style={[styles.featureBtn, {borderRadius: 50}]}
                 />
-                <Text style={styles.featureText}>Khoa KT-QTKD</Text>
+                <Text style={styles.featureText}>KT-QTKD</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
               <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>

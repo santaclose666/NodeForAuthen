@@ -25,6 +25,8 @@
 		B5EB3E40CCC47A1776F47922 /* Pods_Forestry_4_v7_Forestry_4_v7Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C66DDB6995C633CDF4E0E82B /* Pods_Forestry_4_v7_Forestry_4_v7Tests.framework */; };
 		D47BB8B8131A52AABA388DF9 /* Pods_Forestry_4_v7.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83C1910958B5F279F6AD795C /* Pods_Forestry_4_v7.framework */; };
 		D651EBDBCA034DA9B0759680 /* SFProDisplay-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94510F9408DD4187BE11E76D /* SFProDisplay-Bold.otf */; };
+		F717329B2AAB2F0200BBF8D2 /* dance.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F717329A2AAB2F0200BBF8D2 /* dance.mp3 */; };
+		F717329D2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F717329C2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 */; };
 		F79B177B2AA8622F00A25200 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F79B177A2AA8622F00A25200 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +68,8 @@
 		C66DDB6995C633CDF4E0E82B /* Pods_Forestry_4_v7_Forestry_4_v7Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Forestry_4_v7_Forestry_4_v7Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9FEBBA2E02A470F9555FA44 /* SFProDisplay-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Regular.otf"; path = "../src/assets/fonts/SFProDisplay-Regular.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F717329A2AAB2F0200BBF8D2 /* dance.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = dance.mp3; path = ../android/app/src/main/res/raw/dance.mp3; sourceTree = "<group>"; };
+		F717329C2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = hpbdpiano.mp3; path = ../android/app/src/main/res/raw/hpbdpiano.mp3; sourceTree = "<group>"; };
 		F79B177A2AA8622F00A25200 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F7B437ED2A81FEF40058AF6E /* Forestry_4_v7.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Forestry_4_v7.entitlements; path = Forestry_4_v7/Forestry_4_v7.entitlements; sourceTree = "<group>"; };
 		FB4AB16A2CCF469289375789 /* SFProDisplay-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Semibold.otf"; path = "../src/assets/fonts/SFProDisplay-Semibold.otf"; sourceTree = "<group>"; };
@@ -143,6 +147,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				F717329C2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 */,
+				F717329A2AAB2F0200BBF8D2 /* dance.mp3 */,
 				13B07FAE1A68108700A75B9A /* Forestry_4_v7 */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* Forestry_4_v7Tests */,
@@ -289,6 +295,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F717329D2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				5D355B274BA6498083F38F9A /* SFProDisplay-Black.otf in Resources */,
@@ -299,6 +306,7 @@
 				8E4938969F1F42369A03D58A /* SFProDisplay-Regular.otf in Resources */,
 				609E1F8C8A1B4FA38E60DA3A /* SFProDisplay-Semibold.otf in Resources */,
 				B0A81BC93980478DB356F210 /* SFProDisplay-Thin.otf in Resources */,
+				F717329B2AAB2F0200BBF8D2 /* dance.mp3 in Resources */,
 				49D988AC7F4C425CBC78A0E4 /* SFProDisplay-Ultralight.otf in Resources */,
 				82AE3952502D44998B3E10F4 /* Lato-RegularItalic.ttf in Resources */,
 				6FF7B55A73664D5E9337848C /* Lato-Regular.ttf in Resources */,
@@ -560,7 +568,7 @@
 				CODE_SIGN_ENTITLEMENTS = Forestry_4_v7/Forestry_4_v7.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 7L7FA98CYL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Forestry_4_v7/Info.plist;
@@ -570,7 +578,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -594,7 +602,7 @@
 				CODE_SIGN_ENTITLEMENTS = Forestry_4_v7/Forestry_4_v7.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 7L7FA98CYL;
 				INFOPLIST_FILE = Forestry_4_v7/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Forestry4.0;
@@ -603,7 +611,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

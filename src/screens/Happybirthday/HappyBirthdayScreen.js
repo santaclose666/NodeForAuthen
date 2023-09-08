@@ -19,7 +19,7 @@ const HappyBirthdayScreen = ({navigation, route}) => {
   const birthYear = item.ngaysinh.slice(6, 10);
   const age = currYear - birthYear;
 
-  var sound = new Sound('hpbdpiano.mp3', Sound.MAIN_BUNDLE, error => {
+  var sound = new Sound('dance.mp3', Sound.MAIN_BUNDLE, error => {
     if (error) {
       console.log('failed to load the sound', error);
       return;
