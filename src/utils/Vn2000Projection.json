@@ -1,0 +1,422 @@
+[
+    {
+        "id": 0,
+        "province": "Toàn quốc",
+        "zone": "WGS84",
+        "epsg_code": 4326
+    },
+    {
+        "id": 1,
+        "province": "Toàn quốc",
+        "zone": "UTM-WGS-84 - Zone 48",
+        "epsg_code": 32648
+    },
+    {
+        "id": 2,
+        "province": "Toàn quốc",
+        "zone": "UTM-WGS-84 - Zone 49",
+        "epsg_code": 32649
+    },
+    {
+        "id": 3,
+        "province": "Toàn quốc",
+        "zone": "UTM-WGS-84 - Zone 50",
+        "epsg_code": 32650
+    },
+    {
+        "id": 4,
+        "province": "Toàn quốc",
+        "zone": "UTM-VN2000 - Zone 48",
+        "epsg_code": 3405
+    },
+    {
+        "id": 5,
+        "province": "Toàn quốc",
+        "zone": "UTM-VN2000 - Zone 49",
+        "epsg_code": 3406
+    },
+    {
+        "id": 6,
+        "province": "Toàn quốc",
+        "zone": "UTM-VN2000 - Zone 50",
+        "epsg_code": 32650
+    },
+    {
+        "id": 7,
+        "province": "Hà Nội",
+        "zone": "VN2000 / TM-3 105-00",
+        "epsg_code": 5897
+    },
+    {
+        "id": 8,
+        "province": "TP Hồ Chí Minh",
+        "zone": "VN2000 / TM-3 105-45",
+        "epsg_code": 9210
+    },
+    {
+        "id": 9,
+        "province": "Hải Phòng",
+        "zone": "VN2000 / TM-3 105-45",
+        "epsg_code": 9210
+    },
+    {
+        "id": 10,
+        "province": "Đà Nẵng",
+        "zone": "VN2000 / TM-3 107-45",
+        "epsg_code": 5899
+    },
+    {
+        "id": 11,
+        "province": "Hà Giang",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 12,
+        "province": "Cao Bằng",
+        "zone": "VN2000 / TM-3 105-45",
+        "epsg_code": 9210
+    },
+    {
+        "id": 13,
+        "province": "Lai Châu",
+        "zone": "VN2000 / TM-3 103-00",
+        "epsg_code": 9205
+    },
+    {
+        "id": 14,
+        "province": "Lào Cai",
+        "zone": "VN2000 / TM-3 104-45",
+        "epsg_code": 9208
+    },
+    {
+        "id": 15,
+        "province": "Tuyên Quang",
+        "zone": "VN2000 / TM-3 106-00",
+        "epsg_code": 9211
+    },
+    {
+        "id": 16,
+        "province": "Lạng Sơn",
+        "zone": "VN2000 / TM-3 107-15",
+        "epsg_code": 9215
+    },
+    {
+        "id": 17,
+        "province": "Bắc Kạn",
+        "zone": "VN2000 / TM-3 106-30",
+        "epsg_code": 9213
+    },
+    {
+        "id": 18,
+        "province": "Thái Nguyên",
+        "zone": "VN2000 / TM-3 106-30",
+        "epsg_code": 9213
+    },
+    {
+        "id": 19,
+        "province": "Yên Bái",
+        "zone": "VN2000 / TM-3 104-45",
+        "epsg_code": 9208
+    },
+    {
+        "id": 20,
+        "province": "Sơn La",
+        "zone": "VN2000 / TM-3 104-00",
+        "epsg_code": 9206
+    },
+    {
+        "id": 21,
+        "province": "Phú Thọ",
+        "zone": "VN2000 / TM-3 104-45",
+        "epsg_code": 9208
+    },
+    {
+        "id": 22,
+        "province": "Vĩnh Phúc",
+        "zone": "VN2000 / TM-3 105-00",
+        "epsg_code": 5897
+    },
+    {
+        "id": 23,
+        "province": "Quảng Ninh",
+        "zone": "VN2000 / TM-3 107-45",
+        "epsg_code": 5899
+    },
+    {
+        "id": 24,
+        "province": "Bắc Giang",
+        "zone": "VN2000 / TM-3 107-00",
+        "epsg_code": 9214
+    },
+    {
+        "id": 25,
+        "province": "Bắc Ninh",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 26,
+        "province": "Hải Dương",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 27,
+        "province": "Hưng Yên",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 28,
+        "province": "Hòa Bình",
+        "zone": "VN2000 / TM-3 106-00",
+        "epsg_code": 9211
+    },
+    {
+        "id": 29,
+        "province": "Hà Nam",
+        "zone": "VN2000 / TM-3 105-00",
+        "epsg_code": 5897
+    },
+    {
+        "id": 30,
+        "province": "Nam Định",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 31,
+        "province": "Thái Bình",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 32,
+        "province": "Ninh Bình",
+        "zone": "VN2000 / TM-3 105-00",
+        "epsg_code": 5897
+    },
+    {
+        "id": 33,
+        "province": "Thanh Hóa",
+        "zone": "VN2000 / TM-3 105-00",
+        "epsg_code": 5897
+    },
+    {
+        "id": 34,
+        "province": "Nghệ An",
+        "zone": "VN2000 / TM-3 104-45",
+        "epsg_code": 9208
+    },
+    {
+        "id": 35,
+        "province": "Hà Tĩnh",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 36,
+        "province": "Quảng Bình",
+        "zone": "VN2000 / TM-3 106-00",
+        "epsg_code": 9211
+    },
+    {
+        "id": 37,
+        "province": "Quảng Trị",
+        "zone": "VN2000 / TM-3 106-15",
+        "epsg_code": 9212
+    },
+    {
+        "id": 38,
+        "province": "Thừa Thiên Huế",
+        "zone": "VN2000 / TM-3 107-00",
+        "epsg_code": 9214
+    },
+    {
+        "id": 39,
+        "province": "Quảng Nam",
+        "zone": "VN2000 / TM-3 107-45",
+        "epsg_code": 5899
+    },
+    {
+        "id": 40,
+        "province": "Quảng Ngãi",
+        "zone": "VN2000 / TM-3 zone 491",
+        "epsg_code": 5898
+    },
+    {
+        "id": 41,
+        "province": "Kon Tum",
+        "zone": "VN2000 / TM-3 107-30",
+        "epsg_code": 9216
+    },
+    {
+        "id": 42,
+        "province": "Bình Định",
+        "zone": "VN2000 / TM-3 108-15",
+        "epsg_code": 9217
+    },
+    {
+        "id": 43,
+        "province": "Gia Lai",
+        "zone": "VN2000 / TM-3 108-30",
+        "epsg_code": 9218
+    },
+    {
+        "id": 44,
+        "province": "Phú Yên",
+        "zone": "VN2000 / TM-3 108-30",
+        "epsg_code": 9218
+    },
+    {
+        "id": 45,
+        "province": "Đắk Lắk",
+        "zone": "VN2000 / TM-3 108-30",
+        "epsg_code": 9218
+    },
+    {
+        "id": 46,
+        "province": "Khánh Hòa",
+        "zone": "VN2000 / TM-3 108-15",
+        "epsg_code": 9217
+    },
+    {
+        "id": 47,
+        "province": "Lâm Đồng",
+        "zone": "VN2000 / TM-3 107-45",
+        "epsg_code": 5899
+    },
+    {
+        "id": 48,
+        "province": "Bình Phước",
+        "zone": "VN2000 / TM-3 106-15",
+        "epsg_code": 9212
+    },
+    {
+        "id": 49,
+        "province": "Bình Dương",
+        "zone": "VN2000 / TM-3 105-45",
+        "epsg_code": 9210
+    },
+    {
+        "id": 50,
+        "province": "Ninh Thuận",
+        "zone": "VN2000 / TM-3 108-15",
+        "epsg_code": 9217
+    },
+    {
+        "id": 51,
+        "province": "Tây Ninh",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 52,
+        "province": "Bình Thuận",
+        "zone": "VN2000 / TM-3 108-30",
+        "epsg_code": 9218
+    },
+    {
+        "id": 53,
+        "province": "Đồng Nai",
+        "zone": "VN2000 / TM-3 107-45",
+        "epsg_code": 5899
+    },
+    {
+        "id": 54,
+        "province": "Long An",
+        "zone": "VN2000 / TM-3 105-45",
+        "epsg_code": 9210
+    },
+    {
+        "id": 55,
+        "province": "Đồng Tháp",
+        "zone": "VN2000 / TM-3 105-00",
+        "epsg_code": 5897
+    },
+    {
+        "id": 56,
+        "province": "An Giang",
+        "zone": "VN2000 / TM-3 104-45",
+        "epsg_code": 9208
+    },
+    {
+        "id": 57,
+        "province": "Bà Rịa - Vũng Tàu",
+        "zone": "VN2000 / TM-3 107-45",
+        "epsg_code": 5899
+    },
+    {
+        "id": 58,
+        "province": "Tiền Giang",
+        "zone": "VN2000 / TM-3 105-45",
+        "epsg_code": 9210
+    },
+    {
+        "id": 59,
+        "province": "Kiên Giang",
+        "zone": "VN2000 / TM-3 104-30",
+        "epsg_code": 9207
+    },
+    {
+        "id": 60,
+        "province": "Cần Thơ",
+        "zone": "VN2000 / TM-3 105-00",
+        "epsg_code": 5897
+    },
+    {
+        "id": 61,
+        "province": "Bến Tre",
+        "zone": "VN2000 / TM-3 105-45",
+        "epsg_code": 9210
+    },
+    {
+        "id": 62,
+        "province": "Vĩnh Long",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 63,
+        "province": "Trà Vinh",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 64,
+        "province": "Sóc Trăng",
+        "zone": "VN2000 / TM-3 105-30",
+        "epsg_code": 9209
+    },
+    {
+        "id": 65,
+        "province": "Bạc Liêu",
+        "zone": "VN2000 / TM-3 105-00",
+        "epsg_code": 5897
+    },
+    {
+        "id": 66,
+        "province": "Cà Mau",
+        "zone": "VN2000 / TM-3 104-30",
+        "epsg_code": 9207
+    },
+    {
+        "id": 67,
+        "province": "Điện Biên",
+        "zone": "VN2000 / TM-3 103-00",
+        "epsg_code": 9205
+    },
+    {
+        "id": 68,
+        "province": "Đắk Nông",
+        "zone": "VN2000 / TM-3 108-30",
+        "epsg_code": 9218
+    },
+    {
+        "id": 69,
+        "province": "Hậu Giang",
+        "zone": "VN2000 / TM-3 105-00",
+        "epsg_code": 5897
+    }
+]

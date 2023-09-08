@@ -3,6 +3,8 @@ import {getAllNotifi} from '../redux/apiRequest';
 import {getCurrentTime} from './serviceFunction';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification, {Importance} from 'react-native-push-notification';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import {Platform} from 'react-native';
 
 PushNotification.createChannel(
   {
@@ -59,15 +61,24 @@ export const ForegroundListener = () => {
       const title = remoteMessage.notification.title;
       const body = remoteMessage.notification.body;
 
-      PushNotification.localNotification({
-        channelId: 'channel-id',
-        channelName: 'My channel',
-        title: title,
-        message: body,
-        soundName: 'default',
-        vibrate: true,
-        playSound: true,
-      });
+      if (Platform.OS == 'android') {
+        PushNotification.localNotification({
+          channelId: 'channel-id',
+          channelName: 'My channel',
+          title: title,
+          message: body,
+          soundName: 'default',
+          vibrate: true,
+          playSound: true,
+        });
+      } else {
+        PushNotificationIOS.addNotificationRequest({
+          id: remoteMessage.messageId,
+          title: title,
+          body: body,
+          userInfo: remoteMessage.data,
+        });
+      }
     });
 
     return unSubcribe;

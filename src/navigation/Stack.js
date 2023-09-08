@@ -25,6 +25,7 @@ import ForestryScreen from '../screens/Forestry/ForestryScreen';
 import SendNotification from '../screens/Notification/SendNotification';
 import ContributionDataScreen from '../screens/ContributionData/ContributionData';
 import KKRScreen from '../screens/KKR/KKRScreen';
+import SelectProvinceFFWScreen from '../screens/ForestFire/SelectProvinceFFWScreen';
 
 const Stack = createStackNavigator();
 
@@ -76,6 +77,10 @@ const StactNavigator = () => {
         component={ContributionDataScreen}
       />
       <Stack.Screen name="KKR" component={KKRScreen} />
+      <Stack.Screen
+        name="SelectProvinceFFW"
+        component={SelectProvinceFFWScreen}
+      />
     </Stack.Navigator>
   );
 };
