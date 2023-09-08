@@ -328,6 +328,31 @@ const HomePageScreen = ({navigation}) => {
             </View>
           </View>
 
+          <View style={styles.btnContainer}>
+            <TouchableOpacity
+              style={styles.buttonFuc}
+              onPress={() => {
+                handleNavigate('SelectProvinceFFW');
+              }}>
+              <Image source={Images.forestFire} style={styles.featureBtn} />
+              <Text style={styles.featureText}>Cảnh báo cháy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonFuc}
+              onPress={() => {
+                handleAlert;
+              }}>
+              <Image source={Images.muavu} style={styles.featureBtn} />
+              <Text style={styles.featureText}>Mùa vụ</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonFuc}
+              onPress={handleAlert}></TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonFuc}
+              onPress={handleAlert}></TouchableOpacity>
+          </View>
+
           <View style={styles.featureBtnContainer}>
             <View
               style={[

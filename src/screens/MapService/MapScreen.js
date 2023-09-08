@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,12 +7,23 @@ import {
   Alert,
   TouchableOpacity,
   Image,
+  Modal,
+  Text,
+  TextInput,
+  SafeAreaView,
 } from 'react-native';
-import MapView, {WMSTile, Polygon, MAP_TYPES} from 'react-native-maps';
+import {Button} from 'native-base';
+import MapView, {WMSTile, Polygon, MAP_TYPES, Marker} from 'react-native-maps';
 import {useRoute} from '@react-navigation/native';
 import Colors from '../../contants/Colors';
 import Images from '../../contants/Images';
 import Dimension from '../../contants/Dimension';
+import dataProjection from '../../utils/Vn2000Projection.json';
+import {Dropdown} from 'react-native-element-dropdown';
+import Fonts from '../../contants/Fonts';
+
+var epsg = require('epsg-to-proj');
+var proj = require('proj4');
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -56,15 +67,6 @@ const MapScreen = ({navigation}) => {
   const route = useRoute();
   const data = route.params;
 
-  console.log(data.WMSLink[0]);
-
-  const [mapType, setMapType] = useState(MAP_TYPES.SATELLITE);
-  const [initialRegion, setInitialRegion] = useState({
-    latitude: Number(data.centerPoint.y),
-    longitude: Number(data.centerPoint.x),
-    latitudeDelta: 0.3,
-    longitudeDelta: 0.3,
-  });
   const [mapViewHeight, setMapViewHeight] = useState(null);
   const [mapViewWidth, setMapViewWidth] = useState(null);
   const [viewFullInfo, setViewFullInfo] = useState(false);
@@ -73,6 +75,25 @@ const MapScreen = ({navigation}) => {
   const [selectRegion, setSelectRegion] = useState([]);
   const [expainBasemap, setExpainBaeMap] = useState(false);
   const [currentBaseImg, setCurrentBaseImg] = useState(Images.baseSatellite);
+  const [selectedOptionCRS, setSelectedOptionCRS] = useState(0);
+  const [listFindPoint, setListFindPoint] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [latFindPoint, setLatFindPoint] = useState('');
+  const [longFindPoint, setLongFindPoint] = useState('');
+  const [pointPress, setPointPress] = useState({});
+  const mapViewRef = useRef(null);
+
+  const listProject = dataProjection.map(item => {
+    return {label: `${item.province} - ${item.zone}`, value: item.epsg_code};
+  });
+
+  const [mapType, setMapType] = useState(MAP_TYPES.SATELLITE);
+  const [initialRegion, setInitialRegion] = useState({
+    latitude: Number(data.centerPoint.y),
+    longitude: Number(data.centerPoint.x),
+    latitudeDelta: 0.3,
+    longitudeDelta: 0.3,
+  });
 
   const [region, setRegion] = useState({
     latitude: LATITUDE,
@@ -110,7 +131,7 @@ const MapScreen = ({navigation}) => {
       setViewFullInfo(false);
       const ApiCall = await fetch(linkAPIGetInfoFull);
       const regionFeatureInfo = await ApiCall.json();
-      let disPlayData = '';
+      let disPlayData = `Vị trí chọn: \n Latitude: ${pointPress.latitude} \n Longitude: ${pointPress.longitude} \n`;
       // Dat vung to mau
       setSelectRegion(regionFeatureInfo.features[0].geometry.coordinates[0][0]);
       // lay tt thuoc tinh
@@ -125,7 +146,7 @@ const MapScreen = ({navigation}) => {
         }
       }
 
-      let disPlayDataFull = '';
+      let disPlayDataFull = `Vị trí chọn: \n Latitude: ${pointPress.latitude} \n Longitude: ${pointPress.longitude} \n`;
       for (let [key, value] of Object.entries(
         regionFeatureInfo.features[0].properties,
       )) {
@@ -161,18 +182,33 @@ const MapScreen = ({navigation}) => {
         {cancelable: false},
       );
     } catch (err) {
-      console.log(err);
+      console.log('222', err);
       setSelectRegion([]);
     }
   };
 
   const handleMapPress = event => {
-    const position = event.nativeEvent.position;
-    if (Platform.OS === 'android') {
-      position.x = position.x / PixelRatio.get();
-      position.y = position.y / PixelRatio.get();
+    try {
+      setPointPress(event.nativeEvent.coordinate);
+      const position = event.nativeEvent.position;
+      if (Platform.OS === 'android') {
+        position.x = position.x / PixelRatio.get();
+        position.y = position.y / PixelRatio.get();
+      }
+      _getWMSFeatureInfo(_getWMSInfoAPILink(position.x, position.y));
+    } catch (err) {
+      console.log('111', err);
     }
-    _getWMSFeatureInfo(_getWMSInfoAPILink(position.x, position.y));
+  };
+
+  const _gotoLocation = (lat, long, latDelta, longDelta) => {
+    console.log('go', lat, long);
+    mapViewRef.current.animateToRegion({
+      latitude: lat,
+      longitude: long,
+      latitudeDelta: latDelta,
+      longitudeDelta: longDelta,
+    });
   };
 
   const onLayout = event => {
@@ -190,8 +226,62 @@ const MapScreen = ({navigation}) => {
     return polygon;
   };
 
+  // Tim diem bang toa do
+  const _findPoint = () => {
+    console.log(longFindPoint, latFindPoint, selectedOptionCRS);
+    var findPoint = [];
+    var pointConvert = [];
+    if (latFindPoint == '' || longFindPoint == '') {
+      Alert.alert('Dữ liệu đầu vào trống!');
+      return null;
+    }
+
+    if (isNaN(latFindPoint) || isNaN(longFindPoint)) {
+      Alert.alert('Dữ liệu đầu vào không đúng định dạng số!');
+      return null;
+    }
+
+    try {
+      if (selectedOptionCRS === 4326) {
+        pointConvert = [Number(longFindPoint), Number(latFindPoint)];
+      } else {
+        var pointConvert = proj(epsg[selectedOptionCRS], epsg[4326], [
+          Number(latFindPoint),
+          Number(longFindPoint),
+        ]);
+      }
+
+      findPoint = {
+        id: listFindPoint.length,
+        coordinate: {latitude: pointConvert[1], longitude: pointConvert[0]},
+        baseCoordinates: {latitude: latFindPoint, longitude: longFindPoint},
+      };
+
+      if (
+        findPoint.coordinate.latitude >= -90 &&
+        findPoint.coordinate.latitude <= 90 &&
+        findPoint.coordinate.longitude >= -180 &&
+        findPoint.coordinate.longitude <= 180
+      ) {
+        let newListPointFind = [];
+        newListPointFind = [...listFindPoint, findPoint];
+
+        setListFindPoint(newListPointFind);
+        setModalVisible(false);
+        setLatFindPoint(null);
+        setLongFindPoint(null);
+        _gotoLocation(pointConvert[1], pointConvert[0], 0.015, 0.015);
+      } else {
+        Alert.alert('Dữ liệu đầu vào không hợp lệ!');
+      }
+    } catch (err) {
+      console.log(err);
+      Alert.alert('Lỗi chuyển toạ độ, kiểm tra lại dữ liệu đầu vào!');
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.backHeartContainer}>
         <TouchableOpacity
           style={styles.headerBtn}
@@ -204,6 +294,7 @@ const MapScreen = ({navigation}) => {
           />
         </TouchableOpacity>
       </View>
+
       <TouchableOpacity
         style={styles.baseMapView}
         onPress={() => {
@@ -211,6 +302,15 @@ const MapScreen = ({navigation}) => {
         }}>
         <Image source={currentBaseImg} style={styles.btnBaseMap} />
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.findPoint}
+        onPress={() => {
+          setModalVisible(true);
+        }}>
+        <Image source={Images.search} style={styles.icon} />
+      </TouchableOpacity>
+
       {expainBasemap && (
         <View style={styles.baseMapContainer}>
           {listBaseMap.map(item => {
@@ -231,13 +331,15 @@ const MapScreen = ({navigation}) => {
 
       <MapView
         onLayout={event => onLayout(event)}
+        ref={mapViewRef}
         style={styles.map}
         mapType={mapType}
         provider="google"
         initialRegion={initialRegion}
         onPress={handleMapPress}
-        showsMyLocationButton={false}
+        showsMyLocationButton={true}
         showsPointsOfInterest={true}
+        showsUserLocation={true}
         showsCompass={true}
         onRegionChangeComplete={Region => {
           setRegion(Region);
@@ -251,6 +353,18 @@ const MapScreen = ({navigation}) => {
             zIndex={200}
           />
         )}
+
+        {listFindPoint.length > 0 &&
+          listFindPoint.map(item => {
+            return (
+              <Marker
+                key={item.id}
+                coordinate={item.coordinate}
+                title={`Điểm tìm kiếm Số Số ${item.id}`}
+                description={`Lat: ${item.baseCoordinates.latitude}; Long: ${item.baseCoordinates.longitude}`}
+              />
+            );
+          })}
         <WMSTile
           urlTemplate={data.WMSLink[0]}
           opacity={1}
@@ -258,7 +372,165 @@ const MapScreen = ({navigation}) => {
           tileSize={512}
         />
       </MapView>
-    </View>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}>
+        {/* <Pressable style={[Platform.OS === "ios" ? styles.iOSBackdrop : styles.androidBackdrop, styles.backdrop]} onPress={() => this.setState({ setModalVisible: false })} /> */}
+        <View
+          style={{
+            backgroundColor: 'white',
+            width: '80%',
+            height: 'auto',
+            justifyContent: 'center',
+            alignItems: 'baseline',
+            marginHorizontal: '10%',
+            marginTop: '30%',
+            paddingHorizontal: 20,
+            borderRadius: 8,
+          }}>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              color: 'rgba(32, 73, 68, 1)',
+              padding: 8,
+              marginLeft: '15%',
+            }}>
+            Tìm điểm theo tọa độ
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              color: 'rgba(32, 73, 68, 1)',
+              padding: 4,
+            }}>
+            Nhập Vĩ độ
+          </Text>
+          <TextInput
+            style={{
+              borderWidth: 1,
+              borderColor: 'grey',
+              borderRadius: 8,
+              margin: 4,
+              padding: 4,
+              width: '100%',
+            }}
+            placeholder="Ví dụ: 12.432423 hoặc 435334"
+            onChangeText={text => setLatFindPoint(text)}
+            autoCompleteType="off"
+            textContentType="none"
+            value={latFindPoint}
+          />
+          <Text
+            style={{
+              fontSize: 14,
+              color: 'rgba(32, 73, 68, 1)',
+              padding: 4,
+            }}>
+            Nhập Kinh độ
+          </Text>
+          <TextInput
+            style={{
+              borderWidth: 1,
+              borderColor: 'grey',
+              borderRadius: 8,
+              margin: 4,
+              padding: 4,
+              width: '100%',
+            }}
+            placeholder="Ví dụ: 106.432423 hoặc 8974849"
+            onChangeText={text => setLongFindPoint(text)}
+            autoCompleteType="off"
+            textContentType="none"
+            value={longFindPoint}
+          />
+          <Text
+            style={{
+              fontSize: 14,
+              color: 'rgba(32, 73, 68, 1)',
+              padding: 4,
+            }}>
+            Chọn hệ toạ độ
+          </Text>
+
+          <Dropdown
+            style={styles.dropdown}
+            autoScroll={false}
+            showsVerticalScrollIndicator={false}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            containerStyle={styles.containerOptionStyle}
+            imageStyle={styles.imageStyle}
+            iconStyle={styles.iconStyle}
+            itemContainerStyle={styles.itemContainer}
+            itemTextStyle={styles.itemText}
+            fontFamily={Fonts.SF_MEDIUM}
+            activeColor="#eef2feff"
+            placeholder="Hệ toạ độ"
+            data={listProject}
+            maxHeight={Dimension.setHeight(30)}
+            labelField="label"
+            valueField="value"
+            value={selectedOptionCRS}
+            renderLeftIcon={() => {
+              return (
+                <Image
+                  source={Images.worldwide}
+                  style={styles.leftIconDropdown}
+                />
+              );
+            }}
+            onChange={item => {
+              setSelectedOptionCRS(item.value);
+              console.log(item.value);
+            }}
+          />
+
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 10,
+              marginTop: 13,
+              marginBottom: 13,
+            }}>
+            <Button
+              style={{
+                borderRadius: 8,
+                backgroundColor: 'green',
+                width: '40%',
+                marginHorizontal: '5%',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                _findPoint();
+              }}>
+              <Text style={{fontSize: 14, fontWeight: 'bold'}}>Tìm điểm</Text>
+            </Button>
+            <Button
+              style={{
+                borderRadius: 8,
+                backgroundColor: 'red',
+                width: '40%',
+                marginHorizontal: '5%',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                setModalVisible(false);
+                setLatFindPoint(null);
+                setLongFindPoint(null);
+              }}>
+              <Text style={{fontSize: 14, fontWeight: 'bold'}}>Hủy</Text>
+            </Button>
+          </View>
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 };
 
@@ -308,6 +580,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignSelf: 'flex-start',
   },
+
   btnBaseMap: {
     width: 50,
     height: 50,
@@ -315,10 +588,60 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 7,
   },
-  baseMapOption: {
-    width: 50,
-    height: 50,
-    marginHorizontal: 7,
+  icon: {
+    width: 30,
+    height: 30,
+  },
+
+  findPoint: {
+    width: 45,
+    height: 45,
+    position: 'absolute',
+    zIndex: 1000,
+    left: 15,
+    top: 120,
+    backgroundColor: '#b3e3ba',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 50,
+  },
+
+  containerEachLine: {
+    marginBottom: Dimension.setHeight(0.5),
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e6e6e6',
+    borderRadius: 12,
+    paddingVertical: Dimension.setHeight(1),
+    paddingHorizontal: Dimension.setWidth(2),
+  },
+
+  title: {
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: Dimension.fontSize(15),
+    color: '#8bc7bc',
+    marginBottom: Dimension.setHeight(1),
+  },
+
+  dropdown: {
+    height: Dimension.setHeight(4.5),
+    marginHorizontal: Dimension.setWidth(1.6),
+    borderBottomColor: 'gray',
+    borderBottomWidth: 0.5,
+    width: '100%',
+  },
+  leftIconDropdown: {
+    width: 20,
+    height: 20,
+    marginRight: Dimension.setWidth(1.8),
+  },
+  itemContainer: {
+    borderRadius: 12,
+  },
+  itemText: {
+    fontSize: 13,
   },
 });
 

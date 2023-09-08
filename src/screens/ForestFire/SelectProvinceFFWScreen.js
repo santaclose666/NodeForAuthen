@@ -22,66 +22,36 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 const vnRegionMapData = require('../../utils/VnRegionMap.json');
 const listLayerWMS = require('../../utils/listLayerWMSGeoPfes.json');
 
-const SelectWMSLayerScreen1 = ({navigation}) => {
-  const [listTypeMap, setListTypeMap] = useState([]);
+const SelectProvinceFFWScreen = ({navigation}) => {
+  const [listTypeMap, setListTypeMap] = useState(['ChayIfee']);
   const [listProvinces, setListProvinces] = useState([]);
   const [listDistricts, setListDistricts] = useState([]);
   const [listCommunes, setListCommunes] = useState([]);
   const [listWMS, setListWMS] = useState([]);
-  const [listYear, setListYear] = useState([]);
 
   const [centerPoint, setCenterPoint] = useState(undefined);
-  const [selectTypeMapCode, setSelectTypeMapCode] = useState(undefined);
-  const [selectYear, setSelectYear] = useState(undefined);
+
   const [selectProvince, setSelectProvince] = useState(null);
   const [selectProvinceCode, setSelectProvinceCode] = useState(undefined);
   const [selectDistrict, setSelectDistrict] = useState(undefined);
   const [selectDistrictCode, setSelectDistrictCode] = useState(undefined);
   const [selectCommune, setSelectCommune] = useState(undefined);
   const [selectCommuneCode, setSelectCommuneCode] = useState(undefined);
-  const [nameRegionCol, setNameRegionCol] = useState('');
+  const nameRegionCol = 'DBR_2019';
+  const selectTypeMapCode = '5';
+
+  // Tỉnh có bản đồ cấp cháy
+  const availableProvinces = ['2', '40'];
 
   useEffect(() => {
-    getListMap();
+    getListProvince();
   }, []);
 
-  const getListMap = () => {
-    let listLayerRaw = [];
-    for (var i = 0; i < listLayerWMS.length; i++) {
-      let layer = {
-        nameLayer: listLayerWMS[i].nameMapGroup,
-        value: listLayerWMS[i].codeMapGroup,
-      };
-      if (layer.value !== '5') {
-        if (!listLayerRaw.some(obj => obj.value === layer.value)) {
-          listLayerRaw.push(layer);
-        }
-      }
-    }
-    setListTypeMap(listLayerRaw);
-  };
-
-  const getListYear = typeMap => {
-    let listYear = [];
-    for (var i = 0; i < listLayerWMS.length; i++) {
-      if (listLayerWMS[i].codeMapGroup == typeMap) {
-        let year = {
-          label: listLayerWMS[i].year,
-          value: listLayerWMS[i].nameRegionCol,
-        };
-        if (!listYear.some(obj => obj.label == year.label)) {
-          listYear.push(year);
-        }
-      }
-    }
-    setListYear(listYear);
-  };
-
-  const getListProvince = nameColum => {
+  const getListProvince = () => {
     let listProvinces = [];
     try {
       for (var i = 0; i < vnRegionMapData.length; i++) {
-        if (vnRegionMapData[i][nameColum] === '1') {
+        if (availableProvinces.includes(vnRegionMapData[i].MATINH)) {
           var province = {
             label: vnRegionMapData[i].TINH,
             value: vnRegionMapData[i].MATINH,
@@ -102,7 +72,6 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
 
   const getListDistrict = matinh => {
     let listDistrict = [];
-    console.log(matinh);
     try {
       for (var i = 0; i < vnRegionMapData.length; i++) {
         if (
@@ -155,8 +124,6 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
   const _getLinkWMS = () => {
     let layerData = _getLayer();
 
-    console.log(layerData);
-
     let queryLayer = _getQueryLayer(
       layerData.cql_filter,
       layerData.nameProvinCodeCol,
@@ -164,7 +131,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
       layerData.nameCommuneCodeCol,
     );
 
-    let link = `${layerData.linkRoot}&version=${layerData.version}&request=GetMap&layers=${layerData.layers}&cql_filter=${queryLayer}&styles=&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=${layerData.format}&transparent=true`;
+    let link = `${layerData.linkRoot}&version=${layerData.version}&request=GetMap&layers=${layerData.layers}&cql_filter=${queryLayer}&styles=${layerData.styles}&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=${layerData.format}&transparent=true`;
     let links = [link];
     return links;
   };
@@ -249,7 +216,6 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
     );
     let link = `${layerData.linkRoot}&version=${layerData.version}&request=GetFeatureInfo&layers=${layerData.layers}&cql_filter=${queryLayer}&query_layers=${layerData.layers}&srs=EPSG:4326&info_format=application/json`;
     //let link = `${layerData.linkRoot}&version=1.1.1&request=GetFeatureInfo&layers=${layerData.layers}&cql_filter=${queryLayer}&query_layers=${layerData.layers}&srs=EPSG:4326&info_format=application/json`;
-
     return link;
   };
 
@@ -267,6 +233,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
         linkRootQueryInfo: linkRootQueryInfo,
         centerPoint: centerPoint,
       };
+      console.log(data);
       navigation.navigate('MapWMS', data);
     } else {
       ToastAlert('Không đủ thông tin');
@@ -290,99 +257,6 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
               elevation: 5,
               ...shadowIOS,
             }}>
-            <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Loại bản đồ</Text>
-              <Dropdown
-                style={styles.dropdown}
-                autoScroll={false}
-                showsVerticalScrollIndicator={false}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                containerStyle={styles.containerOptionStyle}
-                imageStyle={styles.imageStyle}
-                iconStyle={styles.iconStyle}
-                itemContainerStyle={styles.itemContainer}
-                itemTextStyle={styles.itemText}
-                fontFamily={Fonts.SF_MEDIUM}
-                activeColor="#eef2feff"
-                placeholder="Chọn loại bản đồ"
-                data={listTypeMap}
-                maxHeight={Dimension.setHeight(30)}
-                labelField="nameLayer"
-                valueField="value"
-                value={selectTypeMapCode}
-                renderLeftIcon={() => {
-                  return (
-                    <Image
-                      source={Images.worldwide}
-                      style={styles.leftIconDropdown}
-                    />
-                  );
-                }}
-                onChange={item => {
-                  setSelectTypeMapCode(item.value);
-                  setListYear([]);
-                  setListProvinces([]);
-                  setListDistricts([]);
-                  setListCommunes([]);
-                  setSelectYear(undefined);
-                  setSelectProvince(undefined);
-                  setSelectProvinceCode(undefined);
-                  setSelectDistrict(undefined);
-                  setSelectDistrictCode(undefined);
-                  setSelectCommune(undefined);
-                  setSelectCommuneCode(undefined);
-                  setCenterPoint(null);
-                  getListYear(item.value);
-                }}
-              />
-            </View>
-            <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Chọn Năm dữ liệu</Text>
-              <Dropdown
-                style={styles.dropdown}
-                autoScroll={false}
-                showsVerticalScrollIndicator={false}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                containerStyle={styles.containerOptionStyle}
-                imageStyle={styles.imageStyle}
-                iconStyle={styles.iconStyle}
-                itemContainerStyle={styles.itemContainer}
-                itemTextStyle={styles.itemText}
-                fontFamily={Fonts.SF_MEDIUM}
-                activeColor="#eef2feff"
-                placeholder="Chọn năm"
-                data={listYear}
-                maxHeight={Dimension.setHeight(30)}
-                labelField="label"
-                valueField="value"
-                value={selectYear}
-                renderLeftIcon={() => {
-                  return (
-                    <Image
-                      source={Images.worldwide}
-                      style={styles.leftIconDropdown}
-                    />
-                  );
-                }}
-                onChange={item => {
-                  setSelectYear(item.value);
-                  setNameRegionCol(item.value);
-                  setListProvinces([]);
-                  setListDistricts([]);
-                  setListCommunes([]);
-                  setSelectProvince(undefined);
-                  setSelectProvinceCode(undefined);
-                  setSelectDistrict(undefined);
-                  setSelectDistrictCode(undefined);
-                  setSelectCommune(undefined);
-                  setSelectCommuneCode(undefined);
-                  setCenterPoint(null);
-                  getListProvince(item.value);
-                }}
-              />
-            </View>
             <View style={styles.containerEachLine}>
               <Text style={styles.title}>Chọn Tỉnh/Thành phố</Text>
               <Dropdown
@@ -560,4 +434,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SelectWMSLayerScreen1;
+export default SelectProvinceFFWScreen;

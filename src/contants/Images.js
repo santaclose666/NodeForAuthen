@@ -154,6 +154,9 @@ const Images = {
   seed: require('../assets/images/sprout.png'),
   contribution: require('../assets/images/contribution.png'),
   network: require('../assets/images/network.png'),
+  search1: require('../assets/images/search1.png'),
+  forestFire: require('../assets/images/forestFire.png'),
+  muavu: require('../assets/images/muavu.png'),
 };
 
 export default Images;
