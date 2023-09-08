@@ -154,6 +154,8 @@ const Images = {
   seed: require('../assets/images/sprout.png'),
   contribution: require('../assets/images/contribution.png'),
   network: require('../assets/images/network.png'),
+  book: require('../assets/images/book.png'),
+  norms: require('../assets/images/norms.png'),
 };
 
 export default Images;

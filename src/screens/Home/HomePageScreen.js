@@ -337,6 +337,26 @@ const HomePageScreen = ({navigation}) => {
                 <Text style={styles.featureText}>Giống LN</Text>
               </TouchableOpacity>
             </View>
+            <View style={styles.btnContainer}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('DMKTKT');
+                }}>
+                <Image source={Images.norms} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Định mức KTKT</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('VP809');
+                }}>
+                <Image source={Images.book} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Văn Phòng 809</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.featureBtnContainer}>
@@ -813,8 +833,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    flex: 1,
+    alignItems: 'flex-start',
     marginBottom: Dimension.setHeight(1.4),
   },
 

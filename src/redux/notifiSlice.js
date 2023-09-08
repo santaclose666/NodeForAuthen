@@ -1,10 +1,10 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, current} from '@reduxjs/toolkit';
 
 const notifiSlice = createSlice({
   name: 'notifi',
   initialState: {
     notifications: {
-      allNotifi: null,
+      allNotifi: [],
       isFetching: false,
       err: false,
     },
@@ -17,11 +17,24 @@ const notifiSlice = createSlice({
     getNotifiSuccess: (state, action) => {
       state.notifications.isFetching = false;
 
-      if (
-        state.notifications.allNotifi &&
-        Array.isArray(state.notifications.allNotifi)
-      ) {
-        state.notifications.allNotifi.unshift(action.payload);
+      const notifiData = current(state.notifications.allNotifi);
+
+      const checkExist = () => {
+        const existItem = notifiData?.find(
+          item => item.id === action.payload.id,
+        );
+
+        if (existItem) {
+          return false;
+        } else {
+          return true;
+        }
+      };
+
+      if (state.notifications.allNotifi.length != 0) {
+        if (checkExist()) {
+          state.notifications.allNotifi.unshift(action.payload);
+        }
       } else {
         state.notifications.allNotifi = [action.payload];
       }
@@ -37,7 +50,11 @@ const notifiSlice = createSlice({
   },
 });
 
-export const {getNotifiStart, getNotifiSuccess, getNotifiFailed, deleteNotifiSuccess} =
-  notifiSlice.actions;
+export const {
+  getNotifiStart,
+  getNotifiSuccess,
+  getNotifiFailed,
+  deleteNotifiSuccess,
+} = notifiSlice.actions;
 
 export default notifiSlice.reducer;

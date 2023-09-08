@@ -4,7 +4,6 @@ import messaging from '@react-native-firebase/messaging';
 import PushNotification, {Importance} from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import {Platform} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 PushNotification.createChannel(
   {
@@ -36,13 +35,12 @@ export const navigateNotifi = navigation => {
 export const saveNotification = async (remoteMessage, dispatch) => {
   if (remoteMessage) {
     const data = {
+      id: remoteMessage.id,
       obj1: remoteMessage.obj1,
       obj2: remoteMessage.obj2,
       content: remoteMessage.content,
       time: remoteMessage.time,
     };
-
-    
 
     getAllNotifi(data, dispatch);
   }

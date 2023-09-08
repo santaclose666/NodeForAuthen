@@ -27,6 +27,8 @@ import ContributionDataScreen from '../screens/ContributionData/ContributionData
 import KKRScreen from '../screens/KKR/KKRScreen';
 import TcvnScreen from '../screens/Tcvn/TcvnScreen';
 import TreeTypeScreen from '../screens/TreeType/TreeTypeScreen';
+import DMKTKTScreen from '../screens/DMKTKT/DMKTKTScreen';
+import VP809Screen from '../screens/VP809/VP809Screen';
 
 const Stack = createStackNavigator();
 
@@ -80,6 +82,8 @@ const StactNavigator = () => {
       <Stack.Screen name="KKR" component={KKRScreen} />
       <Stack.Screen name="TCVN" component={TcvnScreen} />
       <Stack.Screen name="TreeType" component={TreeTypeScreen} />
+      <Stack.Screen name="DMKTKT" component={DMKTKTScreen} />
+      <Stack.Screen name="VP809" component={VP809Screen} />
     </Stack.Navigator>
   );
 };

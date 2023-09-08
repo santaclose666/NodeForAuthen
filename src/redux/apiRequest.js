@@ -127,7 +127,6 @@ export const getAllStaffs = async dispatch => {
 export const getAllNotifi = async (data, dispatch) => {
   dispatch(getNotifiStart());
   try {
-    console.log('notifi', data);
 
     await dispatch(getNotifiSuccess(data));
   } catch (error) {
