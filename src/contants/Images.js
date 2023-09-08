@@ -156,6 +156,9 @@ const Images = {
   network: require('../assets/images/network.png'),
   book: require('../assets/images/book.png'),
   norms: require('../assets/images/norms.png'),
+  search1: require('../assets/images/search1.png'),
+  forestFire: require('../assets/images/forestFire.png'),
+  muavu: require('../assets/images/muavu.png'),
 };
 
 export default Images;

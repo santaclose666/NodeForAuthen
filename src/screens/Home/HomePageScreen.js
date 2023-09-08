@@ -337,6 +337,7 @@ const HomePageScreen = ({navigation}) => {
                 <Text style={styles.featureText}>Giống LN</Text>
               </TouchableOpacity>
             </View>
+
             <View style={styles.btnContainer}>
               <TouchableOpacity
                 style={styles.buttonFuc}
@@ -354,8 +355,22 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.book} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Văn Phòng 809</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('SelectProvinceFFW');
+                }}>
+                <Image source={Images.forestFire} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Cảnh báo cháy</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleAlert;
+                }}>
+                <Image source={Images.muavu} style={styles.featureBtn} />
+                <Text style={styles.featureText}>Mùa vụ</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
