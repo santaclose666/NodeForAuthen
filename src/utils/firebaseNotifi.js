@@ -32,27 +32,9 @@ export const navigateNotifi = navigation => {
   navigation.navigate('Notification');
 };
 
-export const saveNotification = async (remoteMessage, dispatch) => {
-  if (remoteMessage) {
-    const data = {
-      id: remoteMessage.id,
-      obj1: remoteMessage.obj1,
-      obj2: remoteMessage.obj2,
-      content: remoteMessage.content,
-      time: remoteMessage.time,
-    };
-
-    getAllNotifi(data, dispatch);
-  }
-};
-
-export const notificationListenerData = (navigation, dispatch) => {
+export const notificationListenerData = (navigation) => {
   messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('background and quit');
-    const data = remoteMessage.data;
-    if (Object.keys(data).length !== 0) {
-      saveNotification(data, dispatch);
-    }
+    console.log(remoteMessage);
   });
 
   PushNotification.configure({
@@ -61,12 +43,7 @@ export const notificationListenerData = (navigation, dispatch) => {
     },
 
     onNotification: notification => {
-      console.log('foreground');
-      const data = notification.data;
-
-      if (Object.keys(data).length !== 0) {
-        saveNotification(data, dispatch);
-      }
+      console.log(notification);
 
       if (notification.userInteraction) {
         navigation.navigate('Notification');

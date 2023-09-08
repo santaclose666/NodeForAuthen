@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useLayoutEffect, memo} from 'react';
 import {
   View,
   Text,
@@ -8,22 +8,47 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
-import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import {useSelector} from 'react-redux';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
+import {getAllNotifi} from '../../redux/apiRequest';
+import Loading from '../../components/LoadingUI';
+import {mainURL} from '../../contants/Variable';
 
 const NotifiScreen = ({navigation}) => {
-  const allNotifi = useSelector(state => state.notifi.notifications?.allNotifi);
+  const [allNotifi, setAllNotifi] = useState([]);
   const [notifiMenu, setNotifiMenu] = useState([
     'Tất cả',
     'Yêu cầu',
     'Sự kiện',
   ]);
   const [notifiMenuId, setNotifiMenuId] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const fetchAllNotifi = async () => {
+    try {
+      setLoading(true);
+      const res = await getAllNotifi();
+
+      const noibo = res.noibo;
+      const sinhnhat = res.sinhnhat;
+      const sukien = res.sukien;
+
+      if (res) {
+        setAllNotifi([...noibo, ...sinhnhat, ...sukien]);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useLayoutEffect(() => {
+    fetchAllNotifi();
+  }, []);
 
   return (
     <LinearGradientUI>
@@ -82,10 +107,18 @@ const NotifiScreen = ({navigation}) => {
             data={allNotifi}
             keyExtractor={(_, index) => index}
             showsVerticalScrollIndicator={false}
+            initialNumToRender={6}
+            windowSize={6}
+            removeClippedSubviews={true}
+            refreshing={true}
+            extraData={allNotifi}
             renderItem={({item, index}) => {
               return (
-                <View key={index} style={styles.notifiContainer}>
-                  <Image source={Images.avatar} style={styles.notifiImg} />
+                <TouchableOpacity key={index} style={styles.notifiContainer}>
+                  <Image
+                    src={mainURL + item?.avatar}
+                    style={styles.notifiImg}
+                  />
                   <View
                     style={{
                       marginLeft: Dimension.setWidth(3),
@@ -93,17 +126,20 @@ const NotifiScreen = ({navigation}) => {
                     }}>
                     <View style={styles.textContainer}>
                       <Text style={styles.obj2}>
-                        <Text style={styles.obj1}>{item?.obj1}</Text>{' '}
-                        {item?.content} {item?.obj2}
+                        <Text numberOfLines={3} style={styles.obj1}>
+                          {item?.nguoigui}
+                        </Text>{' '}
+                        {item?.tieude} {item?.noidung}
                       </Text>
                     </View>
-                    <Text style={styles.time}>{item?.time}</Text>
+                    <Text style={styles.time}>{item?.giotao}</Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             }}
           />
         </View>
+        {loading === true && <Loading />}
       </SafeAreaView>
     </LinearGradientUI>
   );
@@ -144,6 +180,7 @@ const styles = StyleSheet.create({
   notifiImg: {
     width: 50,
     height: 50,
+    borderRadius: 50,
   },
 
   textContainer: {

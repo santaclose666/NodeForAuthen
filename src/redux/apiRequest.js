@@ -123,17 +123,6 @@ export const getAllStaffs = async dispatch => {
   }
 };
 
-/////////////////////  NOTIFICATION DATA  ////////////////////
-export const getAllNotifi = async (data, dispatch) => {
-  dispatch(getNotifiStart());
-  try {
-
-    await dispatch(getNotifiSuccess(data));
-  } catch (error) {
-    dispatch(getNotifiFailed());
-  }
-};
-
 /////////////////////  WEATHERS DATA  ////////////////////
 export const getWeatherData = async dispatch => {
   const apiKey = '1e52cb7b5a93a86d54181d1fa5724454';
@@ -595,6 +584,16 @@ export const postNotifcation = async data => {
 
     return res.data;
   } catch (error) {}
+};
+
+export const getAllNotifi = async () => {
+  try {
+    const res = await axios.get(`https://forestry.ifee.edu.vn/api/thongbao`);
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 /////////////////////  SEND FEEDBACK  ////////////////////

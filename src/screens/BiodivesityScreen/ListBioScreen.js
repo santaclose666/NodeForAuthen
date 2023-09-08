@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   Image,
   TextInput,
   StyleSheet,
@@ -72,7 +71,7 @@ const ListBioScreen = ({navigation}) => {
   const [isSelectLocation, setIsSelectLocation] = useState(false);
   const [limited, setLimited] = useState(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (species) {
       setLimited(
         setInterval(() => {

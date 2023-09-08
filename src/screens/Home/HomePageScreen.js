@@ -79,7 +79,7 @@ const HomePageScreen = ({navigation}) => {
   };
 
   const notificationHandleListener = () => {
-    notificationListenerData(navigation, dispatch);
+    notificationListenerData(navigation);
   };
 
   const notificationHandleOpenApp = async () => {
