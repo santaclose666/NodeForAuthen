@@ -364,7 +364,11 @@ const HomePageScreen = ({navigation}) => {
                 <Image source={Images.forest} style={styles.featureBtn} />
                 <Text style={styles.featureText}>QLRBV</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
+              <TouchableOpacity
+                style={styles.buttonFuc}
+                onPress={() => {
+                  handleNavigate('MuaVuMap');
+                }}>
                 <Image source={Images.muavu} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Mùa vụ</Text>
               </TouchableOpacity>

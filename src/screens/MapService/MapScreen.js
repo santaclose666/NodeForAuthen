@@ -114,6 +114,8 @@ const MapScreen = ({navigation}) => {
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [listFirePoint, setListFirePoint] = useState([]);
 
+  console.log(data.WMSLink[0]);
+
   const listProject = dataProjection.map(item => {
     return {label: `${item.province} - ${item.zone}`, value: item.epsg_code};
   });
@@ -320,7 +322,6 @@ const MapScreen = ({navigation}) => {
   }
 
   const _gotoLocation = (lat, long, latDelta, longDelta) => {
-    console.log('go', lat, long);
     mapViewRef.current.animateToRegion({
       latitude: lat,
       longitude: long,
@@ -331,7 +332,6 @@ const MapScreen = ({navigation}) => {
 
   const onLayout = event => {
     const {x, y, height, width} = event.nativeEvent.layout;
-    console.log(event.nativeEvent.layout);
     setMapViewWidth(width);
     setMapViewHeight(height);
   };
@@ -589,6 +589,7 @@ const MapScreen = ({navigation}) => {
               </Marker>
             );
           })}
+
         <WMSTile
           urlTemplate={data.WMSLink[0]}
           opacity={1}
