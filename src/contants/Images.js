@@ -159,6 +159,12 @@ const Images = {
   search1: require('../assets/images/search1.png'),
   forestFire: require('../assets/images/forestFire.png'),
   muavu: require('../assets/images/muavu.png'),
+  gps: require('../assets/images/gps.png'),
+  locationFire: require('../assets/images/locationFire.png'),
+  noFire: require('../assets/images/fire_notconfirmed.png'),
+  confirmFire: require('../assets/images/confirmed_fire_forest.png'),
+  confirmFireNotForest: require('../assets/images/confirmed_fire_not_forest.png'),
+  confirmNoFire: require('../assets/images/confirmed_not_fire.png'),
 };
 
 export default Images;
