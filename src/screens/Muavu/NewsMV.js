@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
 import NewsTemplate from '../../components/NewsTemplate';
 
-const AllNewsScreen = ({navigation}) => {
+const NewsMV = ({navigation}) => {
   const [featureIndex, setFeatureIndex] = useState(0);
   const newsArr = useSelector(state => state.news.newSlice?.data);
   const category = useSelector(state =>
@@ -15,7 +15,7 @@ const AllNewsScreen = ({navigation}) => {
 
   return (
     <NewsTemplate
-      screenName={'Tin tức F4'}
+      screenName={'Tin tức Mùa vụ'}
       navigation={navigation}
       featureIndex={featureIndex}
       setFeatureIndex={setFeatureIndex}
@@ -27,4 +27,4 @@ const AllNewsScreen = ({navigation}) => {
   );
 };
 
-export default AllNewsScreen;
+export default NewsMV;

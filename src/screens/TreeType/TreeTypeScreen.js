@@ -16,6 +16,7 @@ const TreeTypeScreen = ({navigation}) => {
 
   return (
     <DocumentTemplate
+      screenName={'Giống Lâm nghiệp'}
       navigation={navigation}
       pickFileIndex={pickFileIndex}
       setpickFileIndex={setpickFileIndex}

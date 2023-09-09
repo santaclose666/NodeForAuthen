@@ -16,6 +16,7 @@ const ForestPrice = ({navigation}) => {
 
   return (
     <DocumentTemplate
+      screenName={'Khung giá rừng'}
       navigation={navigation}
       pickFileIndex={pickFileIndex}
       setpickFileIndex={setpickFileIndex}

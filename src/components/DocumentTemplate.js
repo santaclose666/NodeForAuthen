@@ -22,6 +22,7 @@ import Header from '../components/Header';
 import LinearGradientUI from './LinearGradientUI';
 
 const DocumentTemplate = ({
+  screenName,
   navigation,
   pickFileIndex,
   setpickFileIndex,
@@ -177,7 +178,7 @@ const DocumentTemplate = ({
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title="Danh mục tài liệu" navigation={navigation} />
+        <Header title={screenName} navigation={navigation} />
         <View style={styles.searchInput}>
           <Icons.Feather name="search" size={25} color={Colors.INACTIVE_GREY} />
           <TextInput

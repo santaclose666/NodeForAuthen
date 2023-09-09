@@ -160,6 +160,9 @@ const Images = {
   forestFire: require('../assets/images/forestFire.png'),
   muavu: require('../assets/images/muavu.png'),
   timecreate: require('../assets/images/timecreate.png'),
+  newsmv: require('../assets/images/newsmv.png'),
+  mapmv: require('../assets/images/mapmv.png'),
+  documentmv: require('../assets/images/documentmv.png'),
 };
 
 export default Images;

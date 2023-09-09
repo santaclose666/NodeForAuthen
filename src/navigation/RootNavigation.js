@@ -7,6 +7,7 @@ import DisplayPDF from '../screens/Document/DisplayPDFScreen';
 import DetailNewsScreen from '../screens/News/DetailNewsScreen';
 import HappyBirthdayScreen from '../screens/Happybirthday/HappyBirthdayScreen';
 import HappyBirthdayList from '../screens/Happybirthday/HappyBirthdayList';
+import MainMV from '../screens/Muavu/MainMV';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ const RootNavigator = () => {
         <Stack.Screen name="DetailNews" component={DetailNewsScreen} />
         <Stack.Screen name="HappyBirthday" component={HappyBirthdayScreen} />
         <Stack.Screen name="HappyBirthdayList" component={HappyBirthdayList} />
+        <Stack.Screen name="Muavu" component={MainMV} />
       </Stack.Navigator>
     </NavigationContainer>
   );

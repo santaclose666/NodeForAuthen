@@ -16,6 +16,7 @@ const ForestryScreen = ({navigation}) => {
 
   return (
     <DocumentTemplate
+      screenName={'Ngành Lâm học'}
       navigation={navigation}
       pickFileIndex={pickFileIndex}
       setpickFileIndex={setpickFileIndex}

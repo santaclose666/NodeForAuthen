@@ -16,6 +16,7 @@ const QLRBVScreen = ({navigation}) => {
 
   return (
     <DocumentTemplate
+      screenName={'Quản lý rừng bền vững'}
       navigation={navigation}
       pickFileIndex={pickFileIndex}
       setpickFileIndex={setpickFileIndex}
