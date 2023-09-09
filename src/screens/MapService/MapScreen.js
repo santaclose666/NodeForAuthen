@@ -534,11 +534,7 @@ const MapScreen = ({navigation}) => {
                     resizeMode="cover"
                   />
                 )}
-                <Callout
-                  style={{padding: 5}}
-                  onPress={() => {
-                    console.log(getXacMinh(marker.properties.XACMINH));
-                  }}>
+                <Callout style={{padding: 5}} onPress={() => {}}>
                   <View style={styles.bubble}>
                     <View>
                       <Text
@@ -1268,7 +1264,7 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    fontSize: 10,
+    fontSize: 11,
     marginBottom: 2,
     marginLeft: 10,
   },
