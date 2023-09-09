@@ -1,5 +1,4 @@
 import {useEffect} from 'react';
-import {getAllNotifi} from '../redux/apiRequest';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification, {Importance} from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
@@ -28,7 +27,7 @@ export const getToken = async () => {
   }
 };
 
-export const navigateNotifi = navigation => {
+export const handleNavigate = navigation => {
   navigation.navigate('Notification');
 };
 
@@ -73,12 +72,14 @@ export const notificationListenerData = (navigation) => {
 export const notificationOpenApp = async navigation => {
   const notificationOpen = await messaging().getInitialNotification();
   if (notificationOpen) {
-    navigateNotifi(navigation);
+    console.log(notificationOpen);
+    handleNavigate(navigation);
   }
 
   messaging().onNotificationOpenedApp(async remoteMessage => {
     if (remoteMessage) {
-      navigateNotifi(navigation);
+      console.log(remoteMessage);
+      handleNavigate(navigation);
     }
   });
 };

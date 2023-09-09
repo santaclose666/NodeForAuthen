@@ -479,9 +479,8 @@ export const DisplayNotificationModal = ({
   setToggleModal,
   item,
 }) => {
-  console.log(typeof item?.giotao.slice(0, 2));
   const filterTime = item?.giotao.slice(0, 5);
-  const halfDay = item?.giotao.slice(0, 2) >= 12 ? 'pm' : 'am';
+  const halfDay = item?.giotao.slice(0, 2) > 12 ? 'pm' : 'am';
 
   return (
     <Modal

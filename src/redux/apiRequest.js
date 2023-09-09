@@ -586,13 +586,16 @@ export const postNotifcation = async data => {
   } catch (error) {}
 };
 
-export const getAllNotifi = async () => {
+export const getAllNotifi = async (id, dispatch) => {
+  dispatch(getNotifiStart());
   try {
-    const res = await axios.get(`https://forestry.ifee.edu.vn/api/thongbao`);
+    const res = await axios.get(
+      `https://forestry.ifee.edu.vn/api/thongbao/${id}`,
+    );
 
-    return res.data;
+    dispatch(getNotifiSuccess(res.data));
   } catch (error) {
-    console.log(error);
+    dispatch(getOnLeaveFailed());
   }
 };
 

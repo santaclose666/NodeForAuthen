@@ -15,11 +15,8 @@ import Sound from 'react-native-sound';
 
 const HappyBirthdayScreen = ({navigation, route}) => {
   const item = route.params.item;
-  const currYear = getCurrentYear();
-  const birthYear = item.ngaysinh.slice(6, 10);
-  const age = currYear - birthYear;
 
-  var sound = new Sound('dance.mp3', Sound.MAIN_BUNDLE, error => {
+  var sound = new Sound('hpbdpiano.mp3', Sound.MAIN_BUNDLE, error => {
     if (error) {
       console.log('failed to load the sound', error);
       return;
@@ -106,11 +103,10 @@ const HappyBirthdayScreen = ({navigation, route}) => {
               marginHorizontal: Dimension.setWidth(6),
               color: '#755a68',
             }}>
-            Hôm nay là một ngày đặc biệt, thành viên đáng quý {item.hoten} của
-            đơn vị tròn {age} tuổi. Trong thời gian qua, bạn không chỉ hoàn
-            thành tốt công việc mà còn luôn giúp đỡ các thành viên khác trong
-            đơn vị. Tuổi mới hy vọng mọi điều tốt đẹp trong cuộc sống sẽ đến với
-            bạn!
+            Hôm nay là một ngày đặc biệt của thành viên đáng quý {item.hoten}.
+            Trong thời gian qua, bạn không chỉ hoàn thành tốt công việc mà còn
+            luôn giúp đỡ các thành viên khác. Tuổi mới hy vọng mọi điều tốt đẹp
+            trong cuộc sống sẽ đến với bạn!
             <Image source={Images.confetti} style={{width: 20, height: 20}} />
           </Text>
         </View>
