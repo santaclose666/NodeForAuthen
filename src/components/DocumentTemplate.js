@@ -148,10 +148,7 @@ const DocumentTemplate = ({
                 alignItems: 'center',
                 width: '70%',
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  handleDownload(item.path);
-                }}>
+              <TouchableOpacity>
                 <Image
                   source={Images.download}
                   style={{
