@@ -13,7 +13,7 @@ import Fonts from '../contants/Fonts';
 import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
 import {shadowIOS} from '../contants/propsIOS';
-import {newsURL} from '../contants/Variable';
+import {newsURL, newsMvURL} from '../contants/Variable';
 import {changeFormatDate} from '../utils/serviceFunction';
 import LinearGradientUI from '../components/LinearGradientUI';
 import Header from '../components/Header';
@@ -26,16 +26,21 @@ const NewsTemplate = ({
   setFeatureIndex,
   newsArr,
   featureArr,
-  newsFilter,
-  setNewsFilter,
+  title,
+  setTitle,
 }) => {
+  const checkURL = screenName === 'Tin tức Mùa vụ' ? newsMvURL : newsURL;
+
   const handlePickFeature = (title, index) => {
     setFeatureIndex(index);
-    if (index !== 0) {
-      const data = newsArr.filter(item => item.id_category === title);
-      setNewsFilter(data);
+    setTitle(title);
+  };
+
+  const handleFilter = () => {
+    if (featureIndex == 0 || screenName === 'Tin tức Mùa vụ') {
+      return newsArr;
     } else {
-      setNewsFilter(null);
+      return newsArr?.filter(item => item?.id_category === title);
     }
   };
 
@@ -46,99 +51,109 @@ const NewsTemplate = ({
         style={styles.container}>
         <Header title={screenName} navigation={navigation} replace={true} />
 
-        <View style={styles.featuresTitleContainer}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {featureArr.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    handlePickFeature(item.id_category, index);
-                  }}
-                  style={{
-                    marginHorizontal: Dimension.setWidth(3),
-                    paddingVertical: 3,
-                    borderBottomWidth: featureIndex === index ? 2 : 0,
-                    borderBottomColor:
-                      featureIndex === index ? Colors.DEFAULT_GREEN : '#fff',
-                  }}
-                  key={index}>
-                  <Text
+        {featureArr && (
+          <View style={styles.featuresTitleContainer}>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              {featureArr.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handlePickFeature(item.id_category, index);
+                    }}
                     style={{
-                      fontFamily:
-                        featureIndex === index
-                          ? Fonts.SF_SEMIBOLD
-                          : Fonts.SF_REGULAR,
-                      fontSize: Dimension.fontSize(16),
-                      opacity: 0.8,
-                      color:
-                        featureIndex === index
-                          ? Colors.DEFAULT_GREEN
-                          : Colors.DEFAULT_BLACK,
-                    }}>
-                    {item.title}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
-
-        <FlatList
-          data={newsFilter ? newsFilter : newsArr}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('DetailNews', {item: item});
-                }}
-                style={styles.hotNewsContainer}
-                key={index}>
-                <View
-                  style={{
-                    marginTop: Dimension.setHeight(0.7),
-                    marginBottom: Dimension.setHeight(0.8),
-                  }}>
-                  <Image
-                    style={styles.newsImg}
-                    src={newsURL + item.avatar}
-                    resizeMode="cover"
-                  />
-                  <View
-                    style={{
-                      marginTop: Dimension.setHeight(0.6),
-                      marginHorizontal: Dimension.setWidth(2.2),
-                    }}>
+                      marginHorizontal: Dimension.setWidth(3),
+                      paddingVertical: 3,
+                      borderBottomWidth: featureIndex === index ? 2 : 0,
+                      borderBottomColor:
+                        featureIndex === index ? Colors.DEFAULT_GREEN : '#fff',
+                    }}
+                    key={index}>
                     <Text
-                      numberOfLines={2}
                       style={{
-                        fontFamily: Fonts.SF_SEMIBOLD,
-                        fontSize: Dimension.fontSize(14),
-                        ...fontDefault,
-                        paddingHorizontal: Dimension.setHeight(1),
-                        textAlign: 'justify',
+                        fontFamily:
+                          featureIndex === index
+                            ? Fonts.SF_SEMIBOLD
+                            : Fonts.SF_REGULAR,
+                        fontSize: Dimension.fontSize(16),
+                        opacity: 0.8,
+                        color:
+                          featureIndex === index
+                            ? Colors.DEFAULT_GREEN
+                            : Colors.DEFAULT_BLACK,
                       }}>
                       {item.title}
                     </Text>
-                    <Text
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
+
+        <View style={{flex: 1, marginTop: Dimension.setHeight(1.6)}}>
+          <FlatList
+            data={handleFilter()}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    const data = {
+                      ...item,
+                      screenName,
+                    };
+                    navigation.navigate('DetailNews', {item: data});
+                  }}
+                  style={styles.hotNewsContainer}
+                  key={index}>
+                  <View
+                    style={{
+                      marginTop: Dimension.setHeight(0.7),
+                      marginBottom: Dimension.setHeight(0.8),
+                    }}>
+                    <Image
+                      style={styles.newsImg}
+                      src={checkURL + item.avatar}
+                      resizeMode="cover"
+                    />
+                    <View
                       style={{
-                        fontFamily: Fonts.SF_REGULAR,
-                        color: Colors.DEFAULT_BLACK,
-                        opacity: 0.6,
-                        fontSize: Dimension.fontSize(12),
-                        paddingHorizontal: Dimension.setHeight(1),
+                        marginTop: Dimension.setHeight(0.6),
+                        marginHorizontal: Dimension.setWidth(2.2),
                       }}>
-                      {changeFormatDate(item.date_created)}
-                    </Text>
+                      <Text
+                        numberOfLines={2}
+                        style={{
+                          fontFamily: Fonts.SF_SEMIBOLD,
+                          fontSize: Dimension.fontSize(14),
+                          ...fontDefault,
+                          paddingHorizontal: Dimension.setHeight(1),
+                          textAlign: 'justify',
+                        }}>
+                        {item.title}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Fonts.SF_REGULAR,
+                          color: Colors.DEFAULT_BLACK,
+                          opacity: 0.6,
+                          fontSize: Dimension.fontSize(12),
+                          paddingHorizontal: Dimension.setHeight(1),
+                        }}>
+                        {changeFormatDate(item.date_created)}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-          initialNumToRender={6}
-          windowSize={6}
-          removeClippedSubviews={true}
-          refreshing={true}
-        />
+                </TouchableOpacity>
+              );
+            }}
+            initialNumToRender={6}
+            windowSize={6}
+            removeClippedSubviews={true}
+            refreshing={true}
+          />
+        </View>
       </SafeAreaView>
     </LinearGradientUI>
   );

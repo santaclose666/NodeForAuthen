@@ -11,7 +11,7 @@ const AllNewsScreen = ({navigation}) => {
     }),
   );
   const featureArr = [{title: 'Tất cả', id_category: 0}, ...category];
-  const [newsFilter, setNewsFilter] = useState(null);
+  const [title, setTitle] = useState('');
 
   return (
     <NewsTemplate
@@ -21,8 +21,8 @@ const AllNewsScreen = ({navigation}) => {
       setFeatureIndex={setFeatureIndex}
       newsArr={newsArr}
       featureArr={featureArr}
-      newsFilter={newsFilter}
-      setNewsFilter={setNewsFilter}
+      title={title}
+      setTitle={setTitle}
     />
   );
 };

@@ -8,14 +8,13 @@ import {
   StyleSheet,
   SafeAreaView,
   useWindowDimensions,
-  Platform,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import {shadowIOS} from '../../contants/propsIOS';
-import {fontDefault, newsURL} from '../../contants/Variable';
+import {fontDefault, newsMvURL, newsURL} from '../../contants/Variable';
 import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
 import RenderHtml from 'react-native-render-html';
 import WebView from 'react-native-webview';
@@ -23,6 +22,8 @@ import WebView from 'react-native-webview';
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
   const {width} = useWindowDimensions();
+
+  const checkURL = item.screenName === 'Tin tức Mùa vụ' ? newsMvURL : newsURL;
 
   const source = {
     html: `${item.content}`,
@@ -41,7 +42,7 @@ const DetailNewsScreen = ({navigation, route}) => {
       <View style={styles.mainImgContainer}>
         <Image
           resizeMode="cover"
-          src={newsURL + item.avatar}
+          src={checkURL + item.avatar}
           style={{
             width: Dimension.setWidth(100),
             height: Dimension.setHeight(30),

@@ -1,18 +1,27 @@
-import React, {useState} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import DocumentTemplate from '../../components/DocumentTemplate';
+import {getAllDocumentMv} from '../../redux/apiRequest';
 
 const DocumentMV = ({navigation}) => {
+  const dispatch = useDispatch();
   const [pickFileIndex, setpickFileIndex] = useState(null);
-  const [pickOptionIndex, setPickOptionIndex] = useState(0);
   const [input, setInput] = useState('');
-  const data = useSelector(
-    state => state.document.documentSlice?.forestryData?.data,
-  );
-  const groupOption = useSelector(
-    state => state.document.documentSlice?.forestryData?.category,
-  );
+  const data = useSelector(state => state.documentMv.documentMvSlice?.data);
   const [document, setDocument] = useState(data);
+
+  const fetchAllDocumentMv = async () => {
+    try {
+      await getAllDocumentMv(dispatch);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useLayoutEffect(() => {
+    fetchAllDocumentMv();
+  }, []);
 
   return (
     <DocumentTemplate
@@ -20,12 +29,9 @@ const DocumentMV = ({navigation}) => {
       navigation={navigation}
       pickFileIndex={pickFileIndex}
       setpickFileIndex={setpickFileIndex}
-      pickOptionIndex={pickOptionIndex}
-      setPickOptionIndex={setPickOptionIndex}
       input={input}
       setInput={setInput}
       data={data}
-      groupOption={groupOption}
       document={document}
       setDocument={setDocument}
     />

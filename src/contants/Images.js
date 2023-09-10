@@ -163,6 +163,7 @@ const Images = {
   newsmv: require('../assets/images/newsmv.png'),
   mapmv: require('../assets/images/mapmv.png'),
   documentmv: require('../assets/images/documentmv.png'),
+  download: require('../assets/images/download.png'),
 };
 
 export default Images;

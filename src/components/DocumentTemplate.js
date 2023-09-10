@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   FlatList,
+  Platform,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../contants/Images';
@@ -20,6 +21,8 @@ import {shadowIOS} from '../contants/propsIOS';
 import {fontDefault} from '../contants/Variable';
 import Header from '../components/Header';
 import LinearGradientUI from './LinearGradientUI';
+import RNFetchBlob from 'rn-fetch-blob';
+import {downloadPermissionAndroid} from '../utils/permissionFunc';
 
 const DocumentTemplate = ({
   screenName,
@@ -38,15 +41,10 @@ const DocumentTemplate = ({
   const handleSearch = useCallback(
     text => {
       setInput(text);
-      setPickOptionIndex(null);
       setpickFileIndex(null);
 
-      const filter = data.filter(
-        item =>
-          unidecode(item.tenvanban.toLowerCase()).includes(
-            text.toLowerCase(),
-          ) ||
-          unidecode(item.loaivanban.toLowerCase()).includes(text.toLowerCase()),
+      const filter = data.filter(item =>
+        unidecode(item.tenvanban.toLowerCase()).includes(text.toLowerCase()),
       );
       setDocument(filter);
     },
@@ -69,6 +67,67 @@ const DocumentTemplate = ({
     navigation.navigate('PDF', {link: path});
   }, []);
 
+  const downloadFile = async url => {
+    const {fs} = RNFetchBlob;
+    const cacheDir = fs.dirs.DownloadDir;
+
+    const filename = url.split('/').pop();
+    const imagePath = `${cacheDir}/${filename}`;
+
+    try {
+      const configOptions = Platform.select({
+        ios: {
+          fileCache: true,
+          path: imagePath,
+          appendExt: filename.split('.').pop(),
+        },
+        android: {
+          fileCache: true,
+          path: imagePath,
+          appendExt: filename.split('.').pop(),
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            path: imagePath,
+            description: 'File',
+          },
+        },
+      });
+
+      const response = await RNFetchBlob.config(configOptions).fetch(
+        'GET',
+        url,
+      );
+
+      return response;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const handleDownload = async path => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await downloadPermissionAndroid();
+
+        if (granted) {
+          downloadFile(path);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const res = await downloadFile(path);
+
+        RNFetchBlob.ios.previewDocument(res.path());
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const RenderDocument = memo(({item, index}) => {
     return (
       <View style={{flex: 1, zIndex: 999}}>
@@ -88,10 +147,19 @@ const DocumentTemplate = ({
                 alignItems: 'center',
                 width: '70%',
               }}>
-              <Image
-                source={Images.pdf}
-                style={{width: 45, height: 45, marginRight: 5}}
-              />
+              <TouchableOpacity
+                onPress={() => {
+                  handleDownload(item.path);
+                }}>
+                <Image
+                  source={Images.download}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    marginRight: Dimension.setWidth(3),
+                  }}
+                />
+              </TouchableOpacity>
               <Text
                 numberOfLines={2}
                 ellipsizeMode="tail"
@@ -122,7 +190,7 @@ const DocumentTemplate = ({
               marginTop: Dimension.setHeight(1.8),
               borderTopWidth: 0.5,
               borderTopColor: Colors.INACTIVE_GREY,
-              marginHorizontal: Dimension.setWidth(8),
+              marginHorizontal: Dimension.setWidth(7),
             }}>
             <View
               style={{
@@ -163,11 +231,20 @@ const DocumentTemplate = ({
                 <Text style={styles.title}>Năm ban hành: </Text>
                 <Text style={styles.content}>{item?.nam}</Text>
               </View>
-              <View style={styles.subItem}>
-                <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Loại văn bản: </Text>
-                <Text style={styles.content}>{item?.loaivanban}</Text>
-              </View>
+              {item?.sohieu && (
+                <View style={styles.subItem}>
+                  <Image source={Images.dot} style={styles.dot} />
+                  <Text style={styles.title}>Số hiệu: </Text>
+                  <Text style={styles.content}>{item?.sohieu}</Text>
+                </View>
+              )}
+              {item?.loaivanban && (
+                <View style={styles.subItem}>
+                  <Image source={Images.dot} style={styles.dot} />
+                  <Text style={styles.title}>Loại văn bản: </Text>
+                  <Text style={styles.content}>{item?.loaivanban}</Text>
+                </View>
+              )}
             </View>
           </View>
         )}
@@ -193,42 +270,46 @@ const DocumentTemplate = ({
           />
         </View>
 
-        <View style={styles.optionContainer}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {groupOption?.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    handlePickOption(item, index);
-                  }}
-                  key={index}
-                  style={{
-                    marginRight: Dimension.setWidth(4.4),
-                    paddingVertical: 3,
-                    borderBottomWidth: pickOptionIndex === index ? 2 : 0,
-                    borderBottomColor:
-                      pickOptionIndex === index ? Colors.DEFAULT_GREEN : '#fff',
-                  }}>
-                  <Text
+        {groupOption && (
+          <View style={styles.optionContainer}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {groupOption?.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handlePickOption(item, index);
+                    }}
+                    key={index}
                     style={{
-                      fontFamily:
-                        pickOptionIndex === index
-                          ? Fonts.SF_SEMIBOLD
-                          : Fonts.SF_REGULAR,
-                      fontSize: Dimension.fontSize(16),
-                      opacity: 0.8,
-                      color:
+                      marginRight: Dimension.setWidth(4.4),
+                      paddingVertical: 3,
+                      borderBottomWidth: pickOptionIndex === index ? 2 : 0,
+                      borderBottomColor:
                         pickOptionIndex === index
                           ? Colors.DEFAULT_GREEN
-                          : Colors.DEFAULT_BLACK,
+                          : '#fff',
                     }}>
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
+                    <Text
+                      style={{
+                        fontFamily:
+                          pickOptionIndex === index
+                            ? Fonts.SF_SEMIBOLD
+                            : Fonts.SF_REGULAR,
+                        fontSize: Dimension.fontSize(16),
+                        opacity: 0.8,
+                        color:
+                          pickOptionIndex === index
+                            ? Colors.DEFAULT_GREEN
+                            : Colors.DEFAULT_BLACK,
+                      }}>
+                      {item}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
 
         <View style={styles.fileListContainer}>
           <FlatList

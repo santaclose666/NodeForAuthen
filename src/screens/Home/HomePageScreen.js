@@ -93,7 +93,7 @@ const HomePageScreen = ({navigation}) => {
     }
   };
 
-  const _shareApp = async () => {
+  const shareApp = async () => {
     try {
       const result = await Share.share({
         message:
@@ -562,7 +562,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  _shareApp();
+                  shareApp();
                 }}>
                 <Image source={Images.network} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Chia sẻ</Text>

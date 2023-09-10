@@ -13,7 +13,7 @@ import {
   getNotifiSuccess,
 } from './notifiSlice';
 import {CommonActions} from '@react-navigation/native';
-import {getCoords} from '../utils/serviceFunction';
+import {changeFormatDate, getCoords} from '../utils/serviceFunction';
 import {
   getWeatherFailed,
   getWeatherStart,
@@ -60,6 +60,13 @@ import {
   getSpecieStart,
   getSpecieSuccess,
 } from './SpeciesSlice';
+import {getNewMvFailed, getNewMvStart, getNewMvSuccess} from './newsMvSlice';
+import {
+  getDocumentMvFaild,
+  getDocumentMvStart,
+  getDocumentMvSuccess,
+} from './documentMvSlice';
+import {documentMvURL} from '../contants/Variable';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -559,6 +566,29 @@ export const getallNews = async dispatch => {
   }
 };
 
+export const getAllNewsMV = async dispatch => {
+  dispatch(getNewMvStart());
+  try {
+    const res = await axios.get(`https://muavutrongrung.ifee.edu.vn/api/cddh`);
+
+    const data = res.data.map(item => {
+      return {
+        id: item.id,
+        title: item.tieude,
+        content: item.noidung,
+        avatar: item.hinhanh,
+        date_created: changeFormatDate(item.ngaydang),
+      };
+    });
+
+    console.log(data);
+
+    dispatch(getNewMvSuccess(data));
+  } catch (error) {
+    dispatch(getNewMvFailed());
+  }
+};
+
 ///////////////////// SEND NOTIFCATION ////////////////////
 export const postToken = async id_ht => {
   try {
@@ -619,6 +649,24 @@ export const getAllDocument = async dispatch => {
     dispatch(getDocumentSuccess(res.data));
   } catch (error) {
     dispatch(getDocumentFailed());
+  }
+};
+
+export const getAllDocumentMv = async dispatch => {
+  dispatch(getDocumentMvStart());
+  try {
+    const res = await axios.get(`https://muavutrongrung.ifee.edu.vn/api/tckt`);
+
+    const data = res.data.map(item => {
+      return {
+        ...item,
+        path: documentMvURL + item.path,
+      };
+    });
+
+    dispatch(getDocumentMvSuccess(data));
+  } catch (error) {
+    dispatch(getDocumentMvFaild());
   }
 };
 
