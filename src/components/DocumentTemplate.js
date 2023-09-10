@@ -21,8 +21,6 @@ import {shadowIOS} from '../contants/propsIOS';
 import {fontDefault} from '../contants/Variable';
 import Header from '../components/Header';
 import LinearGradientUI from './LinearGradientUI';
-import RNFetchBlob from 'rn-fetch-blob';
-import {downloadPermissionAndroid} from '../utils/permissionFunc';
 
 const DocumentTemplate = ({
   screenName,
@@ -64,7 +62,8 @@ const DocumentTemplate = ({
   );
 
   const handlePress = useCallback(path => {
-    navigation.navigate('PDF', {link: path});
+    console.log(path);
+    navigation.navigate('PDF', {link: encodeURI(path)});
   }, []);
 
   // const downloadFile = async url => {
@@ -150,7 +149,7 @@ const DocumentTemplate = ({
               }}>
               <TouchableOpacity>
                 <Image
-                  source={Images.download}
+                  source={Images.pdf}
                   style={{
                     width: 40,
                     height: 40,

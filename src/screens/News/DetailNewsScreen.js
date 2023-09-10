@@ -23,7 +23,8 @@ const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
   const {width} = useWindowDimensions();
 
-  const checkURL = item.screenName === 'Tin tức Mùa vụ' ? newsMvURL : newsURL;
+  const checkURL =
+    item.screenName === 'Chỉ đạo điều hành' ? newsMvURL : newsURL;
 
   const source = {
     html: `${item.content}`,

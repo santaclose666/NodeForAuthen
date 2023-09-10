@@ -29,7 +29,7 @@ const NewsTemplate = ({
   title,
   setTitle,
 }) => {
-  const checkURL = screenName === 'Tin tức Mùa vụ' ? newsMvURL : newsURL;
+  const checkURL = screenName === 'Chỉ đạo điều hành' ? newsMvURL : newsURL;
 
   const handlePickFeature = (title, index) => {
     setFeatureIndex(index);
@@ -37,7 +37,7 @@ const NewsTemplate = ({
   };
 
   const handleFilter = () => {
-    if (featureIndex == 0 || screenName === 'Tin tức Mùa vụ') {
+    if (featureIndex == 0 || screenName === 'Chỉ đạo điều hành') {
       return newsArr;
     } else {
       return newsArr?.filter(item => item?.id_category === title);

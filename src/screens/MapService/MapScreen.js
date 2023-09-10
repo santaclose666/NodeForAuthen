@@ -11,9 +11,16 @@ import {
   Text,
   TextInput,
   SafeAreaView,
+  SwitchComponent,
 } from 'react-native';
-import {Button} from 'native-base';
-import MapView, {WMSTile, Polygon, MAP_TYPES, Marker} from 'react-native-maps';
+import {Button, Center, Fab} from 'native-base';
+import MapView, {
+  WMSTile,
+  Polygon,
+  MAP_TYPES,
+  Marker,
+  Callout,
+} from 'react-native-maps';
 import {useRoute} from '@react-navigation/native';
 import Colors from '../../contants/Colors';
 import Images from '../../contants/Images';
@@ -21,6 +28,14 @@ import Dimension from '../../contants/Dimension';
 import dataProjection from '../../utils/Vn2000Projection.json';
 import {Dropdown} from 'react-native-element-dropdown';
 import Fonts from '../../contants/Fonts';
+import {
+  formatDate,
+  compareDate,
+  compareDateFomated,
+} from '../../utils/serviceFunction';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import Moment from 'moment';
 
 var epsg = require('epsg-to-proj');
 var proj = require('proj4');
@@ -63,10 +78,20 @@ const listDisplayLabelExplant = [
   'Quy hoạch',
 ];
 
+const listOptionPoint = [
+  {label: 'Điểm cháy trong 24h qua', value: 1},
+  {label: 'Điểm cháy theo khoảng thời gian', value: 2},
+];
+
+const listRootURL = [
+  {maTinh: 2, link: 'https://giamsatrunghagiang.ifee.edu.vn'},
+  {maTinh: 40, link: 'https://giamsatrungnghean.ifee.edu.vn'},
+];
+
 const MapScreen = ({navigation}) => {
   const route = useRoute();
   const data = route.params;
-
+  const mapViewRef = useRef(null);
   const [mapViewHeight, setMapViewHeight] = useState(null);
   const [mapViewWidth, setMapViewWidth] = useState(null);
   const [viewFullInfo, setViewFullInfo] = useState(false);
@@ -81,13 +106,19 @@ const MapScreen = ({navigation}) => {
   const [latFindPoint, setLatFindPoint] = useState('');
   const [longFindPoint, setLongFindPoint] = useState('');
   const [pointPress, setPointPress] = useState({});
-  const mapViewRef = useRef(null);
+  const [modalFirePoint, setModalFirePoint] = useState(false);
+  const [modeFindFirePoint, setModeFindFirePoint] = useState(1);
+  const [startDay, setStartDay] = useState(null);
+  const [endDay, setEndDay] = useState(new Date());
+  const [checkPick, setCheckPick] = useState(null);
+  const [toggleDatePicker, setToggleDatePicker] = useState(false);
+  const [listFirePoint, setListFirePoint] = useState([]);
 
   const listProject = dataProjection.map(item => {
     return {label: `${item.province} - ${item.zone}`, value: item.epsg_code};
   });
 
-  const [mapType, setMapType] = useState(MAP_TYPES.SATELLITE);
+  const [mapType, setMapType] = useState(MAP_TYPES.HYBRID);
   const [initialRegion, setInitialRegion] = useState({
     latitude: Number(data.centerPoint.y),
     longitude: Number(data.centerPoint.x),
@@ -131,7 +162,10 @@ const MapScreen = ({navigation}) => {
       setViewFullInfo(false);
       const ApiCall = await fetch(linkAPIGetInfoFull);
       const regionFeatureInfo = await ApiCall.json();
-      let disPlayData = `Vị trí chọn: \n Latitude: ${pointPress.latitude} \n Longitude: ${pointPress.longitude} \n`;
+      let disPlayData = `Vị trí chọn: \n Latitude: ${roundNumber(
+        pointPress.latitude,
+        5,
+      )} \n Longitude: ${roundNumber(pointPress.longitude, 5)} \n`;
       // Dat vung to mau
       setSelectRegion(regionFeatureInfo.features[0].geometry.coordinates[0][0]);
       // lay tt thuoc tinh
@@ -146,7 +180,10 @@ const MapScreen = ({navigation}) => {
         }
       }
 
-      let disPlayDataFull = `Vị trí chọn: \n Latitude: ${pointPress.latitude} \n Longitude: ${pointPress.longitude} \n`;
+      let disPlayDataFull = `Vị trí chọn: \n Latitude: ${roundNumber(
+        pointPress.latitude,
+        5,
+      )} \n Longitude: ${roundNumber(pointPress.longitude, 5)} \n`;
       for (let [key, value] of Object.entries(
         regionFeatureInfo.features[0].properties,
       )) {
@@ -201,8 +238,88 @@ const MapScreen = ({navigation}) => {
     }
   };
 
+  const _findFirePoint = async (dateStart, dateEnd) => {
+    var url = '';
+    const foundItem = listRootURL.find(
+      item => item.maTinh == data.provinceCode,
+    );
+    setListFirePoint([]);
+    if (dateStart != null) {
+      switch (data.mapLevel) {
+        case 'province':
+          url =
+            foundItem.link +
+            '/api/getHotSpotInfo?from=' +
+            dateStart +
+            '&to=' +
+            dateEnd;
+          break;
+        case 'district':
+          url =
+            foundItem.link +
+            '/api/getHotSpotInDistrict?mahuyen=' +
+            data.mapCode +
+            '&from=' +
+            dateStart +
+            '&to=' +
+            dateEnd;
+          break;
+        case 'commune':
+          url =
+            foundItem.link +
+            '/api/getHotSpotInCommune?maxa=' +
+            data.mapCode +
+            '&from=' +
+            dateStart +
+            '&to=' +
+            dateEnd;
+          break;
+      }
+      console.log(url);
+      await fetch(url)
+        .then(res => res.json())
+        .then(resJSON => {
+          if (resJSON.length > 0) {
+            setListFirePoint(resJSON);
+            setModalFirePoint(false);
+          } else {
+            ToastAlert('Không có điểm cháy ghi nhận!');
+          }
+        });
+    } else {
+      ToastAlert('Thiếu thông tin đầu vào!');
+    }
+  };
+
+  const handlePickDate = date => {
+    setToggleDatePicker(false);
+    if (checkPick) {
+      const dayStart = date;
+      console.log(date, endDay, new Date());
+      if (endDay !== null) {
+        compareDate(date, endDay)
+          ? setStartDay(dayStart)
+          : ToastAlert('Ngày bắt đầu không hợp lệ');
+      } else {
+        compareDate(date, new Date())
+          ? setStartDay(dayStart)
+          : ToastAlert('Ngày bắt đầu không hợp lệ');
+      }
+    } else {
+      const dayEnd = date;
+      compareDate(startDay, dayEnd)
+        ? setEndDay(dayEnd)
+        : ToastAlert('Ngày kết thúc không hợp lệ');
+    }
+  };
+
+  function getPreviousDay(date = new Date()) {
+    const previous = new Date(date.getTime());
+    previous.setDate(date.getDate() - 1);
+    return previous;
+  }
+
   const _gotoLocation = (lat, long, latDelta, longDelta) => {
-    console.log('go', lat, long);
     mapViewRef.current.animateToRegion({
       latitude: lat,
       longitude: long,
@@ -213,7 +330,6 @@ const MapScreen = ({navigation}) => {
 
   const onLayout = event => {
     const {x, y, height, width} = event.nativeEvent.layout;
-    console.log(event.nativeEvent.layout);
     setMapViewWidth(width);
     setMapViewHeight(height);
   };
@@ -280,6 +396,10 @@ const MapScreen = ({navigation}) => {
     }
   };
 
+  function roundNumber(num, dec) {
+    return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.backHeartContainer}>
@@ -308,7 +428,15 @@ const MapScreen = ({navigation}) => {
         onPress={() => {
           setModalVisible(true);
         }}>
-        <Image source={Images.search} style={styles.icon} />
+        <Image source={Images.gps} style={styles.icon} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.findFirePoint}
+        onPress={() => {
+          setModalFirePoint(true);
+        }}>
+        <Image source={Images.locationFire} style={styles.icon} />
       </TouchableOpacity>
 
       {expainBasemap && (
@@ -365,6 +493,97 @@ const MapScreen = ({navigation}) => {
               />
             );
           })}
+
+        {listFirePoint.length > 0 &&
+          listFirePoint.map(marker => {
+            return (
+              <Marker
+                title={marker.properties.ACQ_DATE}
+                coordinate={{
+                  latitude: Number(marker.geometry.coordinates[1]),
+                  longitude: Number(marker.geometry.coordinates[0]),
+                }}
+                zIndex={10}>
+                {marker.properties.XACMINH == 1 && (
+                  <Image
+                    style={{width: 48, height: 48}}
+                    source={Images.noFire}
+                    resizeMode="cover"
+                  />
+                )}
+                {marker.properties.XACMINH == 2 && (
+                  <Image
+                    style={{width: 48, height: 48}}
+                    source={Images.confirmFire}
+                    resizeMode="cover"
+                  />
+                )}
+                {marker.properties.XACMINH == 3 && (
+                  <Image
+                    style={{width: 48, height: 48}}
+                    source={Images.confirmNoFire}
+                    resizeMode="cover"
+                  />
+                )}
+                {marker.properties.XACMINH == 4 && (
+                  <Image
+                    style={{width: 48, height: 48}}
+                    source={Images.confirmFireNotForest}
+                    resizeMode="cover"
+                  />
+                )}
+                <Callout style={{padding: 5}} onPress={() => {}}>
+                  <View style={styles.bubble}>
+                    <View>
+                      <Text
+                        style={[
+                          styles.name,
+                          {alignSelf: 'Center', fontWeight: 'bold'},
+                        ]}>
+                        THÔNG TIN ĐIỂM
+                      </Text>
+                      <Text style={styles.name}>
+                        Ngày: {marker.properties.ACQ_DATE}
+                      </Text>
+                      <Text style={styles.name}>
+                        Giờ: {marker.properties.ACQ_TIME}
+                      </Text>
+                      <Text style={styles.name}>
+                        Tên chủ rừng: {marker.properties.CHURUNG}
+                      </Text>
+                      <Text style={styles.name}>
+                        Huyện: {marker.properties.HUYEN}
+                      </Text>
+                      <Text style={styles.name}>
+                        Xã: {marker.properties.XA}
+                      </Text>
+                      <Text style={styles.name}>
+                        Tk/Khoảnh/Lô: {marker.properties.TIEUKHU}/
+                        {marker.properties.KHOANH}/{marker.properties.LO}
+                      </Text>
+                      <Text style={styles.name}>
+                        Xác minh:{' '}
+                        {marker.properties.XACMINH == 1
+                          ? ' Chưa xác minh'
+                          : marker.properties.XACMINH == 2
+                          ? ' Xác minh là cháy rừng'
+                          : marker.properties.XACMINH == 3
+                          ? ' Xác minh không phải cháy rừng'
+                          : ' Xác minh có cháy nhưng không phải cháy rừng'}
+                      </Text>
+                      <Text style={styles.name}>
+                        Kiểm duyệt:{' '}
+                        {marker.properties.KIEMDUYET == 1
+                          ? 'Đã kiểm duyệt'
+                          : 'Chưa kiểm duyệt'}
+                      </Text>
+                    </View>
+                  </View>
+                </Callout>
+              </Marker>
+            );
+          })}
+
         <WMSTile
           urlTemplate={data.WMSLink[0]}
           opacity={1}
@@ -372,6 +591,147 @@ const MapScreen = ({navigation}) => {
           tileSize={512}
         />
       </MapView>
+
+      {data.modeMapView == 'FFW' && (
+        <View style={styles.containerNode} pointerEvents="none">
+          <Text style={{fontSize: 14, color: 'white'}}>Ghi chú:</Text>
+          <View
+            style={{
+              alignContent: 'center',
+              flexDirection: 'row',
+              marginBottom: 3,
+              justifyContent: 'center',
+            }}>
+            <View
+              style={{
+                backgroundColor: '#0000FF',
+                width: 25,
+                height: 20,
+                marginRight: 3,
+                justifyContent: 'center',
+                borderRadius: 5,
+              }}
+            />
+            <Text
+              style={{
+                alignContent: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: 12,
+              }}>
+              Cấp cháy 1
+            </Text>
+          </View>
+          <View
+            style={{
+              alignContent: 'center',
+              flexDirection: 'row',
+              marginBottom: 3,
+              justifyContent: 'center',
+            }}>
+            <View
+              style={{
+                backgroundColor: '#33CC33',
+                width: 25,
+                height: 20,
+                marginRight: 3,
+                justifyContent: 'center',
+                borderRadius: 5,
+              }}
+            />
+            <Text
+              style={{
+                alignContent: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: 12,
+              }}>
+              Cấp cháy 2
+            </Text>
+          </View>
+          <View
+            style={{
+              alignContent: 'center',
+              flexDirection: 'row',
+              marginBottom: 3,
+              justifyContent: 'center',
+            }}>
+            <View
+              style={{
+                backgroundColor: '#FFFF00',
+                width: 25,
+                height: 20,
+                marginRight: 3,
+                justifyContent: 'center',
+                borderRadius: 5,
+              }}
+            />
+            <Text
+              style={{
+                alignContent: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: 12,
+              }}>
+              Cấp cháy 3
+            </Text>
+          </View>
+          <View
+            style={{
+              alignContent: 'center',
+              flexDirection: 'row',
+              marginBottom: 3,
+              justifyContent: 'center',
+            }}>
+            <View
+              style={{
+                backgroundColor: '#FF0000',
+                width: 25,
+                height: 20,
+                marginRight: 3,
+                justifyContent: 'center',
+                borderRadius: 5,
+              }}
+            />
+            <Text
+              style={{
+                alignContent: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: 12,
+              }}>
+              Cấp cháy 4
+            </Text>
+          </View>
+          <View
+            style={{
+              alignContent: 'center',
+              flexDirection: 'row',
+              marginBottom: 3,
+              justifyContent: 'center',
+            }}>
+            <View
+              style={{
+                backgroundColor: '#C00000',
+                width: 25,
+                height: 20,
+                marginRight: 3,
+                justifyContent: 'center',
+                borderRadius: 5,
+              }}
+            />
+            <Text
+              style={{
+                alignContent: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: 12,
+              }}>
+              Cấp cháy 5
+            </Text>
+          </View>
+        </View>
+      )}
 
       <Modal
         animationType="fade"
@@ -530,6 +890,189 @@ const MapScreen = ({navigation}) => {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalFirePoint}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}>
+        {/* <Pressable style={[Platform.OS === "ios" ? styles.iOSBackdrop : styles.androidBackdrop, styles.backdrop]} onPress={() => this.setState({ setModalVisible: false })} /> */}
+        <View style={styles.modalContainer}>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              color: 'rgba(32, 73, 68, 1)',
+              padding: 8,
+              marginLeft: '15%',
+            }}>
+            Lọc điểm cảnh báo cháy
+          </Text>
+          <Text style={[styles.title, {paddingHorizontal: 10, paddingTop: 12}]}>
+            Chọn dữ liệu
+          </Text>
+
+          <Dropdown
+            style={styles.dropdown}
+            autoScroll={false}
+            showsVerticalScrollIndicator={false}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            containerStyle={styles.containerOptionStyle}
+            imageStyle={styles.imageStyle}
+            iconStyle={styles.iconStyle}
+            itemContainerStyle={styles.itemContainer}
+            itemTextStyle={styles.itemText}
+            fontFamily={Fonts.SF_MEDIUM}
+            activeColor="#eef2feff"
+            placeholder="Thời gian ghi nhận điểm cảnh báo cháy"
+            data={listOptionPoint}
+            maxHeight={Dimension.setHeight(30)}
+            labelField="label"
+            valueField="value"
+            value={modeFindFirePoint}
+            renderLeftIcon={() => {
+              return (
+                <Image
+                  source={Images.locationFire}
+                  style={styles.leftIconDropdown}
+                />
+              );
+            }}
+            onChange={item => {
+              setModeFindFirePoint(item.value);
+              console.log(item.value);
+            }}
+          />
+
+          {modeFindFirePoint == 2 && (
+            <Text
+              style={[styles.title, {paddingHorizontal: 10, paddingTop: 12}]}>
+              Chọn khoảng thời gian
+            </Text>
+          )}
+          {modeFindFirePoint == 2 && (
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity
+                onPress={() => {
+                  setCheckPick(true);
+                  setToggleDatePicker(true);
+                }}
+                style={[
+                  styles.containerEachLine,
+                  {
+                    width: '48%',
+                  },
+                ]}>
+                <Text style={styles.title}>Từ ngày</Text>
+                <View style={styles.dateTimePickerContainer}>
+                  <Text style={styles.dateTimeText}>
+                    {startDay
+                      ? Moment(startDay).format('DD-MM-YYYY')
+                      : 'Chọn ngày'}
+                  </Text>
+                  <View
+                    style={[
+                      styles.dateTimeImgContainer,
+                      {backgroundColor: '#dbd265'},
+                    ]}>
+                    <Image
+                      source={Images.calendarBlack}
+                      style={styles.dateTimeImg}
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setCheckPick(false);
+                  setToggleDatePicker(true);
+                }}
+                style={[
+                  styles.containerEachLine,
+                  {
+                    width: '48%',
+                  },
+                ]}>
+                <Text style={styles.title}>Đến ngày</Text>
+                <View style={styles.dateTimePickerContainer}>
+                  <Text style={styles.dateTimeText}>
+                    {endDay ? Moment(endDay).format('DD-MM-YYYY') : 'Chọn ngày'}
+                  </Text>
+                  <View
+                    style={[
+                      styles.dateTimeImgContainer,
+                      {backgroundColor: '#dbd265'},
+                    ]}>
+                    <Image
+                      source={Images.calendarBlack}
+                      style={styles.dateTimeImg}
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          <DateTimePickerModal
+            isVisible={toggleDatePicker}
+            mode="date"
+            onConfirm={handlePickDate}
+            onCancel={() => {
+              setToggleDatePicker(false);
+            }}
+          />
+
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 10,
+              marginTop: 13,
+              marginBottom: 13,
+            }}>
+            <Button
+              style={{
+                borderRadius: 8,
+                backgroundColor: 'green',
+                width: '40%',
+                marginHorizontal: '5%',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                if (modeFindFirePoint == 1) {
+                  _findFirePoint(
+                    Moment(getPreviousDay()).format('Y-MM-DD'),
+                    Moment(new Date()).format('Y-MM-DD'),
+                  );
+                } else {
+                  _findFirePoint(
+                    Moment(startDay).format('Y-MM-DD'),
+                    Moment(endDay).format('Y-MM-DD'),
+                  );
+                }
+              }}>
+              <Text style={{fontSize: 14, fontWeight: 'bold'}}>Tìm điểm</Text>
+            </Button>
+            <Button
+              style={{
+                borderRadius: 8,
+                backgroundColor: 'red',
+                width: '40%',
+                marginHorizontal: '5%',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                setModalFirePoint(false);
+              }}>
+              <Text style={{fontSize: 14, fontWeight: 'bold'}}>Hủy</Text>
+            </Button>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -607,6 +1150,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 50,
   },
+  modalContainer: {
+    backgroundColor: 'white',
+    width: '80%',
+    height: 'auto',
+    justifyContent: 'center',
+    alignItems: 'baseline',
+    marginHorizontal: '10%',
+    marginTop: '30%',
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
 
   containerEachLine: {
     marginBottom: Dimension.setHeight(0.5),
@@ -614,8 +1168,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e6e6e6',
     borderRadius: 12,
-    paddingVertical: Dimension.setHeight(1),
-    paddingHorizontal: Dimension.setWidth(2),
+    paddingVertical: Dimension.setHeight(0.5),
+    paddingHorizontal: Dimension.setWidth(1),
   },
 
   title: {
@@ -642,6 +1196,113 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 13,
+  },
+
+  containerNode: {
+    left: 10,
+    padding: 5,
+    width: 100,
+    height: 150,
+    flexDirection: 'column',
+    alignContent: 'center',
+    position: 'absolute',
+    bottom: 100,
+    backgroundColor: 'rgba(25,11,61,0.50)',
+    borderRadius: 8,
+  },
+  baseMapOption: {
+    padding: 5,
+  },
+  findFirePoint: {
+    width: 45,
+    height: 45,
+    position: 'absolute',
+    zIndex: 1000,
+    left: 15,
+    top: 180,
+    backgroundColor: '#b3e3ba',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 50,
+  },
+  containerEachLine: {
+    marginBottom: Dimension.setHeight(2),
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e6e6e6',
+    borderRadius: 12,
+    paddingVertical: Dimension.setHeight(1.6),
+    paddingHorizontal: Dimension.setWidth(3),
+  },
+
+  title: {
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: Dimension.fontSize(15),
+    color: '#8bc7bc',
+    marginBottom: Dimension.setHeight(1),
+  },
+
+  dateTimePickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: Dimension.setWidth(1.6),
+  },
+  dateTimeImgContainer: {
+    padding: Dimension.setWidth(1.1),
+    borderRadius: 8,
+  },
+
+  dateTimeImg: {
+    height: 17,
+    width: 17,
+    tintColor: '#ffffff',
+  },
+
+  name: {
+    fontSize: 11,
+    marginBottom: 2,
+    marginLeft: 10,
+  },
+  bubble: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    width: 150,
+  },
+  placeholderStyle: {
+    fontSize: Dimension.fontSize(15),
+  },
+  selectedStyle: {
+    borderRadius: 12,
+    borderWidth: 0,
+  },
+  selectedTextStyle: {
+    color: '#277aaeff',
+    fontSize: Dimension.fontSize(15),
+  },
+  imageStyle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  containerOptionStyle: {
+    borderRadius: 12,
+    backgroundColor: '#f6f6f8ff',
+    width: '110%',
+    alignSelf: 'center',
+  },
+  itemContainer: {
+    borderRadius: 12,
+  },
+  itemText: {
+    color: '#57575a',
+    fontSize: Dimension.fontSize(14),
   },
 });
 

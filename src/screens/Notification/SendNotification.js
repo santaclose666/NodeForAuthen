@@ -60,7 +60,7 @@ const IFEEFull = [
 
 const SendNotification = ({navigation}) => {
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
-  const allStaffs = IFEEstaffs.map(item => {
+  const allStaffs = IFEEstaffs?.map(item => {
     return {name: item.hoten, ortherName: item.id_ht};
   });
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -100,9 +100,6 @@ const SendNotification = ({navigation}) => {
     ).map(item => {
       return item.id_ht;
     });
-
-    console.log(dataFilter);
-
     setDataPicker(dataFilter);
   };
 

@@ -21,7 +21,7 @@ const NewsMV = ({navigation}) => {
 
   return (
     <NewsTemplate
-      screenName={'Tin tức Mùa vụ'}
+      screenName={'Chỉ đạo điều hành'}
       navigation={navigation}
       newsArr={newsArr}
     />

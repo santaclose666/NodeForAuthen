@@ -677,7 +677,6 @@ export const getListSpecies = async (data, dispatch) => {
     const res = await axios.get(
       `http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/${data.ma}`,
     );
-
     dispatch(getSpecieSuccess(res.data));
   } catch (error) {
     dispatch(getSpecieFailed());

@@ -6,6 +6,7 @@ import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import DocumentMV from './DocumentMV';
 import NewsMV from './NewsMV';
+import MuaVuMapScreen from './MuaVuMapScreen';
 
 const MainMV = ({navigation}) => {
   const menuArr = [
@@ -18,17 +19,17 @@ const MainMV = ({navigation}) => {
       icon: Images.documentmv,
     },
     {
-      title: 'Tin tức',
+      title: 'Chỉ đạo',
       icon: Images.newsmv,
     },
   ];
   const [menuId, setMenuId] = useState(0);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <View style={{flex: 1}}>
       <View style={{flex: 9}}>
         {menuId == 0 ? (
-          <></> //Map component
+          <MuaVuMapScreen navigation={navigation} />
         ) : menuId == 1 ? (
           <DocumentMV navigation={navigation} />
         ) : (
@@ -42,6 +43,7 @@ const MainMV = ({navigation}) => {
           flexDirection: 'row',
           alignItems: 'center',
           elevation: 5,
+          marginBottom: 5,
         }}>
         {menuArr.map((item, index) => {
           const borderTopColor =
@@ -76,7 +78,7 @@ const MainMV = ({navigation}) => {
           );
         })}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

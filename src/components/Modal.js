@@ -500,7 +500,7 @@ export const DisplayNotificationModal = ({
           justifyContent: 'center',
           borderRadius: 14,
           paddingHorizontal: Dimension.setWidth(3),
-          backgroundColor: 'rgba(23, 185, 231, 0.9)',
+          backgroundColor: 'rgb(102, 153, 153)',
         }}>
         <View
           style={{
