@@ -26,7 +26,7 @@ import {
 } from '../../utils/serviceFunction';
 import {
   getWeatherData,
-  getAllStaffs,
+  getAllDocumentMv,
   getallNews,
   sendFeedback,
   getAllDocument,
@@ -138,6 +138,14 @@ const HomePageScreen = ({navigation}) => {
     ToastAlert('Chức năng đang được phát triển');
   };
 
+  const fetchAllDocumentMv = async () => {
+    try {
+      await getAllDocumentMv(dispatch);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useLayoutEffect(() => {
     if (weather) {
       setInTerVal(
@@ -151,6 +159,7 @@ const HomePageScreen = ({navigation}) => {
 
     fetchAllNews();
     getAllDocument(dispatch);
+    fetchAllDocumentMv();
 
     notificationHandleListener();
     notificationHandleOpenApp();
