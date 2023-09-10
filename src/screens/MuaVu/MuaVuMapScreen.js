@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,8 +10,10 @@ import {
   Modal,
   TextInput,
   PixelRatio,
+  Alert,
+  ScrollView,
 } from 'react-native';
-import MapView, {WMSTile, MAP_TYPES} from 'react-native-maps';
+import MapView, {WMSTile, MAP_TYPES, Polygon} from 'react-native-maps';
 import Colors from '../../contants/Colors';
 import Images from '../../contants/Images';
 import Dimension from '../../contants/Dimension';
@@ -48,31 +50,42 @@ const listMonth = [
   {label: 'Tháng 12', value: 12},
 ];
 
+const listBaseMap = [
+  {type: MAP_TYPES.STANDARD, image: Images.baseStandard},
+  {type: MAP_TYPES.HYBRID, image: Images.baseHybrid},
+  {type: MAP_TYPES.SATELLITE, image: Images.baseSatellite},
+  {type: MAP_TYPES.TERRAIN, image: Images.baseTerrain},
+];
+
 const d = new Date();
 let month = d.getMonth();
 
 const MuaVuMapScreen = ({navigation}) => {
   const mapViewRef = useRef(null);
-  const [region, setRegion] = useState({
-    latitude: LATITUDE,
-    longitude: LONGITUDE,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-  });
+  const [region, setRegion] = useState(initialRegion);
   const [mapType, setMapType] = useState(MAP_TYPES.SATELLITE);
 
   const [mapViewHeight, setMapViewHeight] = useState(null);
   const [mapViewWidth, setMapViewWidth] = useState(null);
   const [queryLayer, setQueryLayer] = useState('');
-  const [styleLayer, setStyleLayer] = useState('');
   const [levelSelect, setLevelSelect] = useState('province');
-  const [provinceSelectCode, setProvinceSelectCode] = useState(0);
+  const [unitSelectCode, setUnitSelectCode] = useState(0);
   const [monthSelect, setMonthSelect] = useState(month + 1);
   const [expainBasemap, setExpainBaeMap] = useState(false);
   const [currentBaseImg, setCurrentBaseImg] = useState(Images.baseSatellite);
   const [numberUnit, setNumberUnit] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  const [listProvince, setListProvince] = useState([]);
+  const [forceRefresh, setForceRefresh] = useState(1);
+  const [selectRegion, setSelectRegion] = useState([]);
+  const [dataRegion, setDataRegion] = useState([]);
+  const [speciesRegion, setSpeciesRegion] = useState([]);
+  const [modalInfoVisible, setModalInfoVisible] = useState(false);
+  const [modalDetailDistrictVisible, setModalDetailDistrictVisible] =
+    useState(false);
+
+  useEffect(() => {
+    updateData();
+  }, []);
 
   const onLayout = event => {
     const {x, y, height, width} = event.nativeEvent.layout;
@@ -80,29 +93,90 @@ const MuaVuMapScreen = ({navigation}) => {
     setMapViewHeight(height);
   };
 
-  const listBaseMap = [
-    {type: MAP_TYPES.STANDARD, image: Images.baseStandard},
-    {type: MAP_TYPES.HYBRID, image: Images.baseHybrid},
-    {type: MAP_TYPES.SATELLITE, image: Images.baseSatellite},
-    {type: MAP_TYPES.TERRAIN, image: Images.baseTerrain},
-  ];
+  const getToanQuocInfo = async month => {
+    const ApiCall = await fetch(
+      `https://muavutrongrung.ifee.edu.vn/api/toanquoc/${month}`,
+    );
+    const regionFeatureInfo = await ApiCall.json();
+    setNumberUnit(regionFeatureInfo.length);
+    setDataRegion(regionFeatureInfo);
+  };
 
-  const getRegion = (x, y) => {
-    //Tinh bbbox
-    let minX = region.longitude - region.longitudeDelta / 2; // westLng - min lng
-    let minY = region.latitude - region.latitudeDelta / 2; // southLat - min lat
-    let maxX = region.longitude + region.longitudeDelta / 2; // eastLng - max lng
-    let maxY = region.latitude + region.latitudeDelta / 2; // northLat - max lat
-    let linkAPIGetInfoFull = `https://bando.ifee.edu.vn:8453/geoserver/ws_muavutrongrung/wms?service=WMS&version=1.1.1&request=GetFeatureInfo&layers=${
-      levelSelect == 'province' ? 'rghc_tinh_muavu' : 'rghc_huyen_muavu'
-    }&${queryLayer}&query_layers==ws_muavutrongrung:${
-      levelSelect == 'province' ? 'rghc_tinh_muavu' : 'rghc_huyen_muavu'
-    }&srs=EPSG:4326&info_format=application/json&bbox=${minX},${minY},${maxX},${maxY}&width=${Math.round(
-      mapViewWidth,
-    )}&height=${Math.round(mapViewHeight)}&x=${Math.round(x)}&y=${Math.round(
-      y,
-    )}`;
-    console.log(linkAPIGetInfoFull);
+  const getTinhInfo = async (month, provinceCode) => {
+    const ApiCall = await fetch(
+      `https://muavutrongrung.ifee.edu.vn/api/tinh/${provinceCode}/${month}`,
+    );
+    const regionFeatureInfo = await ApiCall.json();
+    setNumberUnit(regionFeatureInfo.length);
+    setDataRegion(regionFeatureInfo);
+  };
+
+  const updateData = () => {
+    if (levelSelect == 'province') {
+      getToanQuocInfo(monthSelect);
+    } else if (levelSelect == 'district') {
+      getTinhInfo(monthSelect, unitSelectCode);
+    }
+  };
+
+  const getHuyenInfo = async (month, districtCode) => {
+    const ApiCall = await fetch(
+      `https://muavutrongrung.ifee.edu.vn/api/huyen/${districtCode}/${month}`,
+    );
+    const regionFeatureInfo = await ApiCall.json();
+    setSpeciesRegion(regionFeatureInfo);
+  };
+
+  const getRegion = async (x, y) => {
+    try {
+      //Tinh bbbox
+      let minX = region.longitude - region.longitudeDelta / 2; // westLng - min lng
+      let minY = region.latitude - region.latitudeDelta / 2; // southLat - min lat
+      let maxX = region.longitude + region.longitudeDelta / 2; // eastLng - max lng
+      let maxY = region.latitude + region.latitudeDelta / 2; // northLat - max lat
+      let linkAPIGetInfoFull = `https://bando.ifee.edu.vn:8453/geoserver/ws_muavutrongrung/wms?service=WMS&version=1.1.1&request=GetFeatureInfo&layers=${
+        levelSelect == 'province' ? 'rghc_tinh_muavu' : 'rghc_huyen_muavu'
+      }&${queryLayer}&query_layers==ws_muavutrongrung:${
+        levelSelect == 'province' ? 'rghc_tinh_muavu' : 'rghc_huyen_muavu'
+      }&srs=EPSG:4326&info_format=application/json&bbox=${minX},${minY},${maxX},${maxY}&width=${Math.round(
+        mapViewWidth,
+      )}&height=${Math.round(mapViewHeight)}&x=${Math.round(x)}&y=${Math.round(
+        y,
+      )}`;
+      setSelectRegion([]);
+      const ApiCall = await fetch(linkAPIGetInfoFull);
+      const regionFeatureInfo = await ApiCall.json();
+      const regionProperties = regionFeatureInfo.features[0].properties;
+      if (regionProperties != null) {
+        if (levelSelect == 'province') {
+          setLevelSelect('district');
+          setUnitSelectCode(regionProperties.matinh);
+          setQueryLayer(`&cql_filter=matinh=${regionProperties.matinh}`);
+          refreshMap(1);
+          getTinhInfo(monthSelect, regionProperties.matinh);
+        } else {
+          setUnitSelectCode(regionProperties.mahuyen);
+          console.log(regionProperties.mahuyen);
+          setSelectRegion(
+            regionFeatureInfo.features[0].geometry.coordinates[0][0],
+          );
+          getHuyenInfo(monthSelect, regionProperties.mahuyen);
+          setModalDetailDistrictVisible(true);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const _gotoLocation = (lat, long, latDelta, longDelta) => {
+    console.log(lat, long, latDelta, longDelta);
+    mapViewRef.current.animateToRegion({
+      latitude: lat,
+      longitude: long,
+      latitudeDelta: latDelta,
+      longitudeDelta: longDelta,
+    });
   };
 
   const handleMapPress = event => {
@@ -116,6 +190,21 @@ const MuaVuMapScreen = ({navigation}) => {
     } catch (err) {
       console.log('111', err);
     }
+  };
+
+  const refreshMap = mode => {
+    setForceRefresh(Math.floor(Math.random() * 100));
+    if (mode != 1) {
+      updateData();
+    }
+  };
+
+  const fomatCoordinate = coor => {
+    const polygon = coor.map(coordsArr => ({
+      latitude: coordsArr[1],
+      longitude: coordsArr[0],
+    }));
+    return polygon;
   };
 
   return (
@@ -139,6 +228,27 @@ const MuaVuMapScreen = ({navigation}) => {
           setModalVisible(true);
         }}>
         <Image source={Images.filterBlue} style={styles.icon} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.backLevel}
+        onPress={() => {
+          setLevelSelect('province');
+          setQueryLayer('');
+          setRegion(initialRegion);
+          getToanQuocInfo(monthSelect);
+          setSelectRegion([]);
+          refreshMap();
+        }}>
+        <Image source={Images.refresh} style={styles.icon} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.viewDetail}
+        onPress={() => {
+          setModalInfoVisible(true);
+        }}>
+        <Image source={Images.checklist} style={styles.icon} />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -168,12 +278,13 @@ const MuaVuMapScreen = ({navigation}) => {
       )}
 
       <MapView
+        key={forceRefresh}
         onLayout={event => onLayout(event)}
         ref={mapViewRef}
         style={styles.map}
         mapType={mapType}
         provider="google"
-        initialRegion={initialRegion}
+        initialRegion={region}
         onPress={handleMapPress}
         showsMyLocationButton={true}
         showsPointsOfInterest={true}
@@ -200,6 +311,16 @@ const MuaVuMapScreen = ({navigation}) => {
           zIndex={100}
           tileSize={512}
         />
+
+        {selectRegion.length > 2 && (
+          <Polygon
+            coordinates={fomatCoordinate(selectRegion)}
+            strokeColor={'red'}
+            fillColor={'rgba(242, 227, 235, 0.3)'}
+            strokeWidth={2}
+            zIndex={200}
+          />
+        )}
       </MapView>
 
       <Modal
@@ -249,7 +370,7 @@ const MuaVuMapScreen = ({navigation}) => {
             <Button
               style={[styles.btnModal, {backgroundColor: 'green'}]}
               onPress={() => {
-                // _findPoint();
+                refreshMap();
                 setModalVisible(false);
               }}>
               <Text style={{fontSize: 14, fontWeight: 'bold'}}>Chọn</Text>
@@ -262,6 +383,80 @@ const MuaVuMapScreen = ({navigation}) => {
               <Text style={{fontSize: 14, fontWeight: 'bold'}}>Hủy</Text>
             </Button>
           </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalInfoVisible}
+        onRequestClose={() => {
+          setModalInfoVisible(false);
+        }}>
+        <View style={styles.viewModalContainer}>
+          <Text style={styles.headerModal}>Thông tin mùa vụ</Text>
+          <ScrollView style={styles.scrollContent}>
+            {dataRegion.length > 0 ? (
+              dataRegion.map(item => {
+                return (
+                  <Text style={styles.tileModal}>
+                    <Text style={{fontWeight: 'bold'}}>
+                      {levelSelect == 'province' ? item.tinh : item.huyen}
+                    </Text>
+                    : {item.soluong} loài cây trong mùa vụ
+                  </Text>
+                );
+              })
+            ) : (
+              <Text style={styles.tileModal}>
+                Không có thông tin mùa vụ trồng rừng.
+              </Text>
+            )}
+          </ScrollView>
+          <Button
+            style={[styles.btnInfo]}
+            onPress={() => {
+              setModalInfoVisible(false);
+            }}>
+            <Text style={{fontSize: 14, fontWeight: 'bold'}}>Đóng</Text>
+          </Button>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalDetailDistrictVisible}
+        onRequestClose={() => {
+          setModalDetailDistrictVisible(false);
+        }}>
+        <View style={styles.viewModalContainer}>
+          <Text style={styles.headerModal}>Thông tin loài cây trồng</Text>
+          <ScrollView style={styles.scrollContent}>
+            {speciesRegion.length > 0 ? (
+              speciesRegion.map(item => {
+                return (
+                  <Text style={styles.tileModal}>
+                    <Text style={{fontWeight: 'bold'}}>{item.tenloai}</Text>
+                    {': '}
+                    Chức năng rừng trồng{' '}
+                    <Text style={{fontWeight: 'bold'}}>{item.chucnang}</Text>
+                  </Text>
+                );
+              })
+            ) : (
+              <Text style={styles.tileModal}>
+                Không có thông tin mùa vụ trồng rừng.
+              </Text>
+            )}
+          </ScrollView>
+          <Button
+            style={[styles.btnInfo]}
+            onPress={() => {
+              setModalDetailDistrictVisible(false);
+            }}>
+            <Text style={{fontSize: 14, fontWeight: 'bold'}}>Đóng</Text>
+          </Button>
         </View>
       </Modal>
 
@@ -356,6 +551,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '80%',
     height: 'auto',
+    maxHeight: '65%',
     justifyContent: 'center',
     alignItems: 'baseline',
     marginHorizontal: '10%',
@@ -489,5 +685,47 @@ const styles = StyleSheet.create({
     width: '40%',
     marginHorizontal: '5%',
     justifyContent: 'center',
+  },
+  backLevel: {
+    width: 45,
+    height: 45,
+    position: 'absolute',
+    zIndex: 1000,
+    left: 15,
+    top: 180,
+    backgroundColor: '#e6e6c5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 50,
+  },
+  viewDetail: {
+    width: 45,
+    height: 45,
+    position: 'absolute',
+    zIndex: 1000,
+    left: 15,
+    top: 240,
+    backgroundColor: '#e6e6c5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 50,
+  },
+  scrollContent: {
+    width: '100%',
+    padding: 5,
+  },
+  btnInfo: {
+    borderRadius: 8,
+    width: '40%',
+    marginHorizontal: '5%',
+    justifyContent: 'center',
+    backgroundColor: 'green',
+    alignSelf: 'center',
+    marginTop: 15,
+    marginBottom: 10,
   },
 });

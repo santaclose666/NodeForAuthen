@@ -114,8 +114,6 @@ const MapScreen = ({navigation}) => {
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [listFirePoint, setListFirePoint] = useState([]);
 
-  console.log(data.WMSLink[0]);
-
   const listProject = dataProjection.map(item => {
     return {label: `${item.province} - ${item.zone}`, value: item.epsg_code};
   });

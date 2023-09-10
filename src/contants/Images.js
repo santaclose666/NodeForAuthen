@@ -166,6 +166,8 @@ const Images = {
   confirmFireNotForest: require('../assets/images/confirmed_fire_not_forest.png'),
   confirmNoFire: require('../assets/images/confirmed_not_fire.png'),
   filterBlue: require('../assets/images/filterBlue.png'),
+  refresh: require('../assets/images/refresh.png'),
+  checklist: require('../assets/images/checklist.png'),
 };
 
 export default Images;
