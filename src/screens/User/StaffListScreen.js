@@ -1,4 +1,4 @@
-import React, {useState, useCallback, memo, useLayoutEffect} from 'react';
+import React, {useState, memo, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -8,66 +8,58 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import unidecode from 'unidecode';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {shadowIOS} from '../../contants/propsIOS';
 import {fontDefault, mainURL} from '../../contants/Variable';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
 import {XMGGroup, IFEEGroup} from '../../contants/Variable';
+import {getAllStaffs} from '../../redux/apiRequest';
+import Loading from '../../components/LoadingUI';
 
 const StaffListScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const [input, setInput] = useState(null);
-  const [allStaff, setAllStaff] = useState(null);
-
+  const dispatch = useDispatch();
   const [selectId, setSelectId] = useState(0);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const XMGstaffs = useSelector(state => state.staffs?.staffs?.XMGStaff);
+  const [loading, setLoading] = useState(false);
 
-  const handleSearch = (text, typeStaffValue) => {
-    setInput(text);
-    if (text.length > 0) {
-      setSelectId(null);
-
-      const data = handlePickUnit(typeStaffValue);
-
-      const dataFilter = data.filter(item =>
-        unidecode(item.hoten.toLowerCase()).includes(text.toLowerCase()),
-      );
-
-      setAllStaff(dataFilter);
-    } else {
-      setAllStaff(null);
-    }
-  };
-
-  const handlePickOption = index => {
-    setAllStaff(null);
-    setInput(null);
-    setSelectId(index);
-  };
-
-  const handleFilter = useCallback(index => {
-    const data = user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs;
-    if (index === 0) {
+  const handleFilter = () => {
+    let data = user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs;
+    if (selectId == 0) {
       return data;
-    } else if (index === 1 && user?.tendonvi === 'IFEE') {
+    } else if (selectId == 1 && user?.tendonvi == 'IFEE') {
       return data?.filter(item => item.vitri_ifee == 1 || item.vitri_ifee == 2);
     } else {
-      if (user?.tendonvi === 'IFEE') {
-        return data?.filter(item => item.tenphong === IFEEGroup[index]);
+      if (user?.tendonvi == 'IFEE') {
+        return data?.filter(item => item.tenphong == IFEEGroup[selectId]);
       } else {
         return data?.filter(item => {
           return item.info_phong?.some(
-            group => group.tenphong === XMGGroup[index],
+            group => group.tenphong == XMGGroup[selectId],
           );
         });
       }
     }
+  };
+
+  const fetchAllStaffList = async () => {
+    setLoading(true);
+    try {
+      await getAllStaffs(dispatch);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useLayoutEffect(() => {
+    fetchAllStaffList();
   }, []);
 
   const RenderStaffs = memo(({item, index}) => {
@@ -90,6 +82,7 @@ const StaffListScreen = ({navigation}) => {
           paddingHorizontal: Dimension.setWidth(1),
           paddingVertical: Dimension.setWidth(2),
           marginVertical: Dimension.setWidth(1),
+          marginHorizontal: Dimension.setWidth(2),
           ...shadowIOS,
         }}>
         <View
@@ -181,7 +174,7 @@ const StaffListScreen = ({navigation}) => {
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
-                  onPress={() => handlePickOption(index)}
+                  onPress={() => setSelectId(index)}
                   key={index}
                   style={{
                     marginRight: Dimension.setWidth(4.4),
@@ -212,7 +205,7 @@ const StaffListScreen = ({navigation}) => {
         </View>
 
         <FlatList
-          data={allStaff ? allStaff : handleFilter(selectId)}
+          data={handleFilter()}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({item, index}) => (
             <RenderStaffs item={item} index={index} />
@@ -222,6 +215,8 @@ const StaffListScreen = ({navigation}) => {
           windowSize={10}
           removeClippedSubviews={true}
         />
+
+        {loading === true && <Loading />}
       </SafeAreaView>
     </LinearGradientUI>
   );

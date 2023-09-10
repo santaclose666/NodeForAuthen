@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   notifiItemContainer: {
     flex: 1,
     marginHorizontal: Dimension.setWidth(3.6),
-    marginVertical: 3,
+    marginTop: Dimension.setHeight(1),
   },
 
   allNotifiContainer: {

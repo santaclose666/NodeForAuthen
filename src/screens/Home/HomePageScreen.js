@@ -60,7 +60,6 @@ const HomePageScreen = ({navigation}) => {
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
-    await getAllDocument(dispatch);
     await requestPermissions();
     await getWeatherData(dispatch);
   };
@@ -72,10 +71,6 @@ const HomePageScreen = ({navigation}) => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const fetchAllStaff = () => {
-    getAllStaffs(dispatch);
   };
 
   const notificationHandleListener = () => {
@@ -155,7 +150,7 @@ const HomePageScreen = ({navigation}) => {
     }
 
     fetchAllNews();
-    fetchAllStaff();
+    getAllDocument(dispatch);
 
     notificationHandleListener();
     notificationHandleOpenApp();
