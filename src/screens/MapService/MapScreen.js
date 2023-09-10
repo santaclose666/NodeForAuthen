@@ -114,8 +114,6 @@ const MapScreen = ({navigation}) => {
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [listFirePoint, setListFirePoint] = useState([]);
 
-  console.log(data.WMSLink[0]);
-
   const listProject = dataProjection.map(item => {
     return {label: `${item.province} - ${item.zone}`, value: item.epsg_code};
   });
@@ -595,7 +593,7 @@ const MapScreen = ({navigation}) => {
       </MapView>
 
       {data.modeMapView == 'FFW' && (
-        <View style={styles.containerNode}>
+        <View style={styles.containerNode} pointerEvents="none">
           <Text style={{fontSize: 14, color: 'white'}}>Ghi chú:</Text>
           <View
             style={{
@@ -901,18 +899,7 @@ const MapScreen = ({navigation}) => {
           setModalVisible(false);
         }}>
         {/* <Pressable style={[Platform.OS === "ios" ? styles.iOSBackdrop : styles.androidBackdrop, styles.backdrop]} onPress={() => this.setState({ setModalVisible: false })} /> */}
-        <View
-          style={{
-            backgroundColor: 'white',
-            width: '80%',
-            height: 'auto',
-            justifyContent: 'center',
-            alignItems: 'baseline',
-            marginHorizontal: '10%',
-            marginTop: '30%',
-            paddingHorizontal: 20,
-            borderRadius: 8,
-          }}>
+        <View style={styles.modalContainer}>
           <Text
             style={{
               fontSize: 18,
@@ -959,6 +946,7 @@ const MapScreen = ({navigation}) => {
               console.log(item.value);
             }}
           />
+
           {modeFindFirePoint == 2 && (
             <Text
               style={[styles.title, {paddingHorizontal: 10, paddingTop: 12}]}>
@@ -1055,7 +1043,6 @@ const MapScreen = ({navigation}) => {
                 justifyContent: 'center',
               }}
               onPress={() => {
-                console.log(modeFindFirePoint);
                 if (modeFindFirePoint == 1) {
                   _findFirePoint(
                     Moment(getPreviousDay()).format('Y-MM-DD'),
@@ -1162,6 +1149,17 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: 1,
     borderRadius: 50,
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    width: '80%',
+    height: 'auto',
+    justifyContent: 'center',
+    alignItems: 'baseline',
+    marginHorizontal: '10%',
+    marginTop: '30%',
+    paddingHorizontal: 20,
+    borderRadius: 8,
   },
 
   containerEachLine: {
@@ -1272,6 +1270,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     width: 150,
+  },
+  placeholderStyle: {
+    fontSize: Dimension.fontSize(15),
+  },
+  selectedStyle: {
+    borderRadius: 12,
+    borderWidth: 0,
+  },
+  selectedTextStyle: {
+    color: '#277aaeff',
+    fontSize: Dimension.fontSize(15),
+  },
+  imageStyle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  containerOptionStyle: {
+    borderRadius: 12,
+    backgroundColor: '#f6f6f8ff',
+    width: '110%',
+    alignSelf: 'center',
+  },
+  itemContainer: {
+    borderRadius: 12,
+  },
+  itemText: {
+    color: '#57575a',
+    fontSize: Dimension.fontSize(14),
   },
 });
 
