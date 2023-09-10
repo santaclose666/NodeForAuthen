@@ -71,7 +71,7 @@ const DocumentTemplate = ({
 
   const RenderDocument = memo(({item, index}) => {
     return (
-      <View key={item.id}>
+      <View style={{flex: 1, zIndex: 999}}>
         <TouchableOpacity
           onPress={() => handlePress(item.path)}
           style={styles.flatListItemContainer}>
@@ -240,7 +240,7 @@ const DocumentTemplate = ({
             )}
             initialNumToRender={10}
             windowSize={6}
-            removeClippedSubviews={true}
+            extraData={document}
           />
         </View>
       </SafeAreaView>
@@ -251,7 +251,6 @@ const DocumentTemplate = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
   },
 
   headerContainer: {
@@ -330,7 +329,6 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     elevation: 4,
     ...shadowIOS,
-    marginHorizontal: 5,
     borderWidth: 0.5,
     borderColor: Colors.WHITE,
     paddingTop: Dimension.setHeight(1.6),
