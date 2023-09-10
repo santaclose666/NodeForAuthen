@@ -568,7 +568,7 @@
 				CODE_SIGN_ENTITLEMENTS = Forestry_4_v7/Forestry_4_v7.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = 7L7FA98CYL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Forestry_4_v7/Info.plist;
@@ -578,7 +578,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -602,7 +602,7 @@
 				CODE_SIGN_ENTITLEMENTS = Forestry_4_v7/Forestry_4_v7.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = 7L7FA98CYL;
 				INFOPLIST_FILE = Forestry_4_v7/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Forestry4.0;
@@ -611,7 +611,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

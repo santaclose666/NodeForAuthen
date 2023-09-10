@@ -6,6 +6,7 @@ import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import DocumentMV from './DocumentMV';
 import NewsMV from './NewsMV';
+import MuaVuMapScreen from './MuaVuMapScreen';
 
 const MainMV = ({navigation}) => {
   const menuArr = [
@@ -28,7 +29,7 @@ const MainMV = ({navigation}) => {
     <SafeAreaView style={{flex: 1}}>
       <View style={{flex: 9}}>
         {menuId == 0 ? (
-          <></> //Map component
+          <MuaVuMapScreen navigation={navigation} />
         ) : menuId == 1 ? (
           <DocumentMV navigation={navigation} />
         ) : (

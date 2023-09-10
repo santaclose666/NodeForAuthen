@@ -113,6 +113,15 @@ export const compareDate = (date1, date2) => {
   }
 };
 
+export const compareDateFomated = (date1, date2) => {
+  console.log(date1, date2);
+  if (date1 <= date2) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 export const compareOriginDate = (date1, date2) => {
   const beforeDate = moment(date1).startOf('day');
   const afterDate = moment(date2).startOf('day');

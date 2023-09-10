@@ -23,20 +23,20 @@ const vnRegionMapData = require('../../utils/VnRegionMap.json');
 const listLayerWMS = require('../../utils/listLayerWMSGeoPfes.json');
 
 const SelectProvinceFFWScreen = ({navigation}) => {
-  const [listTypeMap, setListTypeMap] = useState(['ChayIfee']);
   const [listProvinces, setListProvinces] = useState([]);
   const [listDistricts, setListDistricts] = useState([]);
   const [listCommunes, setListCommunes] = useState([]);
   const [listWMS, setListWMS] = useState([]);
-
   const [centerPoint, setCenterPoint] = useState(undefined);
-
   const [selectProvince, setSelectProvince] = useState(null);
   const [selectProvinceCode, setSelectProvinceCode] = useState(undefined);
   const [selectDistrict, setSelectDistrict] = useState(undefined);
   const [selectDistrictCode, setSelectDistrictCode] = useState(undefined);
   const [selectCommune, setSelectCommune] = useState(undefined);
   const [selectCommuneCode, setSelectCommuneCode] = useState(undefined);
+  const [curentMapLevel, setCurentMapLevel] = useState('province');
+  const [curentMapLevelCode, setCurentMapLevelCode] = useState(0);
+
   const nameRegionCol = 'DBR_2019';
   const selectTypeMapCode = '5';
 
@@ -232,6 +232,10 @@ const SelectProvinceFFWScreen = ({navigation}) => {
         WMSLink: joined,
         linkRootQueryInfo: linkRootQueryInfo,
         centerPoint: centerPoint,
+        modeMapView: 'FFW',
+        mapLevel: curentMapLevel,
+        mapCode: curentMapLevelCode,
+        provinceCode: selectProvinceCode,
       };
       console.log(data);
       navigation.navigate('MapWMS', data);
@@ -289,6 +293,8 @@ const SelectProvinceFFWScreen = ({navigation}) => {
                 onChange={item => {
                   setSelectProvince(item.value);
                   setSelectProvinceCode(item.value);
+                  setCurentMapLevel('province');
+                  setCurentMapLevelCode(item.value);
                   setListDistricts([]);
                   setListCommunes([]);
                   setSelectDistrict(undefined);
@@ -332,6 +338,8 @@ const SelectProvinceFFWScreen = ({navigation}) => {
                 onChange={item => {
                   setSelectDistrict(item.value);
                   setSelectDistrictCode(item.value);
+                  setCurentMapLevel('district');
+                  setCurentMapLevelCode(item.value);
                   setListCommunes([]);
                   setSelectCommune(undefined);
                   setSelectCommuneCode(undefined);
@@ -373,6 +381,8 @@ const SelectProvinceFFWScreen = ({navigation}) => {
                 onChange={item => {
                   setSelectCommune(item.value);
                   setSelectCommuneCode(item.value);
+                  setCurentMapLevel('commune');
+                  setCurentMapLevelCode(item.value);
                   setCenterPoint({x: item.communeX, y: item.communeY});
                 }}
               />
