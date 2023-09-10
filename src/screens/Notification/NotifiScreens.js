@@ -161,7 +161,7 @@ const NotifiScreen = ({navigation, route}) => {
                       flexDirection: 'column',
                     }}>
                     <View style={styles.textContainer}>
-                      <Text numberOfLines={3} style={styles.obj2}>
+                      <Text numberOfLines={2} style={styles.obj2}>
                         <Text style={styles.obj1}>{item?.nguoigui}</Text>{' '}
                         {item?.tieude} {item?.noidung}
                       </Text>
