@@ -59,13 +59,13 @@ const ContributionDataScreen = ({navigation}) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              Linking.openURL('https://ifee.edu.vn/');
+              Linking.openURL('https://4forestry.xuanmaijsc.vn/chia-se/');
             }}>
             <Text style={styles.paragrap}>
               Nếu bạn có các tài liệu dữ liệu muốn được chi sẻ với mọi người vui
               lòng truy cập theo địa chỉ{' '}
               <Text style={{color: 'red', fontStyle: 'italic'}}>
-                forestry.xuanmaijsc.vn
+                4forestry.xuanmaijsc.vn - 4forestry.ifee.edu.vn
               </Text>
             </Text>
           </TouchableOpacity>

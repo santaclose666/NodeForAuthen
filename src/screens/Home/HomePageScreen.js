@@ -26,14 +26,14 @@ import {
 } from '../../utils/serviceFunction';
 import {
   getWeatherData,
-  getAllStaffs,
+  getAllDocumentMv,
   getallNews,
   sendFeedback,
   getAllDocument,
 } from '../../redux/apiRequest';
 import {
   ForegroundListener,
-  notificationOpenApp,
+  // notificationOpenApp,
   notificationListenerData,
 } from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
@@ -60,7 +60,6 @@ const HomePageScreen = ({navigation}) => {
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
-    await getAllDocument(dispatch);
     await requestPermissions();
     await getWeatherData(dispatch);
   };
@@ -74,16 +73,12 @@ const HomePageScreen = ({navigation}) => {
     }
   };
 
-  const fetchAllStaff = () => {
-    getAllStaffs(dispatch);
-  };
-
   const notificationHandleListener = () => {
     notificationListenerData(navigation);
   };
 
   const notificationHandleOpenApp = async () => {
-    await notificationOpenApp(navigation);
+    // await notificationOpenApp(navigation);
   };
 
   const handleNavigate = routeName => {
@@ -98,7 +93,7 @@ const HomePageScreen = ({navigation}) => {
     }
   };
 
-  const _shareApp = async () => {
+  const shareApp = async () => {
     try {
       const result = await Share.share({
         message:
@@ -143,6 +138,14 @@ const HomePageScreen = ({navigation}) => {
     ToastAlert('Chức năng đang được phát triển');
   };
 
+  const fetchAllDocumentMv = async () => {
+    try {
+      await getAllDocumentMv(dispatch);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useLayoutEffect(() => {
     if (weather) {
       setInTerVal(
@@ -155,7 +158,8 @@ const HomePageScreen = ({navigation}) => {
     }
 
     fetchAllNews();
-    fetchAllStaff();
+    getAllDocument(dispatch);
+    fetchAllDocumentMv();
 
     notificationHandleListener();
     notificationHandleOpenApp();
@@ -367,7 +371,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  handleNavigate('MuaVuMap');
+                  handleNavigate('Muavu');
                 }}>
                 <Image source={Images.muavu} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Mùa vụ</Text>
@@ -567,7 +571,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  _shareApp();
+                  shareApp();
                 }}>
                 <Image source={Images.network} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Chia sẻ</Text>

@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   FlatList,
+  Platform,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../contants/Images';
@@ -22,6 +23,7 @@ import Header from '../components/Header';
 import LinearGradientUI from './LinearGradientUI';
 
 const DocumentTemplate = ({
+  screenName,
   navigation,
   pickFileIndex,
   setpickFileIndex,
@@ -37,15 +39,10 @@ const DocumentTemplate = ({
   const handleSearch = useCallback(
     text => {
       setInput(text);
-      setPickOptionIndex(null);
       setpickFileIndex(null);
 
-      const filter = data.filter(
-        item =>
-          unidecode(item.tenvanban.toLowerCase()).includes(
-            text.toLowerCase(),
-          ) ||
-          unidecode(item.loaivanban.toLowerCase()).includes(text.toLowerCase()),
+      const filter = data.filter(item =>
+        unidecode(item.tenvanban.toLowerCase()).includes(text.toLowerCase()),
       );
       setDocument(filter);
     },
@@ -65,12 +62,75 @@ const DocumentTemplate = ({
   );
 
   const handlePress = useCallback(path => {
-    navigation.navigate('PDF', {link: path});
+    console.log(path);
+    navigation.navigate('PDF', {link: encodeURI(path)});
   }, []);
+
+  // const downloadFile = async url => {
+  //   const {config, fs} = RNFetchBlob;
+  //   const cacheDir = fs.dirs.DownloadDir;
+
+  //   const filename = url.split('/').pop();
+  //   const imagePath = `${cacheDir}/${filename}`;
+
+  //   try {
+  //     const configOptions = Platform.select({
+  //       ios: {
+  //         fileCache: true,
+  //         path: imagePath,
+  //         appendExt: filename.split('.').pop(),
+  //       },
+  //       android: {
+  //         fileCache: true,
+  //         path: imagePath,
+  //         appendExt: filename.split('.').pop(),
+  //         addAndroidDownloads: {
+  //           useDownloadManager: true,
+  //           notification: true,
+  //           path: imagePath,
+  //           description: 'File',
+  //         },
+  //       },
+  //     });
+
+  //     const response = await RNFetchBlob.config(configOptions).fetch(
+  //       'GET',
+  //       url,
+  //     );
+
+  //     return response;
+  //   } catch (error) {
+  //     console.error(error);
+  //     return null;
+  //   }
+  // };
+
+  // const handleDownload = async path => {
+  //   console.log(path);
+  //   if (Platform.OS === 'android') {
+  //     try {
+  //       const granted = await downloadPermissionAndroid();
+
+  //       if (granted) {
+  //         downloadFile(path);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   } else {
+  //     try {
+  //       const res = await downloadFile(path);
+
+  //       RNFetchBlob.ios.previewDocument(res.path());
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // };
 
   const RenderDocument = memo(({item, index}) => {
     return (
-      <View key={item.id}>
+      <View style={{flex: 1, zIndex: 999}}>
         <TouchableOpacity
           onPress={() => handlePress(item.path)}
           style={styles.flatListItemContainer}>
@@ -87,10 +147,16 @@ const DocumentTemplate = ({
                 alignItems: 'center',
                 width: '70%',
               }}>
-              <Image
-                source={Images.pdf}
-                style={{width: 45, height: 45, marginRight: 5}}
-              />
+              <TouchableOpacity>
+                <Image
+                  source={Images.pdf}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    marginRight: Dimension.setWidth(3),
+                  }}
+                />
+              </TouchableOpacity>
               <Text
                 numberOfLines={2}
                 ellipsizeMode="tail"
@@ -121,7 +187,7 @@ const DocumentTemplate = ({
               marginTop: Dimension.setHeight(1.8),
               borderTopWidth: 0.5,
               borderTopColor: Colors.INACTIVE_GREY,
-              marginHorizontal: Dimension.setWidth(8),
+              marginHorizontal: Dimension.setWidth(7),
             }}>
             <View
               style={{
@@ -162,11 +228,20 @@ const DocumentTemplate = ({
                 <Text style={styles.title}>Năm ban hành: </Text>
                 <Text style={styles.content}>{item?.nam}</Text>
               </View>
-              <View style={styles.subItem}>
-                <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Loại văn bản: </Text>
-                <Text style={styles.content}>{item?.loaivanban}</Text>
-              </View>
+              {item?.sohieu && (
+                <View style={styles.subItem}>
+                  <Image source={Images.dot} style={styles.dot} />
+                  <Text style={styles.title}>Số hiệu: </Text>
+                  <Text style={styles.content}>{item?.sohieu}</Text>
+                </View>
+              )}
+              {item?.loaivanban && (
+                <View style={styles.subItem}>
+                  <Image source={Images.dot} style={styles.dot} />
+                  <Text style={styles.title}>Loại văn bản: </Text>
+                  <Text style={styles.content}>{item?.loaivanban}</Text>
+                </View>
+              )}
             </View>
           </View>
         )}
@@ -177,7 +252,7 @@ const DocumentTemplate = ({
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title="Danh mục tài liệu" navigation={navigation} />
+        <Header title={screenName} navigation={navigation} />
         <View style={styles.searchInput}>
           <Icons.Feather name="search" size={25} color={Colors.INACTIVE_GREY} />
           <TextInput
@@ -192,42 +267,46 @@ const DocumentTemplate = ({
           />
         </View>
 
-        <View style={styles.optionContainer}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {groupOption?.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    handlePickOption(item, index);
-                  }}
-                  key={index}
-                  style={{
-                    marginRight: Dimension.setWidth(4.4),
-                    paddingVertical: 3,
-                    borderBottomWidth: pickOptionIndex === index ? 2 : 0,
-                    borderBottomColor:
-                      pickOptionIndex === index ? Colors.DEFAULT_GREEN : '#fff',
-                  }}>
-                  <Text
+        {groupOption && (
+          <View style={styles.optionContainer}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {groupOption?.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handlePickOption(item, index);
+                    }}
+                    key={index}
                     style={{
-                      fontFamily:
-                        pickOptionIndex === index
-                          ? Fonts.SF_SEMIBOLD
-                          : Fonts.SF_REGULAR,
-                      fontSize: Dimension.fontSize(16),
-                      opacity: 0.8,
-                      color:
+                      marginRight: Dimension.setWidth(4.4),
+                      paddingVertical: 3,
+                      borderBottomWidth: pickOptionIndex === index ? 2 : 0,
+                      borderBottomColor:
                         pickOptionIndex === index
                           ? Colors.DEFAULT_GREEN
-                          : Colors.DEFAULT_BLACK,
+                          : '#fff',
                     }}>
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
+                    <Text
+                      style={{
+                        fontFamily:
+                          pickOptionIndex === index
+                            ? Fonts.SF_SEMIBOLD
+                            : Fonts.SF_REGULAR,
+                        fontSize: Dimension.fontSize(16),
+                        opacity: 0.8,
+                        color:
+                          pickOptionIndex === index
+                            ? Colors.DEFAULT_GREEN
+                            : Colors.DEFAULT_BLACK,
+                      }}>
+                      {item}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
 
         <View style={styles.fileListContainer}>
           <FlatList
@@ -239,7 +318,7 @@ const DocumentTemplate = ({
             )}
             initialNumToRender={10}
             windowSize={6}
-            removeClippedSubviews={true}
+            extraData={document}
           />
         </View>
       </SafeAreaView>
@@ -250,7 +329,6 @@ const DocumentTemplate = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
   },
 
   headerContainer: {
@@ -329,7 +407,6 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     elevation: 4,
     ...shadowIOS,
-    marginHorizontal: 5,
     borderWidth: 0.5,
     borderColor: Colors.WHITE,
     paddingTop: Dimension.setHeight(1.6),

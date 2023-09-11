@@ -30,8 +30,6 @@ import TreeTypeScreen from '../screens/TreeType/TreeTypeScreen';
 import DMKTKTScreen from '../screens/DMKTKT/DMKTKTScreen';
 import VP809Screen from '../screens/VP809/VP809Screen';
 import SelectProvinceFFWScreen from '../screens/ForestFire/SelectProvinceFFWScreen';
-import MuaVuMapScreen from '../screens/MuaVu/MuaVuMapScreen';
-
 const Stack = createStackNavigator();
 
 const StactNavigator = () => {
@@ -89,7 +87,7 @@ const StactNavigator = () => {
         name="SelectProvinceFFW"
         component={SelectProvinceFFWScreen}
       />
-      <Stack.Screen name="MuaVuMap" component={MuaVuMapScreen} />
+      <Stack.Screen name="VP809" component={VP809Screen} />
     </Stack.Navigator>
   );
 };

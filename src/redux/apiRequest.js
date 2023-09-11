@@ -13,7 +13,7 @@ import {
   getNotifiSuccess,
 } from './notifiSlice';
 import {CommonActions} from '@react-navigation/native';
-import {getCoords} from '../utils/serviceFunction';
+import {changeFormatDate, getCoords} from '../utils/serviceFunction';
 import {
   getWeatherFailed,
   getWeatherStart,
@@ -60,6 +60,13 @@ import {
   getSpecieStart,
   getSpecieSuccess,
 } from './SpeciesSlice';
+import {getNewMvFailed, getNewMvStart, getNewMvSuccess} from './newsMvSlice';
+import {
+  getDocumentMvFaild,
+  getDocumentMvStart,
+  getDocumentMvSuccess,
+} from './documentMvSlice';
+import {documentMvURL} from '../contants/Variable';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -82,6 +89,8 @@ export const loginUser = async (user, dispatch, navigation, save) => {
     } else {
       navigation.dispatch(resetAction);
       navigation.navigate('BottomTab');
+
+      getAllStaffs(dispatch);
       postToken(res.data.id_ht);
 
       save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));
@@ -559,6 +568,29 @@ export const getallNews = async dispatch => {
   }
 };
 
+export const getAllNewsMV = async dispatch => {
+  dispatch(getNewMvStart());
+  try {
+    const res = await axios.get(`https://muavutrongrung.ifee.edu.vn/api/cddh`);
+
+    const data = res.data.map(item => {
+      return {
+        id: item.id,
+        title: item.tieude,
+        content: item.noidung,
+        avatar: item.hinhanh,
+        date_created: changeFormatDate(item.ngaydang),
+      };
+    });
+
+    console.log(data);
+
+    dispatch(getNewMvSuccess(data));
+  } catch (error) {
+    dispatch(getNewMvFailed());
+  }
+};
+
 ///////////////////// SEND NOTIFCATION ////////////////////
 export const postToken = async id_ht => {
   try {
@@ -586,13 +618,16 @@ export const postNotifcation = async data => {
   } catch (error) {}
 };
 
-export const getAllNotifi = async () => {
+export const getAllNotifi = async (id, dispatch) => {
+  dispatch(getNotifiStart());
   try {
-    const res = await axios.get(`https://forestry.ifee.edu.vn/api/thongbao`);
+    const res = await axios.get(
+      `https://forestry.ifee.edu.vn/api/thongbao/${id}`,
+    );
 
-    return res.data;
+    dispatch(getNotifiSuccess(res.data));
   } catch (error) {
-    console.log(error);
+    dispatch(getOnLeaveFailed());
   }
 };
 
@@ -619,6 +654,24 @@ export const getAllDocument = async dispatch => {
   }
 };
 
+export const getAllDocumentMv = async dispatch => {
+  dispatch(getDocumentMvStart());
+  try {
+    const res = await axios.get(`https://muavutrongrung.ifee.edu.vn/api/tckt`);
+
+    const data = res.data.map(item => {
+      return {
+        ...item,
+        path: documentMvURL + item.path,
+      };
+    });
+
+    dispatch(getDocumentMvSuccess(data));
+  } catch (error) {
+    dispatch(getDocumentMvFaild());
+  }
+};
+
 /////////////////////  SPECIES LIST  ////////////////////
 export const getListSpecies = async (data, dispatch) => {
   dispatch(getSpecieStart());
@@ -626,7 +679,6 @@ export const getListSpecies = async (data, dispatch) => {
     const res = await axios.get(
       `http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/${data.ma}`,
     );
-
     dispatch(getSpecieSuccess(res.data));
   } catch (error) {
     dispatch(getSpecieFailed());

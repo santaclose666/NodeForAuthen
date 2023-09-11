@@ -16,6 +16,7 @@ const DMKTKTScreen = ({navigation}) => {
 
   return (
     <DocumentTemplate
+      screenName={'Định mức Kinh tế Kĩ thuật'}
       navigation={navigation}
       pickFileIndex={pickFileIndex}
       setpickFileIndex={setpickFileIndex}

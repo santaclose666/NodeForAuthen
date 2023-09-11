@@ -46,6 +46,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string></string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string></string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>App requires background tracking</string>
 	<key>NSLocationAlwaysUsageDescription</key>

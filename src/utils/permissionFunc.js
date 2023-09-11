@@ -28,3 +28,20 @@ export const requestPermissions = async () => {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
   }
 };
+
+// export const downloadPermissionAndroid = async () => {
+//   try {
+//     const granted = await PermissionsAndroid.request(
+//       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+//       {
+//         title: 'File Download Permission',
+//         message: 'Your permission is required to save Files to your device',
+//         buttonNegative: 'Cancel',
+//         buttonPositive: 'OK',
+//       },
+//     );
+//     if (granted === PermissionsAndroid.RESULTS.GRANTED) return true;
+//   } catch (err) {
+//     console.log('err', err);
+//   }
+// };

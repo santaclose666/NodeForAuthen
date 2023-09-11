@@ -30,7 +30,12 @@ const DisplayPDF = ({navigation, route}) => {
           style={{width: 18, height: 18, tintColor: Colors.WHITE}}
         />
       </TouchableOpacity>
-      <Pdf trustAllCerts={false} source={source} style={styles.pdf} />
+      <Pdf
+        showsVerticalScrollIndicator={false}
+        trustAllCerts={false}
+        source={source}
+        style={styles.pdf}
+      />
     </View>
   );
 };

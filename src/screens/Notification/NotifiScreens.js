@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, memo} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -11,36 +11,58 @@ import {
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
 import {getAllNotifi} from '../../redux/apiRequest';
 import Loading from '../../components/LoadingUI';
 import {mainURL} from '../../contants/Variable';
+import {DisplayNotificationModal} from '../../components/Modal';
 
-const NotifiScreen = ({navigation}) => {
-  const [allNotifi, setAllNotifi] = useState([]);
-  const [notifiMenu, setNotifiMenu] = useState([
-    'Tất cả',
-    'Yêu cầu',
-    'Sự kiện',
-  ]);
+const NotifiScreen = ({navigation, route}) => {
+  const receiveNotifi = route.params?.notifi;
+  const user = useSelector(state => state.auth.login?.currentUser);
+  const dispatch = useDispatch();
+  const allNotifi = useSelector(state => state.notifi.notifications?.allNotifi);
+  const notifiMenu = ['Nội bộ', 'Sự kiện', 'Sinh nhật'];
   const [notifiMenuId, setNotifiMenuId] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [toggleNotifiModal, setToggleNotifiModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const handlePickItem = notifi => {
+    setSelectedItem(notifi);
+
+    if (notifi.type == 'sinhnhat') {
+      const item = notifi.user_sn;
+      navigation.navigate('HappyBirthday', {item: item});
+    } else if (notifi.type == 'event') {
+      setToggleNotifiModal(true);
+    }
+  };
+
+  const handleFilterNotifi = () => {
+    if (user) {
+      switch (notifiMenuId) {
+        case 0:
+          return allNotifi?.noibo;
+        case 1:
+          return allNotifi?.sukien;
+        case 2:
+          return allNotifi?.sinhnhat;
+      }
+    } else {
+      return allNotifi?.sukien;
+    }
+  };
 
   const fetchAllNotifi = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const res = await getAllNotifi();
+      const idUser = user ? user?.id_ht : null;
+      await getAllNotifi(idUser, dispatch);
 
-      const noibo = res.noibo;
-      const sinhnhat = res.sinhnhat;
-      const sukien = res.sukien;
-
-      if (res) {
-        setAllNotifi([...noibo, ...sinhnhat, ...sukien]);
-        setLoading(false);
-      }
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -48,54 +70,62 @@ const NotifiScreen = ({navigation}) => {
 
   useLayoutEffect(() => {
     fetchAllNotifi();
+
+    if (receiveNotifi) {
+      setSelectedItem(receiveNotifi);
+
+      setToggleNotifiModal(true);
+    }
   }, []);
 
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Thông báo" navigation={navigation} replace={true} />
-        <View style={styles.notifiItemContainer}>
-          <FlatList
-            data={notifiMenu}
-            keyExtractor={(_, index) => index}
-            horizontal={true}
-            renderItem={({item, index}) => {
-              const colorBorder =
-                notifiMenuId === index ? Colors.DEFAULT_GREEN : Colors.WHITE;
-              const bdWidth = notifiMenuId === index ? 2 : 0;
-              return (
-                <View
-                  key={index}
-                  style={{
-                    marginLeft: Dimension.setWidth(4.4),
-                    borderBottomWidth: bdWidth,
-                    borderColor: colorBorder,
-                    marginBottom: 0,
-                    flex: 1,
-                    justifyContent: 'space-between',
-                  }}>
-                  <TouchableOpacity onPress={() => setNotifiMenuId(index)}>
-                    <Text
-                      style={{
-                        fontFamily:
-                          notifiMenuId === index
-                            ? Fonts.SF_SEMIBOLD
-                            : Fonts.SF_REGULAR,
-                        fontSize: Dimension.fontSize(16),
-                        opacity: 0.8,
-                        color:
-                          notifiMenuId === index
-                            ? Colors.DEFAULT_GREEN
-                            : Colors.DEFAULT_BLACK,
-                      }}>
-                      {item}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              );
-            }}
-          />
-        </View>
+        {user && (
+          <View style={styles.notifiItemContainer}>
+            <FlatList
+              data={notifiMenu}
+              keyExtractor={(_, index) => index}
+              horizontal={true}
+              renderItem={({item, index}) => {
+                const colorBorder =
+                  notifiMenuId === index ? Colors.DEFAULT_GREEN : Colors.WHITE;
+                const bdWidth = notifiMenuId === index ? 2 : 0;
+                return (
+                  <View
+                    key={index}
+                    style={{
+                      marginLeft: Dimension.setWidth(4.4),
+                      borderBottomWidth: bdWidth,
+                      borderColor: colorBorder,
+                      marginBottom: 0,
+                      flex: 1,
+                      justifyContent: 'space-between',
+                    }}>
+                    <TouchableOpacity onPress={() => setNotifiMenuId(index)}>
+                      <Text
+                        style={{
+                          fontFamily:
+                            notifiMenuId === index
+                              ? Fonts.SF_SEMIBOLD
+                              : Fonts.SF_REGULAR,
+                          fontSize: Dimension.fontSize(16),
+                          opacity: 0.8,
+                          color:
+                            notifiMenuId === index
+                              ? Colors.DEFAULT_GREEN
+                              : Colors.DEFAULT_BLACK,
+                        }}>
+                        {item}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              }}
+            />
+          </View>
+        )}
         <View
           style={{
             flex: 20,
@@ -104,17 +134,23 @@ const NotifiScreen = ({navigation}) => {
             marginTop: Dimension.setHeight(2),
           }}>
           <FlatList
-            data={allNotifi}
+            data={handleFilterNotifi()}
             keyExtractor={(_, index) => index}
             showsVerticalScrollIndicator={false}
             initialNumToRender={6}
             windowSize={6}
             removeClippedSubviews={true}
             refreshing={true}
-            extraData={allNotifi}
             renderItem={({item, index}) => {
+              const filterTime = item?.giotao.slice(0, 5);
+              const halfDay = item?.giotao.slice(0, 2) > 12 ? 'pm' : 'am';
               return (
-                <TouchableOpacity key={index} style={styles.notifiContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    handlePickItem(item);
+                  }}
+                  key={index}
+                  style={styles.notifiContainer}>
                   <Image
                     src={mainURL + item?.avatar}
                     style={styles.notifiImg}
@@ -125,20 +161,24 @@ const NotifiScreen = ({navigation}) => {
                       flexDirection: 'column',
                     }}>
                     <View style={styles.textContainer}>
-                      <Text style={styles.obj2}>
-                        <Text numberOfLines={3} style={styles.obj1}>
-                          {item?.nguoigui}
-                        </Text>{' '}
+                      <Text numberOfLines={2} style={styles.obj2}>
+                        <Text style={styles.obj1}>{item?.nguoigui}</Text>{' '}
                         {item?.tieude} {item?.noidung}
                       </Text>
                     </View>
-                    <Text style={styles.time}>{item?.giotao}</Text>
+                    <Text
+                      style={styles.time}>{`${filterTime} ${halfDay}`}</Text>
                   </View>
                 </TouchableOpacity>
               );
             }}
           />
         </View>
+        <DisplayNotificationModal
+          toggleModal={toggleNotifiModal}
+          setToggleModal={setToggleNotifiModal}
+          item={selectedItem}
+        />
         {loading === true && <Loading />}
       </SafeAreaView>
     </LinearGradientUI>
@@ -160,7 +200,7 @@ const styles = StyleSheet.create({
   notifiItemContainer: {
     flex: 1,
     marginHorizontal: Dimension.setWidth(3.6),
-    marginVertical: 3,
+    marginTop: Dimension.setHeight(1),
   },
 
   allNotifiContainer: {

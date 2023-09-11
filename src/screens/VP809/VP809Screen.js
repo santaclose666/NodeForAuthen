@@ -16,6 +16,7 @@ const VP809Screen = ({navigation}) => {
 
   return (
     <DocumentTemplate
+      screenName={'Văn phòng 809'}
       navigation={navigation}
       pickFileIndex={pickFileIndex}
       setpickFileIndex={setpickFileIndex}

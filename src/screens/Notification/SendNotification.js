@@ -20,7 +20,7 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
-import {postNotifcation} from '../../redux/apiRequest';
+import {getAllStaffs, postNotifcation} from '../../redux/apiRequest';
 import LinearGradientUI from '../../components/LinearGradientUI';
 
 const group = [
@@ -60,7 +60,7 @@ const IFEEFull = [
 
 const SendNotification = ({navigation}) => {
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
-  const allStaffs = IFEEstaffs.map(item => {
+  const allStaffs = IFEEstaffs?.map(item => {
     return {name: item.hoten, ortherName: item.id_ht};
   });
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -100,9 +100,6 @@ const SendNotification = ({navigation}) => {
     ).map(item => {
       return item.id_ht;
     });
-
-    console.log(dataFilter);
-
     setDataPicker(dataFilter);
   };
 
@@ -132,6 +129,14 @@ const SendNotification = ({navigation}) => {
       }
     } else {
       ToastAlert('Thiếu thông tin!');
+    }
+  };
+
+  const fetchStaff = async () => {
+    try {
+      await getAllStaffs();
+    } catch (error) {
+      console.log(error);
     }
   };
 
