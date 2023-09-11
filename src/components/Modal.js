@@ -458,7 +458,13 @@ export const WarningModal = ({
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Image source={Images.send} style={{width: 25, height: 25}} />
+            <Image
+              source={Images.send}
+              style={{
+                width: 25,
+                height: 25,
+              }}
+            />
           </TouchableOpacity>
         </View>
 
@@ -613,6 +619,113 @@ export const DisplayNotificationModal = ({
   );
 };
 
+export const CheckDownLoadModal = ({
+  navigation,
+  toggleModal,
+  setToggleModal,
+  handlePresentModalPress,
+}) => {
+  return (
+    <Modal
+      isVisible={toggleModal}
+      animationIn="fadeInUp"
+      animationInTiming={100}
+      animationOut="fadeOutDown"
+      animationOutTiming={100}
+      avoidKeyboard={true}>
+      <View
+        style={{
+          flex: 1,
+          position: 'absolute',
+          alignSelf: 'center',
+          width: Dimension.setWidth(85),
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 14,
+          paddingHorizontal: Dimension.setWidth(3),
+          backgroundColor: '#cce0f2',
+        }}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginVertical: Dimension.setHeight(1),
+            borderBottomWidth: 0.8,
+            borderBlockColor: Colors.INACTIVE_GREY,
+            width: '100%',
+            height: Dimension.setHeight(4.5),
+          }}>
+          <Text
+            style={{
+              fontFamily: Fonts.SF_BOLD,
+              fontSize: Dimension.fontSize(20),
+              ...fontDefault,
+              color: '#e86243',
+            }}>
+            Bạn chưa đăng nhập!
+          </Text>
+        </View>
+
+        <Text
+          style={{
+            textAlign: 'center',
+            fontFamily: Fonts.SF_MEDIUM,
+            fontSize: Dimension.fontSize(16),
+            ...fontDefault,
+          }}>
+          Để tải xuống và sử dụng tài liệu của chúng tôi bắt buộc phải đăng nhập
+          hoặc bạn cũng có thể đăng kí để sử dụng!
+        </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: Dimension.setHeight(1.6),
+            marginTop: Dimension.setHeight(1),
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setToggleModal(false);
+              navigation.navigate('Login');
+            }}
+            style={[
+              styles.btnLoginRegister,
+              {backgroundColor: Colors.DEFAULT_GREEN},
+            ]}>
+            <Text style={styles.textLoginRegister}>Đăng nhập</Text>
+          </TouchableOpacity>
+          <Image
+            source={Images.diagonalline}
+            style={{
+              width: 30,
+              height: 30,
+              marginHorizontal: Dimension.setWidth(1.6),
+            }}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              setToggleModal(false);
+              handlePresentModalPress();
+            }}
+            style={[styles.btnLoginRegister, {backgroundColor: '#d4994e'}]}>
+            <Text style={styles.textLoginRegister}>Đăng kí sử dụng</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          onPress={() => {
+            setToggleModal(false);
+          }}
+          style={{position: 'absolute', right: 8, top: 8}}>
+          <Image source={Images.minusclose} style={styles.btnModal} />
+        </TouchableOpacity>
+      </View>
+    </Modal>
+  );
+};
+
 const styles = StyleSheet.create({
   containerEachLine: {
     flexDirection: 'row',
@@ -693,5 +806,21 @@ const styles = StyleSheet.create({
     height: 17,
     width: 17,
     tintColor: '#ffffff',
+  },
+
+  btnLoginRegister: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    height: Dimension.boxHeight(40),
+    width: '39%',
+    paddingHorizontal: Dimension.setWidth(2),
+  },
+
+  textLoginRegister: {
+    fontFamily: Fonts.SF_MEDIUM,
+    color: '#fff',
+    fontSize: Dimension.fontSize(15),
+    textAlign: 'center',
   },
 });
