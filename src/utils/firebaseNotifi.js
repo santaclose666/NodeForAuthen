@@ -31,7 +31,7 @@ export const handleNavigate = navigation => {
   navigation.navigate('Notification');
 };
 
-export const notificationListenerData = (navigation) => {
+export const notificationListenerData = navigation => {
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log(remoteMessage);
   });
@@ -42,10 +42,10 @@ export const notificationListenerData = (navigation) => {
     },
 
     onNotification: notification => {
-      console.log(notification);
-
+      const data = notification.data;
+      console.log('Pressssss', data);
       if (notification.userInteraction) {
-        navigation.navigate('Notification');
+        navigation.navigate(data.screen, {item: data});
       }
       notification.finish(PushNotificationIOS.FetchResult.NoData);
     },
@@ -69,20 +69,22 @@ export const notificationListenerData = (navigation) => {
   });
 };
 
-export const notificationOpenApp = async navigation => {
-  const notificationOpen = await messaging().getInitialNotification();
-  if (notificationOpen) {
-    console.log(notificationOpen);
-    handleNavigate(navigation);
-  }
+// export const notificationOpenApp = async navigation => {
+//   const notificationOpen = await messaging().getInitialNotification();
+//   if (notificationOpen) {
+//     const data = notificationOpen.data;
+//     // handleNavigate(navigation);
+//     navigation.navigate(data.screen, {item: data.data});
+//   }
 
-  messaging().onNotificationOpenedApp(async remoteMessage => {
-    if (remoteMessage) {
-      console.log(remoteMessage);
-      handleNavigate(navigation);
-    }
-  });
-};
+//   messaging().onNotificationOpenedApp(async remoteMessage => {
+//     if (remoteMessage) {
+//       const data = remoteMessage.data;
+//       // handleNavigate(navigation);
+//       navigation.navigate(data.screen, {item: data.data});
+//     }
+//   });
+// };
 
 export const ForegroundListener = () => {
   useEffect(() => {

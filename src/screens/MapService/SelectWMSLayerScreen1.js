@@ -153,20 +153,24 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
   };
 
   const _getLinkWMS = () => {
-    let layerData = _getLayer();
+    try {
+      let layerData = _getLayer();
 
-    console.log(layerData);
+      console.log(layerData);
 
-    let queryLayer = _getQueryLayer(
-      layerData.cql_filter,
-      layerData.nameProvinCodeCol,
-      layerData.nameDistrictCodeCol,
-      layerData.nameCommuneCodeCol,
-    );
+      let queryLayer = _getQueryLayer(
+        layerData.cql_filter,
+        layerData.nameProvinCodeCol,
+        layerData.nameDistrictCodeCol,
+        layerData.nameCommuneCodeCol,
+      );
 
-    let link = `${layerData.linkRoot}&version=${layerData.version}&request=GetMap&layers=${layerData.layers}&cql_filter=${queryLayer}&styles=&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=${layerData.format}&transparent=true`;
-    let links = [link];
-    return links;
+      let link = `${layerData.linkRoot}&version=${layerData.version}&request=GetMap&layers=${layerData.layers}&cql_filter=${queryLayer}&styles=&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=${layerData.format}&transparent=true`;
+      let links = [link];
+      return links;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const _getQueryLayer = (

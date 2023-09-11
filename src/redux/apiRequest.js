@@ -89,6 +89,8 @@ export const loginUser = async (user, dispatch, navigation, save) => {
     } else {
       navigation.dispatch(resetAction);
       navigation.navigate('BottomTab');
+
+      getAllStaffs(dispatch);
       postToken(res.data.id_ht);
 
       save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));

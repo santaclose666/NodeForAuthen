@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Dimension from '../../contants/Dimension';
 import {
   View,
@@ -15,8 +15,9 @@ import Sound from 'react-native-sound';
 
 const HappyBirthdayScreen = ({navigation, route}) => {
   const item = route.params.item;
+  console.log('123123', item);
 
-  var sound = new Sound('hpbdpiano.mp3', Sound.MAIN_BUNDLE, error => {
+  var sound = new Sound('dance.mp3', Sound.MAIN_BUNDLE, error => {
     if (error) {
       console.log('failed to load the sound', error);
       return;

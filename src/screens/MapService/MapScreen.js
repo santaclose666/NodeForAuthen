@@ -431,14 +431,6 @@ const MapScreen = ({navigation}) => {
         <Image source={Images.gps} style={styles.icon} />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.findFirePoint}
-        onPress={() => {
-          setModalFirePoint(true);
-        }}>
-        <Image source={Images.locationFire} style={styles.icon} />
-      </TouchableOpacity>
-
       {expainBasemap && (
         <View style={styles.baseMapContainer}>
           {listBaseMap.map(item => {
@@ -591,6 +583,16 @@ const MapScreen = ({navigation}) => {
           tileSize={512}
         />
       </MapView>
+
+      {data.modeMapView == 'FFW' && (
+        <TouchableOpacity
+          style={styles.findFirePoint}
+          onPress={() => {
+            setModalFirePoint(true);
+          }}>
+          <Image source={Images.locationFire} style={styles.icon} />
+        </TouchableOpacity>
+      )}
 
       {data.modeMapView == 'FFW' && (
         <View style={styles.containerNode} pointerEvents="none">

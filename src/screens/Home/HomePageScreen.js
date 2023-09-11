@@ -33,7 +33,7 @@ import {
 } from '../../redux/apiRequest';
 import {
   ForegroundListener,
-  notificationOpenApp,
+  // notificationOpenApp,
   notificationListenerData,
 } from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
@@ -78,7 +78,7 @@ const HomePageScreen = ({navigation}) => {
   };
 
   const notificationHandleOpenApp = async () => {
-    await notificationOpenApp(navigation);
+    // await notificationOpenApp(navigation);
   };
 
   const handleNavigate = routeName => {

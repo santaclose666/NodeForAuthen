@@ -20,7 +20,7 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
-import {postNotifcation} from '../../redux/apiRequest';
+import {getAllStaffs, postNotifcation} from '../../redux/apiRequest';
 import LinearGradientUI from '../../components/LinearGradientUI';
 
 const group = [
@@ -129,6 +129,14 @@ const SendNotification = ({navigation}) => {
       }
     } else {
       ToastAlert('Thiếu thông tin!');
+    }
+  };
+
+  const fetchStaff = async () => {
+    try {
+      await getAllStaffs();
+    } catch (error) {
+      console.log(error);
     }
   };
 
