@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   FlatList,
+  Platform,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../contants/Images';
@@ -22,6 +23,7 @@ import Header from '../components/Header';
 import LinearGradientUI from './LinearGradientUI';
 import {CheckDownLoadModal} from './Modal';
 import {useSelector} from 'react-redux';
+import {request, PERMISSIONS} from 'react-native-permissions';
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -31,6 +33,7 @@ import {Checkbox} from 'native-base';
 import RegisterBtn from './RegisterBtn';
 import {ToastAlert, ToastSuccess} from './Toast';
 import ReactNativeBlobUtil from 'react-native-blob-util';
+import {downloadPermissionAndroid} from '../utils/permissionFunc';
 
 const DocumentTemplate = ({
   screenName,
@@ -99,26 +102,53 @@ const DocumentTemplate = ({
     }
   };
 
-  const dowloadPDFFile = path => {
+  const downloadFile = async url => {
     const {config, fs} = ReactNativeBlobUtil;
+    const cacheDir = fs.dirs.DownloadDir;
 
-    const dowloads = fs.dirs?.DownloadDir;
+    const filename = url.split('/').pop();
+    const pdfPath = `${cacheDir}/${filename}`;
 
-    return config({
-      fileCache: true,
-      addAndroidDownloads: {
-        useDownloadManager: true,
-        notification: true,
-        path: dowloads + '/' + `doc${Math.random()}` + '.pdf',
-      },
-    })
-      .fetch('GET', path)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(e => {
-        console.log(e);
+    try {
+      const configOptions = Platform.select({
+        ios: {
+          fileCache: true,
+          path: pdfPath,
+          appendExt: filename.split('.').pop(),
+        },
+        android: {
+          fileCache: true,
+          path: pdfPath,
+          appendExt: filename.split('.').pop(),
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            path: pdfPath,
+            description: 'File',
+          },
+        },
       });
+
+      const response = await ReactNativeBlobUtil.config(configOptions).fetch(
+        'GET',
+        url,
+      );
+
+      return response;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const dowloadPDFFile = async url => {
+    if (Platform.OS === 'android') {
+      downloadFile(url);
+    } else {
+      downloadFile(url).then(res => {
+        ReactNativeBlobUtil.ios.previewDocument(res.path());
+      });
+    }
   };
 
   const handleRegisterDocument = () => {
