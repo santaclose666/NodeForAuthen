@@ -34,7 +34,11 @@ export const ToastAlert = message => {
     render: () => {
       return (
         <Box bg="yellow.400" px="2" py="2" rounded="sm" mb={10}>
-          <Text fontSize={18} color="white" fontFamily="SF-Pro-Display-Medium">
+          <Text
+            textAlign={'center'}
+            fontSize={18}
+            color="white"
+            fontFamily="SF-Pro-Display-Medium">
             {message}
           </Text>
         </Box>

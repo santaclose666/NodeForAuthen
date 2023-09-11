@@ -672,6 +672,18 @@ export const getAllDocumentMv = async dispatch => {
   }
 };
 
+export const sendRequestUseDocument = async data => {
+  try {
+    console.log(data);
+
+    await axios.post(
+      `https://forestry.ifee.edu.vn/api/document/reg?id_vanban=${data.id_vanban}&hoten=${data.hoten}&sdt=${data.sdt}&donvi=${data.donvi}&mucdich_sd=${data.mucdich_sd}&email=${data.email}`,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /////////////////////  SPECIES LIST  ////////////////////
 export const getListSpecies = async (data, dispatch) => {
   dispatch(getSpecieStart());

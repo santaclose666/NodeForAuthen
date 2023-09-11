@@ -23,7 +23,6 @@ import Header from '../components/Header';
 import LinearGradientUI from './LinearGradientUI';
 import {CheckDownLoadModal} from './Modal';
 import {useSelector} from 'react-redux';
-import {request, PERMISSIONS} from 'react-native-permissions';
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -33,7 +32,8 @@ import {Checkbox} from 'native-base';
 import RegisterBtn from './RegisterBtn';
 import {ToastAlert, ToastSuccess} from './Toast';
 import ReactNativeBlobUtil from 'react-native-blob-util';
-import {downloadPermissionAndroid} from '../utils/permissionFunc';
+import RNFS from 'react-native-fs';
+import {sendRequestUseDocument} from '../redux/apiRequest';
 
 const DocumentTemplate = ({
   screenName,
@@ -58,7 +58,8 @@ const DocumentTemplate = ({
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [purpose, setPurpose] = useState('');
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(false);
+  const [docId, setDocId] = useState(null);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -70,8 +71,11 @@ const DocumentTemplate = ({
       setpickFileIndex(null);
 
       const filter = data.filter(item =>
-        unidecode(item.tenvanban.toLowerCase()).includes(text.toLowerCase()),
+        unidecode(item.tenvanban.toLowerCase()).includes(
+          unidecode(text.toLowerCase()),
+        ),
       );
+
       setDocument(filter);
     },
     [input],
@@ -94,15 +98,17 @@ const DocumentTemplate = ({
     navigation.navigate('PDF', {link: encodeURI(path)});
   }, []);
 
-  const handleCheckDownload = () => {
+  const handleCheckDownload = id => {
     if (!user) {
+      console.log(id);
+      setDocId(id);
       setToggleCheckDownload(true);
     } else {
       ToastAlert('Logined');
     }
   };
 
-  const downloadFile = async url => {
+  const IOSDownload = async url => {
     const {config, fs} = ReactNativeBlobUtil;
     const cacheDir = fs.dirs.DownloadDir;
 
@@ -141,11 +147,30 @@ const DocumentTemplate = ({
     }
   };
 
+  const AndroidDownload = async url => {
+    console.log(url);
+    const filePath = RNFS.DocumentDirectoryPath + '/example.pdf';
+
+    RNFS.downloadFile({
+      fromUrl: url,
+      toFile: filePath,
+    })
+      .promise.then(response => {
+        return RNFS.readFile(filePath, 'base64');
+      })
+      .catch(err => {
+        console.log('Download error:', err);
+      });
+  };
+
   const dowloadPDFFile = async url => {
     if (Platform.OS === 'android') {
-      downloadFile(url);
+      // AndroidDownload(url);
+      ToastAlert(
+        'Chức năng tải văn bản chưa hoạt động ổn định ở hệ điều hành Android!',
+      );
     } else {
-      downloadFile(url).then(res => {
+      IOSDownload(url).then(res => {
         ReactNativeBlobUtil.ios.previewDocument(res.path());
       });
     }
@@ -157,13 +182,27 @@ const DocumentTemplate = ({
       workUnit.length !== 0 &&
       phoneNumber.length !== 0 &&
       email.length !== 0 &&
-      purpose.length !== 0
+      purpose.length !== 0 &&
+      docId !== null
     ) {
       if (checked) {
+        const data = {
+          id_vanban: docId,
+          hoten: name,
+          sdt: phoneNumber,
+          donvi: workUnit,
+          mucdich_sd: purpose,
+          email: email,
+        };
+
+        sendRequestUseDocument(data);
+
         bottomSheetModalRef.current?.dismiss();
-        ToastSuccess('Đăng kí thành công');
+        ToastSuccess(
+          'Đăng kí thành công, Chúng tôi sẽ xem xét và xử lý yêu cầu của bạn!',
+        );
       } else {
-        ToastAlert('Chưa cam kết sử dụng tài liệu đúng mục đích!');
+        ToastAlert('Chưa cam kết việc sử dụng tài liệu!');
       }
     } else {
       ToastAlert('Thiếu thông tin!');
@@ -191,6 +230,7 @@ const DocumentTemplate = ({
               }}>
               <TouchableOpacity
                 onPress={() => {
+                  // handleCheckDownload(item.id);
                   dowloadPDFFile(item.path);
                 }}>
                 <Image
@@ -308,6 +348,7 @@ const DocumentTemplate = ({
               fontFamily: Fonts.SF_REGULAR,
               marginLeft: 10,
               width: '80%',
+              height: Dimension.setHeight(6),
             }}
           />
         </View>
@@ -451,7 +492,6 @@ const DocumentTemplate = ({
                   value="signupdocument"
                   fontFamily={'SFProDisplay-Medium'}
                   textDecorationLine={'underline'}
-                  defaultIsChecked
                   onChange={e => {
                     setChecked(e);
                   }}>

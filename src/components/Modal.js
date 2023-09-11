@@ -673,8 +673,7 @@ export const CheckDownLoadModal = ({
             fontSize: Dimension.fontSize(16),
             ...fontDefault,
           }}>
-          Để tải xuống và sử dụng tài liệu của chúng tôi bắt buộc phải đăng nhập
-          hoặc bạn cũng có thể đăng kí để sử dụng!
+          Nhấn đăng kí tài liệu để nhận đường dẫn tải file!
         </Text>
 
         <View
@@ -688,29 +687,10 @@ export const CheckDownLoadModal = ({
           <TouchableOpacity
             onPress={() => {
               setToggleModal(false);
-              navigation.navigate('Login');
-            }}
-            style={[
-              styles.btnLoginRegister,
-              {backgroundColor: Colors.DEFAULT_GREEN},
-            ]}>
-            <Text style={styles.textLoginRegister}>Đăng nhập</Text>
-          </TouchableOpacity>
-          <Image
-            source={Images.diagonalline}
-            style={{
-              width: 30,
-              height: 30,
-              marginHorizontal: Dimension.setWidth(1.6),
-            }}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setToggleModal(false);
               handlePresentModalPress();
             }}
             style={[styles.btnLoginRegister, {backgroundColor: '#d4994e'}]}>
-            <Text style={styles.textLoginRegister}>Đăng kí sử dụng</Text>
+            <Text style={styles.textLoginRegister}>Đăng kí tài liệu</Text>
           </TouchableOpacity>
         </View>
 
