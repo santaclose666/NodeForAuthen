@@ -9,6 +9,8 @@ import {
   SafeAreaView,
   ScrollView,
   FlatList,
+  Platform,
+  Share,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../contants/Images';
@@ -30,6 +32,9 @@ import {
 import {Checkbox} from 'native-base';
 import RegisterBtn from './RegisterBtn';
 import {ToastAlert, ToastSuccess} from './Toast';
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import RNFS from 'react-native-fs';
+import {sendRequestUseDocument} from '../redux/apiRequest';
 
 const DocumentTemplate = ({
   screenName,
@@ -54,9 +59,8 @@ const DocumentTemplate = ({
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [purpose, setPurpose] = useState('');
-  const [checked, setChecked] = useState(true);
-
-  console.log(groupOption);
+  const [checked, setChecked] = useState(false);
+  const [docId, setDocId] = useState(null);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -68,8 +72,11 @@ const DocumentTemplate = ({
       setpickFileIndex(null);
 
       const filter = data.filter(item =>
-        unidecode(item.tenvanban.toLowerCase()).includes(text.toLowerCase()),
+        unidecode(item.tenvanban.toLowerCase()).includes(
+          unidecode(text.toLowerCase()),
+        ),
       );
+
       setDocument(filter);
     },
     [input],
@@ -77,17 +84,9 @@ const DocumentTemplate = ({
 
   const handlePickOption = useCallback(
     (keyWord, index) => {
-      if (index === 0) {
-        setDocument(data);
-      } else {
-        setDocument(
-          data.filter(
-            item => item.loaivanban === keyWord || item.loaivbpl === keyWord,
-          ),
-        );
-
-        console.log(data);
-      }
+      index === 0
+        ? setDocument(data)
+        : setDocument(data.filter(item => item.loaivanban === keyWord));
 
       setPickOptionIndex(index);
       setpickFileIndex(null);
@@ -100,75 +99,98 @@ const DocumentTemplate = ({
     navigation.navigate('PDF', {link: encodeURI(path)});
   }, []);
 
-  const handleCheckDownload = () => {
+  const handleCheckDownload = (id, path) => {
     if (!user) {
+      console.log(id);
+      setDocId(id);
       setToggleCheckDownload(true);
     } else {
-      ToastAlert('Logined');
+      dowloadPDFFile(path);
     }
   };
 
-  // const downloadFile = async url => {
-  //   const {config, fs} = RNFetchBlob;
-  //   const cacheDir = fs.dirs.DownloadDir;
+  const IOSDownload = async url => {
+    const {config, fs} = ReactNativeBlobUtil;
+    const cacheDir = fs.dirs.DownloadDir;
 
-  //   const filename = url.split('/').pop();
-  //   const imagePath = `${cacheDir}/${filename}`;
+    const filename = url.split('/').pop();
+    const pdfPath = `${cacheDir}/${filename}`;
 
-  //   try {
-  //     const configOptions = Platform.select({
-  //       ios: {
-  //         fileCache: true,
-  //         path: imagePath,
-  //         appendExt: filename.split('.').pop(),
-  //       },
-  //       android: {
-  //         fileCache: true,
-  //         path: imagePath,
-  //         appendExt: filename.split('.').pop(),
-  //         addAndroidDownloads: {
-  //           useDownloadManager: true,
-  //           notification: true,
-  //           path: imagePath,
-  //           description: 'File',
-  //         },
-  //       },
-  //     });
+    try {
+      const configOptions = Platform.select({
+        ios: {
+          fileCache: true,
+          path: pdfPath,
+          appendExt: filename.split('.').pop(),
+        },
+        android: {
+          fileCache: true,
+          path: pdfPath,
+          appendExt: filename.split('.').pop(),
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            path: pdfPath,
+            description: 'File',
+          },
+        },
+      });
 
-  //     const response = await RNFetchBlob.config(configOptions).fetch(
-  //       'GET',
-  //       url,
-  //     );
+      const response = await ReactNativeBlobUtil.config(configOptions).fetch(
+        'GET',
+        url,
+      );
 
-  //     return response;
-  //   } catch (error) {
-  //     console.error(error);
-  //     return null;
-  //   }
-  // };
+      return response;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
 
-  // const handleDownload = async path => {
-  //   console.log(path);
-  //   if (Platform.OS === 'android') {
-  //     try {
-  //       const granted = await downloadPermissionAndroid();
+  const shareLinkAndroid = async url => {
+    try {
+      const result = await Share.share({
+        message: url,
+      });
 
-  //       if (granted) {
-  //         downloadFile(path);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   } else {
-  //     try {
-  //       const res = await downloadFile(path);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+        } else {
+        }
+      } else if (result.action === Share.dismissedAction) {
+      }
+    } catch (error) {}
+  };
 
-  //       RNFetchBlob.ios.previewDocument(res.path());
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
+  const dowloadPDFFile = async url => {
+    if (Platform.OS === 'android') {
+      const split_url = url.split('/');
+      const filename = split_url[split_url.length - 1];
+      const android = ReactNativeBlobUtil.android;
+      ReactNativeBlobUtil.config({
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          mime: 'application/pdf',
+          title: filename,
+          path: RNFS.DownloadDirectoryPath + '/' + filename,
+        },
+      })
+        .fetch('GET', url)
+        .then(async res => {
+          console.log(res.path());
+          android.actionViewIntent(
+            RNFS.DownloadDirectoryPath + '/' + filename,
+            'application/pdf',
+          );
+        });
+    } else {
+      IOSDownload(url).then(res => {
+        ReactNativeBlobUtil.ios.previewDocument(res.path());
+      });
+    }
+  };
 
   const handleRegisterDocument = () => {
     if (
@@ -176,18 +198,33 @@ const DocumentTemplate = ({
       workUnit.length !== 0 &&
       phoneNumber.length !== 0 &&
       email.length !== 0 &&
-      purpose.length !== 0
+      purpose.length !== 0 &&
+      docId !== null
     ) {
       if (checked) {
+        const data = {
+          id_vanban: docId,
+          hoten: name,
+          sdt: phoneNumber,
+          donvi: workUnit,
+          mucdich_sd: purpose,
+          email: email,
+        };
+
+        sendRequestUseDocument(data);
+
         bottomSheetModalRef.current?.dismiss();
-        ToastSuccess('Đăng kí thành công');
+        ToastSuccess(
+          'Đăng kí thành công, Chúng tôi sẽ xem xét và xử lý yêu cầu của bạn!',
+        );
       } else {
-        ToastAlert('Chưa cam kết sử dụng tài liệu đúng mục đích!');
+        ToastAlert('Chưa cam kết việc sử dụng tài liệu!');
       }
     } else {
       ToastAlert('Thiếu thông tin!');
     }
   };
+
 
   const RenderDocument = memo(({item, index}) => {
     const colorHieuluc =
