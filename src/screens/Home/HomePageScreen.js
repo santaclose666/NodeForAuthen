@@ -315,7 +315,7 @@ const HomePageScreen = ({navigation}) => {
                   source={Images.documentation}
                   style={styles.featureBtn}
                 />
-                <Text style={styles.featureText}>Văn bản PFES</Text>
+                <Text style={styles.featureText}>DVMTR</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonFuc}
