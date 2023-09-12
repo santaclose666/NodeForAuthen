@@ -580,6 +580,7 @@ export const getAllNewsMV = async dispatch => {
         content: item.noidung,
         avatar: item.hinhanh,
         date_created: changeFormatDate(item.ngaydang),
+        files: item.files[0]
       };
     });
 

@@ -31,15 +31,8 @@ import {
   sendFeedback,
   getAllDocument,
 } from '../../redux/apiRequest';
-
 import {fcmService} from '../../services/FCMService';
 import {localNotificationService} from '../../services/LocalNotificationService';
-
-// import {
-//   ForegroundListener,
-//   notificationOpenApp,
-//   notificationListenerData,
-// } from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import {shadowIOS} from '../../contants/propsIOS';
@@ -76,14 +69,6 @@ const HomePageScreen = ({navigation}) => {
       console.log(error);
     }
   };
-
-  // const notificationHandleListener = () => {
-  //   notificationListenerData(navigation);
-  // };
-
-  // const notificationHandleOpenApp = async () => {
-  //   // await notificationOpenApp(navigation);
-  // };
 
   const handleNavigate = routeName => {
     navigation.navigate(routeName);
@@ -169,9 +154,6 @@ const HomePageScreen = ({navigation}) => {
     getAllDocument(dispatch);
     fetchAllDocumentMv();
 
-    // notificationHandleListener();
-    // notificationHandleOpenApp();
-
     return () => clearInterval(interval);
   }, []);
 
@@ -185,8 +167,6 @@ const HomePageScreen = ({navigation}) => {
       playSound: true,
     };
 
-    console.log('B2---------', notify);
-
     localNotificationService.showNotification(
       0,
       notify.notification.title,
@@ -197,8 +177,6 @@ const HomePageScreen = ({navigation}) => {
   };
 
   const onOpenNotification = async notify => {
-    console.log('B3---------', notify);
-
     navigation.navigate(notify.screen, {item: notify});
   };
 
@@ -218,7 +196,6 @@ const HomePageScreen = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={false}
           style={styles.container}>
-          {/* <ForegroundListener /> */}
           <View style={styles.userInforContainer}>
             <View style={styles.userNameContainer}>
               <Text style={styles.userNameText}>Welcome, {user?.hoten} </Text>

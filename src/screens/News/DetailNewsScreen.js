@@ -8,7 +8,9 @@ import {
   StyleSheet,
   SafeAreaView,
   useWindowDimensions,
+  Platform,
 } from 'react-native';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
@@ -18,6 +20,7 @@ import {fontDefault, newsMvURL, newsURL} from '../../contants/Variable';
 import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
 import RenderHtml from 'react-native-render-html';
 import WebView from 'react-native-webview';
+import {AndroidDownload, IOSDownload} from '../../utils/download';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
@@ -95,12 +98,36 @@ const DetailNewsScreen = ({navigation, route}) => {
             renderersProps={{
               iframe: {
                 scalesPageToFit: true,
-                webViewProps: {
-                  /* Any prop you want to pass to iframe WebViews */
-                },
+                webViewProps: {},
               },
             }}
           />
+          {item?.files && (
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={{
+                  fontSize: Dimension.fontSize(15),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  marginRight: Dimension.setWidth(1),
+                }}>
+                Tệp đính kèm:
+              </Text>
+              <Text
+                style={{
+                  fontSize: Dimension.fontSize(15),
+                  fontFamily: Fonts.SF_BOLD,
+                  textDecorationLine: 'underline',
+                  color: Colors.DEFAULT_GREEN,
+                }}
+                onPress={() => {
+                  Platform.OS == 'ios'
+                    ? IOSDownload(newsMvURL + item.files.filename)
+                    : AndroidDownload(newsMvURL + item.files.filename);
+                }}>
+                {item.files.hyperlink}
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -153,9 +180,9 @@ const styles = StyleSheet.create({
   },
 
   descriptionContainer: {
-    marginBottom: Dimension.setHeight(20),
     flex: 1,
     paddingHorizontal: Dimension.setWidth(3),
+    paddingBottom: Dimension.setHeight(28),
   },
 
   header: {
