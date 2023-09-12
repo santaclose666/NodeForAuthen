@@ -9,8 +9,6 @@ import {
   SafeAreaView,
   ScrollView,
   FlatList,
-  Platform,
-  Share,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../contants/Images';
@@ -32,9 +30,6 @@ import {
 import {Checkbox} from 'native-base';
 import RegisterBtn from './RegisterBtn';
 import {ToastAlert, ToastSuccess} from './Toast';
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import RNFS from 'react-native-fs';
-import {sendRequestUseDocument} from '../redux/apiRequest';
 
 const DocumentTemplate = ({
   screenName,
@@ -59,8 +54,9 @@ const DocumentTemplate = ({
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [purpose, setPurpose] = useState('');
-  const [checked, setChecked] = useState(false);
-  const [docId, setDocId] = useState(null);
+  const [checked, setChecked] = useState(true);
+
+  console.log(groupOption);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -72,11 +68,8 @@ const DocumentTemplate = ({
       setpickFileIndex(null);
 
       const filter = data.filter(item =>
-        unidecode(item.tenvanban.toLowerCase()).includes(
-          unidecode(text.toLowerCase()),
-        ),
+        unidecode(item.tenvanban.toLowerCase()).includes(text.toLowerCase()),
       );
-
       setDocument(filter);
     },
     [input],
@@ -84,9 +77,17 @@ const DocumentTemplate = ({
 
   const handlePickOption = useCallback(
     (keyWord, index) => {
-      index === 0
-        ? setDocument(data)
-        : setDocument(data.filter(item => item.loaivanban === keyWord));
+      if (index === 0) {
+        setDocument(data);
+      } else {
+        setDocument(
+          data.filter(
+            item => item.loaivanban === keyWord || item.loaivbpl === keyWord,
+          ),
+        );
+
+        console.log(data);
+      }
 
       setPickOptionIndex(index);
       setpickFileIndex(null);
@@ -99,99 +100,75 @@ const DocumentTemplate = ({
     navigation.navigate('PDF', {link: encodeURI(path)});
   }, []);
 
-  const handleCheckDownload = (id, path) => {
+  const handleCheckDownload = () => {
     if (!user) {
-      console.log(id);
-      setDocId(id);
       setToggleCheckDownload(true);
     } else {
-      dowloadPDFFile(path);
+      ToastAlert('Logined');
     }
   };
 
-  const IOSDownload = async url => {
-    const {config, fs} = ReactNativeBlobUtil;
-    const cacheDir = fs.dirs.DownloadDir;
+  // const downloadFile = async url => {
+  //   const {config, fs} = RNFetchBlob;
+  //   const cacheDir = fs.dirs.DownloadDir;
 
-    const filename = url.split('/').pop();
-    const pdfPath = `${cacheDir}/${filename}`;
+  //   const filename = url.split('/').pop();
+  //   const imagePath = `${cacheDir}/${filename}`;
 
-    try {
-      const configOptions = Platform.select({
-        ios: {
-          fileCache: true,
-          path: pdfPath,
-          appendExt: filename.split('.').pop(),
-        },
-        android: {
-          fileCache: true,
-          path: pdfPath,
-          appendExt: filename.split('.').pop(),
-          addAndroidDownloads: {
-            useDownloadManager: true,
-            notification: true,
-            path: pdfPath,
-            description: 'File',
-          },
-        },
-      });
-
-      const response = await ReactNativeBlobUtil.config(configOptions).fetch(
-        'GET',
-        url,
-      );
-
-      return response;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
-  const shareLinkAndroid = async url => {
-    try {
-      const result = await Share.share({
-        message: url,
-      });
-
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-        } else {
-        }
-      } else if (result.action === Share.dismissedAction) {
-      }
-    } catch (error) {}
-  };
-
-  // const AndroidDownload = async url => {
-  //   console.log(url);
-  //   const filePath = RNFS.DocumentDirectoryPath + '/example.pdf';
-
-  //   RNFS.downloadFile({
-  //     fromUrl: url,
-  //     toFile: filePath,
-  //   })
-  //     .promise.then(response => {
-  //       return RNFS.readFile(filePath, 'base64');
-  //     })
-  //     .catch(err => {
-  //       console.log('Download error:', err);
+  //   try {
+  //     const configOptions = Platform.select({
+  //       ios: {
+  //         fileCache: true,
+  //         path: imagePath,
+  //         appendExt: filename.split('.').pop(),
+  //       },
+  //       android: {
+  //         fileCache: true,
+  //         path: imagePath,
+  //         appendExt: filename.split('.').pop(),
+  //         addAndroidDownloads: {
+  //           useDownloadManager: true,
+  //           notification: true,
+  //           path: imagePath,
+  //           description: 'File',
+  //         },
+  //       },
   //     });
+
+  //     const response = await RNFetchBlob.config(configOptions).fetch(
+  //       'GET',
+  //       url,
+  //     );
+
+  //     return response;
+  //   } catch (error) {
+  //     console.error(error);
+  //     return null;
+  //   }
   // };
 
-  const dowloadPDFFile = async url => {
-    if (Platform.OS === 'android') {
-      shareLinkAndroid(url);
-      // AndroidDownload(url);
-      // ToastAlert(
-      //   'Chức năng tải văn bản chưa hoạt động ổn định ở hệ điều hành Android!',
-      // );
-    } else {
-      IOSDownload(url).then(res => {
-        ReactNativeBlobUtil.ios.previewDocument(res.path());
-      });
-    }
-  };
+  // const handleDownload = async path => {
+  //   console.log(path);
+  //   if (Platform.OS === 'android') {
+  //     try {
+  //       const granted = await downloadPermissionAndroid();
+
+  //       if (granted) {
+  //         downloadFile(path);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   } else {
+  //     try {
+  //       const res = await downloadFile(path);
+
+  //       RNFetchBlob.ios.previewDocument(res.path());
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // };
 
   const handleRegisterDocument = () => {
     if (
@@ -199,27 +176,13 @@ const DocumentTemplate = ({
       workUnit.length !== 0 &&
       phoneNumber.length !== 0 &&
       email.length !== 0 &&
-      purpose.length !== 0 &&
-      docId !== null
+      purpose.length !== 0
     ) {
       if (checked) {
-        const data = {
-          id_vanban: docId,
-          hoten: name,
-          sdt: phoneNumber,
-          donvi: workUnit,
-          mucdich_sd: purpose,
-          email: email,
-        };
-
-        sendRequestUseDocument(data);
-
         bottomSheetModalRef.current?.dismiss();
-        ToastSuccess(
-          'Đăng kí thành công, Chúng tôi sẽ xem xét và xử lý yêu cầu của bạn!',
-        );
+        ToastSuccess('Đăng kí thành công');
       } else {
-        ToastAlert('Chưa cam kết việc sử dụng tài liệu!');
+        ToastAlert('Chưa cam kết sử dụng tài liệu đúng mục đích!');
       }
     } else {
       ToastAlert('Thiếu thông tin!');
@@ -227,8 +190,17 @@ const DocumentTemplate = ({
   };
 
   const RenderDocument = memo(({item, index}) => {
+    const colorHieuluc =
+      item.hieuluc == 'Còn hiệu lực'
+        ? '#30a62c'
+        : item.hieuluc == 'Hết hiệu lực'
+        ? '#cc2333'
+        : item.hieuluc == 'Sắp có hiệu lực'
+        ? '#c7b841'
+        : {...fontDefault};
+
     return (
-      <View>
+      <View style={{flex: 1, zIndex: 999}}>
         <TouchableOpacity
           onPress={() => handlePress(item.path)}
           style={styles.flatListItemContainer}>
@@ -243,42 +215,73 @@ const DocumentTemplate = ({
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                width: '70%',
+                width: '66%',
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handleCheckDownload(item.id);
-                  handleCheckDownload(item.id, item.path);
-                }}>
-                <Image
-                  source={Images.download}
-                  style={{
-                    width: 40,
-                    height: 40,
-                    marginRight: Dimension.setWidth(3),
-                  }}
-                />
-              </TouchableOpacity>
-              <Text
-                numberOfLines={2}
-                ellipsizeMode="tail"
+              <Image
+                source={Images.pdf}
                 style={{
-                  fontFamily: Fonts.SF_SEMIBOLD,
-                  fontSize: Dimension.fontSize(16),
-                  ...fontDefault,
-                }}>
-                {item.tenvanban}
-              </Text>
+                  width: 40,
+                  height: 40,
+                  marginRight: Dimension.setWidth(3),
+                }}
+              />
+              <View>
+                {item.id_donvi != 99 && (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      source={Images.certicate}
+                      style={{
+                        width: 16,
+                        height: 16,
+                        marginRight: 2,
+                      }}
+                    />
+                    <Text
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
+                      style={{
+                        fontFamily: Fonts.SF_SEMIBOLD,
+                        fontSize: Dimension.fontSize(12),
+                        ...fontDefault,
+                        color: '#63c8f5',
+                      }}>
+                      {item.donvi}
+                    </Text>
+                  </View>
+                )}
+                <Text
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontFamily: Fonts.SF_SEMIBOLD,
+                    fontSize: Dimension.fontSize(15),
+                    ...fontDefault,
+                  }}>
+                  {item.tenvanban}
+                </Text>
+              </View>
             </View>
-            <Text
-              style={{
-                fontFamily: Fonts.SF_SEMIBOLD,
-                fontSize: Dimension.fontSize(15),
-                color: Colors.INACTIVE_GREY,
-              }}>
-              {item.nam}
-            </Text>
+
+            <TouchableOpacity
+              onPress={() => {
+                handleCheckDownload();
+              }}
+              style={{width: 40, height: 40}}>
+              <Image
+                source={Images.download}
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginRight: Dimension.setWidth(3),
+                }}
+              />
+            </TouchableOpacity>
           </View>
+
           <TouchableOpacity
             onPress={() => {
               pickFileIndex !== index
@@ -319,30 +322,49 @@ const DocumentTemplate = ({
         </TouchableOpacity>
         {pickFileIndex === index && (
           <View style={styles.subMenuContainer}>
-            <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
-              <Image source={Images.dot} style={styles.dot} />
-              <Text style={styles.titleSubItem}>Tên VB: </Text>
-              <Text style={styles.content}>{item?.tenvanban}</Text>
-            </View>
-            <View style={styles.subItem}>
-              <Image source={Images.dot} style={styles.dot} />
-              <Text style={styles.titleSubItem}>Năm ban hành: </Text>
-              <Text style={styles.content}>{item?.nam}</Text>
-            </View>
-            {item?.sohieu && (
+            <View style={{padding: 10, marginLeft: Dimension.setWidth(3)}}>
+              <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
+                <Image source={Images.dot} style={styles.dot} />
+                <Text style={styles.title}>Tên VB: </Text>
+                <Text style={styles.content}>{item?.tenvanban}</Text>
+              </View>
+
+              {item?.loaivanban && (
+                <View style={styles.subItem}>
+                  <Image source={Images.dot} style={styles.dot} />
+                  <Text style={styles.title}>Loại văn bản: </Text>
+                  <Text style={styles.content}>{item?.loaivanban}</Text>
+                </View>
+              )}
+              {item?.id_loaivanban == 5 && (
+                <>
+                  <View style={styles.subItem}>
+                    <Image source={Images.dot} style={styles.dot} />
+                    <Text style={styles.title}>Số hiệu: </Text>
+                    <Text style={styles.content}>{item?.sohieu}</Text>
+                  </View>
+                  <View style={styles.subItem}>
+                    <Image source={Images.dot} style={styles.dot} />
+                    <Text style={styles.title}>Hiệu lực: </Text>
+                    <Text style={[styles.content, {color: colorHieuluc}]}>
+                      {item?.hieuluc}
+                    </Text>
+                  </View>
+                </>
+              )}
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.titleSubItem}>Số hiệu: </Text>
-                <Text style={styles.content}>{item?.sohieu}</Text>
+                <Text style={styles.title}>Năm: </Text>
+                <Text style={styles.content}>{item?.nam}</Text>
               </View>
-            )}
-            {item?.loaivanban && (
-              <View style={styles.subItem}>
-                <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.titleSubItem}>Loại văn bản: </Text>
-                <Text style={styles.content}>{item?.loaivanban}</Text>
-              </View>
-            )}
+              {item?.id_donvi != 99 && (
+                <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
+                  <Image source={Images.dot} style={styles.dot} />
+                  <Text style={styles.title}>Nguồn: </Text>
+                  <Text style={styles.content}>{item?.donvi}</Text>
+                </View>
+              )}
+            </View>
           </View>
         )}
       </View>
@@ -363,7 +385,6 @@ const DocumentTemplate = ({
               fontFamily: Fonts.SF_REGULAR,
               marginLeft: 10,
               width: '80%',
-              height: Dimension.setHeight(6),
             }}
           />
         </View>
@@ -507,6 +528,7 @@ const DocumentTemplate = ({
                   value="signupdocument"
                   fontFamily={'SFProDisplay-Medium'}
                   textDecorationLine={'underline'}
+                  defaultIsChecked
                   onChange={e => {
                     setChecked(e);
                   }}>
@@ -575,7 +597,6 @@ const styles = StyleSheet.create({
   subItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: Dimension.setHeight(0),
   },
 
   dot: {
@@ -584,11 +605,11 @@ const styles = StyleSheet.create({
     marginRight: Dimension.setWidth(1),
   },
 
-  titleSubItem: {
+  title: {
     fontFamily: Fonts.SF_BOLD,
     fontSize: Dimension.fontSize(15),
     ...fontDefault,
-    color: '#8bc7bc',
+    color: '#2c336b',
   },
 
   content: {
@@ -597,7 +618,6 @@ const styles = StyleSheet.create({
     marginLeft: Dimension.setWidth(1),
     textAlign: 'justify',
   },
-
   searchInput: {
     alignSelf: 'center',
     flexDirection: 'row',
@@ -629,10 +649,8 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(5.5),
     backgroundColor: 'rgba(150, 160, 169, 0.2)',
     borderRadius: 12,
-    width: '88%',
+    width: '86%',
     marginBottom: Dimension.setHeight(0.6),
-    paddingVertical: Dimension.setHeight(1),
-    paddingHorizontal: Dimension.setWidth(3),
   },
 
   containerEachLine: {
@@ -643,13 +661,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: Dimension.setHeight(1.6),
     paddingHorizontal: Dimension.setWidth(3),
-  },
-
-  title: {
-    fontFamily: Fonts.SF_MEDIUM,
-    fontSize: Dimension.fontSize(15),
-    color: '#8bc7bc',
-    marginBottom: Dimension.setHeight(1),
   },
 
   inputText: {

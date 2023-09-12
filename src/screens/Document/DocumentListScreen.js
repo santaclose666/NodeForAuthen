@@ -1,24 +1,22 @@
 import React, {useState} from 'react';
-import {DocumentData} from '../../contants/Variable';
 import DocumentTemplate from '../../components/DocumentTemplate';
+import {useSelector} from 'react-redux';
 
 const DocumentListScreen = ({navigation}) => {
   const [pickFileIndex, setpickFileIndex] = useState(null);
   const [pickOptionIndex, setPickOptionIndex] = useState(0);
   const [input, setInput] = useState('');
-  const groupOption = [
-    'Tất cả',
-    'Luật',
-    'Nghị định',
-    'Quyết định',
-    'Thông tư',
-    'Sổ tay',
-  ];
-  const [document, setDocument] = useState(DocumentData);
+  const data = useSelector(
+    state => state.document.documentSlice?.dvmtrData?.data,
+  );
+  const groupOption = useSelector(
+    state => state.document.documentSlice?.dvmtrData?.category,
+  );
+  const [document, setDocument] = useState(data);
 
   return (
     <DocumentTemplate
-      screenName={'Văn bản PFES'}
+      screenName={'Dịch vụ môi trường rừng'}
       navigation={navigation}
       pickFileIndex={pickFileIndex}
       setpickFileIndex={setpickFileIndex}
@@ -26,7 +24,7 @@ const DocumentListScreen = ({navigation}) => {
       setPickOptionIndex={setPickOptionIndex}
       input={input}
       setInput={setInput}
-      data={DocumentData}
+      data={data}
       groupOption={groupOption}
       document={document}
       setDocument={setDocument}
