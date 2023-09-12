@@ -258,23 +258,25 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
   };
 
   const onPressSelectMap = () => {
-    if (
-      selectTypeMapCode !== '' &&
-      selectProvinceCode !== '' &&
-      nameRegionCol !== ''
-    ) {
-      let linkSelect = _getLinkWMS();
-      let joined = listWMS.concat(linkSelect);
-      let linkRootQueryInfo = _getQueryInfoLinkWMS();
-      const data = {
-        WMSLink: joined,
-        linkRootQueryInfo: linkRootQueryInfo,
-        centerPoint: centerPoint,
-      };
-      navigation.navigate('MapWMS', data);
-    } else {
-      ToastAlert('Không đủ thông tin');
-    }
+    try {
+      if (
+        selectTypeMapCode != undefined &&
+        selectProvinceCode != undefined &&
+        nameRegionCol != undefined
+      ) {
+        let linkSelect = _getLinkWMS();
+        let joined = listWMS.concat(linkSelect);
+        let linkRootQueryInfo = _getQueryInfoLinkWMS();
+        const data = {
+          WMSLink: joined,
+          linkRootQueryInfo: linkRootQueryInfo,
+          centerPoint: centerPoint,
+        };
+        navigation.navigate('MapWMS', data);
+      } else {
+        ToastAlert('Không đủ thông tin');
+      }
+    } catch (err) {}
   };
 
   return (

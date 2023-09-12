@@ -220,11 +220,7 @@ const SelectProvinceFFWScreen = ({navigation}) => {
   };
 
   const onPressSelectMap = () => {
-    if (
-      selectTypeMapCode !== '' &&
-      selectProvinceCode !== '' &&
-      nameRegionCol !== ''
-    ) {
+    if (selectProvinceCode !== undefined && nameRegionCol !== undefined) {
       let linkSelect = _getLinkWMS();
       let joined = listWMS.concat(linkSelect);
       let linkRootQueryInfo = _getQueryInfoLinkWMS();

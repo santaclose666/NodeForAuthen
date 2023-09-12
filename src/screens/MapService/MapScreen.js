@@ -157,15 +157,15 @@ const MapScreen = ({navigation}) => {
     return linkAPIGetInfoFull;
   };
 
-  const _getWMSFeatureInfo = async linkAPIGetInfoFull => {
+  const _getWMSFeatureInfo = async (linkAPIGetInfoFull, x, y) => {
     try {
       setViewFullInfo(false);
       const ApiCall = await fetch(linkAPIGetInfoFull);
       const regionFeatureInfo = await ApiCall.json();
       let disPlayData = `Vị trí chọn: \n Latitude: ${roundNumber(
-        pointPress.latitude,
+        x,
         5,
-      )} \n Longitude: ${roundNumber(pointPress.longitude, 5)} \n`;
+      )} \n Longitude: ${roundNumber(y, 5)} \n`;
       // Dat vung to mau
       setSelectRegion(regionFeatureInfo.features[0].geometry.coordinates[0][0]);
       // lay tt thuoc tinh
@@ -181,9 +181,9 @@ const MapScreen = ({navigation}) => {
       }
 
       let disPlayDataFull = `Vị trí chọn: \n Latitude: ${roundNumber(
-        pointPress.latitude,
+        x,
         5,
-      )} \n Longitude: ${roundNumber(pointPress.longitude, 5)} \n`;
+      )} \n Longitude: ${roundNumber(y, 5)} \n`;
       for (let [key, value] of Object.entries(
         regionFeatureInfo.features[0].properties,
       )) {
@@ -226,13 +226,17 @@ const MapScreen = ({navigation}) => {
 
   const handleMapPress = event => {
     try {
-      setPointPress(event.nativeEvent.coordinate);
+      const coorPress = event.nativeEvent.coordinate;
       const position = event.nativeEvent.position;
       if (Platform.OS === 'android') {
         position.x = position.x / PixelRatio.get();
         position.y = position.y / PixelRatio.get();
       }
-      _getWMSFeatureInfo(_getWMSInfoAPILink(position.x, position.y));
+      _getWMSFeatureInfo(
+        _getWMSInfoAPILink(position.x, position.y),
+        coorPress.latitude,
+        coorPress.longitude,
+      );
     } catch (err) {
       console.log('111', err);
     }
