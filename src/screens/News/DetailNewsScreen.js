@@ -8,6 +8,7 @@ import {
   StyleSheet,
   SafeAreaView,
   useWindowDimensions,
+  Linking,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -95,12 +96,33 @@ const DetailNewsScreen = ({navigation, route}) => {
             renderersProps={{
               iframe: {
                 scalesPageToFit: true,
-                webViewProps: {
-                  /* Any prop you want to pass to iframe WebViews */
-                },
+                webViewProps: {},
               },
             }}
           />
+          {item?.files && (
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={{
+                  fontSize: Dimension.fontSize(15),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  marginRight: Dimension.setWidth(1),
+                }}>
+                Tệp đính kèm:
+              </Text>
+              <Text
+                style={{
+                  fontSize: Dimension.fontSize(15),
+                  fontFamily: Fonts.SF_BOLD,
+                  textDecorationLine: 'underline',
+                }}
+                onPress={() => {
+                  Linking.openURL(newsMvURL + item.files.filename);
+                }}>
+                {item.files.hyperlink}
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -153,9 +175,9 @@ const styles = StyleSheet.create({
   },
 
   descriptionContainer: {
-    marginBottom: Dimension.setHeight(20),
     flex: 1,
     paddingHorizontal: Dimension.setWidth(3),
+    paddingBottom: Dimension.setHeight(28),
   },
 
   header: {

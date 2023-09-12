@@ -38,7 +38,7 @@ const MainMV = ({navigation}) => {
       </View>
       <View
         style={{
-          flex: 0.9,
+          flex: 1,
           backgroundColor: '#fff',
           flexDirection: 'row',
           alignItems: 'center',
