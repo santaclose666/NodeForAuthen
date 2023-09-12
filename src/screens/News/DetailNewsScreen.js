@@ -20,7 +20,7 @@ import {fontDefault, newsMvURL, newsURL} from '../../contants/Variable';
 import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
 import RenderHtml from 'react-native-render-html';
 import WebView from 'react-native-webview';
-import {AndroidDownload, IOSDownload} from '../../utils/download';
+import {AndroidDownload, IOSDownload, shareAndroid} from '../../utils/download';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
@@ -122,7 +122,7 @@ const DetailNewsScreen = ({navigation, route}) => {
                 onPress={() => {
                   Platform.OS == 'ios'
                     ? IOSDownload(newsMvURL + item.files.filename)
-                    : AndroidDownload(newsMvURL + item.files.filename);
+                    : shareAndroid(newsMvURL + item.files.filename);
                 }}>
                 {item.files.hyperlink}
               </Text>

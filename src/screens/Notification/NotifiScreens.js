@@ -36,7 +36,7 @@ const NotifiScreen = ({navigation, route}) => {
     if (notifi.type == 'sinhnhat') {
       const item = notifi.user_sn;
       navigation.navigate('HappyBirthday', {item: item});
-    } else if (notifi.type == 'event') {
+    } else {
       setToggleNotifiModal(true);
     }
   };
@@ -161,9 +161,14 @@ const NotifiScreen = ({navigation, route}) => {
                       flexDirection: 'column',
                     }}>
                     <View style={styles.textContainer}>
+                      <Text style={styles.obj1}>
+                        {item?.nguoigui}{' '}
+                        <Text numberOfLines={2} style={styles.obj2}>
+                          {item?.tieude}
+                        </Text>
+                      </Text>
                       <Text numberOfLines={2} style={styles.obj2}>
-                        <Text style={styles.obj1}>{item?.nguoigui}</Text>{' '}
-                        {item?.tieude} {item?.noidung}
+                        {item?.noidung}
                       </Text>
                     </View>
                     <Text
@@ -224,8 +229,6 @@ const styles = StyleSheet.create({
   },
 
   textContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     width: Dimension.setWidth(70),
     marginBottom: 3,
   },

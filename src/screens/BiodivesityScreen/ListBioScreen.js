@@ -89,8 +89,11 @@ const ListBioScreen = ({navigation}) => {
   const handleSearch = text => {
     setInput(text);
     const data = speciesArr.filter(item =>
-      unidecode(item.loaitv.toLowerCase()).includes(text.toLowerCase()),
+      unidecode(item.loaitv.toLowerCase()).includes(
+        unidecode(text.toLowerCase()),
+      ),
     );
+
     setSpeciesFilled(data);
   };
 

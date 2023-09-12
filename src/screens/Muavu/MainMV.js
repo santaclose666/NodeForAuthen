@@ -12,11 +12,11 @@ const MainMV = ({navigation}) => {
   const menuArr = [
     {
       title: 'Bản đồ',
-      icon: Images.mapmv,
+      icon: Images.documentmv,
     },
     {
       title: 'Tài liệu',
-      icon: Images.documentmv,
+      icon: Images.storage,
     },
     {
       title: 'Chỉ đạo',

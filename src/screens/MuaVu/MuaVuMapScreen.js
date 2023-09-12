@@ -11,7 +11,7 @@ import {
   PixelRatio,
   ScrollView,
 } from 'react-native';
-import MapView, {WMSTile, MAP_TYPES, Polygon} from 'react-native-maps';
+import MapView, {WMSTile, MAP_TYPES, Polygon, Marker} from 'react-native-maps';
 import Colors from '../../contants/Colors';
 import Images from '../../contants/Images';
 import Dimension from '../../contants/Dimension';
@@ -319,6 +319,25 @@ const MuaVuMapScreen = ({navigation}) => {
             zIndex={200}
           />
         )}
+
+        <Marker
+          coordinate={{
+            latitude: 16.649559054878615,
+            longitude: 112.72635619193963,
+          }}
+          title={`Quần đảo Hoàng Sa`}
+          description={`Thành phố Đà Nẵng`}>
+          <Image source={Images.vietnam} style={{width: 44, height: 44}} />
+        </Marker>
+        <Marker
+          coordinate={{
+            latitude: 9.215961963744183,
+            longitude: 113.43436962795047,
+          }}
+          title={`Quần đảo Trường sa`}
+          description={`Tỉnh Khánh Hoà`}>
+          <Image source={Images.vietnam} style={{width: 44, height: 44}} />
+        </Marker>
       </MapView>
 
       <Modal

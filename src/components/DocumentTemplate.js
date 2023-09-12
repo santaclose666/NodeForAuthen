@@ -86,7 +86,11 @@ const DocumentTemplate = ({
     (keyWord, index) => {
       index === 0
         ? setDocument(data)
-        : setDocument(data.filter(item => item.loaivanban === keyWord));
+        : setDocument(
+            data.filter(
+              item => item.loaivanban === keyWord || item.loaivbpl === keyWord,
+            ),
+          );
 
       setPickOptionIndex(index);
       setpickFileIndex(null);
@@ -104,7 +108,7 @@ const DocumentTemplate = ({
       setDocId(id);
       setToggleCheckDownload(true);
     } else {
-      dowloadPDFFile(path);
+      dowloadPDFFile(encodeURI(path));
     }
   };
 
@@ -121,7 +125,7 @@ const DocumentTemplate = ({
       name.length !== 0 &&
       workUnit.length !== 0 &&
       phoneNumber.length !== 0 &&
-      email.length !== 0 &&
+      email.includes('@') &&
       purpose.length !== 0 &&
       docId !== null
     ) {
@@ -145,7 +149,7 @@ const DocumentTemplate = ({
         ToastAlert('Chưa cam kết việc sử dụng tài liệu!');
       }
     } else {
-      ToastAlert('Thiếu thông tin!');
+      ToastAlert('Thông tin không phù hợp!');
     }
   };
 
@@ -306,7 +310,11 @@ const DocumentTemplate = ({
                   <View style={styles.subItem}>
                     <Image source={Images.dot} style={styles.dot} />
                     <Text style={styles.title}>Hiệu lực: </Text>
-                    <Text style={[styles.content, {color: colorHieuluc}]}>
+                    <Text
+                      style={[
+                        styles.content,
+                        {color: colorHieuluc, fontFamily: Fonts.SF_BOLD},
+                      ]}>
                       {item?.hieuluc}
                     </Text>
                   </View>
@@ -488,7 +496,6 @@ const DocumentTemplate = ({
                   value="signupdocument"
                   fontFamily={'SFProDisplay-Medium'}
                   textDecorationLine={'underline'}
-                  defaultIsChecked
                   onChange={e => {
                     setChecked(e);
                   }}>

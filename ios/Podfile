@@ -45,6 +45,7 @@ pod 'react-native-google-maps', :path => rn_maps_path
 
 pod 'react-native-blob-util',
     :path => '../node_modules/react-native-blob-util'
+    
 
 
   config = use_native_modules!

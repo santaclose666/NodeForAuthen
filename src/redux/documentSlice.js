@@ -34,13 +34,13 @@ const documentSlice = createSlice({
       const VP809Category = ['Tất cả'];
 
       const filterCategory = (dataArr, category) => {
-        const data = dataArr.forEach(item => {
+        dataArr.forEach(item => {
           if (!category.includes(item.loaivanban)) {
             category.push(item.loaivanban);
           }
         });
 
-        return data;
+        return category;
       };
 
       action.payload.dvmtr.forEach(item => {

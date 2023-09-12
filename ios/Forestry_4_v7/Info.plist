@@ -60,6 +60,12 @@
 	<string></string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Forestry 4.0 muốn gửi thông báo cho bạn</string>
+	 <key>UIFileSharingEnabled</key>
+    <true/>
+    <key>LSSupportsOpeningDocumentsInPlace</key>
+    <true/>
+    <key>UISupportsDocumentBrowser</key>
+    <true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

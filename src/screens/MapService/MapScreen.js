@@ -478,6 +478,25 @@ const MapScreen = ({navigation}) => {
           />
         )}
 
+        <Marker
+          coordinate={{
+            latitude: 16.649559054878615,
+            longitude: 112.72635619193963,
+          }}
+          title={`Quần đảo Hoàng Sa`}
+          description={`Thành phố Đà Nẵng`}>
+          <Image source={Images.vietnam} style={{width: 44, height: 44}} />
+        </Marker>
+        <Marker
+          coordinate={{
+            latitude: 9.215961963744183,
+            longitude: 113.43436962795047,
+          }}
+          title={`Quần đảo Trường sa`}
+          description={`Tỉnh Khánh Hoà`}>
+          <Image source={Images.vietnam} style={{width: 44, height: 44}} />
+        </Marker>
+
         {listFindPoint.length > 0 &&
           listFindPoint.map(item => {
             return (

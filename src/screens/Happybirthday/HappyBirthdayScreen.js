@@ -6,17 +6,18 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
-import {getCurrentYear} from '../../utils/serviceFunction';
 import {mainURL, imgDefault} from '../../contants/Variable';
 import Sound from 'react-native-sound';
 
 const HappyBirthdayScreen = ({navigation, route}) => {
   const item = route.params.item;
+  const sing = Platform.OS == 'android' ? 'hpbdpiano.mp3' : 'dance.mp3';
 
-  var sound = new Sound('dance.mp3', Sound.MAIN_BUNDLE, error => {
+  var sound = new Sound(sing, Sound.MAIN_BUNDLE, error => {
     if (error) {
       console.log('failed to load the sound', error);
       return;

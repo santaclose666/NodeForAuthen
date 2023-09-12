@@ -175,6 +175,8 @@ const Images = {
   checklist: require('../assets/images/checklist.png'),
   diagonalline: require('../assets/images/diagonalline.png'),
   certicate: require('../assets/images/certicate.png'),
+  vietnam: require('../assets/images/vietnam.png'),
+  storage: require('../assets/images/storage.png'),
 };
 
 export default Images;
