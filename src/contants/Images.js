@@ -174,6 +174,7 @@ const Images = {
   refresh: require('../assets/images/refresh.png'),
   checklist: require('../assets/images/checklist.png'),
   diagonalline: require('../assets/images/diagonalline.png'),
+  certicate: require('../assets/images/certicate.png'),
 };
 
 export default Images;

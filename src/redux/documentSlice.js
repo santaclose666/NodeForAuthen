@@ -4,6 +4,7 @@ const documentSlice = createSlice({
   name: 'document',
   initialState: {
     documentSlice: {
+      dvmtrData: null,
       forestData: null,
       forestryData: null,
       QLRBVData: null,
@@ -22,6 +23,7 @@ const documentSlice = createSlice({
       state.documentSlice.isFetching = true;
     },
     getDocumentSuccess: (state, action) => {
+      const dvmtrCategory = ['Tất cả'];
       const forestCategory = ['Tất cả'];
       const forestryCategory = ['Tất cả'];
       const QLRBVCategory = ['Tất cả'];
@@ -30,77 +32,67 @@ const documentSlice = createSlice({
       const gionglnCategory = ['Tất cả'];
       const DMKTKTCategory = ['Tất cả'];
       const VP809Category = ['Tất cả'];
-      action.payload.dinhgiarung.forEach(item => {
-        if (!forestCategory.includes(item.loaivanban)) {
-          forestCategory.push(item.loaivanban);
+
+      const filterCategory = (dataArr, category) => {
+        const data = dataArr.forEach(item => {
+          if (!category.includes(item.loaivanban)) {
+            category.push(item.loaivanban);
+          }
+        });
+
+        return data;
+      };
+
+      action.payload.dvmtr.forEach(item => {
+        if (item.id_loaivanban == 5) {
+          if (!dvmtrCategory.includes(item.loaivbpl)) {
+            dvmtrCategory.push(item.loaivbpl);
+          }
+        }
+
+        if (
+          !dvmtrCategory.includes(item.loaivanban) &&
+          item.id_loaivanban != 5
+        ) {
+          dvmtrCategory.push(item.loaivanban);
         }
       });
-      action.payload.lamsinh.forEach(item => {
-        if (!forestryCategory.includes(item.loaivanban)) {
-          forestryCategory.push(item.loaivanban);
-        }
-      });
-      action.payload.qlrbv.forEach(item => {
-        if (!QLRBVCategory.includes(item.loaivanban)) {
-          QLRBVCategory.push(item.loaivanban);
-        }
-      });
-      action.payload.kkr.forEach(item => {
-        if (!KKRCategory.includes(item.loaivanban)) {
-          KKRCategory.push(item.loaivanban);
-        }
-      });
-      action.payload.tcvn.forEach(item => {
-        if (!tcvnCategory.includes(item.loaivanban)) {
-          tcvnCategory.push(item.loaivanban);
-        }
-      });
-      action.payload.giongln.forEach(item => {
-        if (!gionglnCategory.includes(item.loaivanban)) {
-          gionglnCategory.push(item.loaivanban);
-        }
-      });
-      action.payload.dinhmuc_ktkt.forEach(item => {
-        if (!DMKTKTCategory.includes(item.loaivanban)) {
-          DMKTKTCategory.push(item.loaivanban);
-        }
-      });
-      action.payload.vanphong_809.forEach(item => {
-        if (!VP809Category.includes(item.loaivanban)) {
-          VP809Category.push(item.loaivanban);
-        }
-      });
+
       state.documentSlice.isFetching = false;
+      state.documentSlice.dvmtrData = {
+        category: dvmtrCategory,
+        data: action.payload.dvmtr,
+      };
       state.documentSlice.forestData = {
-        category: forestCategory,
+        category: filterCategory(action.payload.dinhgiarung, forestCategory),
         data: action.payload.dinhgiarung,
       };
       state.documentSlice.forestryData = {
-        category: forestryCategory,
+        category: filterCategory(action.payload.lamsinh, forestryCategory),
         data: action.payload.lamsinh,
       };
       state.documentSlice.QLRBVData = {
-        category: QLRBVCategory,
+        category: filterCategory(action.payload.qlrbv, QLRBVCategory),
         data: action.payload.qlrbv,
       };
       state.documentSlice.kkrData = {
-        category: KKRCategory,
+        category: filterCategory(action.payload.kkr, KKRCategory),
         data: action.payload.kkr,
       };
       state.documentSlice.tcvnData = {
-        category: tcvnCategory,
+        category: filterCategory(action.payload.tcvn, tcvnCategory),
         data: action.payload.tcvn,
       };
       state.documentSlice.gionglnData = {
-        category: gionglnCategory,
+        category: filterCategory(action.payload.giongln, gionglnCategory),
         data: action.payload.giongln,
       };
       state.documentSlice.DMKTKTData = {
-        category: DMKTKTCategory,
+        category: filterCategory(action.payload.dinhmuc_ktkt, DMKTKTCategory),
         data: action.payload.dinhmuc_ktkt,
       };
       state.documentSlice.VP809Data = {
-        category: VP809Category,
+        category: filterCategory(action.payload.vanphong_809, VP809Category),
         data: action.payload.vanphong_809,
       };
     },

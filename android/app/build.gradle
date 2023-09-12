@@ -84,8 +84,8 @@ android {
         applicationId "com.forestry_4_v7"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "1.5"
+        versionCode 8
+        versionName "1.7"
     }
     signingConfigs {
         release {

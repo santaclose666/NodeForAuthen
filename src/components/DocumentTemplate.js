@@ -10,7 +10,6 @@ import {
   ScrollView,
   FlatList,
   Platform,
-  Share,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../contants/Images';
@@ -109,6 +108,29 @@ const DocumentTemplate = ({
     }
   };
 
+  const AndroidDownload = url => {
+    const split_url = url.split('/');
+    const filename = split_url[split_url.length - 1];
+    const android = ReactNativeBlobUtil.android;
+    ReactNativeBlobUtil.config({
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        mime: 'application/pdf',
+        title: filename,
+        path: RNFS.DownloadDirectoryPath + '/' + filename,
+      },
+    })
+      .fetch('GET', url)
+      .then(async res => {
+        console.log(res.path());
+        android.actionViewIntent(
+          RNFS.DownloadDirectoryPath + '/' + filename,
+          'application/pdf',
+        );
+      });
+  };
+
   const IOSDownload = async url => {
     const {config, fs} = ReactNativeBlobUtil;
     const cacheDir = fs.dirs.DownloadDir;
@@ -148,43 +170,9 @@ const DocumentTemplate = ({
     }
   };
 
-  const shareLinkAndroid = async url => {
-    try {
-      const result = await Share.share({
-        message: url,
-      });
-
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-        } else {
-        }
-      } else if (result.action === Share.dismissedAction) {
-      }
-    } catch (error) {}
-  };
-
   const dowloadPDFFile = async url => {
     if (Platform.OS === 'android') {
-      const split_url = url.split('/');
-      const filename = split_url[split_url.length - 1];
-      const android = ReactNativeBlobUtil.android;
-      ReactNativeBlobUtil.config({
-        addAndroidDownloads: {
-          useDownloadManager: true,
-          notification: true,
-          mime: 'application/pdf',
-          title: filename,
-          path: RNFS.DownloadDirectoryPath + '/' + filename,
-        },
-      })
-        .fetch('GET', url)
-        .then(async res => {
-          console.log(res.path());
-          android.actionViewIntent(
-            RNFS.DownloadDirectoryPath + '/' + filename,
-            'application/pdf',
-          );
-        });
+      AndroidDownload(url);
     } else {
       IOSDownload(url).then(res => {
         ReactNativeBlobUtil.ios.previewDocument(res.path());
@@ -226,8 +214,17 @@ const DocumentTemplate = ({
   };
 
   const RenderDocument = memo(({item, index}) => {
+    const colorHieuluc =
+      item.hieuluc == 'Còn hiệu lực'
+        ? '#30a62c'
+        : item.hieuluc == 'Hết hiệu lực'
+        ? '#cc2333'
+        : item.hieuluc == 'Sắp có hiệu lực'
+        ? '#c7b841'
+        : {...fontDefault};
+
     return (
-      <View>
+      <View style={{flex: 1, zIndex: 999}}>
         <TouchableOpacity
           onPress={() => handlePress(item.path)}
           style={styles.flatListItemContainer}>
@@ -242,42 +239,73 @@ const DocumentTemplate = ({
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                width: '70%',
+                width: '66%',
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handleCheckDownload(item.id);
-                  handleCheckDownload(item.id, item.path);
-                }}>
-                <Image
-                  source={Images.download}
-                  style={{
-                    width: 40,
-                    height: 40,
-                    marginRight: Dimension.setWidth(3),
-                  }}
-                />
-              </TouchableOpacity>
-              <Text
-                numberOfLines={2}
-                ellipsizeMode="tail"
+              <Image
+                source={Images.pdf}
                 style={{
-                  fontFamily: Fonts.SF_SEMIBOLD,
-                  fontSize: Dimension.fontSize(16),
-                  ...fontDefault,
-                }}>
-                {item.tenvanban}
-              </Text>
+                  width: 40,
+                  height: 40,
+                  marginRight: Dimension.setWidth(3),
+                }}
+              />
+              <View>
+                {item.id_donvi != 99 && (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      source={Images.certicate}
+                      style={{
+                        width: 16,
+                        height: 16,
+                        marginRight: 2,
+                      }}
+                    />
+                    <Text
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
+                      style={{
+                        fontFamily: Fonts.SF_SEMIBOLD,
+                        fontSize: Dimension.fontSize(12),
+                        ...fontDefault,
+                        color: '#63c8f5',
+                      }}>
+                      {item.donvi}
+                    </Text>
+                  </View>
+                )}
+                <Text
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontFamily: Fonts.SF_SEMIBOLD,
+                    fontSize: Dimension.fontSize(15),
+                    ...fontDefault,
+                  }}>
+                  {item.tenvanban}
+                </Text>
+              </View>
             </View>
-            <Text
-              style={{
-                fontFamily: Fonts.SF_SEMIBOLD,
-                fontSize: Dimension.fontSize(15),
-                color: Colors.INACTIVE_GREY,
-              }}>
-              {item.nam}
-            </Text>
+
+            <TouchableOpacity
+              onPress={() => {
+                handleCheckDownload(item.id, item.path);
+              }}
+              style={{width: 40, height: 40}}>
+              <Image
+                source={Images.download}
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginRight: Dimension.setWidth(3),
+                }}
+              />
+            </TouchableOpacity>
           </View>
+
           <TouchableOpacity
             onPress={() => {
               pickFileIndex !== index
@@ -318,30 +346,49 @@ const DocumentTemplate = ({
         </TouchableOpacity>
         {pickFileIndex === index && (
           <View style={styles.subMenuContainer}>
-            <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
-              <Image source={Images.dot} style={styles.dot} />
-              <Text style={styles.titleSubItem}>Tên VB: </Text>
-              <Text style={styles.content}>{item?.tenvanban}</Text>
-            </View>
-            <View style={styles.subItem}>
-              <Image source={Images.dot} style={styles.dot} />
-              <Text style={styles.titleSubItem}>Năm ban hành: </Text>
-              <Text style={styles.content}>{item?.nam}</Text>
-            </View>
-            {item?.sohieu && (
+            <View style={{padding: 10, marginLeft: Dimension.setWidth(3)}}>
+              <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
+                <Image source={Images.dot} style={styles.dot} />
+                <Text style={styles.title}>Tên VB: </Text>
+                <Text style={styles.content}>{item?.tenvanban}</Text>
+              </View>
+
+              {item?.loaivanban && (
+                <View style={styles.subItem}>
+                  <Image source={Images.dot} style={styles.dot} />
+                  <Text style={styles.title}>Loại văn bản: </Text>
+                  <Text style={styles.content}>{item?.loaivanban}</Text>
+                </View>
+              )}
+              {item?.id_loaivanban == 5 && (
+                <>
+                  <View style={styles.subItem}>
+                    <Image source={Images.dot} style={styles.dot} />
+                    <Text style={styles.title}>Số hiệu: </Text>
+                    <Text style={styles.content}>{item?.sohieu}</Text>
+                  </View>
+                  <View style={styles.subItem}>
+                    <Image source={Images.dot} style={styles.dot} />
+                    <Text style={styles.title}>Hiệu lực: </Text>
+                    <Text style={[styles.content, {color: colorHieuluc}]}>
+                      {item?.hieuluc}
+                    </Text>
+                  </View>
+                </>
+              )}
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.titleSubItem}>Số hiệu: </Text>
-                <Text style={styles.content}>{item?.sohieu}</Text>
+                <Text style={styles.title}>Năm: </Text>
+                <Text style={styles.content}>{item?.nam}</Text>
               </View>
-            )}
-            {item?.loaivanban && (
-              <View style={styles.subItem}>
-                <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.titleSubItem}>Loại văn bản: </Text>
-                <Text style={styles.content}>{item?.loaivanban}</Text>
-              </View>
-            )}
+              {item?.id_donvi != 99 && (
+                <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
+                  <Image source={Images.dot} style={styles.dot} />
+                  <Text style={styles.title}>Nguồn: </Text>
+                  <Text style={styles.content}>{item?.donvi}</Text>
+                </View>
+              )}
+            </View>
           </View>
         )}
       </View>
@@ -362,7 +409,6 @@ const DocumentTemplate = ({
               fontFamily: Fonts.SF_REGULAR,
               marginLeft: 10,
               width: '80%',
-              height: Dimension.setHeight(6),
             }}
           />
         </View>
@@ -506,6 +552,7 @@ const DocumentTemplate = ({
                   value="signupdocument"
                   fontFamily={'SFProDisplay-Medium'}
                   textDecorationLine={'underline'}
+                  defaultIsChecked
                   onChange={e => {
                     setChecked(e);
                   }}>
@@ -574,7 +621,6 @@ const styles = StyleSheet.create({
   subItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: Dimension.setHeight(0),
   },
 
   dot: {
@@ -583,11 +629,11 @@ const styles = StyleSheet.create({
     marginRight: Dimension.setWidth(1),
   },
 
-  titleSubItem: {
+  title: {
     fontFamily: Fonts.SF_BOLD,
     fontSize: Dimension.fontSize(15),
     ...fontDefault,
-    color: '#8bc7bc',
+    color: '#2c336b',
   },
 
   content: {
@@ -596,7 +642,6 @@ const styles = StyleSheet.create({
     marginLeft: Dimension.setWidth(1),
     textAlign: 'justify',
   },
-
   searchInput: {
     alignSelf: 'center',
     flexDirection: 'row',
@@ -628,10 +673,8 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(5.5),
     backgroundColor: 'rgba(150, 160, 169, 0.2)',
     borderRadius: 12,
-    width: '88%',
+    width: '86%',
     marginBottom: Dimension.setHeight(0.6),
-    paddingVertical: Dimension.setHeight(1),
-    paddingHorizontal: Dimension.setWidth(3),
   },
 
   containerEachLine: {
@@ -642,13 +685,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: Dimension.setHeight(1.6),
     paddingHorizontal: Dimension.setWidth(3),
-  },
-
-  title: {
-    fontFamily: Fonts.SF_MEDIUM,
-    fontSize: Dimension.fontSize(15),
-    color: '#8bc7bc',
-    marginBottom: Dimension.setHeight(1),
   },
 
   inputText: {

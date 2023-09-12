@@ -31,11 +31,15 @@ import {
   sendFeedback,
   getAllDocument,
 } from '../../redux/apiRequest';
-import {
-  ForegroundListener,
-  // notificationOpenApp,
-  notificationListenerData,
-} from '../../utils/firebaseNotifi';
+
+import {fcmService} from '../../services/FCMService';
+import {localNotificationService} from '../../services/LocalNotificationService';
+
+// import {
+//   ForegroundListener,
+//   notificationOpenApp,
+//   notificationListenerData,
+// } from '../../utils/firebaseNotifi';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import {shadowIOS} from '../../contants/propsIOS';
@@ -73,13 +77,13 @@ const HomePageScreen = ({navigation}) => {
     }
   };
 
-  const notificationHandleListener = () => {
-    notificationListenerData(navigation);
-  };
+  // const notificationHandleListener = () => {
+  //   notificationListenerData(navigation);
+  // };
 
-  const notificationHandleOpenApp = async () => {
-    // await notificationOpenApp(navigation);
-  };
+  // const notificationHandleOpenApp = async () => {
+  //   // await notificationOpenApp(navigation);
+  // };
 
   const handleNavigate = routeName => {
     navigation.navigate(routeName);
@@ -147,6 +151,10 @@ const HomePageScreen = ({navigation}) => {
   };
 
   useLayoutEffect(() => {
+    fcmService.registerAppWithFCM();
+    fcmService.register(onRegister, onNotification, onOpenNotification);
+    localNotificationService.configure(onOpenNotification);
+
     if (weather) {
       setInTerVal(
         setInterval(() => {
@@ -161,11 +169,38 @@ const HomePageScreen = ({navigation}) => {
     getAllDocument(dispatch);
     fetchAllDocumentMv();
 
-    notificationHandleListener();
-    notificationHandleOpenApp();
+    // notificationHandleListener();
+    // notificationHandleOpenApp();
 
     return () => clearInterval(interval);
   }, []);
+
+  const onRegister = token => {
+    console.log('[App] onRegister: ', token);
+  };
+
+  const onNotification = notify => {
+    const options = {
+      soundName: 'default',
+      playSound: true,
+    };
+
+    console.log('B2---------', notify);
+
+    localNotificationService.showNotification(
+      0,
+      notify.notification.title,
+      notify.notification.body,
+      notify,
+      options,
+    );
+  };
+
+  const onOpenNotification = async notify => {
+    console.log('B3---------', notify);
+
+    navigation.navigate(notify.screen, {item: notify});
+  };
 
   return (
     <LinearGradientUI>
@@ -183,7 +218,7 @@ const HomePageScreen = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={false}
           style={styles.container}>
-          <ForegroundListener />
+          {/* <ForegroundListener /> */}
           <View style={styles.userInforContainer}>
             <View style={styles.userNameContainer}>
               <Text style={styles.userNameText}>Welcome, {user?.hoten} </Text>
@@ -280,7 +315,7 @@ const HomePageScreen = ({navigation}) => {
                   source={Images.documentation}
                   style={styles.featureBtn}
                 />
-                <Text style={styles.featureText}>Văn bản PFES</Text>
+                <Text style={styles.featureText}>DVMTR</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonFuc}
@@ -463,16 +498,15 @@ const HomePageScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.buttonFuc}
                   onPress={() => {
-                    handleNavigate('HistoryPlaneTicket');
+                    handleNavigate('SendNotification');
                   }}>
                   <Image
-                    source={Images.registerticket}
+                    source={Images.sendnotification}
                     style={styles.featureBtn}
                   />
-                  <Text style={styles.featureText}>Đăng kí vé</Text>
+                  <Text style={styles.featureText}>Gửi thông báo</Text>
                 </TouchableOpacity>
               </View>
-
               <View style={styles.btnContainer}>
                 <TouchableOpacity
                   style={styles.buttonFuc}
@@ -486,6 +520,17 @@ const HomePageScreen = ({navigation}) => {
                   <Text style={styles.featureText}>Đăng kí xe</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
+                    handleNavigate('HistoryPlaneTicket');
+                  }}>
+                  <Image
+                    source={Images.registerticket}
+                    style={styles.featureBtn}
+                  />
+                  <Text style={styles.featureText}>Đăng kí vé</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={() => {
                     handleNavigate('HappyBirthdayList');
                   }}
@@ -493,21 +538,6 @@ const HomePageScreen = ({navigation}) => {
                   <Image source={Images.happybd} style={styles.featureBtn} />
                   <Text style={styles.featureText}>HPBD</Text>
                 </TouchableOpacity>
-                {user?.quyentruycap == 1 ? (
-                  <TouchableOpacity
-                    style={styles.buttonFuc}
-                    onPress={() => {
-                      handleNavigate('SendNotification');
-                    }}>
-                    <Image
-                      source={Images.sendnotification}
-                      style={styles.featureBtn}
-                    />
-                    <Text style={styles.featureText}>Gửi thông báo</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
-                )}
                 <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
               </View>
             </View>
