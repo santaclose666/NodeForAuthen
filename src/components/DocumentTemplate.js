@@ -10,6 +10,7 @@ import {
   ScrollView,
   FlatList,
   Platform,
+  Share,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../contants/Images';
@@ -147,25 +148,41 @@ const DocumentTemplate = ({
     }
   };
 
-  const AndroidDownload = async url => {
-    console.log(url);
-    const filePath = RNFS.DocumentDirectoryPath + '/example.pdf';
-
-    RNFS.downloadFile({
-      fromUrl: url,
-      toFile: filePath,
-    })
-      .promise.then(response => {
-        return RNFS.readFile(filePath, 'base64');
-      })
-      .catch(err => {
-        console.log('Download error:', err);
+  const shareLinkAndroid = async url => {
+    try {
+      const result = await Share.share({
+        message: url,
       });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+        } else {
+        }
+      } else if (result.action === Share.dismissedAction) {
+      }
+    } catch (error) {}
   };
+
+  // const AndroidDownload = async url => {
+  //   console.log(url);
+  //   const filePath = RNFS.DocumentDirectoryPath + '/example.pdf';
+
+  //   RNFS.downloadFile({
+  //     fromUrl: url,
+  //     toFile: filePath,
+  //   })
+  //     .promise.then(response => {
+  //       return RNFS.readFile(filePath, 'base64');
+  //     })
+  //     .catch(err => {
+  //       console.log('Download error:', err);
+  //     });
+  // };
 
   const dowloadPDFFile = async url => {
     if (Platform.OS === 'android') {
-      AndroidDownload(url);
+      shareLinkAndroid(url);
+      // AndroidDownload(url);
       // ToastAlert(
       //   'Chức năng tải văn bản chưa hoạt động ổn định ở hệ điều hành Android!',
       // );
@@ -211,7 +228,7 @@ const DocumentTemplate = ({
 
   const RenderDocument = memo(({item, index}) => {
     return (
-      <View style={{flex: 1, zIndex: 999}}>
+      <View>
         <TouchableOpacity
           onPress={() => handlePress(item.path)}
           style={styles.flatListItemContainer}>
@@ -304,25 +321,25 @@ const DocumentTemplate = ({
           <View style={styles.subMenuContainer}>
             <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
               <Image source={Images.dot} style={styles.dot} />
-              <Text style={styles.title}>Tên VB: </Text>
+              <Text style={styles.titleSubItem}>Tên VB: </Text>
               <Text style={styles.content}>{item?.tenvanban}</Text>
             </View>
             <View style={styles.subItem}>
               <Image source={Images.dot} style={styles.dot} />
-              <Text style={styles.title}>Năm ban hành: </Text>
+              <Text style={styles.titleSubItem}>Năm ban hành: </Text>
               <Text style={styles.content}>{item?.nam}</Text>
             </View>
             {item?.sohieu && (
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Số hiệu: </Text>
+                <Text style={styles.titleSubItem}>Số hiệu: </Text>
                 <Text style={styles.content}>{item?.sohieu}</Text>
               </View>
             )}
             {item?.loaivanban && (
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Loại văn bản: </Text>
+                <Text style={styles.titleSubItem}>Loại văn bản: </Text>
                 <Text style={styles.content}>{item?.loaivanban}</Text>
               </View>
             )}
@@ -567,10 +584,11 @@ const styles = StyleSheet.create({
     marginRight: Dimension.setWidth(1),
   },
 
-  title: {
+  titleSubItem: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: Dimension.fontSize(14),
+    fontSize: Dimension.fontSize(15),
     ...fontDefault,
+    color: '#8bc7bc',
   },
 
   content: {
@@ -579,6 +597,7 @@ const styles = StyleSheet.create({
     marginLeft: Dimension.setWidth(1),
     textAlign: 'justify',
   },
+
   searchInput: {
     alignSelf: 'center',
     flexDirection: 'row',
