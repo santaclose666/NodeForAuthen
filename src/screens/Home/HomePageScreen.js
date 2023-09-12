@@ -150,10 +150,10 @@ const HomePageScreen = ({navigation}) => {
     }
   };
 
-  useLayoutEffect(async () => {
-    await fcmService.registerAppWithFCM();
-    await fcmService.register(onRegister, onNotification, onOpenNotification);
-    await localNotificationService.configure(onOpenNotification);
+  useLayoutEffect(() => {
+    fcmService.registerAppWithFCM();
+    fcmService.register(onRegister, onNotification, onOpenNotification);
+    localNotificationService.configure(onOpenNotification);
 
     if (weather) {
       setInTerVal(

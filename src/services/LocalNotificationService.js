@@ -14,7 +14,11 @@ class LocalNotificationService {
         console.log('LocalNotificationService', notification);
 
         if (notification.userInteraction) {
-          onOpenNotification(notification.data);
+          onOpenNotification(
+            Platform.OS === 'ios'
+              ? notification.data.item
+              : notification.data.data,
+          );
         }
 
         if (Platform.OS === 'ios') {
