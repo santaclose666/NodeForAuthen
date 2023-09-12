@@ -302,32 +302,30 @@ const DocumentTemplate = ({
         </TouchableOpacity>
         {pickFileIndex === index && (
           <View style={styles.subMenuContainer}>
-            <View style={{padding: 10, marginLeft: Dimension.setWidth(3)}}>
-              <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
-                <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Tên VB: </Text>
-                <Text style={styles.content}>{item?.tenvanban}</Text>
-              </View>
+            <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
+              <Image source={Images.dot} style={styles.dot} />
+              <Text style={styles.title}>Tên VB: </Text>
+              <Text style={styles.content}>{item?.tenvanban}</Text>
+            </View>
+            <View style={styles.subItem}>
+              <Image source={Images.dot} style={styles.dot} />
+              <Text style={styles.title}>Năm ban hành: </Text>
+              <Text style={styles.content}>{item?.nam}</Text>
+            </View>
+            {item?.sohieu && (
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Năm ban hành: </Text>
-                <Text style={styles.content}>{item?.nam}</Text>
+                <Text style={styles.title}>Số hiệu: </Text>
+                <Text style={styles.content}>{item?.sohieu}</Text>
               </View>
-              {item?.sohieu && (
-                <View style={styles.subItem}>
-                  <Image source={Images.dot} style={styles.dot} />
-                  <Text style={styles.title}>Số hiệu: </Text>
-                  <Text style={styles.content}>{item?.sohieu}</Text>
-                </View>
-              )}
-              {item?.loaivanban && (
-                <View style={styles.subItem}>
-                  <Image source={Images.dot} style={styles.dot} />
-                  <Text style={styles.title}>Loại văn bản: </Text>
-                  <Text style={styles.content}>{item?.loaivanban}</Text>
-                </View>
-              )}
-            </View>
+            )}
+            {item?.loaivanban && (
+              <View style={styles.subItem}>
+                <Image source={Images.dot} style={styles.dot} />
+                <Text style={styles.title}>Loại văn bản: </Text>
+                <Text style={styles.content}>{item?.loaivanban}</Text>
+              </View>
+            )}
           </View>
         )}
       </View>
@@ -560,6 +558,7 @@ const styles = StyleSheet.create({
   subItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: Dimension.setHeight(0),
   },
 
   dot: {
@@ -577,7 +576,7 @@ const styles = StyleSheet.create({
   content: {
     fontFamily: Fonts.SF_REGULAR,
     fontSize: Dimension.fontSize(14),
-    marginLeft: Dimension.setWidth(2),
+    marginLeft: Dimension.setWidth(1),
     textAlign: 'justify',
   },
   searchInput: {
@@ -611,8 +610,10 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(5.5),
     backgroundColor: 'rgba(150, 160, 169, 0.2)',
     borderRadius: 12,
-    width: '86%',
+    width: '88%',
     marginBottom: Dimension.setHeight(0.6),
+    paddingVertical: Dimension.setHeight(1),
+    paddingHorizontal: Dimension.setWidth(3),
   },
 
   containerEachLine: {
