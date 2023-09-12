@@ -8,9 +8,7 @@ import {
   SafeAreaView,
   Text,
   Modal,
-  TextInput,
   PixelRatio,
-  Alert,
   ScrollView,
 } from 'react-native';
 import MapView, {WMSTile, MAP_TYPES, Polygon} from 'react-native-maps';

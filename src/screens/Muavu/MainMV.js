@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Image, TouchableOpacity, SafeAreaView, Text} from 'react-native';
+import {View, Image, TouchableOpacity, Text} from 'react-native';
 import Images from '../../contants/Images';
 import Dimension from '../../contants/Dimension';
 import Fonts from '../../contants/Fonts';
@@ -27,7 +27,7 @@ const MainMV = ({navigation}) => {
 
   return (
     <View style={{flex: 1}}>
-      <View style={{flex: 9}}>
+      <View style={{flex: 10.1}}>
         {menuId == 0 ? (
           <MuaVuMapScreen navigation={navigation} />
         ) : menuId == 1 ? (

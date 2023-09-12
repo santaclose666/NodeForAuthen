@@ -51,12 +51,11 @@ export const IOSDownload = async url => {
       },
     });
 
-    const response = await ReactNativeBlobUtil.config(configOptions).fetch(
-      'GET',
-      url,
-    );
-
-    return response;
+    ReactNativeBlobUtil.config(configOptions)
+      .fetch('GET', url)
+      .then(res => {
+        ReactNativeBlobUtil.ios.previewDocument(res.path());
+      });
   } catch (error) {
     console.error(error);
     return null;
