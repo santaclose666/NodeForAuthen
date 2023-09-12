@@ -10,7 +10,6 @@ import {
   ScrollView,
   FlatList,
   Platform,
-  Share,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../contants/Images';
@@ -109,6 +108,29 @@ const DocumentTemplate = ({
     }
   };
 
+  const AndroidDownload = url => {
+    const split_url = url.split('/');
+    const filename = split_url[split_url.length - 1];
+    const android = ReactNativeBlobUtil.android;
+    ReactNativeBlobUtil.config({
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        mime: 'application/pdf',
+        title: filename,
+        path: RNFS.DownloadDirectoryPath + '/' + filename,
+      },
+    })
+      .fetch('GET', url)
+      .then(async res => {
+        console.log(res.path());
+        android.actionViewIntent(
+          RNFS.DownloadDirectoryPath + '/' + filename,
+          'application/pdf',
+        );
+      });
+  };
+
   const IOSDownload = async url => {
     const {config, fs} = ReactNativeBlobUtil;
     const cacheDir = fs.dirs.DownloadDir;
@@ -148,43 +170,9 @@ const DocumentTemplate = ({
     }
   };
 
-  const shareLinkAndroid = async url => {
-    try {
-      const result = await Share.share({
-        message: url,
-      });
-
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-        } else {
-        }
-      } else if (result.action === Share.dismissedAction) {
-      }
-    } catch (error) {}
-  };
-
   const dowloadPDFFile = async url => {
     if (Platform.OS === 'android') {
-      const split_url = url.split('/');
-      const filename = split_url[split_url.length - 1];
-      const android = ReactNativeBlobUtil.android;
-      ReactNativeBlobUtil.config({
-        addAndroidDownloads: {
-          useDownloadManager: true,
-          notification: true,
-          mime: 'application/pdf',
-          title: filename,
-          path: RNFS.DownloadDirectoryPath + '/' + filename,
-        },
-      })
-        .fetch('GET', url)
-        .then(async res => {
-          console.log(res.path());
-          android.actionViewIntent(
-            RNFS.DownloadDirectoryPath + '/' + filename,
-            'application/pdf',
-          );
-        });
+      AndroidDownload(url);
     } else {
       IOSDownload(url).then(res => {
         ReactNativeBlobUtil.ios.previewDocument(res.path());
@@ -224,7 +212,6 @@ const DocumentTemplate = ({
       ToastAlert('Thiếu thông tin!');
     }
   };
-
 
   const RenderDocument = memo(({item, index}) => {
     const colorHieuluc =
@@ -305,7 +292,7 @@ const DocumentTemplate = ({
 
             <TouchableOpacity
               onPress={() => {
-                handleCheckDownload();
+                handleCheckDownload(item.id, item.path);
               }}
               style={{width: 40, height: 40}}>
               <Image
