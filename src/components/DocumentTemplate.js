@@ -98,13 +98,13 @@ const DocumentTemplate = ({
     navigation.navigate('PDF', {link: encodeURI(path)});
   }, []);
 
-  const handleCheckDownload = id => {
+  const handleCheckDownload = (id, path) => {
     if (!user) {
       console.log(id);
       setDocId(id);
       setToggleCheckDownload(true);
     } else {
-      ToastAlert('Logined');
+      dowloadPDFFile(path);
     }
   };
 
@@ -165,10 +165,10 @@ const DocumentTemplate = ({
 
   const dowloadPDFFile = async url => {
     if (Platform.OS === 'android') {
-      // AndroidDownload(url);
-      ToastAlert(
-        'Chức năng tải văn bản chưa hoạt động ổn định ở hệ điều hành Android!',
-      );
+      AndroidDownload(url);
+      // ToastAlert(
+      //   'Chức năng tải văn bản chưa hoạt động ổn định ở hệ điều hành Android!',
+      // );
     } else {
       IOSDownload(url).then(res => {
         ReactNativeBlobUtil.ios.previewDocument(res.path());
@@ -231,7 +231,7 @@ const DocumentTemplate = ({
               <TouchableOpacity
                 onPress={() => {
                   // handleCheckDownload(item.id);
-                  dowloadPDFFile(item.path);
+                  handleCheckDownload(item.id, item.path);
                 }}>
                 <Image
                   source={Images.download}
