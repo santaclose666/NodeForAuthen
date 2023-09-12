@@ -163,29 +163,28 @@ const DocumentTemplate = ({
     } catch (error) {}
   };
 
-  // const AndroidDownload = async url => {
-  //   console.log(url);
-  //   const filePath = RNFS.DocumentDirectoryPath + '/example.pdf';
-
-  //   RNFS.downloadFile({
-  //     fromUrl: url,
-  //     toFile: filePath,
-  //   })
-  //     .promise.then(response => {
-  //       return RNFS.readFile(filePath, 'base64');
-  //     })
-  //     .catch(err => {
-  //       console.log('Download error:', err);
-  //     });
-  // };
-
   const dowloadPDFFile = async url => {
     if (Platform.OS === 'android') {
-      shareLinkAndroid(url);
-      // AndroidDownload(url);
-      // ToastAlert(
-      //   'Chức năng tải văn bản chưa hoạt động ổn định ở hệ điều hành Android!',
-      // );
+      const split_url = url.split('/');
+      const filename = split_url[split_url.length - 1];
+      const android = ReactNativeBlobUtil.android;
+      ReactNativeBlobUtil.config({
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          mime: 'application/pdf',
+          title: filename,
+          path: RNFS.DownloadDirectoryPath + '/' + filename,
+        },
+      })
+        .fetch('GET', url)
+        .then(async res => {
+          console.log(res.path());
+          android.actionViewIntent(
+            RNFS.DownloadDirectoryPath + '/' + filename,
+            'application/pdf',
+          );
+        });
     } else {
       IOSDownload(url).then(res => {
         ReactNativeBlobUtil.ios.previewDocument(res.path());
