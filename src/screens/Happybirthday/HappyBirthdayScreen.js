@@ -15,7 +15,6 @@ import Sound from 'react-native-sound';
 
 const HappyBirthdayScreen = ({navigation, route}) => {
   const item = route.params.item;
-  console.log('123123', item);
 
   var sound = new Sound('dance.mp3', Sound.MAIN_BUNDLE, error => {
     if (error) {
