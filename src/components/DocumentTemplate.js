@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react';
+import React, {memo, useCallback, useState, useRef, useMemo} from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   ScrollView,
   FlatList,
   Platform,
+  Share,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../contants/Images';
@@ -21,6 +22,19 @@ import {shadowIOS} from '../contants/propsIOS';
 import {fontDefault} from '../contants/Variable';
 import Header from '../components/Header';
 import LinearGradientUI from './LinearGradientUI';
+import {CheckDownLoadModal} from './Modal';
+import {useSelector} from 'react-redux';
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetScrollView,
+} from '@gorhom/bottom-sheet';
+import {Checkbox} from 'native-base';
+import RegisterBtn from './RegisterBtn';
+import {ToastAlert, ToastSuccess} from './Toast';
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import RNFS from 'react-native-fs';
+import {sendRequestUseDocument} from '../redux/apiRequest';
 
 const DocumentTemplate = ({
   screenName,
@@ -36,14 +50,33 @@ const DocumentTemplate = ({
   document,
   setDocument,
 }) => {
+  const user = useSelector(state => state.auth.login?.currentUser);
+  const bottomSheetModalRef = useRef(null);
+  const snapPoints = useMemo(() => ['96%'], []);
+  const [toggleCheckDownload, setToggleCheckDownload] = useState(false);
+  const [name, setName] = useState('');
+  const [workUnit, setWorkUnit] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [purpose, setPurpose] = useState('');
+  const [checked, setChecked] = useState(false);
+  const [docId, setDocId] = useState(null);
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
   const handleSearch = useCallback(
     text => {
       setInput(text);
       setpickFileIndex(null);
 
       const filter = data.filter(item =>
-        unidecode(item.tenvanban.toLowerCase()).includes(text.toLowerCase()),
+        unidecode(item.tenvanban.toLowerCase()).includes(
+          unidecode(text.toLowerCase()),
+        ),
       );
+
       setDocument(filter);
     },
     [input],
@@ -66,71 +99,135 @@ const DocumentTemplate = ({
     navigation.navigate('PDF', {link: encodeURI(path)});
   }, []);
 
-  // const downloadFile = async url => {
-  //   const {config, fs} = RNFetchBlob;
-  //   const cacheDir = fs.dirs.DownloadDir;
+  const handleCheckDownload = (id, path) => {
+    if (!user) {
+      console.log(id);
+      setDocId(id);
+      setToggleCheckDownload(true);
+    } else {
+      dowloadPDFFile(path);
+    }
+  };
 
-  //   const filename = url.split('/').pop();
-  //   const imagePath = `${cacheDir}/${filename}`;
+  const IOSDownload = async url => {
+    const {config, fs} = ReactNativeBlobUtil;
+    const cacheDir = fs.dirs.DownloadDir;
 
-  //   try {
-  //     const configOptions = Platform.select({
-  //       ios: {
-  //         fileCache: true,
-  //         path: imagePath,
-  //         appendExt: filename.split('.').pop(),
-  //       },
-  //       android: {
-  //         fileCache: true,
-  //         path: imagePath,
-  //         appendExt: filename.split('.').pop(),
-  //         addAndroidDownloads: {
-  //           useDownloadManager: true,
-  //           notification: true,
-  //           path: imagePath,
-  //           description: 'File',
-  //         },
-  //       },
-  //     });
+    const filename = url.split('/').pop();
+    const pdfPath = `${cacheDir}/${filename}`;
 
-  //     const response = await RNFetchBlob.config(configOptions).fetch(
-  //       'GET',
-  //       url,
-  //     );
+    try {
+      const configOptions = Platform.select({
+        ios: {
+          fileCache: true,
+          path: pdfPath,
+          appendExt: filename.split('.').pop(),
+        },
+        android: {
+          fileCache: true,
+          path: pdfPath,
+          appendExt: filename.split('.').pop(),
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            path: pdfPath,
+            description: 'File',
+          },
+        },
+      });
 
-  //     return response;
-  //   } catch (error) {
-  //     console.error(error);
-  //     return null;
-  //   }
-  // };
+      const response = await ReactNativeBlobUtil.config(configOptions).fetch(
+        'GET',
+        url,
+      );
 
-  // const handleDownload = async path => {
-  //   console.log(path);
-  //   if (Platform.OS === 'android') {
-  //     try {
-  //       const granted = await downloadPermissionAndroid();
+      return response;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
 
-  //       if (granted) {
-  //         downloadFile(path);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   } else {
-  //     try {
-  //       const res = await downloadFile(path);
+  const shareLinkAndroid = async url => {
+    try {
+      const result = await Share.share({
+        message: url,
+      });
 
-  //       RNFetchBlob.ios.previewDocument(res.path());
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+        } else {
+        }
+      } else if (result.action === Share.dismissedAction) {
+      }
+    } catch (error) {}
+  };
+
+  const dowloadPDFFile = async url => {
+    if (Platform.OS === 'android') {
+      const split_url = url.split('/');
+      const filename = split_url[split_url.length - 1];
+      const android = ReactNativeBlobUtil.android;
+      ReactNativeBlobUtil.config({
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          mime: 'application/pdf',
+          title: filename,
+          path: RNFS.DownloadDirectoryPath + '/' + filename,
+        },
+      })
+        .fetch('GET', url)
+        .then(async res => {
+          console.log(res.path());
+          android.actionViewIntent(
+            RNFS.DownloadDirectoryPath + '/' + filename,
+            'application/pdf',
+          );
+        });
+    } else {
+      IOSDownload(url).then(res => {
+        ReactNativeBlobUtil.ios.previewDocument(res.path());
+      });
+    }
+  };
+
+  const handleRegisterDocument = () => {
+    if (
+      name.length !== 0 &&
+      workUnit.length !== 0 &&
+      phoneNumber.length !== 0 &&
+      email.length !== 0 &&
+      purpose.length !== 0 &&
+      docId !== null
+    ) {
+      if (checked) {
+        const data = {
+          id_vanban: docId,
+          hoten: name,
+          sdt: phoneNumber,
+          donvi: workUnit,
+          mucdich_sd: purpose,
+          email: email,
+        };
+
+        sendRequestUseDocument(data);
+
+        bottomSheetModalRef.current?.dismiss();
+        ToastSuccess(
+          'Đăng kí thành công, Chúng tôi sẽ xem xét và xử lý yêu cầu của bạn!',
+        );
+      } else {
+        ToastAlert('Chưa cam kết việc sử dụng tài liệu!');
+      }
+    } else {
+      ToastAlert('Thiếu thông tin!');
+    }
+  };
 
   const RenderDocument = memo(({item, index}) => {
     return (
-      <View style={{flex: 1, zIndex: 999}}>
+      <View>
         <TouchableOpacity
           onPress={() => handlePress(item.path)}
           style={styles.flatListItemContainer}>
@@ -147,9 +244,13 @@ const DocumentTemplate = ({
                 alignItems: 'center',
                 width: '70%',
               }}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  // handleCheckDownload(item.id);
+                  handleCheckDownload(item.id, item.path);
+                }}>
                 <Image
-                  source={Images.pdf}
+                  source={Images.download}
                   style={{
                     width: 40,
                     height: 40,
@@ -217,32 +318,30 @@ const DocumentTemplate = ({
         </TouchableOpacity>
         {pickFileIndex === index && (
           <View style={styles.subMenuContainer}>
-            <View style={{padding: 10, marginLeft: Dimension.setWidth(3)}}>
-              <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
-                <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Tên VB: </Text>
-                <Text style={styles.content}>{item?.tenvanban}</Text>
-              </View>
+            <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
+              <Image source={Images.dot} style={styles.dot} />
+              <Text style={styles.titleSubItem}>Tên VB: </Text>
+              <Text style={styles.content}>{item?.tenvanban}</Text>
+            </View>
+            <View style={styles.subItem}>
+              <Image source={Images.dot} style={styles.dot} />
+              <Text style={styles.titleSubItem}>Năm ban hành: </Text>
+              <Text style={styles.content}>{item?.nam}</Text>
+            </View>
+            {item?.sohieu && (
               <View style={styles.subItem}>
                 <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Năm ban hành: </Text>
-                <Text style={styles.content}>{item?.nam}</Text>
+                <Text style={styles.titleSubItem}>Số hiệu: </Text>
+                <Text style={styles.content}>{item?.sohieu}</Text>
               </View>
-              {item?.sohieu && (
-                <View style={styles.subItem}>
-                  <Image source={Images.dot} style={styles.dot} />
-                  <Text style={styles.title}>Số hiệu: </Text>
-                  <Text style={styles.content}>{item?.sohieu}</Text>
-                </View>
-              )}
-              {item?.loaivanban && (
-                <View style={styles.subItem}>
-                  <Image source={Images.dot} style={styles.dot} />
-                  <Text style={styles.title}>Loại văn bản: </Text>
-                  <Text style={styles.content}>{item?.loaivanban}</Text>
-                </View>
-              )}
-            </View>
+            )}
+            {item?.loaivanban && (
+              <View style={styles.subItem}>
+                <Image source={Images.dot} style={styles.dot} />
+                <Text style={styles.titleSubItem}>Loại văn bản: </Text>
+                <Text style={styles.content}>{item?.loaivanban}</Text>
+              </View>
+            )}
           </View>
         )}
       </View>
@@ -263,6 +362,7 @@ const DocumentTemplate = ({
               fontFamily: Fonts.SF_REGULAR,
               marginLeft: 10,
               width: '80%',
+              height: Dimension.setHeight(6),
             }}
           />
         </View>
@@ -321,6 +421,114 @@ const DocumentTemplate = ({
             extraData={document}
           />
         </View>
+
+        <BottomSheetModalProvider>
+          <BottomSheetModal
+            backgroundStyle={{backgroundColor: '#cce0f2'}}
+            ref={bottomSheetModalRef}
+            index={0}
+            snapPoints={snapPoints}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: Dimension.setHeight(1.2),
+                paddingBottom: Dimension.setHeight(1.5),
+                borderBottomWidth: 0.8,
+                borderBottomColor: Colors.INACTIVE_GREY,
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: Dimension.fontSize(20),
+                  ...fontDefault,
+                }}>
+                Đăng kí sử dụng
+              </Text>
+            </View>
+            <BottomSheetScrollView
+              style={{
+                marginTop: Dimension.setHeight(2),
+                paddingHorizontal: Dimension.setWidth(3),
+              }}
+              showsVerticalScrollIndicator={false}>
+              <View style={styles.containerEachLine}>
+                <Text style={styles.title}>Họ tên</Text>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Nhập họ tên"
+                  value={name}
+                  onChangeText={e => setName(e)}
+                />
+              </View>
+              <View style={styles.containerEachLine}>
+                <Text style={styles.title}>Đơn vị công tác</Text>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Nhập tên đơn vị"
+                  value={workUnit}
+                  onChangeText={e => setWorkUnit(e)}
+                />
+              </View>
+              <View style={styles.containerEachLine}>
+                <Text style={styles.title}>Số điện thoại</Text>
+                <TextInput
+                  inputMode="numeric"
+                  style={styles.inputText}
+                  placeholder="Nhập số điện thoại"
+                  value={phoneNumber}
+                  onChangeText={e => setPhoneNumber(e)}
+                />
+              </View>
+              <View style={styles.containerEachLine}>
+                <Text style={styles.title}>Địa chỉ email</Text>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Nhập email"
+                  value={email}
+                  onChangeText={e => setEmail(e)}
+                />
+              </View>
+              <View style={styles.containerEachLine}>
+                <Text style={styles.title}>Mục đích sử dụng</Text>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Nhập mục đích"
+                  value={purpose}
+                  onChangeText={e => setPurpose(e)}
+                />
+              </View>
+              <View
+                style={{
+                  paddingLeft: Dimension.setWidth(2),
+                }}>
+                <Checkbox
+                  value="signupdocument"
+                  fontFamily={'SFProDisplay-Medium'}
+                  textDecorationLine={'underline'}
+                  onChange={e => {
+                    setChecked(e);
+                  }}>
+                  Tôi cam kết sử dụng tài liệu đúng mục đích
+                </Checkbox>
+              </View>
+
+              <View style={{marginTop: Dimension.setHeight(1)}}>
+                <RegisterBtn
+                  nameBtn={'Đăng kí'}
+                  onEvent={handleRegisterDocument}
+                />
+              </View>
+            </BottomSheetScrollView>
+          </BottomSheetModal>
+        </BottomSheetModalProvider>
+
+        <CheckDownLoadModal
+          navigation={navigation}
+          toggleModal={toggleCheckDownload}
+          setToggleModal={setToggleCheckDownload}
+          handlePresentModalPress={handlePresentModalPress}
+        />
       </SafeAreaView>
     </LinearGradientUI>
   );
@@ -366,6 +574,7 @@ const styles = StyleSheet.create({
   subItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: Dimension.setHeight(0),
   },
 
   dot: {
@@ -374,18 +583,20 @@ const styles = StyleSheet.create({
     marginRight: Dimension.setWidth(1),
   },
 
-  title: {
+  titleSubItem: {
     fontFamily: Fonts.SF_BOLD,
-    fontSize: Dimension.fontSize(14),
+    fontSize: Dimension.fontSize(15),
     ...fontDefault,
+    color: '#8bc7bc',
   },
 
   content: {
     fontFamily: Fonts.SF_REGULAR,
     fontSize: Dimension.fontSize(14),
-    marginLeft: Dimension.setWidth(2),
+    marginLeft: Dimension.setWidth(1),
     textAlign: 'justify',
   },
+
   searchInput: {
     alignSelf: 'center',
     flexDirection: 'row',
@@ -417,8 +628,36 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(5.5),
     backgroundColor: 'rgba(150, 160, 169, 0.2)',
     borderRadius: 12,
-    width: '86%',
+    width: '88%',
     marginBottom: Dimension.setHeight(0.6),
+    paddingVertical: Dimension.setHeight(1),
+    paddingHorizontal: Dimension.setWidth(3),
+  },
+
+  containerEachLine: {
+    marginBottom: Dimension.setHeight(2),
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e6e6e6',
+    borderRadius: 12,
+    paddingVertical: Dimension.setHeight(1.6),
+    paddingHorizontal: Dimension.setWidth(3),
+  },
+
+  title: {
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: Dimension.fontSize(15),
+    color: '#8bc7bc',
+    marginBottom: Dimension.setHeight(1),
+  },
+
+  inputText: {
+    borderBottomWidth: 0.6,
+    borderBottomColor: 'gray',
+    marginHorizontal: Dimension.setWidth(1.6),
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: Dimension.fontSize(16),
+    height: Dimension.setHeight(6),
   },
 });
 

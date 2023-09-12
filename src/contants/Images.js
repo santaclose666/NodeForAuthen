@@ -173,6 +173,7 @@ const Images = {
   filterBlue: require('../assets/images/filterBlue.png'),
   refresh: require('../assets/images/refresh.png'),
   checklist: require('../assets/images/checklist.png'),
+  diagonalline: require('../assets/images/diagonalline.png'),
 };
 
 export default Images;

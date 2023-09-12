@@ -463,15 +463,16 @@ const HomePageScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.buttonFuc}
                   onPress={() => {
-                    handleNavigate('SendNotification');
+                    handleNavigate('HistoryPlaneTicket');
                   }}>
                   <Image
-                    source={Images.sendnotification}
+                    source={Images.registerticket}
                     style={styles.featureBtn}
                   />
-                  <Text style={styles.featureText}>Gửi thông báo</Text>
+                  <Text style={styles.featureText}>Đăng kí vé</Text>
                 </TouchableOpacity>
               </View>
+
               <View style={styles.btnContainer}>
                 <TouchableOpacity
                   style={styles.buttonFuc}
@@ -485,17 +486,6 @@ const HomePageScreen = ({navigation}) => {
                   <Text style={styles.featureText}>Đăng kí xe</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    handleNavigate('HistoryPlaneTicket');
-                  }}>
-                  <Image
-                    source={Images.registerticket}
-                    style={styles.featureBtn}
-                  />
-                  <Text style={styles.featureText}>Đăng kí vé</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
                   onPress={() => {
                     handleNavigate('HappyBirthdayList');
                   }}
@@ -503,6 +493,21 @@ const HomePageScreen = ({navigation}) => {
                   <Image source={Images.happybd} style={styles.featureBtn} />
                   <Text style={styles.featureText}>HPBD</Text>
                 </TouchableOpacity>
+                {user?.quyentruycap == 1 ? (
+                  <TouchableOpacity
+                    style={styles.buttonFuc}
+                    onPress={() => {
+                      handleNavigate('SendNotification');
+                    }}>
+                    <Image
+                      source={Images.sendnotification}
+                      style={styles.featureBtn}
+                    />
+                    <Text style={styles.featureText}>Gửi thông báo</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                )}
                 <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
               </View>
             </View>

@@ -7610,10 +7610,10 @@ react-native-asset@^2.1.1:
     sha1-file "^1.0.4"
     xcode "^2.0.0"
 
-react-native-blob-util@^0.16.4:
-  version "0.16.4"
-  resolved "https://registry.yarnpkg.com/react-native-blob-util/-/react-native-blob-util-0.16.4.tgz#eeb0e28f6fa6ecb357c10f154be3d2e66c010f62"
-  integrity sha512-rNKMcVsrVn+l6PQVrCIJy3N2t9zEpXP1yrP3CdnWNHh9Dsup7tJMcoun4S1Cz869L0acx4LiM40XdqqfLyqrDw==
+react-native-blob-util@^0.19.1:
+  version "0.19.1"
+  resolved "https://registry.yarnpkg.com/react-native-blob-util/-/react-native-blob-util-0.19.1.tgz#7a1cc49db5c987e7091e6bc18334a2b38a7ab8ce"
+  integrity sha512-X1+MAcijR1AEky9dqNTFtsKvUPAoof2qsmmbSYThj/RWIucc2hhzrK3V2BJVU/hemNuz7E0NDaErmpNDpDHtNw==
   dependencies:
     base-64 "0.1.0"
     glob "^7.2.3"
