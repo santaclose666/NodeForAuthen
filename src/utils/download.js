@@ -9,18 +9,13 @@ export const AndroidDownload = url => {
     addAndroidDownloads: {
       useDownloadManager: true,
       notification: true,
-      mime: 'application/pdf',
       title: filename,
       path: RNFS.DownloadDirectoryPath + '/' + filename,
     },
   })
     .fetch('GET', url)
     .then(async res => {
-      console.log(res.path());
-      android.actionViewIntent(
-        RNFS.DownloadDirectoryPath + '/' + filename,
-        'application/pdf',
-      );
+      android.actionViewIntent(RNFS.DownloadDirectoryPath + '/' + filename);
     });
 };
 

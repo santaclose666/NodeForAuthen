@@ -117,6 +117,7 @@ const DetailNewsScreen = ({navigation, route}) => {
                   fontSize: Dimension.fontSize(15),
                   fontFamily: Fonts.SF_BOLD,
                   textDecorationLine: 'underline',
+                  color: Colors.DEFAULT_GREEN,
                 }}
                 onPress={() => {
                   Platform.OS == 'ios'
