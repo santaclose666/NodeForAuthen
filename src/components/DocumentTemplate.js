@@ -31,10 +31,9 @@ import {
 import {Checkbox} from 'native-base';
 import RegisterBtn from './RegisterBtn';
 import {ToastAlert, ToastSuccess} from './Toast';
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import RNFS from 'react-native-fs';
 import {sendRequestUseDocument} from '../redux/apiRequest';
 import {IOSDownload, AndroidDownload} from '../utils/download';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const DocumentTemplate = ({
   screenName,
@@ -418,98 +417,111 @@ const DocumentTemplate = ({
             ref={bottomSheetModalRef}
             index={0}
             snapPoints={snapPoints}>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: Dimension.setHeight(1.2),
-                paddingBottom: Dimension.setHeight(1.5),
-                borderBottomWidth: 0.8,
-                borderBottomColor: Colors.INACTIVE_GREY,
-              }}>
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_BOLD,
-                  fontSize: Dimension.fontSize(20),
-                  ...fontDefault,
-                }}>
-                Đăng kí sử dụng
-              </Text>
-            </View>
-            <BottomSheetScrollView
-              style={{
-                marginTop: Dimension.setHeight(2),
+            <KeyboardAwareScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{
+                backgroundColor: '#fbfbfd',
+                borderRadius: 12,
+                marginHorizontal: Dimension.setWidth(3),
+                marginVertical: Dimension.setHeight(3),
                 paddingHorizontal: Dimension.setWidth(3),
-              }}
-              showsVerticalScrollIndicator={false}>
-              <View style={styles.containerEachLine}>
-                <Text style={styles.title}>Họ tên</Text>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Nhập họ tên"
-                  value={name}
-                  onChangeText={e => setName(e)}
-                />
-              </View>
-              <View style={styles.containerEachLine}>
-                <Text style={styles.title}>Đơn vị công tác</Text>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Nhập tên đơn vị"
-                  value={workUnit}
-                  onChangeText={e => setWorkUnit(e)}
-                />
-              </View>
-              <View style={styles.containerEachLine}>
-                <Text style={styles.title}>Số điện thoại</Text>
-                <TextInput
-                  inputMode="numeric"
-                  style={styles.inputText}
-                  placeholder="Nhập số điện thoại"
-                  value={phoneNumber}
-                  onChangeText={e => setPhoneNumber(e)}
-                />
-              </View>
-              <View style={styles.containerEachLine}>
-                <Text style={styles.title}>Địa chỉ email</Text>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Nhập email"
-                  value={email}
-                  onChangeText={e => setEmail(e)}
-                />
-              </View>
-              <View style={styles.containerEachLine}>
-                <Text style={styles.title}>Mục đích sử dụng</Text>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="Nhập mục đích"
-                  value={purpose}
-                  onChangeText={e => setPurpose(e)}
-                />
-              </View>
+                paddingTop: Dimension.setHeight(3),
+                elevation: 5,
+                ...shadowIOS,
+              }}>
               <View
                 style={{
-                  paddingLeft: Dimension.setWidth(2),
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: Dimension.setHeight(1.2),
+                  paddingBottom: Dimension.setHeight(1.5),
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: Colors.INACTIVE_GREY,
                 }}>
-                <Checkbox
-                  value="signupdocument"
-                  fontFamily={'SFProDisplay-Medium'}
-                  textDecorationLine={'underline'}
-                  onChange={e => {
-                    setChecked(e);
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_BOLD,
+                    fontSize: Dimension.fontSize(20),
+                    ...fontDefault,
                   }}>
-                  Tôi cam kết sử dụng tài liệu đúng mục đích
-                </Checkbox>
+                  Đăng kí sử dụng
+                </Text>
               </View>
+              <BottomSheetScrollView
+                style={{
+                  marginTop: Dimension.setHeight(2),
+                  paddingHorizontal: Dimension.setWidth(3),
+                }}
+                showsVerticalScrollIndicator={false}>
+                <View style={styles.containerEachLine}>
+                  <Text style={styles.title}>Họ tên</Text>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Nhập họ tên"
+                    value={name}
+                    onChangeText={e => setName(e)}
+                  />
+                </View>
+                <View style={styles.containerEachLine}>
+                  <Text style={styles.title}>Đơn vị công tác</Text>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Nhập tên đơn vị"
+                    value={workUnit}
+                    onChangeText={e => setWorkUnit(e)}
+                  />
+                </View>
+                <View style={styles.containerEachLine}>
+                  <Text style={styles.title}>Số điện thoại</Text>
+                  <TextInput
+                    inputMode="numeric"
+                    style={styles.inputText}
+                    placeholder="Nhập số điện thoại"
+                    value={phoneNumber}
+                    onChangeText={e => setPhoneNumber(e)}
+                  />
+                </View>
+                <View style={styles.containerEachLine}>
+                  <Text style={styles.title}>Địa chỉ email</Text>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Nhập email"
+                    value={email}
+                    onChangeText={e => setEmail(e)}
+                  />
+                </View>
+                <View style={styles.containerEachLine}>
+                  <Text style={styles.title}>Mục đích sử dụng</Text>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Nhập mục đích"
+                    value={purpose}
+                    onChangeText={e => setPurpose(e)}
+                  />
+                </View>
+                <View
+                  style={{
+                    paddingLeft: Dimension.setWidth(2),
+                  }}>
+                  <Checkbox
+                    value="signupdocument"
+                    fontFamily={'SFProDisplay-Medium'}
+                    textDecorationLine={'underline'}
+                    onChange={e => {
+                      setChecked(e);
+                    }}>
+                    Tôi cam kết sử dụng tài liệu đúng mục đích
+                  </Checkbox>
+                </View>
 
-              <View style={{marginTop: Dimension.setHeight(1)}}>
-                <RegisterBtn
-                  nameBtn={'Đăng kí'}
-                  onEvent={handleRegisterDocument}
-                />
-              </View>
-            </BottomSheetScrollView>
+                <View style={{marginTop: Dimension.setHeight(1)}}>
+                  <RegisterBtn
+                    nameBtn={'Đăng kí'}
+                    onEvent={handleRegisterDocument}
+                  />
+                </View>
+              </BottomSheetScrollView>
+            </KeyboardAwareScrollView>
           </BottomSheetModal>
         </BottomSheetModalProvider>
 
