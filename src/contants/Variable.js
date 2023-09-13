@@ -15,6 +15,9 @@ export const defaultXMG = 'XMG/user/xmg.jpg';
 export const DocumentURL =
   'https://forestry.ifee.edu.vn/2023_Forestry4.0App/VanBanSoTay/';
 
+export const serverKey =
+  'AAAAcLNNRfs:APA91bE28a2U-d85I1raX7EWUrkWUFVOIFG4iHnlXmz3VR8blqF6fR3159guM8kzIXEHCCcqdAhZMD11K92A8pfQ3e9JDRe_I42-c0Savs_jLeErQiyoXHAiq4PjxyQAUp8aXNKEdjAf';
+
 export const XMGGroup = [
   'Tất cả',
   'Ban Giám đốc',

@@ -66,7 +66,7 @@ import {
   getDocumentMvStart,
   getDocumentMvSuccess,
 } from './documentMvSlice';
-import {documentMvURL} from '../contants/Variable';
+import {documentMvURL, serverKey} from '../contants/Variable';
 import {
   subcribeWorkUnitTopic,
   unSubcribeWorkUnitTopic,
@@ -638,6 +638,31 @@ export const getAllNotifi = async (id, dispatch) => {
     console.log(res.data);
   } catch (error) {
     dispatch(getOnLeaveFailed());
+  }
+};
+
+export const sendNotifiByTopic = async notifi => {
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `key=${serverKey}`,
+    };
+    const body = {
+      data: {},
+      notification: {
+        body: notifi.content,
+        title: notifi.title,
+      },
+      to: `/topics/${notifi.id}`,
+    };
+    const res = await axios.post(`https://fcm.googleapis.com/fcm/send`, body, {
+      headers: headers,
+    });
+
+    console.log(res);
+    return res.data;
+  } catch (error) {
+    console.log(error);
   }
 };
 
