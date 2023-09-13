@@ -11,7 +11,6 @@ import {AlertDialog, Button} from 'native-base';
 import {useSelector} from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
-import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import ListInfo from '../../components/ListInfo';
 import {useDispatch} from 'react-redux';
@@ -37,13 +36,12 @@ const DetailStaffScreen = ({navigation, route}) => {
     birthday: changeFormatDate(item?.ngaysinh),
   });
   const [indexInfo, setIndexInfo] = useState(0);
-  const bgColor = indexInfo === 0 ? '#ffffff' : 'rgba(133, 229, 211, 0.8)';
   const [toggleConfirmOut, setTogglecConfirmOut] = useState(false);
   const cancelRef = useRef(null);
 
   const handleLogout = () => {
     onCloseConfirmOut();
-    logoutUser(dispatch, navigation);
+    logoutUser(dispatch, navigation, user);
   };
 
   const handleCheck = () => {

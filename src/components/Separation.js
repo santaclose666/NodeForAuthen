@@ -10,7 +10,7 @@ const Separation = () => {
         width: Dimension.setWidth(3),
         height: 0,
         borderWidth: 1,
-        marginHorizontal: Dimension.setWidth(1.5),
+        marginHorizontal: Dimension.setWidth(1.1),
         borderColor: Colors.INACTIVE_GREY,
         alignSelf: 'center',
       }}

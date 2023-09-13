@@ -38,15 +38,19 @@ const Header = ({title, navigation, refreshData, replace = false}) => {
         backgroundColor="transparent"
         barStyle="light-content"
       />
-      <TouchableOpacity
-        onPress={() => {
-          replace == true ? navigation.navigate('Home') : navigation.goBack();
-        }}>
-        <Image
-          source={Images.back}
-          style={{width: 25, height: 18, ...imgDefault}}
-        />
-      </TouchableOpacity>
+      {title == 'Thông báo' ? (
+        <View style={{width: 25, height: 25}}></View>
+      ) : (
+        <TouchableOpacity
+          onPress={() => {
+            replace == true ? navigation.navigate('Home') : navigation.goBack();
+          }}>
+          <Image
+            source={Images.back}
+            style={{width: 23, height: 23, ...imgDefault}}
+          />
+        </TouchableOpacity>
+      )}
       <View style={{flex: 1, alignItems: 'center'}}>
         <Text
           style={{
