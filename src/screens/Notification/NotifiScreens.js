@@ -151,7 +151,11 @@ const NotifiScreen = ({navigation, route}) => {
                 key={index}
                 style={styles.notifiContainer}>
                 <View style={{width: '77%'}}>
-                  <View style={{width: Dimension.setWidth(55)}}>
+                  <View
+                    style={{
+                      width: Dimension.setWidth(55),
+                      marginBottom: Dimension.setHeight(0.5),
+                    }}>
                     <Text numberOfLines={2} style={styles.obj1}>
                       {item?.noidung}
                     </Text>
@@ -238,8 +242,8 @@ const styles = StyleSheet.create({
   },
 
   notifiImg: {
-    width: 55,
-    height: 55,
+    width: Dimension.fontSize(50),
+    height: Dimension.fontSize(50),
     borderRadius: 50,
   },
 
