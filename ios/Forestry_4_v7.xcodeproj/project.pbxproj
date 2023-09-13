@@ -23,11 +23,11 @@
 		9BEC7B3C348B40BAB6DC9A90 /* SFProDisplay-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 40E0A3B7C4FE477998ADAF8B /* SFProDisplay-Heavy.otf */; };
 		B0A81BC93980478DB356F210 /* SFProDisplay-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = A542D1EE08B54A6AB498AFD7 /* SFProDisplay-Thin.otf */; };
 		B5EB3E40CCC47A1776F47922 /* Pods_Forestry_4_v7_Forestry_4_v7Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C66DDB6995C633CDF4E0E82B /* Pods_Forestry_4_v7_Forestry_4_v7Tests.framework */; };
+		BAEB7D0A2AB14B0200A4414A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BAEB7D092AB14B0200A4414A /* GoogleService-Info.plist */; };
 		D47BB8B8131A52AABA388DF9 /* Pods_Forestry_4_v7.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83C1910958B5F279F6AD795C /* Pods_Forestry_4_v7.framework */; };
 		D651EBDBCA034DA9B0759680 /* SFProDisplay-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94510F9408DD4187BE11E76D /* SFProDisplay-Bold.otf */; };
 		F717329B2AAB2F0200BBF8D2 /* dance.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F717329A2AAB2F0200BBF8D2 /* dance.mp3 */; };
 		F717329D2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F717329C2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 */; };
-		F7602CCD2AB058330038482A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7602CCC2AB058330038482A /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,12 +65,12 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-Forestry_4_v7-Forestry_4_v7Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Forestry_4_v7-Forestry_4_v7Tests.release.xcconfig"; path = "Target Support Files/Pods-Forestry_4_v7-Forestry_4_v7Tests/Pods-Forestry_4_v7-Forestry_4_v7Tests.release.xcconfig"; sourceTree = "<group>"; };
 		94510F9408DD4187BE11E76D /* SFProDisplay-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Bold.otf"; path = "../src/assets/fonts/SFProDisplay-Bold.otf"; sourceTree = "<group>"; };
 		A542D1EE08B54A6AB498AFD7 /* SFProDisplay-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Thin.otf"; path = "../src/assets/fonts/SFProDisplay-Thin.otf"; sourceTree = "<group>"; };
+		BAEB7D092AB14B0200A4414A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C66DDB6995C633CDF4E0E82B /* Pods_Forestry_4_v7_Forestry_4_v7Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Forestry_4_v7_Forestry_4_v7Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9FEBBA2E02A470F9555FA44 /* SFProDisplay-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Regular.otf"; path = "../src/assets/fonts/SFProDisplay-Regular.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F717329A2AAB2F0200BBF8D2 /* dance.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = dance.mp3; path = ../android/app/src/main/res/raw/dance.mp3; sourceTree = "<group>"; };
 		F717329C2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = hpbdpiano.mp3; path = ../android/app/src/main/res/raw/hpbdpiano.mp3; sourceTree = "<group>"; };
-		F7602CCC2AB058330038482A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F7B437ED2A81FEF40058AF6E /* Forestry_4_v7.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Forestry_4_v7.entitlements; path = Forestry_4_v7/Forestry_4_v7.entitlements; sourceTree = "<group>"; };
 		FB4AB16A2CCF469289375789 /* SFProDisplay-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Semibold.otf"; path = "../src/assets/fonts/SFProDisplay-Semibold.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -115,7 +115,7 @@
 		13B07FAE1A68108700A75B9A /* Forestry_4_v7 */ = {
 			isa = PBXGroup;
 			children = (
-				F7602CCC2AB058330038482A /* GoogleService-Info.plist */,
+				BAEB7D092AB14B0200A4414A /* GoogleService-Info.plist */,
 				F7B437ED2A81FEF40058AF6E /* Forestry_4_v7.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -304,7 +304,7 @@
 				502A260079F5498FBFF7A2EB /* SFProDisplay-Light.otf in Resources */,
 				4BBEC09BF38C4649849306B9 /* SFProDisplay-Medium.otf in Resources */,
 				8E4938969F1F42369A03D58A /* SFProDisplay-Regular.otf in Resources */,
-				F7602CCD2AB058330038482A /* GoogleService-Info.plist in Resources */,
+				BAEB7D0A2AB14B0200A4414A /* GoogleService-Info.plist in Resources */,
 				609E1F8C8A1B4FA38E60DA3A /* SFProDisplay-Semibold.otf in Resources */,
 				B0A81BC93980478DB356F210 /* SFProDisplay-Thin.otf in Resources */,
 				F717329B2AAB2F0200BBF8D2 /* dance.mp3 in Resources */,

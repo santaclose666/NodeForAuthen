@@ -123,7 +123,7 @@ const DocumentTemplate = ({
     if (
       name.length !== 0 &&
       workUnit.length !== 0 &&
-      phoneNumber.length !== 0 &&
+      (phoneNumber.length == 10 || phoneNumber.length == 11) &&
       email.includes('@') &&
       purpose.length !== 0 &&
       docId !== null
@@ -141,6 +141,7 @@ const DocumentTemplate = ({
         sendRequestUseDocument(data);
 
         bottomSheetModalRef.current?.dismiss();
+        setPurpose('');
         ToastSuccess(
           'Đăng kí thành công, Chúng tôi sẽ xem xét và xử lý yêu cầu của bạn!',
         );
@@ -417,42 +418,42 @@ const DocumentTemplate = ({
             ref={bottomSheetModalRef}
             index={0}
             snapPoints={snapPoints}>
-            <KeyboardAwareScrollView
-              keyboardShouldPersistTaps="handled"
-              contentContainerStyle={{
-                backgroundColor: '#fbfbfd',
-                borderRadius: 12,
-                marginHorizontal: Dimension.setWidth(3),
-                marginVertical: Dimension.setHeight(3),
-                paddingHorizontal: Dimension.setWidth(3),
-                paddingTop: Dimension.setHeight(3),
-                elevation: 5,
-                ...shadowIOS,
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: Dimension.setHeight(1.2),
+                paddingBottom: Dimension.setHeight(1.5),
+                borderBottomWidth: 0.8,
+                borderBottomColor: Colors.INACTIVE_GREY,
               }}>
-              <View
+              <Text
                 style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: Dimension.setHeight(1.2),
-                  paddingBottom: Dimension.setHeight(1.5),
-                  borderBottomWidth: 0.8,
-                  borderBottomColor: Colors.INACTIVE_GREY,
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: Dimension.fontSize(20),
+                  ...fontDefault,
                 }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.SF_BOLD,
-                    fontSize: Dimension.fontSize(20),
-                    ...fontDefault,
-                  }}>
-                  Đăng kí sử dụng
-                </Text>
-              </View>
-              <BottomSheetScrollView
-                style={{
-                  marginTop: Dimension.setHeight(2),
+                Đăng kí sử dụng
+              </Text>
+            </View>
+            <BottomSheetScrollView
+              style={{
+                marginTop: Dimension.setHeight(2),
+                paddingHorizontal: Dimension.setWidth(3),
+              }}
+              showsVerticalScrollIndicator={false}>
+              <KeyboardAwareScrollView
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={{
+                  backgroundColor: '#fbfbfd',
+                  borderRadius: 12,
+                  marginHorizontal: Dimension.setWidth(0.6),
+                  marginBottom: Dimension.setHeight(2),
                   paddingHorizontal: Dimension.setWidth(3),
-                }}
-                showsVerticalScrollIndicator={false}>
+                  paddingTop: Dimension.setHeight(3),
+                  elevation: 5,
+                  ...shadowIOS,
+                }}>
                 <View style={styles.containerEachLine}>
                   <Text style={styles.title}>Họ tên</Text>
                   <TextInput
@@ -499,18 +500,20 @@ const DocumentTemplate = ({
                     onChangeText={e => setPurpose(e)}
                   />
                 </View>
-                <View
-                  style={{
-                    paddingLeft: Dimension.setWidth(2),
-                  }}>
+                <View style={{paddingLeft: Dimension.setWidth(1)}}>
                   <Checkbox
                     value="signupdocument"
-                    fontFamily={'SFProDisplay-Medium'}
-                    textDecorationLine={'underline'}
+                    textAlign={'justify'}
                     onChange={e => {
                       setChecked(e);
                     }}>
-                    Tôi cam kết sử dụng tài liệu đúng mục đích
+                    <Text
+                      style={{
+                        fontSize: Dimension.fontSize(16),
+                        fontFamily: Fonts.SF_REGULAR,
+                      }}>
+                      Tôi cam kết sử dụng tài liệu đúng mục đích
+                    </Text>
                   </Checkbox>
                 </View>
 
@@ -520,8 +523,8 @@ const DocumentTemplate = ({
                     onEvent={handleRegisterDocument}
                   />
                 </View>
-              </BottomSheetScrollView>
-            </KeyboardAwareScrollView>
+              </KeyboardAwareScrollView>
+            </BottomSheetScrollView>
           </BottomSheetModal>
         </BottomSheetModalProvider>
 

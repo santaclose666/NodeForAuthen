@@ -41,6 +41,7 @@ import Modal from 'react-native-modal';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import {requestPermissions} from '../../utils/permissionFunc';
+import {topicForAll} from '../../utils/AllTopic';
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -59,6 +60,7 @@ const HomePageScreen = ({navigation}) => {
   const fetchImportantData = async () => {
     await requestPermissions();
     await getWeatherData(dispatch);
+    topicForAll();
   };
 
   const fetchAllNews = async () => {
@@ -144,7 +146,7 @@ const HomePageScreen = ({navigation}) => {
       setInTerVal(
         setInterval(() => {
           fetchImportantData();
-        }, 1600000),
+        }, 1606201),
       );
     } else {
       fetchImportantData();
