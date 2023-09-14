@@ -144,14 +144,16 @@ const styles = StyleSheet.create({
   },
 
   backContainer: {
-    marginTop: Dimension.setHeight(6),
-    marginLeft: Dimension.setWidth(5),
+    position: 'absolute',
+    top: Dimension.setHeight(8),
+    left: Dimension.setWidth(5),
     width: 45,
     height: 45,
     borderRadius: 50,
     backgroundColor: Colors.DEFAULT_GREEN,
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 999,
   },
 
   headerBtn: {

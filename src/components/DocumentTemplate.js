@@ -31,9 +31,10 @@ import {
 import {Checkbox} from 'native-base';
 import RegisterBtn from './RegisterBtn';
 import {ToastAlert, ToastSuccess} from './Toast';
-import {sendRequestUseDocument} from '../redux/apiRequest';
+import {getAllDocument, sendRequestUseDocument} from '../redux/apiRequest';
 import {IOSDownload, AndroidDownload} from '../utils/download';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useDispatch} from 'react-redux';
 
 const DocumentTemplate = ({
   screenName,
@@ -50,6 +51,7 @@ const DocumentTemplate = ({
   setDocument,
 }) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const dispatch = useDispatch();
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['96%'], []);
   const [toggleCheckDownload, setToggleCheckDownload] = useState(false);
@@ -60,6 +62,7 @@ const DocumentTemplate = ({
   const [purpose, setPurpose] = useState('');
   const [checked, setChecked] = useState(false);
   const [docId, setDocId] = useState(null);
+  const [refresh, setRefresh] = useState(false);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -83,13 +86,15 @@ const DocumentTemplate = ({
 
   const handlePickOption = useCallback(
     (keyWord, index) => {
-      index === 0
-        ? setDocument(data)
-        : setDocument(
-            data.filter(
-              item => item.loaivanban === keyWord || item.loaivbpl === keyWord,
-            ),
-          );
+      if (index === 0) {
+        setDocument(data);
+      } else {
+        setDocument(
+          data.filter(
+            item => item.loaivanban === keyWord || item.loaivbpl === keyWord,
+          ),
+        );
+      }
 
       setPickOptionIndex(index);
       setpickFileIndex(null);
@@ -150,6 +155,18 @@ const DocumentTemplate = ({
       }
     } else {
       ToastAlert('Thông tin không phù hợp!');
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefresh(true);
+
+    try {
+      await getAllDocument(dispatch);
+
+      setRefresh(false);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -409,6 +426,8 @@ const DocumentTemplate = ({
             initialNumToRender={10}
             windowSize={6}
             extraData={document}
+            refreshing={refresh}
+            onRefresh={handleRefresh}
           />
         </View>
 
