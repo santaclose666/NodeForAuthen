@@ -36,20 +36,7 @@ import {IOSDownload, AndroidDownload} from '../utils/download';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
 
-const DocumentTemplate = ({
-  screenName,
-  navigation,
-  pickFileIndex,
-  setpickFileIndex,
-  pickOptionIndex,
-  setPickOptionIndex,
-  input,
-  setInput,
-  data,
-  groupOption,
-  document,
-  setDocument,
-}) => {
+const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const dispatch = useDispatch();
   const bottomSheetModalRef = useRef(null);
@@ -63,6 +50,13 @@ const DocumentTemplate = ({
   const [checked, setChecked] = useState(false);
   const [docId, setDocId] = useState(null);
   const [refresh, setRefresh] = useState(false);
+  const [pickFileIndex, setpickFileIndex] = useState(null);
+  const [pickOptionIndex, setPickOptionIndex] = useState({
+    item: 'Tất cả',
+    index: 0,
+  });
+  const [input, setInput] = useState('');
+  const [document, setDocument] = useState(null);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -85,13 +79,13 @@ const DocumentTemplate = ({
   );
 
   const handlePickOption = useCallback(() => {
-    if (pickOptionIndex.index === 0) {
+    if (pickOptionIndex?.index === 0) {
       return data;
     } else {
       return data.filter(
         item =>
-          item.loaivanban === pickOptionIndex.item ||
-          item.loaivbpl === pickOptionIndex.item,
+          item.loaivanban === pickOptionIndex?.item ||
+          item.loaivbpl === pickOptionIndex?.item,
       );
     }
   }, [pickOptionIndex]);
@@ -158,6 +152,7 @@ const DocumentTemplate = ({
     try {
       await getAllDocument(dispatch);
 
+      setPickOptionIndex({item: null, index: 0});
       setRefresh(false);
     } catch (error) {
       console.log(error);
@@ -385,7 +380,7 @@ const DocumentTemplate = ({
                       borderBottomWidth:
                         pickOptionIndex.index === index ? 2 : 0,
                       borderBottomColor:
-                        pickOptionIndex === index
+                        pickOptionIndex.index === index
                           ? Colors.DEFAULT_GREEN
                           : '#fff',
                     }}>
@@ -413,7 +408,7 @@ const DocumentTemplate = ({
 
         <View style={styles.fileListContainer}>
           <FlatList
-            data={handlePickOption()}
+            data={document ? document : handlePickOption()}
             keyExtractor={item => item.id.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => (
