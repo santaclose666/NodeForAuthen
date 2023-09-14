@@ -84,23 +84,17 @@ const DocumentTemplate = ({
     [input],
   );
 
-  const handlePickOption = useCallback(
-    (keyWord, index) => {
-      if (index === 0) {
-        setDocument(data);
-      } else {
-        setDocument(
-          data.filter(
-            item => item.loaivanban === keyWord || item.loaivbpl === keyWord,
-          ),
-        );
-      }
-
-      setPickOptionIndex(index);
-      setpickFileIndex(null);
-    },
-    [pickOptionIndex],
-  );
+  const handlePickOption = useCallback(() => {
+    if (pickOptionIndex.index === 0) {
+      return data;
+    } else {
+      return data.filter(
+        item =>
+          item.loaivanban === pickOptionIndex.item ||
+          item.loaivbpl === pickOptionIndex.item,
+      );
+    }
+  }, [pickOptionIndex]);
 
   const handlePress = useCallback(path => {
     console.log(path);
@@ -266,7 +260,7 @@ const DocumentTemplate = ({
           <TouchableOpacity
             onPress={() => {
               pickFileIndex !== index
-                ? setpickFileIndex(index)
+                ? setpickFileIndex({item: item, index: index})
                 : setpickFileIndex(null);
             }}
             style={{
@@ -381,13 +375,15 @@ const DocumentTemplate = ({
                 return (
                   <TouchableOpacity
                     onPress={() => {
-                      handlePickOption(item, index);
+                      setPickOptionIndex({item: item, index: index});
+                      setpickFileIndex(null);
                     }}
                     key={index}
                     style={{
                       marginRight: Dimension.setWidth(4.4),
                       paddingVertical: 3,
-                      borderBottomWidth: pickOptionIndex === index ? 2 : 0,
+                      borderBottomWidth:
+                        pickOptionIndex.index === index ? 2 : 0,
                       borderBottomColor:
                         pickOptionIndex === index
                           ? Colors.DEFAULT_GREEN
@@ -396,13 +392,13 @@ const DocumentTemplate = ({
                     <Text
                       style={{
                         fontFamily:
-                          pickOptionIndex === index
+                          pickOptionIndex.index === index
                             ? Fonts.SF_SEMIBOLD
                             : Fonts.SF_REGULAR,
                         fontSize: Dimension.fontSize(16),
                         opacity: 0.8,
                         color:
-                          pickOptionIndex === index
+                          pickOptionIndex.index === index
                             ? Colors.DEFAULT_GREEN
                             : Colors.DEFAULT_BLACK,
                       }}>
@@ -417,7 +413,7 @@ const DocumentTemplate = ({
 
         <View style={styles.fileListContainer}>
           <FlatList
-            data={document}
+            data={handlePickOption()}
             keyExtractor={item => item.id.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => (

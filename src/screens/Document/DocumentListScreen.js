@@ -4,7 +4,10 @@ import {useSelector} from 'react-redux';
 
 const DocumentListScreen = ({navigation}) => {
   const [pickFileIndex, setpickFileIndex] = useState(null);
-  const [pickOptionIndex, setPickOptionIndex] = useState(0);
+  const [pickOptionIndex, setPickOptionIndex] = useState({
+    item: 'Tất cả',
+    index: 0,
+  });
   const [input, setInput] = useState('');
   const data = useSelector(
     state => state.document.documentSlice?.dvmtrData?.data,
