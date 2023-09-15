@@ -14,7 +14,6 @@ const TcvnScreen = ({navigation}) => {
     <DocumentTemplate
       screenName={'Tiêu chuẩn Việt Nam'}
       navigation={navigation}
-      setInput={setInput}
       data={data}
       groupOption={groupOption}
     />
