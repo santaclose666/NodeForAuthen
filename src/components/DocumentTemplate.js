@@ -40,6 +40,7 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const dispatch = useDispatch();
   const bottomSheetModalRef = useRef(null);
+  const bottomSheetFilter = useRef(null);
   const snapPoints = useMemo(() => ['96%'], []);
   const [toggleCheckDownload, setToggleCheckDownload] = useState(false);
   const [name, setName] = useState('');
@@ -60,6 +61,11 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
+  }, []);
+
+  const handlePresentFilter = useCallback(() => {
+    bottomSheetFilter.current?.present();
+    console.log('filter');
   }, []);
 
   const handleSearch = useCallback(
@@ -91,7 +97,6 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
   }, [pickOptionIndex]);
 
   const handlePress = useCallback(path => {
-    console.log(path);
     navigation.navigate('PDF', {link: encodeURI(path)});
   }, []);
 
@@ -348,7 +353,11 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title={screenName} navigation={navigation} />
+        <Header
+          title={screenName}
+          navigation={navigation}
+          handleFilter={handlePresentFilter}
+        />
         <View style={styles.searchInput}>
           <Icons.Feather name="search" size={25} color={Colors.INACTIVE_GREY} />
           <TextInput
@@ -444,6 +453,120 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                   ...fontDefault,
                 }}>
                 Đăng kí sử dụng
+              </Text>
+            </View>
+            <BottomSheetScrollView
+              style={{
+                marginTop: Dimension.setHeight(2),
+                paddingHorizontal: Dimension.setWidth(3),
+              }}
+              showsVerticalScrollIndicator={false}>
+              <KeyboardAwareScrollView
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={{
+                  backgroundColor: '#fbfbfd',
+                  borderRadius: 12,
+                  marginHorizontal: Dimension.setWidth(0.6),
+                  marginBottom: Dimension.setHeight(2),
+                  paddingHorizontal: Dimension.setWidth(3),
+                  paddingTop: Dimension.setHeight(3),
+                  elevation: 5,
+                  ...shadowIOS,
+                }}>
+                <View style={styles.containerEachLine}>
+                  <Text style={styles.title}>Họ tên</Text>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Nhập họ tên"
+                    value={name}
+                    onChangeText={e => setName(e)}
+                  />
+                </View>
+                <View style={styles.containerEachLine}>
+                  <Text style={styles.title}>Đơn vị công tác</Text>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Nhập tên đơn vị"
+                    value={workUnit}
+                    onChangeText={e => setWorkUnit(e)}
+                  />
+                </View>
+                <View style={styles.containerEachLine}>
+                  <Text style={styles.title}>Số điện thoại</Text>
+                  <TextInput
+                    inputMode="numeric"
+                    style={styles.inputText}
+                    placeholder="Nhập số điện thoại"
+                    value={phoneNumber}
+                    onChangeText={e => setPhoneNumber(e)}
+                  />
+                </View>
+                <View style={styles.containerEachLine}>
+                  <Text style={styles.title}>Địa chỉ email</Text>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Nhập email"
+                    value={email}
+                    onChangeText={e => setEmail(e)}
+                  />
+                </View>
+                <View style={styles.containerEachLine}>
+                  <Text style={styles.title}>Mục đích sử dụng</Text>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Nhập mục đích"
+                    value={purpose}
+                    onChangeText={e => setPurpose(e)}
+                  />
+                </View>
+                <View style={{paddingLeft: Dimension.setWidth(1)}}>
+                  <Checkbox
+                    value="signupdocument"
+                    textAlign={'justify'}
+                    onChange={e => {
+                      setChecked(e);
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: Dimension.fontSize(16),
+                        fontFamily: Fonts.SF_REGULAR,
+                      }}>
+                      Tôi cam kết sử dụng tài liệu đúng mục đích
+                    </Text>
+                  </Checkbox>
+                </View>
+
+                <View style={{marginTop: Dimension.setHeight(1)}}>
+                  <RegisterBtn
+                    nameBtn={'Đăng kí'}
+                    onEvent={handleRegisterDocument}
+                  />
+                </View>
+              </KeyboardAwareScrollView>
+            </BottomSheetScrollView>
+          </BottomSheetModal>
+
+          <BottomSheetModal
+            backgroundStyle={{backgroundColor: '#cce0f2'}}
+            ref={bottomSheetFilter}
+            index={0}
+            snapPoints={snapPoints}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: Dimension.setHeight(1.2),
+                paddingBottom: Dimension.setHeight(1.5),
+                borderBottomWidth: 0.8,
+                borderBottomColor: Colors.INACTIVE_GREY,
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: Dimension.fontSize(20),
+                  ...fontDefault,
+                }}>
+                Lọc dữ liệu
               </Text>
             </View>
             <BottomSheetScrollView
