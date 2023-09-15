@@ -254,9 +254,9 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
 
           <TouchableOpacity
             onPress={() => {
-              pickFileIndex !== index
+              pickFileIndex.index !== index
                 ? setpickFileIndex({item: item, index: index})
-                : setpickFileIndex(null);
+                : setpickFileIndex({item: null, index: null});
             }}
             style={{
               marginTop: Dimension.setHeight(1.8),
@@ -290,7 +290,7 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
             </View>
           </TouchableOpacity>
         </TouchableOpacity>
-        {pickFileIndex === index && (
+        {pickFileIndex.index === index && (
           <View style={styles.subMenuContainer}>
             <View style={{padding: 10, marginLeft: Dimension.setWidth(3)}}>
               <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
