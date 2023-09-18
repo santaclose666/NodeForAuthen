@@ -1,4 +1,11 @@
-import React, {memo, useCallback, useState, useRef, useMemo} from 'react';
+import React, {
+  memo,
+  useCallback,
+  useState,
+  useRef,
+  useMemo,
+  useEffect,
+} from 'react';
 import {
   View,
   Text,
@@ -307,21 +314,45 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
     setYearValue([]);
   };
 
+  // const handleMultiFilter = () => {
+  //   setPickOptionIndex({item: null, index: null});
+  //   const allDoc = data.filter(
+  //     item =>
+  //       categoryValue.some(
+  //         cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
+  //       ) &&
+  //       yearValue.some(
+  //         year => parseInt(item?.nam?.split('/')[2]) == year.item,
+  //       ) &&
+  //       stateHieuLuc.some(hieuluc => item.hieuluc == hieuluc.item),
+  //   );
+
+  //   setDocument(allDoc);
+  //   bottomSheetFilter?.current?.dismiss();
+  // };
+
   const handleMultiFilter = () => {
     setPickOptionIndex({item: null, index: null});
-    const allDoc = data.filter(
-      item =>
+
+    const allDoc = data.filter(item => {
+      const categoryCondition =
+        categoryValue.length === 0 ||
         categoryValue.some(
           cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
-        ) &&
-        yearValue.some(
-          year => parseInt(item?.nam?.split('/')[2]) == year.item,
-        ) &&
-        stateHieuLuc.some(hieuluc => item.hieuluc == hieuluc.item),
-    );
+        );
 
-    setDocument(allDoc);
-    bottomSheetFilter?.current?.dismiss();
+      const yearCondition =
+        yearValue.length === 0 ||
+        yearValue.some(year => parseInt(item?.nam?.split('/')[2]) == year.item);
+
+      const stateCondition =
+        stateHieuLuc.length === 0 ||
+        stateHieuLuc.some(hieuluc => item.hieuluc == hieuluc.item);
+
+      return categoryCondition && yearCondition && stateCondition;
+    });
+
+    // setDocument(allDoc);
   };
 
   const RenderDocument = useCallback(
@@ -773,7 +804,10 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
             <BottomSheetScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.containerLineBottom}>
                 <Text style={styles.titleBottom}>Thể loại</Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <BottomSheetScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={{flexWrap: 'wrap'}}>
                   {groupOption
                     .filter(item => item != 'Tất cả')
                     .map((item, index) => {
@@ -809,12 +843,14 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                         </TouchableOpacity>
                       );
                     })}
-                </ScrollView>
+                </BottomSheetScrollView>
               </View>
               {yearOption.length != 0 && (
                 <View style={styles.containerLineBottom}>
                   <Text style={styles.titleBottom}>Năm ban hành</Text>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <BottomSheetScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}>
                     {yearOption?.map((item, index) => {
                       const filter = yearValue.some(
                         cate => cate.index == index,
@@ -848,12 +884,14 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                         </TouchableOpacity>
                       );
                     })}
-                  </ScrollView>
+                  </BottomSheetScrollView>
                 </View>
               )}
               <View style={styles.containerLineBottom}>
                 <Text style={styles.titleBottom}>Trạng thái hiệu lực</Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <BottomSheetScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}>
                   {hieuLuc.map((item, index) => {
                     const filter = stateHieuLuc.some(
                       cate => cate.index == index,
@@ -887,12 +925,12 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                       </TouchableOpacity>
                     );
                   })}
-                </ScrollView>
+                </BottomSheetScrollView>
               </View>
             </BottomSheetScrollView>
             <TouchableOpacity
               disabled={results == 0 ? true : false}
-              // onPress={handleMultiFilter}
+              onPress={handleMultiFilter}
               style={{
                 alignItems: 'center',
                 marginHorizontal: Dimension.setWidth(3),
