@@ -282,13 +282,13 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
     bottomSheetFilter?.current?.dismiss();
   }, []);
 
-  const handleReset = useCallback(() => {
+  const handleReset = () => {
     setCategoryValue([]);
     setStateHieuLuc([]);
     setYearValue([]);
     setUnitValue([]);
     setResults(0);
-  }, []);
+  };
 
   const RenderDocument = useCallback(
     ({item, index}) => {
