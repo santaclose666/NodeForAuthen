@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useRef, useMemo} from 'react';
+import React, {useCallback, useState, useRef, useMemo, useEffect} from 'react';
 import {
   View,
   Text,
@@ -56,7 +56,6 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
     item: 'Tất cả',
     index: 0,
   });
-  const hieuLuc = ['Còn hiệu lực', 'Hết hiệu lực', 'Sắp có hiệu lực'];
   const [input, setInput] = useState('');
   const [document, setDocument] = useState(null);
   const [categoryValue, setCategoryValue] = useState([]);
@@ -91,6 +90,23 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
     return unit;
   }, []);
   let unitOption = unitName();
+  const hieulucFunc = useCallback(() => {
+    let hieuluc = [];
+
+    data.forEach(item => {
+      if (!hieuluc.includes(item.hieuluc)) {
+        if (item.hieuluc != null) {
+          hieuluc.push(item.hieuluc);
+        }
+      }
+    });
+    return hieuluc;
+  }, []);
+  let hieuLuc = hieulucFunc();
+
+  useEffect(() => {
+    console.log(hieuLuc);
+  }, []);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -214,69 +230,65 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
     [categoryValue, yearValue, stateHieuLuc, unitValue],
   );
 
-  const handleMultiFilter = useCallback(
-    (thenRemoveExist, identifi) => {
-      const allDoc = data.filter(item => {
-        let categoryCondition;
-        if (identifi == 'category') {
-          categoryCondition = thenRemoveExist.some(
+  const handleMultiFilter = (thenRemoveExist, identifi) => {
+    const allDoc = data.filter(item => {
+      let categoryCondition;
+      if (identifi == 'category') {
+        categoryCondition = thenRemoveExist.some(
+          cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
+        );
+      } else {
+        categoryCondition =
+          categoryValue.length === 0 ||
+          categoryValue.some(
             cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
           );
-        } else {
-          categoryCondition =
-            categoryValue.length === 0 ||
-            categoryValue.some(
-              cate =>
-                item.loaivanban == cate.item || item.loaivbpl == cate.item,
-            );
-        }
+      }
 
-        let yearCondition;
-        if (identifi == 'year') {
-          yearCondition = thenRemoveExist.some(
+      let yearCondition;
+      if (identifi == 'year') {
+        yearCondition = thenRemoveExist.some(
+          year => parseInt(item?.nam?.split('/')[2]) == year.item,
+        );
+      } else {
+        yearCondition =
+          yearValue.length === 0 ||
+          yearValue.some(
             year => parseInt(item?.nam?.split('/')[2]) == year.item,
           );
-        } else {
-          yearCondition =
-            yearValue.length === 0 ||
-            yearValue.some(
-              year => parseInt(item?.nam?.split('/')[2]) == year.item,
-            );
-        }
-
-        let stateCondition;
-        if (identifi == 'hieuluc') {
-          stateCondition = thenRemoveExist.some(
-            hieuluc => item.hieuluc == hieuluc.item,
-          );
-        } else {
-          stateCondition =
-            stateHieuLuc.length === 0 ||
-            stateHieuLuc.some(hieuluc => item.hieuluc == hieuluc.item);
-        }
-
-        let unitCondition;
-        if (identifi == 'unit') {
-          unitCondition = thenRemoveExist.some(unit => item.donvi == unit.item);
-        } else {
-          unitCondition =
-            unitValue.length === 0 ||
-            unitValue.some(unit => item.donvi == unit.item);
-        }
-
-        return (
-          categoryCondition && yearCondition && stateCondition && unitCondition
-        );
-      });
-
-      setResults(allDoc.length);
-      if (allDoc.length != 0) {
-        setDocument(allDoc);
-        setPickOptionIndex({item: null, index: null});
       }
-    },
-    [document],
-  );
+
+      let stateCondition;
+      if (identifi == 'hieuluc') {
+        stateCondition = thenRemoveExist.some(
+          hieuluc => item.hieuluc == hieuluc.item,
+        );
+      } else {
+        stateCondition =
+          stateHieuLuc.length === 0 ||
+          stateHieuLuc.some(hieuluc => item.hieuluc == hieuluc.item);
+      }
+
+      let unitCondition;
+      if (identifi == 'unit') {
+        unitCondition = thenRemoveExist.some(unit => item.donvi == unit.item);
+      } else {
+        unitCondition =
+          unitValue.length === 0 ||
+          unitValue.some(unit => item.donvi == unit.item);
+      }
+
+      return (
+        categoryCondition && yearCondition && stateCondition && unitCondition
+      );
+    });
+
+    setResults(allDoc.length);
+    if (allDoc.length != 0) {
+      setDocument(allDoc);
+      setPickOptionIndex({item: null, index: null});
+    }
+  };
 
   const handleShowResult = useCallback(() => {
     bottomSheetFilter?.current?.dismiss();
@@ -829,101 +841,109 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                   </View>
                 </View>
               )}
-              <View style={styles.containerLineBottom}>
-                <Text style={styles.titleBottom}>Trạng thái hiệu lực</Text>
-                <View style={styles.containerItemRender}>
-                  {hieuLuc.map((item, index) => {
-                    const filter = stateHieuLuc.some(
-                      cate => cate.index == index,
-                    );
-                    return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          handlePickMultiData(
-                            item,
-                            index,
-                            stateHieuLuc,
-                            setStateHieuLuc,
-                            'hieuluc',
-                          );
-                        }}
-                        style={[
-                          styles.containerItemBottom,
-                          {
-                            backgroundColor: filter
-                              ? Colors.DEFAULT_BLACK
-                              : 'transparent',
-                          },
-                        ]}
-                        key={index}>
-                        <Text
+              {hieuLuc.length != 0 && (
+                <View style={styles.containerLineBottom}>
+                  <Text style={styles.titleBottom}>Trạng thái hiệu lực</Text>
+                  <View style={styles.containerItemRender}>
+                    {hieuLuc.map((item, index) => {
+                      const filter = stateHieuLuc.some(
+                        cate => cate.index == index,
+                      );
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            handlePickMultiData(
+                              item,
+                              index,
+                              stateHieuLuc,
+                              setStateHieuLuc,
+                              'hieuluc',
+                            );
+                          }}
                           style={[
-                            styles.itemBottom,
+                            styles.containerItemBottom,
                             {
-                              color: filter
-                                ? '#fff'
-                                : item == 'Còn hiệu lực'
-                                ? '#30a62c'
-                                : item == 'Hết hiệu lực'
-                                ? '#cc2333'
-                                : '#c7b841',
+                              backgroundColor: filter
+                                ? Colors.DEFAULT_BLACK
+                                : 'transparent',
                             },
-                          ]}>
-                          {item}
-                        </Text>
-                        {filter && (
-                          <Image style={styles.imgItem} source={Images.v} />
-                        )}
-                      </TouchableOpacity>
-                    );
-                  })}
+                          ]}
+                          key={index}>
+                          <Text
+                            style={[
+                              styles.itemBottom,
+                              {
+                                color: filter
+                                  ? '#fff'
+                                  : item == 'Còn hiệu lực'
+                                  ? '#30a62c'
+                                  : item == 'Hết hiệu lực'
+                                  ? '#cc2333'
+                                  : item == 'Không xác định'
+                                  ? '#653e3eff'
+                                  : '#c7b841',
+                              },
+                            ]}>
+                            {item}
+                          </Text>
+                          {filter && (
+                            <Image style={styles.imgItem} source={Images.v} />
+                          )}
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
                 </View>
-              </View>
-              <View style={styles.containerLineBottom}>
-                <Text style={styles.titleBottom}>Đơn vị</Text>
-                <View style={styles.containerItemRender}>
-                  {unitOption.map((item, index) => {
-                    const filter = unitValue.some(cate => cate.index == index);
-                    return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          handlePickMultiData(
-                            item,
-                            index,
-                            unitValue,
-                            setUnitValue,
-                            'unit',
-                          );
-                        }}
-                        style={[
-                          styles.containerItemBottom,
-                          {
-                            backgroundColor: filter
-                              ? Colors.DEFAULT_BLACK
-                              : 'transparent',
-                          },
-                        ]}
-                        key={index}>
-                        <Text
+              )}
+              {unitOption && (
+                <View style={styles.containerLineBottom}>
+                  <Text style={styles.titleBottom}>Đơn vị</Text>
+                  <View style={styles.containerItemRender}>
+                    {unitOption.map((item, index) => {
+                      const filter = unitValue.some(
+                        cate => cate.index == index,
+                      );
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            handlePickMultiData(
+                              item,
+                              index,
+                              unitValue,
+                              setUnitValue,
+                              'unit',
+                            );
+                          }}
                           style={[
-                            styles.itemBottom,
+                            styles.containerItemBottom,
                             {
-                              color: filter ? '#fff' : item.color,
+                              backgroundColor: filter
+                                ? Colors.DEFAULT_BLACK
+                                : 'transparent',
                             },
-                          ]}>
-                          {item}
-                        </Text>
-                        {filter && (
-                          <Image style={styles.imgItem} source={Images.v} />
-                        )}
-                      </TouchableOpacity>
-                    );
-                  })}
+                          ]}
+                          key={index}>
+                          <Text
+                            style={[
+                              styles.itemBottom,
+                              {
+                                color: filter ? '#fff' : item.color,
+                              },
+                            ]}>
+                            {item}
+                          </Text>
+                          {filter && (
+                            <Image style={styles.imgItem} source={Images.v} />
+                          )}
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
                 </View>
-              </View>
+              )}
             </BottomSheetScrollView>
             <TouchableOpacity
-              // disabled={results == 0 ? true : false}
+              disabled={results == 0 ? true : false}
               onPress={handleShowResult}
               style={{
                 alignItems: 'center',
