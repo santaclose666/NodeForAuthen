@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Colors from '../contants/Colors';
@@ -29,8 +36,7 @@ const ListInfo = ({info, index}) => {
               top: 0,
               left: 0,
               right: 0,
-              bottom: Dimension.setHeight(5),
-              margin: 'auto',
+              bottom: Dimension.setHeight(4),
             }}>
             <View style={styles.avtContainer}>
               <Image style={styles.avatarIfee} src={info?.avatar} />
@@ -42,13 +48,6 @@ const ListInfo = ({info, index}) => {
               }}>
               <Text style={styles.fullNameIfee}>{info?.fullName}</Text>
               <Text style={styles.ifee}>Viện Sinh thái rừng & Môi trường</Text>
-            </View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: Dimension.setHeight(0.6),
-              }}>
               <Text style={styles.roleTeamTittle}>{role}</Text>
             </View>
           </View>
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     borderRadius: 10,
     backgroundColor: '#ffffff',
-    height: Dimension.boxHeight(160),
+    height: Dimension.boxHeight(145),
     marginHorizontal: Dimension.setWidth(10),
     marginTop: Dimension.setHeight(8),
     elevation: 5,
@@ -224,7 +223,7 @@ const styles = StyleSheet.create({
     fontSize: Dimension.fontSize(16),
     fontFamily: Fonts.SF_BOLD,
     ...fontDefault,
-    marginVertical: Dimension.setHeight(0.2),
+    marginVertical: Platform.OS == 'ios' ? Dimension.setHeight(0.2) : -3,
   },
 });
 

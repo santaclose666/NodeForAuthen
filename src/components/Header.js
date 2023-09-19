@@ -19,6 +19,7 @@ const Header = ({
   refreshData,
   replace = false,
   handleFilter,
+  indexInfo,
 }) => {
   const showCreateButton =
     title === 'Lịch sử nghỉ phép' ||
@@ -106,6 +107,17 @@ const Header = ({
       {showFitlerButon && (
         <TouchableOpacity onPress={handleFilter}>
           <Image source={Images.filter} style={styles.rightIcon} />
+        </TouchableOpacity>
+      )}
+      {title == 'Thông tin' && (
+        <TouchableOpacity
+          onPress={() => {
+            handleFilter(true);
+          }}
+          style={{width: 25}}>
+          {indexInfo == 0 && (
+            <Image source={Images.logout} style={styles.rightIcon} />
+          )}
         </TouchableOpacity>
       )}
     </View>
