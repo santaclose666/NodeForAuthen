@@ -9,6 +9,15 @@ const ForestPrice = ({navigation}) => {
   const groupOption = useSelector(
     state => state.document.documentSlice?.forestData?.category,
   );
+  const yearOption = useSelector(
+    state => state.document.documentSlice?.forestData?.year,
+  );
+  const unitOption = useSelector(
+    state => state.document.documentSlice?.forestData?.unit,
+  );
+  const hieuLuc = useSelector(
+    state => state.document.documentSlice?.forestData?.hieuluc,
+  );
 
   return (
     <DocumentTemplate
@@ -16,6 +25,9 @@ const ForestPrice = ({navigation}) => {
       navigation={navigation}
       data={data}
       groupOption={groupOption}
+      yearOption={yearOption}
+      unitOption={unitOption}
+      hieuLuc={hieuLuc}
     />
   );
 };

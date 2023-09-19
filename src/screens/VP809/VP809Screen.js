@@ -9,6 +9,15 @@ const VP809Screen = ({navigation}) => {
   const groupOption = useSelector(
     state => state.document.documentSlice?.VP809Data?.category,
   );
+  const yearOption = useSelector(
+    state => state.document.documentSlice?.VP809Data?.year,
+  );
+  const unitOption = useSelector(
+    state => state.document.documentSlice?.VP809Data?.unit,
+  );
+  const hieuLuc = useSelector(
+    state => state.document.documentSlice?.VP809Data?.hieuluc,
+  );
 
   return (
     <DocumentTemplate
@@ -16,6 +25,9 @@ const VP809Screen = ({navigation}) => {
       navigation={navigation}
       data={data}
       groupOption={groupOption}
+      yearOption={yearOption}
+      unitOption={unitOption}
+      hieuLuc={hieuLuc}
     />
   );
 };

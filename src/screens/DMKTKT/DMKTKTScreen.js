@@ -9,6 +9,15 @@ const DMKTKTScreen = ({navigation}) => {
   const groupOption = useSelector(
     state => state.document.documentSlice?.DMKTKTData?.category,
   );
+  const yearOption = useSelector(
+    state => state.document.documentSlice?.DMKTKTData?.year,
+  );
+  const unitOption = useSelector(
+    state => state.document.documentSlice?.DMKTKTData?.unit,
+  );
+  const hieuLuc = useSelector(
+    state => state.document.documentSlice?.DMKTKTData?.hieuluc,
+  );
 
   return (
     <DocumentTemplate
@@ -16,6 +25,9 @@ const DMKTKTScreen = ({navigation}) => {
       navigation={navigation}
       data={data}
       groupOption={groupOption}
+      yearOption={yearOption}
+      unitOption={unitOption}
+      hieuLuc={hieuLuc}
     />
   );
 };
