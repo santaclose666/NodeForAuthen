@@ -27,6 +27,7 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetScrollView,
+  BottomSheetTextInput,
 } from '@gorhom/bottom-sheet';
 import {Checkbox} from 'native-base';
 import RegisterBtn from './RegisterBtn';
@@ -637,7 +638,7 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                 }}>
                 <View style={styles.containerEachLine}>
                   <Text style={styles.title}>Họ tên</Text>
-                  <TextInput
+                  <BottomSheetTextInput
                     style={styles.inputText}
                     placeholder="Nhập họ tên"
                     value={name}
@@ -646,16 +647,23 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                 </View>
                 <View style={styles.containerEachLine}>
                   <Text style={styles.title}>Đơn vị công tác</Text>
-                  <TextInput
+                  <BottomSheetTextInput
                     style={styles.inputText}
                     placeholder="Nhập tên đơn vị"
-                    value={workUnit}
-                    onChangeText={e => setWorkUnit(e)}
+                    defaultValue={workUnit}
+                    onChangeText={e =>
+                      setWorkUnit(
+                        e.replace(
+                          /[`~0-9!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,
+                          '',
+                        ),
+                      )
+                    }
                   />
                 </View>
                 <View style={styles.containerEachLine}>
                   <Text style={styles.title}>Số điện thoại</Text>
-                  <TextInput
+                  <BottomSheetTextInput
                     inputMode="numeric"
                     style={styles.inputText}
                     placeholder="Nhập số điện thoại"
@@ -665,16 +673,25 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                 </View>
                 <View style={styles.containerEachLine}>
                   <Text style={styles.title}>Địa chỉ email</Text>
-                  <TextInput
+                  <BottomSheetTextInput
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
                     style={styles.inputText}
                     placeholder="Nhập email"
-                    value={email}
-                    onChangeText={e => setEmail(e)}
+                    defaultValue={email}
+                    onChangeText={e =>
+                      setEmail(
+                        e.replace(
+                          /[`~0-9!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,
+                          '',
+                        ),
+                      )
+                    }
                   />
                 </View>
                 <View style={styles.containerEachLine}>
                   <Text style={styles.title}>Mục đích sử dụng</Text>
-                  <TextInput
+                  <BottomSheetTextInput
                     style={styles.inputText}
                     placeholder="Nhập mục đích"
                     value={purpose}
