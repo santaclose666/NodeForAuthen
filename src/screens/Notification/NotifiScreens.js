@@ -16,8 +16,11 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
 import {getAllNotifi} from '../../redux/apiRequest';
 import Loading from '../../components/LoadingUI';
-import {mainURL} from '../../contants/Variable';
+import {mainURL, fontDefault} from '../../contants/Variable';
 import {DisplayNotificationModal} from '../../components/Modal';
+import Images from '../../contants/Images';
+import {changeFormatDate} from '../../utils/serviceFunction';
+import Separation from '../../components/Separation';
 
 const NotifiScreen = ({navigation, route}) => {
   const receiveNotifi = route.params?.notifi;
@@ -126,59 +129,80 @@ const NotifiScreen = ({navigation, route}) => {
             />
           </View>
         )}
-        <View
-          style={{
-            flex: 20,
-            flexDirection: 'row',
-            marginHorizontal: Dimension.setWidth(2.5),
-            marginTop: Dimension.setHeight(2),
-          }}>
-          <FlatList
-            data={handleFilterNotifi()}
-            keyExtractor={(_, index) => index}
-            showsVerticalScrollIndicator={false}
-            initialNumToRender={6}
-            windowSize={6}
-            removeClippedSubviews={true}
-            refreshing={true}
-            renderItem={({item, index}) => {
-              const filterTime = item?.giotao.slice(0, 5);
-              const halfDay = item?.giotao.slice(0, 2) > 12 ? 'pm' : 'am';
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    handlePickItem(item);
-                  }}
-                  key={index}
-                  style={styles.notifiContainer}>
-                  <Image
-                    src={mainURL + item?.avatar}
-                    style={styles.notifiImg}
-                  />
+        <FlatList
+          data={handleFilterNotifi()}
+          keyExtractor={(_, index) => index}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={6}
+          windowSize={6}
+          removeClippedSubviews={true}
+          refreshing={true}
+          renderItem={({item, index}) => {
+            const filterTime = item?.giotao.slice(0, 5);
+            const halfDay = item?.giotao.slice(0, 2) > 12 ? 'PM' : 'AM';
+            const avt =
+              item?.type != 'sinhnhat' ? item?.avatar : item?.user_sn.path;
+
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  handlePickItem(item);
+                }}
+                key={index}
+                style={styles.notifiContainer}>
+                <View style={{width: '77%'}}>
                   <View
                     style={{
-                      marginLeft: Dimension.setWidth(3),
-                      flexDirection: 'column',
+                      width: Dimension.setWidth(55),
+                      marginBottom: Dimension.setHeight(0.5),
                     }}>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.obj1}>
-                        {item?.nguoigui}{' '}
-                        <Text numberOfLines={2} style={styles.obj2}>
-                          {item?.tieude}
+                    <Text numberOfLines={2} style={styles.obj1}>
+                      {item?.noidung}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      width: Dimension.setWidth(66),
+                    }}>
+                    {!item?.nguoigui.includes('Forestry 4.0') && (
+                      <>
+                        <Text
+                          style={{
+                            color: '#1b2061',
+                            fontFamily: Fonts.SF_REGULAR,
+                            fontSize: Dimension.fontSize(15),
+                          }}>
+                          {item?.nguoigui}
                         </Text>
-                      </Text>
-                      <Text numberOfLines={2} style={styles.obj2}>
-                        {item?.noidung}
-                      </Text>
-                    </View>
+                        <Image
+                          source={Images.dot}
+                          style={{
+                            width: 8,
+                            height: 8,
+                            marginHorizontal: Dimension.setWidth(0.6),
+                            tintColor: Colors.INACTIVE_GREY,
+                          }}
+                        />
+                      </>
+                    )}
                     <Text
                       style={styles.time}>{`${filterTime} ${halfDay}`}</Text>
+
+                    <Separation />
+                    <Text style={styles.time}>
+                      {`${changeFormatDate(item?.ngaytao)} `}
+                    </Text>
                   </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
+                </View>
+                <View>
+                  <Image src={mainURL + avt} style={styles.notifiImg} />
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        />
         <DisplayNotificationModal
           toggleModal={toggleNotifiModal}
           setToggleModal={setToggleNotifiModal}
@@ -203,52 +227,38 @@ const styles = StyleSheet.create({
   },
 
   notifiItemContainer: {
-    flex: 1,
     marginHorizontal: Dimension.setWidth(3.6),
-    marginTop: Dimension.setHeight(1),
-  },
-
-  allNotifiContainer: {
-    marginTop: Dimension.setHeight(2.5),
-    marginHorizontal: Dimension.setWidth(3.6),
-    borderBottomWidth: 0.6,
-    borderColor: Colors.INACTIVE_GREY,
+    marginTop: Dimension.setHeight(1.6),
   },
 
   notifiContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: Dimension.setWidth(4),
-    marginBottom: Dimension.setHeight(3.6),
+    marginTop: Dimension.setHeight(1),
+    marginBottom: Dimension.setHeight(2),
+    marginHorizontal: Dimension.setWidth(3),
+    paddingHorizontal: Dimension.setWidth(4),
+    alignSelf: 'center',
   },
 
   notifiImg: {
-    width: 50,
-    height: 50,
+    width: Dimension.fontSize(50),
+    height: Dimension.fontSize(50),
     borderRadius: 50,
   },
 
   textContainer: {
-    width: Dimension.setWidth(70),
-    marginBottom: 3,
+    width: Dimension.setWidth(68),
   },
 
   obj1: {
-    flexWrap: 'wrap',
     color: '#3a5072',
-    fontFamily: Fonts.SF_BOLD,
-    fontSize: Dimension.fontSize(18),
-  },
-
-  obj2: {
-    flexWrap: 'wrap',
-    color: '#7f84a1',
-    fontFamily: Fonts.SF_REGULAR,
+    fontFamily: Fonts.SF_MEDIUM,
     fontSize: Dimension.fontSize(18),
   },
 
   time: {
-    color: Colors.INACTIVE_GREY,
+    color: '#636363ff',
     fontFamily: Fonts.SF_REGULAR,
     fontSize: Dimension.fontSize(15),
   },

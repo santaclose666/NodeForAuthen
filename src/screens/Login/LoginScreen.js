@@ -9,7 +9,7 @@ import {
   Dimensions,
   SafeAreaView,
 } from 'react-native';
-import {Switch, VStack} from 'native-base';
+import {Switch} from 'native-base';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
@@ -67,7 +67,7 @@ const LoginScreen = ({navigation}) => {
             />
           </TouchableOpacity>
           <Image
-            source={Images.logo}
+            source={Images.F4_Lunar}
             resizeMode="cover"
             style={{
               width: Dimensions.get('screen').width / 1.8,

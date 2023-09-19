@@ -3,11 +3,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import TabNaviagtor from './BottomTab';
 import LoginScreen from '../screens/Login/LoginScreen';
-import DisplayPDF from '../screens/Document/DisplayPDFScreen';
 import DetailNewsScreen from '../screens/News/DetailNewsScreen';
 import HappyBirthdayScreen from '../screens/Happybirthday/HappyBirthdayScreen';
 import HappyBirthdayList from '../screens/Happybirthday/HappyBirthdayList';
 import MainMV from '../screens/MuaVu/MainMV';
+import DisplayPDF from '../screens/Document/DisplayPDFScreen';
 
 const Stack = createStackNavigator();
 

@@ -82,7 +82,7 @@ android {
     namespace "com.forestry_4_v7"
     defaultConfig {
         applicationId "com.forestry_4_v7"
-        minSdkVersion rootProject.ext.minSdkVersiongit
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 10
         versionName "1.8.1"

@@ -27,7 +27,7 @@
 		D651EBDBCA034DA9B0759680 /* SFProDisplay-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94510F9408DD4187BE11E76D /* SFProDisplay-Bold.otf */; };
 		F717329B2AAB2F0200BBF8D2 /* dance.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F717329A2AAB2F0200BBF8D2 /* dance.mp3 */; };
 		F717329D2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F717329C2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 */; };
-		F7602CCD2AB058330038482A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7602CCC2AB058330038482A /* GoogleService-Info.plist */; };
+		F761E4FC2AB93662001CC4BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F761E4FB2AB93662001CC4BF /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,7 +70,7 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F717329A2AAB2F0200BBF8D2 /* dance.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = dance.mp3; path = ../android/app/src/main/res/raw/dance.mp3; sourceTree = "<group>"; };
 		F717329C2AAB2F3A00BBF8D2 /* hpbdpiano.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = hpbdpiano.mp3; path = ../android/app/src/main/res/raw/hpbdpiano.mp3; sourceTree = "<group>"; };
-		F7602CCC2AB058330038482A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F761E4FB2AB93662001CC4BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F7B437ED2A81FEF40058AF6E /* Forestry_4_v7.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Forestry_4_v7.entitlements; path = Forestry_4_v7/Forestry_4_v7.entitlements; sourceTree = "<group>"; };
 		FB4AB16A2CCF469289375789 /* SFProDisplay-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Semibold.otf"; path = "../src/assets/fonts/SFProDisplay-Semibold.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -115,7 +115,7 @@
 		13B07FAE1A68108700A75B9A /* Forestry_4_v7 */ = {
 			isa = PBXGroup;
 			children = (
-				F7602CCC2AB058330038482A /* GoogleService-Info.plist */,
+				F761E4FB2AB93662001CC4BF /* GoogleService-Info.plist */,
 				F7B437ED2A81FEF40058AF6E /* Forestry_4_v7.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -304,7 +304,7 @@
 				502A260079F5498FBFF7A2EB /* SFProDisplay-Light.otf in Resources */,
 				4BBEC09BF38C4649849306B9 /* SFProDisplay-Medium.otf in Resources */,
 				8E4938969F1F42369A03D58A /* SFProDisplay-Regular.otf in Resources */,
-				F7602CCD2AB058330038482A /* GoogleService-Info.plist in Resources */,
+				F761E4FC2AB93662001CC4BF /* GoogleService-Info.plist in Resources */,
 				609E1F8C8A1B4FA38E60DA3A /* SFProDisplay-Semibold.otf in Resources */,
 				B0A81BC93980478DB356F210 /* SFProDisplay-Thin.otf in Resources */,
 				F717329B2AAB2F0200BBF8D2 /* dance.mp3 in Resources */,
@@ -568,7 +568,7 @@
 				CODE_SIGN_ENTITLEMENTS = Forestry_4_v7/Forestry_4_v7.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = 7L7FA98CYL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Forestry_4_v7/Info.plist;
@@ -578,7 +578,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -602,7 +602,7 @@
 				CODE_SIGN_ENTITLEMENTS = Forestry_4_v7/Forestry_4_v7.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = 7L7FA98CYL;
 				INFOPLIST_FILE = Forestry_4_v7/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Forestry4.0;
@@ -611,7 +611,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

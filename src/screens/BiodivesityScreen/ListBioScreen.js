@@ -3,13 +3,13 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   Image,
   TextInput,
   StyleSheet,
   StatusBar,
   SafeAreaView,
   Dimensions,
+  Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import unidecode from 'unidecode';
@@ -314,7 +314,8 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 0.8,
     borderRadius: 12,
-    height: Dimension.setHeight(4),
+    height:
+      Platform.OS == 'ios' ? Dimension.setHeight(5) : Dimension.setHeight(6),
     marginRight: Dimension.setWidth(2),
     backgroundColor: 'white',
   },

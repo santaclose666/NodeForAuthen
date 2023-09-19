@@ -20,12 +20,20 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
-import {getAllStaffs, postNotifcation} from '../../redux/apiRequest';
+import {
+  getAllStaffs,
+  postNotifcation,
+  sendNotifiByTopic,
+} from '../../redux/apiRequest';
 import LinearGradientUI from '../../components/LinearGradientUI';
 
 const group = [
   {
     title: 'Tất cả mọi người',
+    id: 0,
+  },
+  {
+    title: 'Tất cả nhân sự IFEE',
     id: 1,
   },
   {
@@ -74,11 +82,15 @@ const SendNotification = ({navigation}) => {
   const handlePickGroup = id => {
     let received;
     switch (id) {
+      case 0:
+        setDataPicker('allEvent');
+        break;
       case 1:
-        received = IFEEstaffs.map(item => {
-          return item.id_ht;
-        });
-        setDataPicker(received);
+        // received = IFEEstaffs.map(item => {
+        //   return item.id_ht;
+        // });
+        // setDataPicker(received);
+        setDataPicker(user?.tendonvi);
         break;
       case 2:
         received = IFEEstaffs.filter(item => item.vitri_ifee <= 3).map(item => {
@@ -118,7 +130,9 @@ const SendNotification = ({navigation}) => {
 
       setLoading(true);
       try {
-        const res = await postNotifcation(data);
+        const res = await (typeof dataPicker === 'object'
+          ? postNotifcation(data)
+          : sendNotifiByTopic(data));
 
         if (res) {
           ToastSuccess('Gửi thông báo thành công');

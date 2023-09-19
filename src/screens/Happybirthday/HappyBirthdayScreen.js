@@ -17,6 +17,8 @@ const HappyBirthdayScreen = ({navigation, route}) => {
   const item = route.params.item;
   const sing = Platform.OS == 'android' ? 'hpbdpiano.mp3' : 'dance.mp3';
 
+  console.log(item);
+
   var sound = new Sound(sing, Sound.MAIN_BUNDLE, error => {
     if (error) {
       console.log('failed to load the sound', error);

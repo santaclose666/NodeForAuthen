@@ -66,7 +66,11 @@ import {
   getDocumentMvStart,
   getDocumentMvSuccess,
 } from './documentMvSlice';
-import {documentMvURL} from '../contants/Variable';
+import {documentMvURL, serverKey} from '../contants/Variable';
+import {
+  subcribeWorkUnitTopic,
+  unSubcribeWorkUnitTopic,
+} from '../utils/AllTopic';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -81,17 +85,20 @@ export const loginUser = async (user, dispatch, navigation, save) => {
       'https://forestry.ifee.edu.vn/api/login',
       user,
     );
-    dispatch(loginSuccess((await res).data));
 
-    if (res.data === 0) {
+    const data = res.data;
+    dispatch(loginSuccess(data));
+
+    if (data === 0) {
       const mess = 'Thông tin đăng nhập chưa chính xác!';
       ToastWarning(mess);
     } else {
       navigation.dispatch(resetAction);
       navigation.navigate('BottomTab');
 
+      subcribeWorkUnitTopic(data.tendonvi);
       getAllStaffs(dispatch);
-      postToken(res.data.id_ht);
+      postToken(data.id_ht);
 
       save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));
     }
@@ -101,15 +108,16 @@ export const loginUser = async (user, dispatch, navigation, save) => {
   }
 };
 
-export const logoutUser = async (dispatch, navigation) => {
+export const logoutUser = async (dispatch, navigation, user) => {
   try {
     const token = await getToken();
     await axios.post(`https://forestry.ifee.edu.vn/api/logout`, {
       token: token,
     });
 
+    console.log(user);
+    unSubcribeWorkUnitTopic(user.tendonvi);
     dispatch(logoutSuccess());
-    dispatch(deleteNotifiSuccess(null));
 
     navigation.dispatch(resetAction);
     navigation.navigate('BottomTab');
@@ -580,7 +588,7 @@ export const getAllNewsMV = async dispatch => {
         content: item.noidung,
         avatar: item.hinhanh,
         date_created: changeFormatDate(item.ngaydang),
-        files: item.files[0]
+        files: item.files[0],
       };
     });
 
@@ -627,8 +635,34 @@ export const getAllNotifi = async (id, dispatch) => {
     );
 
     dispatch(getNotifiSuccess(res.data));
+    console.log(res.data);
   } catch (error) {
     dispatch(getOnLeaveFailed());
+  }
+};
+
+export const sendNotifiByTopic = async notifi => {
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `key=${serverKey}`,
+    };
+    const body = {
+      data: {},
+      notification: {
+        body: notifi.content,
+        title: notifi.title,
+      },
+      to: `/topics/${notifi.id}`,
+    };
+    const res = await axios.post(`https://fcm.googleapis.com/fcm/send`, body, {
+      headers: headers,
+    });
+
+    console.log(res);
+    return res.data;
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -649,8 +683,11 @@ export const getAllDocument = async dispatch => {
   try {
     const res = await axios.get(`https://forestry.ifee.edu.vn/api/vanban`);
 
-    dispatch(getDocumentSuccess(res.data));
+    const result = await dispatch(getDocumentSuccess(res.data)).unwrap();
+
+    console.log(result);
   } catch (error) {
+    console.log(error);
     dispatch(getDocumentFailed());
   }
 };

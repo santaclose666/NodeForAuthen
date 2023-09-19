@@ -5,20 +5,38 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
-  SafeAreaView,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import {fontDefault, imgDefault} from '../contants/Variable';
 
-const Header = ({title, navigation, refreshData, replace = false}) => {
+const Header = ({
+  title,
+  navigation,
+  refreshData,
+  replace = false,
+  handleFilter,
+}) => {
   const showCreateButton =
     title === 'Lịch sử nghỉ phép' ||
     title === 'Lịch sử đặt vé' ||
     title === 'Lịch sử công tác' ||
     title === 'Lịch sử đăng kí xe';
+
+  const showFitlerButon =
+    title === 'Định mức Kinh tế Kĩ thuật' ||
+    title === 'Dịch vụ môi trường rừng' ||
+    title === 'Khung giá rừng' ||
+    title === 'Ngành Lâm học' ||
+    title === 'Kiểm kê rừng' ||
+    title === 'Tài liệu Mùa vụ' ||
+    title === 'Quản lý rừng bền vững' ||
+    title === 'Tiêu chuẩn Việt Nam' ||
+    title === 'Giống Lâm nghiệp' ||
+    title === 'Văn phòng 809';
 
   return (
     <View
@@ -38,15 +56,19 @@ const Header = ({title, navigation, refreshData, replace = false}) => {
         backgroundColor="transparent"
         barStyle="light-content"
       />
-      <TouchableOpacity
-        onPress={() => {
-          replace == true ? navigation.navigate('Home') : navigation.goBack();
-        }}>
-        <Image
-          source={Images.back}
-          style={{width: 25, height: 18, ...imgDefault}}
-        />
-      </TouchableOpacity>
+      {title == 'Thông báo' ? (
+        <View style={{width: 25, height: 25}}></View>
+      ) : (
+        <TouchableOpacity
+          onPress={() => {
+            replace == true ? navigation.navigate('Home') : navigation.goBack();
+          }}>
+          <Image
+            source={Images.back}
+            style={{width: 23, height: 23, ...imgDefault}}
+          />
+        </TouchableOpacity>
+      )}
       <View style={{flex: 1, alignItems: 'center'}}>
         <Text
           style={{
@@ -57,7 +79,7 @@ const Header = ({title, navigation, refreshData, replace = false}) => {
           {title}
         </Text>
       </View>
-      {showCreateButton ? (
+      {showCreateButton && (
         <TouchableOpacity
           onPress={() => {
             if (title === 'Lịch sử nghỉ phép') {
@@ -78,16 +100,24 @@ const Header = ({title, navigation, refreshData, replace = false}) => {
               });
             }
           }}>
-          <Image
-            source={Images.adjust}
-            style={{width: 30, height: 30, ...imgDefault}}
-          />
+          <Image source={Images.adjust} style={styles.rightIcon} />
         </TouchableOpacity>
-      ) : (
-        <View style={{width: 30}} />
+      )}
+      {showFitlerButon && (
+        <TouchableOpacity onPress={handleFilter}>
+          <Image source={Images.filter} style={styles.rightIcon} />
+        </TouchableOpacity>
       )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  rightIcon: {
+    width: 25,
+    height: 25,
+    ...imgDefault,
+  },
+});
 
 export default Header;
