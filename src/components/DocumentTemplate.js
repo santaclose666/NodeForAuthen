@@ -599,7 +599,8 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
             backgroundStyle={{backgroundColor: '#cce0f2'}}
             ref={bottomSheetModalRef}
             index={0}
-            snapPoints={snapPoints}>
+            snapPoints={snapPoints}
+            android_keyboardInputMode="adjustResize">
             <View
               style={{
                 alignItems: 'center',
@@ -625,7 +626,12 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
               }}
               showsVerticalScrollIndicator={false}>
               <KeyboardAwareScrollView
+                enableAutomaticScroll={true}
+                enableResetScrollToCoords={true}
+                enableOnAndroid={true}
+                behavior="padding"
                 contentContainerStyle={{
+                  flex: 1,
                   backgroundColor: '#fbfbfd',
                   borderRadius: 12,
                   marginHorizontal: Dimension.setWidth(0.6),
@@ -713,7 +719,6 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                     </Text>
                   </Checkbox>
                 </View>
-
                 <View style={{marginTop: Dimension.setHeight(1)}}>
                   <RegisterBtn
                     nameBtn={'Đăng kí'}
