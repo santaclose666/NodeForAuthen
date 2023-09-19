@@ -550,11 +550,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   <Text style={styles.titleBottomSheet}>Thông tin xe</Text>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.vehicles} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Loại xe:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -566,11 +562,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.vehicleplate} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Km Giao:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -595,11 +587,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.content} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '90%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>
                         Nội dung:{'  '}
                         <Text
@@ -621,11 +609,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       source={Images.registerperson}
                       style={styles.Iconic}
                     />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Người đăng kí:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -637,11 +621,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.datetime} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Ngày duyệt:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -1168,6 +1148,12 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: Dimension.setWidth(1.3),
+  },
+
+  containerLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '88%',
   },
 });
 
