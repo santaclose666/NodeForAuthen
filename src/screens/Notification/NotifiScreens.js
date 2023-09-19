@@ -131,7 +131,7 @@ const NotifiScreen = ({navigation, route}) => {
           </View>
         )}
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          {handleFilterNotifi().length != 0 ? (
+          {handleFilterNotifi()?.length != 0 ? (
             <FlatList
               data={handleFilterNotifi()}
               keyExtractor={(_, index) => index}

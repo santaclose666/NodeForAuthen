@@ -119,9 +119,10 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   }, []);
 
   const handleBottomSheet = useCallback(
-    (item, colorStatus, bgColorStatus) => {
+    (item, path, colorStatus, bgColorStatus) => {
       setSelectedItem({
         ...item,
+        path,
         colorStatus,
         bgColorStatus,
       });
@@ -311,7 +312,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          handleBottomSheet(item, colorStatus, bgColorStatus);
+          handleBottomSheet(item, userFilter?.path, colorStatus, bgColorStatus);
         }}
         key={index}
         style={{
@@ -606,7 +607,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                   </Text>
                   <View style={styles.containerEachLine}>
                     <Image
-                      source={Images.registerperson}
+                      src={mainURL + selectedItem.path}
                       style={styles.Iconic}
                     />
                     <View style={styles.containerLine}>
