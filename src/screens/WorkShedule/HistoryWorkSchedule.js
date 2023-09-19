@@ -686,7 +686,7 @@ const HistoryWorkShedule = ({navigation}) => {
                   <View style={styles.containerEachLine}>
                     <Image
                       src={mainURL + selectedItem.avatar}
-                      style={styles.Iconic}
+                      style={[styles.Iconic, {borderRadius: 50}]}
                     />
                     <View style={styles.containerLine}>
                       <Text style={styles.title}>Người công tác:{''}</Text>

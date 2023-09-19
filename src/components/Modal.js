@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Images from '../contants/Images';
@@ -415,15 +416,18 @@ export const WarningModal = ({
           />
           <Text
             style={{
-              fontSize: Dimension.fontSize(16),
-              fontFamily: Fonts.SF_SEMIBOLD,
+              fontSize: Dimension.fontSize(17),
+              fontFamily: Fonts.SF_MEDIUM,
+              ...fontDefault,
+              marginBottom: Dimension.setHeight(0.6),
             }}>
             {item?.name}
           </Text>
           <Text
             style={{
-              fontSize: Dimension.fontSize(18),
-              fontFamily: Fonts.SF_SEMIBOLD,
+              fontSize: Dimension.fontSize(16),
+              fontFamily: Fonts.SF_MEDIUM,
+              ...fontDefault,
             }}>
             {item?.content}
           </Text>
@@ -433,7 +437,6 @@ export const WarningModal = ({
           <Image source={Images.comment} style={styles.iconic} />
           <TextInput
             multiline={true}
-            placeholder="Lý do cảnh báo"
             style={{
               backgroundColor: '#ffffff',
               paddingHorizontal: Dimension.setWidth(2),
@@ -441,7 +444,6 @@ export const WarningModal = ({
               fontFamily: Fonts.SF_REGULAR,
               width: '70%',
               height: Dimension.setHeight(6),
-              maxHeight: Dimension.setHeight(9),
             }}
             onChangeText={e => setReasonInput(e)}
             value={reasonInput}

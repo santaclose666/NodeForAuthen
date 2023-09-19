@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useLayoutEffect} from 'react';
+import React, {useState, useCallback, useLayoutEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -38,6 +38,7 @@ const AllWorkScheduleScreen = ({navigation}) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [reasonInput, setReasonInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const handlePickItem = useCallback(item => {
     setSelectedItem(item);
@@ -67,11 +68,22 @@ const AllWorkScheduleScreen = ({navigation}) => {
   }, []);
 
   const fetTotalWorkSchedule = async () => {
-    totalWorkSchedule(dispatch);
+    await totalWorkSchedule(dispatch);
+  };
+
+  const handleRefresh = async () => {
+    setRefresh(true);
+    try {
+      await fetTotalWorkSchedule();
+
+      setRefresh(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useLayoutEffect(() => {
-    fetTotalWorkSchedule();
+    handleRefresh();
   }, []);
 
   const RenderTaskOfDay = useCallback(item => {
@@ -183,7 +195,8 @@ const AllWorkScheduleScreen = ({navigation}) => {
           removeClippedSubviews={true}
           style={{backgroundColor: 'transparent'}}
           theme={{reservationsBackgroundColor: 'transparent'}}
-          onRefresh={fetTotalWorkSchedule}
+          onRefresh={handleRefresh}
+          refreshing={refresh}
           extraData={totalWorkData}
         />
 

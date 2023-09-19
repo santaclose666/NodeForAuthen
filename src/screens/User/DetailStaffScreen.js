@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import {AlertDialog, Button} from 'native-base';
 import {useSelector} from 'react-redux';
@@ -71,22 +72,15 @@ const DetailStaffScreen = ({navigation, route}) => {
 
   return (
     <LinearGradientUI>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
-        }}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.headerContainer}>
           <TouchableOpacity
             onPress={() => {
-              {
-                indexInfo === 0 ? navigation.goBack() : navigation.goBack();
-              }
+              navigation.goBack();
             }}>
             <Image
               source={Images.back}
-              style={{width: 25, height: 18, ...imgDefault}}
+              style={{width: 24, height: 24, ...imgDefault}}
             />
           </TouchableOpacity>
           <Text
@@ -164,18 +158,20 @@ const DetailStaffScreen = ({navigation, route}) => {
           </AlertDialog>
         </View>
 
-        <View style={{flex: 1}}>
-          <ListInfo
-            info={indexInfo === 0 ? userInfo : workInfo}
-            index={indexInfo}
-          />
-        </View>
-      </View>
+        <ListInfo
+          info={indexInfo === 0 ? userInfo : workInfo}
+          index={indexInfo}
+        />
+      </SafeAreaView>
     </LinearGradientUI>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -185,16 +181,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     marginHorizontal: Dimension.setHeight(1.4),
     borderRadius: 25,
-  },
-
-  optionInfoContainer: {
-    borderRadius: 32,
-    height: Dimension.setHeight(6.5),
-    marginTop: Dimension.setHeight(4),
-    marginHorizontal: Dimension.setWidth(6),
-    flexDirection: 'row',
-    backgroundColor: '#e1e9ea',
-    alignItems: 'center',
+    marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
   },
 });
 
