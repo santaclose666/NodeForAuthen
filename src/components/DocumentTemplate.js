@@ -625,7 +625,6 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
               }}
               showsVerticalScrollIndicator={false}>
               <KeyboardAwareScrollView
-                keyboardShouldPersistTaps="handled"
                 contentContainerStyle={{
                   backgroundColor: '#fbfbfd',
                   borderRadius: 12,
