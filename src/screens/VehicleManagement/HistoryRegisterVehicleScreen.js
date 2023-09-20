@@ -13,6 +13,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -660,345 +662,350 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
           animationOut="fadeOutDown"
           animationOutTiming={100}
           avoidKeyboard={true}>
-          <View
-            style={{
-              flex: 1,
-              position: 'absolute',
-              alignSelf: 'center',
-              backgroundColor: '#def8ed',
-              width: Dimension.setWidth(85),
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 14,
-              paddingHorizontal: Dimension.setWidth(3),
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
             }}>
             <View
               style={{
+                flex: 1,
+                position: 'absolute',
+                alignSelf: 'center',
+                backgroundColor: '#def8ed',
+                width: Dimension.setWidth(85),
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginVertical: Dimension.setHeight(1),
-                borderBottomWidth: 0.8,
-                borderBlockColor: Colors.INACTIVE_GREY,
-                width: '100%',
-                height: Dimension.setHeight(4.5),
-              }}>
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_BOLD,
-                  fontSize: Dimension.fontSize(20),
-                  color: '#57b85d',
-                }}>
-                Trả xe
-              </Text>
-            </View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingVertical: Dimension.setHeight(1.5),
+                borderRadius: 14,
                 paddingHorizontal: Dimension.setWidth(3),
               }}>
-              <Image
-                source={
-                  selectedItem?.loaixe.includes('WAVE')
-                    ? Images.motorbike
-                    : Images.vehicles
-                }
-                style={{height: 55, width: 55}}
-              />
-              <Text
+              <View
                 style={{
-                  fontSize: Dimension.fontSize(18),
-                  fontFamily: Fonts.SF_SEMIBOLD,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginVertical: Dimension.setHeight(1),
+                  borderBottomWidth: 0.8,
+                  borderBlockColor: Colors.INACTIVE_GREY,
+                  width: '100%',
+                  height: Dimension.setHeight(4.5),
                 }}>
-                {user?.hoten}
-              </Text>
-            </View>
-
-            <View style={styles.lineContainerModal}>
-              <View style={[styles.itemContainerModal, {width: '100%'}]}>
-                <Text style={styles.titleModal}>Người mua xăng</Text>
-                <View style={styles.containerEachLine1}>
-                  <Dropdown
-                    style={styles.dropdown}
-                    autoScroll={false}
-                    showsVerticalScrollIndicator={false}
-                    placeholderStyle={styles.placeholderStyle}
-                    selectedStyle={styles.selectedStyle}
-                    selectedTextStyle={[
-                      styles.selectedTextStyle,
-                      {fontSize: 13},
-                    ]}
-                    containerStyle={styles.containerOptionStyle}
-                    iconStyle={styles.iconStyle}
-                    itemContainerStyle={styles.itemContainer}
-                    itemTextStyle={styles.itemText}
-                    fontFamily={Fonts.SF_MEDIUM}
-                    search
-                    searchPlaceholder="Tìm kiếm..."
-                    activeColor="#eef2feff"
-                    data={allStaffs}
-                    maxHeight={Dimension.setHeight(30)}
-                    labelField="name"
-                    valueField="name"
-                    placeholder="Chọn người mua xăng"
-                    value={staffValue}
-                    renderLeftIcon={() => {
-                      return (
-                        <Image
-                          source={Images.person}
-                          style={styles.leftIconDropdown}
-                        />
-                      );
-                    }}
-                    onChange={item => {
-                      setStaffValue(item.name);
-                    }}
-                  />
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.lineContainerModal}>
-              <View style={styles.itemContainerModal}>
-                <View style={rowAlignCenter}>
-                  <Text style={styles.titleModal}>Ngày về</Text>
-                  <RedPoint />
-                </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    setToggleDatePicker(true);
-                  }}
-                  style={[
-                    styles.dateModalContainer,
-                    {height: Dimension.setHeight(6.5)},
-                  ]}>
-                  <Text style={styles.contentModal}>{endDate}</Text>
-                  <View
-                    style={[
-                      styles.imgModalContainer,
-                      {backgroundColor: '#7cc985'},
-                    ]}>
-                    <Image
-                      source={Images.calendarBlack}
-                      style={styles.imgDate}
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.itemContainerModal}>
-                <View style={rowAlignCenter}>
-                  <Text style={styles.titleModal}>Km nhận</Text>
-                  <RedPoint />
-                </View>
-                <View style={styles.dateModalContainer}>
-                  <TextInput
-                    style={{
-                      borderBottomWidth: 0.6,
-                      borderBottomColor: 'gray',
-                      marginHorizontal: Dimension.setWidth(1.6),
-                      fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: Dimension.fontSize(16),
-                      height: Dimension.setHeight(6),
-                      width: '65%',
-                    }}
-                    inputMode="numeric"
-                    value={km}
-                    onChangeText={e => setKm(e)}
-                  />
-                  <View
-                    style={[
-                      styles.imgModalContainer,
-                      {backgroundColor: '#61c4b2'},
-                    ]}>
-                    <Image source={Images.km} style={[styles.imgDate]} />
-                  </View>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.lineContainerModal}>
-              <View style={[styles.itemContainerModal, {width: '100%'}]}>
-                <Text style={styles.titleModal}>Người bảo dưỡng</Text>
-                <View style={styles.containerEachLine1}>
-                  <Dropdown
-                    style={styles.dropdown}
-                    autoScroll={false}
-                    showsVerticalScrollIndicator={false}
-                    placeholderStyle={styles.placeholderStyle}
-                    selectedStyle={styles.selectedStyle}
-                    selectedTextStyle={[
-                      styles.selectedTextStyle,
-                      {fontSize: 13},
-                    ]}
-                    containerStyle={styles.containerOptionStyle}
-                    iconStyle={styles.iconStyle}
-                    itemContainerStyle={styles.itemContainer}
-                    itemTextStyle={styles.itemText}
-                    fontFamily={Fonts.SF_MEDIUM}
-                    search
-                    searchPlaceholder="Tìm kiếm..."
-                    activeColor="#eef2feff"
-                    data={allStaffs}
-                    maxHeight={Dimension.setHeight(30)}
-                    labelField="name"
-                    valueField="name"
-                    placeholder="Chọn người bảo dưỡng"
-                    value={maintenancePerson}
-                    renderLeftIcon={() => {
-                      return (
-                        <Image
-                          source={Images.person}
-                          style={styles.leftIconDropdown}
-                        />
-                      );
-                    }}
-                    onChange={item => {
-                      setMaintenancePerson(item.name);
-                    }}
-                  />
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.lineContainerModal}>
-              <View style={styles.itemContainerModal}>
-                <Text style={styles.titleModal}>Phí xăng xe</Text>
-                <View style={styles.dateModalContainer}>
-                  <TextInput
-                    style={{
-                      borderBottomWidth: 0.6,
-                      borderBottomColor: 'gray',
-                      marginHorizontal: Dimension.setWidth(1.6),
-                      fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: Dimension.fontSize(16),
-                      height: Dimension.setHeight(6),
-                      width: '65%',
-                    }}
-                    inputMode="numeric"
-                    value={gasPrice}
-                    onChangeText={e => setGasPrice(e)}
-                  />
-                  <View
-                    style={[
-                      styles.imgModalContainer,
-                      {backgroundColor: '#edcb8b'},
-                    ]}>
-                    <Image source={Images.petro} style={[styles.imgDate]} />
-                  </View>
-                </View>
-              </View>
-              <View style={styles.itemContainerModal}>
-                <Text style={styles.titleModal}>Phí bảo dưỡng</Text>
-                <View style={styles.dateModalContainer}>
-                  <TextInput
-                    style={{
-                      borderBottomWidth: 0.6,
-                      borderBottomColor: 'gray',
-                      marginHorizontal: Dimension.setWidth(1.6),
-                      fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: Dimension.fontSize(16),
-                      height: Dimension.setHeight(6),
-                      width: '65%',
-                    }}
-                    inputMode="numeric"
-                    value={maintenancePrice}
-                    onChangeText={e => setMaintenancePrice(e)}
-                  />
-                  <View
-                    style={[
-                      styles.imgModalContainer,
-                      {backgroundColor: '#7f8cd1'},
-                    ]}>
-                    <Image
-                      source={Images.maintenance}
-                      style={[styles.imgDate]}
-                    />
-                  </View>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.lineContainerModal}>
-              <View style={[styles.itemContainerModal, {width: '100%'}]}>
-                <Text style={styles.titleModal}>Đề xuất</Text>
-                <View style={[styles.dateModalContainer, {width: '100%'}]}>
-                  <TextInput
-                    placeholder="Nhập đề xuất"
-                    style={{
-                      borderBottomWidth: 0.6,
-                      borderBottomColor: 'gray',
-                      marginHorizontal: Dimension.setWidth(1.6),
-                      fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: Dimension.fontSize(16),
-                      height: Dimension.setHeight(6),
-                      width: '95%',
-                    }}
-                    value={propose}
-                    onChangeText={e => setPropose(e)}
-                  />
-                </View>
-              </View>
-            </View>
-
-            <View
-              style={[
-                styles.lineContainerModal,
-                {justifyContent: 'flex-start'},
-              ]}>
-              <View style={styles.itemContainerModal}>
-                <View style={rowAlignCenter}>
-                  <Text style={styles.titleModal}>File ảnh</Text>
-                  <RedPoint />
-                </View>
-                <TouchableOpacity
-                  onPress={handlePickImg}
-                  style={styles.dateModalContainer}>
-                  <Text
-                    style={{
-                      alignSelf: 'center',
-                      fontFamily: Fonts.SF_REGULAR,
-                      color: '#cddef1',
-                    }}>
-                    Upload...
-                  </Text>
-                  <View
-                    style={[
-                      styles.imgModalContainer,
-                      {backgroundColor: '#cddef1'},
-                    ]}>
-                    <Image source={Images.uploadimg} style={styles.imgDate} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              {filePicker && (
-                <TouchableOpacity
-                  style={styles.itemContainerModal}
-                  onPress={() => {
-                    setZoomImg(true);
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_BOLD,
+                    fontSize: Dimension.fontSize(20),
+                    color: '#57b85d',
                   }}>
-                  <Image
-                    source={{uri: filePicker.uri}}
-                    style={{width: 66, height: 66, borderRadius: 6}}
-                  />
-                </TouchableOpacity>
-              )}
-            </View>
+                  Trả xe
+                </Text>
+              </View>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingVertical: Dimension.setHeight(1.5),
+                  paddingHorizontal: Dimension.setWidth(3),
+                }}>
+                <Image
+                  source={
+                    selectedItem?.loaixe.includes('WAVE')
+                      ? Images.motorbike
+                      : Images.vehicles
+                  }
+                  style={{height: 55, width: 55}}
+                />
+                <Text
+                  style={{
+                    fontSize: Dimension.fontSize(18),
+                    fontFamily: Fonts.SF_SEMIBOLD,
+                  }}>
+                  {user?.hoten}
+                </Text>
+              </View>
 
-            <TouchableOpacity
-              onPress={() => {
-                setToggleReturnModal(false);
-              }}
-              style={{position: 'absolute', left: 12, top: 12}}>
-              <Image source={Images.minusclose} style={styles.btnModal} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleReturnVehicle}
-              style={{position: 'absolute', right: 12, top: 12}}>
-              <Image source={Images.confirm} style={styles.btnModal} />
-            </TouchableOpacity>
-          </View>
+              <View style={styles.lineContainerModal}>
+                <View style={[styles.itemContainerModal, {width: '100%'}]}>
+                  <Text style={styles.titleModal}>Người mua xăng</Text>
+                  <View style={styles.containerEachLine1}>
+                    <Dropdown
+                      style={styles.dropdown}
+                      autoScroll={false}
+                      showsVerticalScrollIndicator={false}
+                      placeholderStyle={styles.placeholderStyle}
+                      selectedStyle={styles.selectedStyle}
+                      selectedTextStyle={[
+                        styles.selectedTextStyle,
+                        {fontSize: 13},
+                      ]}
+                      containerStyle={styles.containerOptionStyle}
+                      iconStyle={styles.iconStyle}
+                      itemContainerStyle={styles.itemContainer}
+                      itemTextStyle={styles.itemText}
+                      fontFamily={Fonts.SF_MEDIUM}
+                      search
+                      searchPlaceholder="Tìm kiếm..."
+                      activeColor="#eef2feff"
+                      data={allStaffs}
+                      maxHeight={Dimension.setHeight(30)}
+                      labelField="name"
+                      valueField="name"
+                      placeholder="Chọn người mua xăng"
+                      value={staffValue}
+                      renderLeftIcon={() => {
+                        return (
+                          <Image
+                            source={Images.person}
+                            style={styles.leftIconDropdown}
+                          />
+                        );
+                      }}
+                      onChange={item => {
+                        setStaffValue(item.name);
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.lineContainerModal}>
+                <View style={styles.itemContainerModal}>
+                  <View style={rowAlignCenter}>
+                    <Text style={styles.titleModal}>Ngày về</Text>
+                    <RedPoint />
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setToggleDatePicker(true);
+                    }}
+                    style={[
+                      styles.dateModalContainer,
+                      {height: Dimension.setHeight(6.5)},
+                    ]}>
+                    <Text style={styles.contentModal}>{endDate}</Text>
+                    <View
+                      style={[
+                        styles.imgModalContainer,
+                        {backgroundColor: '#7cc985'},
+                      ]}>
+                      <Image
+                        source={Images.calendarBlack}
+                        style={styles.imgDate}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.itemContainerModal}>
+                  <View style={rowAlignCenter}>
+                    <Text style={styles.titleModal}>Km nhận</Text>
+                    <RedPoint />
+                  </View>
+                  <View style={styles.dateModalContainer}>
+                    <TextInput
+                      style={{
+                        borderBottomWidth: 0.6,
+                        borderBottomColor: 'gray',
+                        marginHorizontal: Dimension.setWidth(1.6),
+                        fontFamily: Fonts.SF_MEDIUM,
+                        fontSize: Dimension.fontSize(16),
+                        height: Dimension.setHeight(6),
+                        width: '65%',
+                      }}
+                      inputMode="numeric"
+                      value={km}
+                      onChangeText={e => setKm(e)}
+                    />
+                    <View
+                      style={[
+                        styles.imgModalContainer,
+                        {backgroundColor: '#61c4b2'},
+                      ]}>
+                      <Image source={Images.km} style={[styles.imgDate]} />
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.lineContainerModal}>
+                <View style={[styles.itemContainerModal, {width: '100%'}]}>
+                  <Text style={styles.titleModal}>Người bảo dưỡng</Text>
+                  <View style={styles.containerEachLine1}>
+                    <Dropdown
+                      style={styles.dropdown}
+                      autoScroll={false}
+                      showsVerticalScrollIndicator={false}
+                      placeholderStyle={styles.placeholderStyle}
+                      selectedStyle={styles.selectedStyle}
+                      selectedTextStyle={[
+                        styles.selectedTextStyle,
+                        {fontSize: 13},
+                      ]}
+                      containerStyle={styles.containerOptionStyle}
+                      iconStyle={styles.iconStyle}
+                      itemContainerStyle={styles.itemContainer}
+                      itemTextStyle={styles.itemText}
+                      fontFamily={Fonts.SF_MEDIUM}
+                      search
+                      searchPlaceholder="Tìm kiếm..."
+                      activeColor="#eef2feff"
+                      data={allStaffs}
+                      maxHeight={Dimension.setHeight(30)}
+                      labelField="name"
+                      valueField="name"
+                      placeholder="Chọn người bảo dưỡng"
+                      value={maintenancePerson}
+                      renderLeftIcon={() => {
+                        return (
+                          <Image
+                            source={Images.person}
+                            style={styles.leftIconDropdown}
+                          />
+                        );
+                      }}
+                      onChange={item => {
+                        setMaintenancePerson(item.name);
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.lineContainerModal}>
+                <View style={styles.itemContainerModal}>
+                  <Text style={styles.titleModal}>Phí xăng xe</Text>
+                  <View style={styles.dateModalContainer}>
+                    <TextInput
+                      style={{
+                        borderBottomWidth: 0.6,
+                        borderBottomColor: 'gray',
+                        marginHorizontal: Dimension.setWidth(1.6),
+                        fontFamily: Fonts.SF_MEDIUM,
+                        fontSize: Dimension.fontSize(16),
+                        height: Dimension.setHeight(6),
+                        width: '65%',
+                      }}
+                      inputMode="numeric"
+                      value={gasPrice}
+                      onChangeText={e => setGasPrice(e)}
+                    />
+                    <View
+                      style={[
+                        styles.imgModalContainer,
+                        {backgroundColor: '#edcb8b'},
+                      ]}>
+                      <Image source={Images.petro} style={[styles.imgDate]} />
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.itemContainerModal}>
+                  <Text style={styles.titleModal}>Phí bảo dưỡng</Text>
+                  <View style={styles.dateModalContainer}>
+                    <TextInput
+                      style={{
+                        borderBottomWidth: 0.6,
+                        borderBottomColor: 'gray',
+                        marginHorizontal: Dimension.setWidth(1.6),
+                        fontFamily: Fonts.SF_MEDIUM,
+                        fontSize: Dimension.fontSize(16),
+                        height: Dimension.setHeight(6),
+                        width: '65%',
+                      }}
+                      inputMode="numeric"
+                      value={maintenancePrice}
+                      onChangeText={e => setMaintenancePrice(e)}
+                    />
+                    <View
+                      style={[
+                        styles.imgModalContainer,
+                        {backgroundColor: '#7f8cd1'},
+                      ]}>
+                      <Image
+                        source={Images.maintenance}
+                        style={[styles.imgDate]}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.lineContainerModal}>
+                <View style={[styles.itemContainerModal, {width: '100%'}]}>
+                  <Text style={styles.titleModal}>Đề xuất</Text>
+                  <View style={[styles.dateModalContainer, {width: '100%'}]}>
+                    <TextInput
+                      placeholder="Nhập đề xuất"
+                      style={{
+                        borderBottomWidth: 0.6,
+                        borderBottomColor: 'gray',
+                        marginHorizontal: Dimension.setWidth(1.6),
+                        fontFamily: Fonts.SF_MEDIUM,
+                        fontSize: Dimension.fontSize(16),
+                        height: Dimension.setHeight(6),
+                        width: '95%',
+                      }}
+                      value={propose}
+                      onChangeText={e => setPropose(e)}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              <View
+                style={[
+                  styles.lineContainerModal,
+                  {justifyContent: 'flex-start'},
+                ]}>
+                <View style={styles.itemContainerModal}>
+                  <View style={rowAlignCenter}>
+                    <Text style={styles.titleModal}>File ảnh</Text>
+                    <RedPoint />
+                  </View>
+                  <TouchableOpacity
+                    onPress={handlePickImg}
+                    style={styles.dateModalContainer}>
+                    <Text
+                      style={{
+                        alignSelf: 'center',
+                        fontFamily: Fonts.SF_REGULAR,
+                        color: '#cddef1',
+                      }}>
+                      Upload...
+                    </Text>
+                    <View
+                      style={[
+                        styles.imgModalContainer,
+                        {backgroundColor: '#cddef1'},
+                      ]}>
+                      <Image source={Images.uploadimg} style={styles.imgDate} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+
+                {filePicker && (
+                  <TouchableOpacity
+                    style={styles.itemContainerModal}
+                    onPress={() => {
+                      setZoomImg(true);
+                    }}>
+                    <Image
+                      source={{uri: filePicker.uri}}
+                      style={{width: 66, height: 66, borderRadius: 6}}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setToggleReturnModal(false);
+                }}
+                style={{position: 'absolute', left: 12, top: 12}}>
+                <Image source={Images.minusclose} style={styles.btnModal} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleReturnVehicle}
+                style={{position: 'absolute', right: 12, top: 12}}>
+                <Image source={Images.confirm} style={styles.btnModal} />
+              </TouchableOpacity>
+            </View>
+          </TouchableWithoutFeedback>
           <DateTimePickerModal
             isVisible={toggleDatePicker}
             mode="date"
