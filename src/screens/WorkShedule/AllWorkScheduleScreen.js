@@ -197,7 +197,6 @@ const AllWorkScheduleScreen = ({navigation}) => {
           theme={{reservationsBackgroundColor: 'transparent'}}
           onRefresh={handleRefresh}
           refreshing={refresh}
-          extraData={totalWorkData}
         />
 
         <WarningModal

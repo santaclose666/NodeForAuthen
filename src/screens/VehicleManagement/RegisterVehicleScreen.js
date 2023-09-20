@@ -32,6 +32,8 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import RedPoint from '../../components/RedPoint';
+import {rowAlignCenter} from '../../contants/CssFE';
 
 const RegisterVehicleScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -86,22 +88,20 @@ const RegisterVehicleScreen = ({navigation, route}) => {
   };
 
   const handleRegister = async () => {
-    console.log(vehicleValue, placeInput, contentInput);
-    const data = {
-      id_user: user.id,
-      loaixe: vehicleValue,
-      ngaydi: formatDateToPost(dateStart),
-      noiden: placeInput,
-      noidung: contentInput,
-      gionhan: formatTimeToPost(receiveTime),
-      ngaynhan: formatDateToPost(receiveDate),
-    };
-
     if (vehicleValue !== null && placeInput !== '' && contentInput !== '') {
+      const data = {
+        id_user: user.id,
+        loaixe: vehicleValue,
+        ngaydi: formatDateToPost(dateStart),
+        noiden: placeInput,
+        noidung: contentInput,
+        gionhan: formatTimeToPost(receiveTime),
+        ngaynhan: formatDateToPost(receiveDate),
+      };
       setLoading(true);
       try {
         const res = await registerVehicle(data);
-        console.log(res);
+
         if (res) {
           ToastSuccess('Đăng kí thành công');
           navigation.goBack();
@@ -152,7 +152,10 @@ const RegisterVehicleScreen = ({navigation, route}) => {
               </View>
             </View>
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Loại xe</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Loại xe</Text>
+                <RedPoint />
+              </View>
               {typeVehicle?.length === 0 ? (
                 <Text style={styles.nocar}>
                   Hiện tại đang không còn xe khả dụng
@@ -197,7 +200,10 @@ const RegisterVehicleScreen = ({navigation, route}) => {
             <TouchableOpacity
               onPress={handlePickStartDate}
               style={styles.containerEachLine}>
-              <Text style={styles.title}>Ngày đi</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Ngày đi</Text>
+                <RedPoint />
+              </View>
               <View style={styles.dateTimePickerContainer}>
                 <Text style={styles.dateTimeText}>{dateStart}</Text>
                 <View
@@ -221,7 +227,10 @@ const RegisterVehicleScreen = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={handlePickReceiveTime}
                 style={[styles.containerEachLine, {width: '48%'}]}>
-                <Text style={styles.title}>Giờ nhận xe</Text>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.title}>Giờ nhận xe</Text>
+                  <RedPoint />
+                </View>
                 <View style={styles.dateTimePickerContainer}>
                   <Text style={styles.dateTimeText}>{receiveTime}</Text>
                   <View
@@ -236,7 +245,10 @@ const RegisterVehicleScreen = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={handelePickReceiveDate}
                 style={[styles.containerEachLine, {width: '48%'}]}>
-                <Text style={styles.title}>Ngày nhận xe</Text>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.title}>Ngày nhận xe</Text>
+                  <RedPoint />
+                </View>
                 <View style={styles.dateTimePickerContainer}>
                   <Text style={styles.dateTimeText}>{receiveDate}</Text>
                   <View
@@ -261,7 +273,10 @@ const RegisterVehicleScreen = ({navigation, route}) => {
               />
             </View>
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Nơi đến</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Nơi đến</Text>
+                <RedPoint />
+              </View>
               <TextInput
                 placeholder="Nhập địa điểm"
                 style={{
@@ -277,10 +292,12 @@ const RegisterVehicleScreen = ({navigation, route}) => {
               />
             </View>
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Nội dung công tác</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Nội dung công tác</Text>
+                <RedPoint />
+              </View>
               <TextInput
                 multiline
-                placeholder="Nội dung công tác"
                 style={{
                   borderBottomWidth: 0.6,
                   borderBottomColor: 'gray',

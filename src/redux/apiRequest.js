@@ -6,12 +6,7 @@ import {
   logoutSuccess,
 } from './authSlice';
 import {getStaffStart, getStaffSuccess, getStaffFailed} from './staffSlice';
-import {
-  deleteNotifiSuccess,
-  getNotifiFailed,
-  getNotifiStart,
-  getNotifiSuccess,
-} from './notifiSlice';
+import {getNotifiStart, getNotifiSuccess} from './notifiSlice';
 import {CommonActions} from '@react-navigation/native';
 import {changeFormatDate, getCoords} from '../utils/serviceFunction';
 import {

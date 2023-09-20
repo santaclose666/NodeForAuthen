@@ -370,11 +370,16 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
         </View>
         {item.status !== 0 && (
           <View style={styles.containerEachLine}>
-            <Image src={mainURL + approver?.path} style={styles.iconic} />
+            <Image
+              src={mainURL + (approver?.path ? approver?.path : defaultIFEE)}
+              style={styles.iconic}
+            />
             <Text style={styles.title}>
               {item.status !== 2 ? 'Người duyệt:' : 'Từ chối bởi:'}{' '}
             </Text>
-            <Text style={styles.content}>{item.nguoiduyet}</Text>
+            <Text style={styles.content}>
+              {item.nguoiduyet ? item.nguoiduyet : 'Không xác định'}
+            </Text>
           </View>
         )}
         <View
@@ -734,8 +739,9 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    fontSize: Dimension.fontSize(17),
+    fontSize: Dimension.fontSize(16),
     fontFamily: Fonts.SF_SEMIBOLD,
+    color: '#747476',
   },
 
   lineContainerModal: {

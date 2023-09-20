@@ -52,6 +52,8 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import Loading from '../../components/LoadingUI';
 import ImageView from 'react-native-image-viewing';
 import {Dropdown} from 'react-native-element-dropdown';
+import RedPoint from '../../components/RedPoint';
+import {rowAlignCenter} from '../../contants/CssFE';
 
 export const approveArr = [
   {
@@ -754,7 +756,10 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
 
             <View style={styles.lineContainerModal}>
               <View style={styles.itemContainerModal}>
-                <Text style={styles.titleModal}>Ngày về</Text>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.titleModal}>Ngày về</Text>
+                  <RedPoint />
+                </View>
                 <TouchableOpacity
                   onPress={() => {
                     setToggleDatePicker(true);
@@ -777,7 +782,10 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.itemContainerModal}>
-                <Text style={styles.titleModal}>Km nhận</Text>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.titleModal}>Km nhận</Text>
+                  <RedPoint />
+                </View>
                 <View style={styles.dateModalContainer}>
                   <TextInput
                     style={{
@@ -903,7 +911,10 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                 {justifyContent: 'flex-start'},
               ]}>
               <View style={styles.itemContainerModal}>
-                <Text style={styles.titleModal}>File ảnh </Text>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.titleModal}>File ảnh</Text>
+                  <RedPoint />
+                </View>
                 <TouchableOpacity
                   onPress={handlePickImg}
                   style={styles.dateModalContainer}>
