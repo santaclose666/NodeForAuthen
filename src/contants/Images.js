@@ -180,6 +180,7 @@ const Images = {
   reset: require('../assets/images/reset.png'),
   v: require('../assets/images/v.png'),
   F4_Lunar: require('../assets/images/F4_Lunar_.png'),
+  propose: require('../assets/images/propose.png'),
 };
 
 export default Images;

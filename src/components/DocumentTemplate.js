@@ -279,7 +279,7 @@ const DocumentTemplate = ({
           ? '#cc2333'
           : item.hieuluc == 'Sắp có hiệu lực'
           ? '#c7b841'
-          : {...fontDefault};
+          : fontDefault;
 
       return (
         <View style={{flex: 1, zIndex: 999}}>
@@ -765,7 +765,7 @@ const DocumentTemplate = ({
                             {
                               backgroundColor: filter
                                 ? Colors.DEFAULT_BLACK
-                                : 'transparent',
+                                : '#fff',
                             },
                           ]}
                           key={index}>
@@ -810,7 +810,7 @@ const DocumentTemplate = ({
                             {
                               backgroundColor: filter
                                 ? Colors.DEFAULT_BLACK
-                                : 'transparent',
+                                : '#fff',
                             },
                           ]}
                           key={index}>
@@ -856,7 +856,7 @@ const DocumentTemplate = ({
                             {
                               backgroundColor: filter
                                 ? Colors.DEFAULT_BLACK
-                                : 'transparent',
+                                : '#fff',
                             },
                           ]}
                           key={index}>
@@ -910,7 +910,7 @@ const DocumentTemplate = ({
                             {
                               backgroundColor: filter
                                 ? Colors.DEFAULT_BLACK
-                                : 'transparent',
+                                : '#fff',
                             },
                           ]}
                           key={index}>
@@ -1114,6 +1114,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.INACTIVE_GREY,
     paddingHorizontal: Dimension.setWidth(2.6),
     paddingVertical: Dimension.setHeight(0.4),
+    elevation: 5,
+    ...shadowIOS,
   },
 
   titleBottom: {

@@ -102,6 +102,8 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const [filePicker, setFilePicker] = useState(null);
   const [zoomImg, setZoomImg] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [propose, setPropose] = useState('');
+  const [request, setRequest] = useState('');
   const allStaffs = IFEEstaffs.map(item => {
     return {name: item.hoten};
   });
@@ -207,6 +209,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
         nguoimuaxang: staffValue,
         phibaoduong: maintenancePrice,
         nguoibaoduong: maintenancePerson,
+        propose,
         file: {
           uri: filePicker.uri,
           type: filePicker.type,
@@ -646,6 +649,8 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
           status={isConfirm}
           handleApprove={handleApprove}
           handleCancel={handleCancel}
+          request={request}
+          setRequest={setRequest}
         />
 
         <Modal
@@ -736,7 +741,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                     maxHeight={Dimension.setHeight(30)}
                     labelField="name"
                     valueField="name"
-                    placeholder="Chọn người công tác"
+                    placeholder="Chọn người mua xăng"
                     value={staffValue}
                     renderLeftIcon={() => {
                       return (
@@ -813,36 +818,45 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
             </View>
 
             <View style={styles.lineContainerModal}>
-              <View style={styles.itemContainerModal}>
+              <View style={[styles.itemContainerModal, {width: '100%'}]}>
                 <Text style={styles.titleModal}>Người bảo dưỡng</Text>
-                <View
-                  style={[
-                    styles.dateModalContainer,
-                    {width: Dimension.setWidth(75)},
-                  ]}>
-                  <TextInput
-                    style={{
-                      borderBottomWidth: 0.6,
-                      borderBottomColor: 'gray',
-                      marginHorizontal: Dimension.setWidth(1.6),
-                      fontFamily: Fonts.SF_MEDIUM,
-                      fontSize: Dimension.fontSize(16),
-                      height: Dimension.setHeight(6),
-                      width: '85%',
-                    }}
+                <View style={styles.containerEachLine1}>
+                  <Dropdown
+                    style={styles.dropdown}
+                    autoScroll={false}
+                    showsVerticalScrollIndicator={false}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedStyle={styles.selectedStyle}
+                    selectedTextStyle={[
+                      styles.selectedTextStyle,
+                      {fontSize: 13},
+                    ]}
+                    containerStyle={styles.containerOptionStyle}
+                    iconStyle={styles.iconStyle}
+                    itemContainerStyle={styles.itemContainer}
+                    itemTextStyle={styles.itemText}
+                    fontFamily={Fonts.SF_MEDIUM}
+                    search
+                    searchPlaceholder="Tìm kiếm..."
+                    activeColor="#eef2feff"
+                    data={allStaffs}
+                    maxHeight={Dimension.setHeight(30)}
+                    labelField="name"
+                    valueField="name"
+                    placeholder="Chọn người bảo dưỡng"
                     value={maintenancePerson}
-                    onChangeText={e => setMaintenancePerson(e)}
+                    renderLeftIcon={() => {
+                      return (
+                        <Image
+                          source={Images.person}
+                          style={styles.leftIconDropdown}
+                        />
+                      );
+                    }}
+                    onChange={item => {
+                      setMaintenancePerson(item.name);
+                    }}
                   />
-                  <View
-                    style={[
-                      styles.imgModalContainer,
-                      {backgroundColor: '#ed9d8b'},
-                    ]}>
-                    <Image
-                      source={Images.maintenanceguy}
-                      style={styles.imgDate}
-                    />
-                  </View>
                 </View>
               </View>
             </View>
@@ -901,6 +915,28 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                       style={[styles.imgDate]}
                     />
                   </View>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.lineContainerModal}>
+              <View style={[styles.itemContainerModal, {width: '100%'}]}>
+                <Text style={styles.titleModal}>Đề xuất</Text>
+                <View style={[styles.dateModalContainer, {width: '100%'}]}>
+                  <TextInput
+                    placeholder="Nhập đề xuất"
+                    style={{
+                      borderBottomWidth: 0.6,
+                      borderBottomColor: 'gray',
+                      marginHorizontal: Dimension.setWidth(1.6),
+                      fontFamily: Fonts.SF_MEDIUM,
+                      fontSize: Dimension.fontSize(16),
+                      height: Dimension.setHeight(6),
+                      width: '95%',
+                    }}
+                    value={propose}
+                    onChangeText={e => setPropose(e)}
+                  />
                 </View>
               </View>
             </View>

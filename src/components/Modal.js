@@ -252,9 +252,13 @@ export const ConfirmModal = ({
   status,
   handleApprove,
   handleCancel,
+  request,
+  setRequest,
 }) => {
-  const approveMess = 'Chắc chắn xác nhận phê duyệt đăng kí?';
-  const cancelMess = 'Chắc chắn xác nhận từ chối đăng kí?';
+  const approveMess = 'Chắc chắn phê duyệt đăng kí xe';
+  const cancelMess = 'Chắc chắn từ chối đăng kí xe';
+
+  console.log(item);
 
   return (
     <Modal
@@ -307,11 +311,36 @@ export const ConfirmModal = ({
           <Text
             style={{
               marginLeft: Dimension.setWidth(3),
-              fontSize: Dimension.fontSize(18),
-              fontFamily: Fonts.SF_SEMIBOLD,
+              fontSize: Dimension.fontSize(17),
+              fontFamily: Fonts.SF_MEDIUM,
+              textAlign: 'center',
+              ...fontDefault,
             }}>
-            {status ? approveMess : cancelMess}
+            {`${status ? approveMess : cancelMess} ${item?.loaixe}?`}
           </Text>
+        </View>
+
+        <View
+          style={{
+            backgroundColor: '#fff',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '77%',
+            marginBottom: Dimension.setHeight(2),
+            paddingVertical: Dimension.setHeight(1),
+            borderRadius: 16,
+          }}>
+          <TextInput
+            placeholder="Nhập đề nghị!"
+            style={{
+              fontFamily: Fonts.SF_REGULAR,
+              fontSize: Dimension.fontSize(14),
+            }}
+            value={request}
+            onChangeText={e => {
+              setRequest(e);
+            }}
+          />
         </View>
 
         <View
