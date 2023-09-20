@@ -71,11 +71,9 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
       setLoading(true);
       try {
         const res = await registerOnLeave(data);
-
         if (res) {
           const message = 'Đăng kí thành công';
           ToastSuccess(message);
-
           navigation.goBack();
           route.params?.refreshData();
         } else {

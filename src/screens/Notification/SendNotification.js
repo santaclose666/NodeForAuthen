@@ -86,10 +86,6 @@ const SendNotification = ({navigation}) => {
         setDataPicker('allEvent');
         break;
       case 1:
-        // received = IFEEstaffs.map(item => {
-        //   return item.id_ht;
-        // });
-        // setDataPicker(received);
         setDataPicker(user?.tendonvi);
         break;
       case 2:
@@ -143,14 +139,6 @@ const SendNotification = ({navigation}) => {
       }
     } else {
       ToastAlert('Thiếu thông tin!');
-    }
-  };
-
-  const fetchStaff = async () => {
-    try {
-      await getAllStaffs();
-    } catch (error) {
-      console.log(error);
     }
   };
 

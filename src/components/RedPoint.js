@@ -7,7 +7,7 @@ const RedPoint = () => {
   return (
     <Text
       style={{
-        fontSize: Dimension.fontSize(28),
+        fontSize: Dimension.fontSize(18),
         fontFamily: Fonts.SF_SEMIBOLD,
         color: 'red',
         marginLeft: 3,

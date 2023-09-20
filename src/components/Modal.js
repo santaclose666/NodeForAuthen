@@ -93,12 +93,13 @@ export const ApproveCancelModal = ({
             }}>
             <Image
               src={mainURL + avatar[0]?.path}
-              style={{height: 55, width: 55}}
+              style={{height: 55, width: 55, borderRadius: 50}}
             />
             <Text
               style={{
                 fontSize: Dimension.fontSize(18),
                 fontFamily: Fonts.SF_SEMIBOLD,
+                ...fontDefault,
               }}>
               {selectedItem?.hoten}
             </Text>

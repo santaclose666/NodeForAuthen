@@ -81,6 +81,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
       id_nghiphep: selectedItem.id,
       id_user: user?.id,
     };
+
     if (!checkInput && reasonCancel !== null && selectedItem !== null) {
       const data = {
         ...importantData,
@@ -98,7 +99,6 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
         nhanxet: commnetInput,
       };
       resolveLeaveRequest(data);
-
       setCommentInput(null);
       setToggleApproveModal(false);
       setTimeout(() => {
@@ -364,7 +364,10 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
           {item.songay} ngày
         </Text>
         <View style={styles.containerEachLine}>
-          <Image src={mainURL + avtUser} style={styles.iconic} />
+          <Image
+            src={mainURL + avtUser}
+            style={[styles.iconic, {borderRadius: 50}]}
+          />
           <Text style={styles.title}>Họ tên: </Text>
           <Text style={styles.content}>{item.hoten}</Text>
         </View>
