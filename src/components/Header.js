@@ -19,7 +19,6 @@ const Header = ({
   refreshData,
   replace = false,
   handleFilter,
-  indexInfo,
 }) => {
   const showCreateButton =
     title === 'Lịch sử nghỉ phép' ||
@@ -37,7 +36,8 @@ const Header = ({
     title === 'Quản lý rừng bền vững' ||
     title === 'Tiêu chuẩn Việt Nam' ||
     title === 'Giống Lâm nghiệp' ||
-    title === 'Văn phòng 809';
+    title === 'Văn phòng 809' ||
+    title.includes('Động thực vật');
 
   return (
     <View
@@ -106,18 +106,10 @@ const Header = ({
       )}
       {showFitlerButon && (
         <TouchableOpacity onPress={handleFilter}>
-          <Image source={Images.filter} style={styles.rightIcon} />
-        </TouchableOpacity>
-      )}
-      {title == 'Thông tin' && (
-        <TouchableOpacity
-          onPress={() => {
-            handleFilter(true);
-          }}
-          style={{width: 25}}>
-          {indexInfo == 0 && (
-            <Image source={Images.logout} style={styles.rightIcon} />
-          )}
+          <Image
+            source={Images.filter}
+            style={{width: 23, height: 23, ...imgDefault}}
+          />
         </TouchableOpacity>
       )}
     </View>

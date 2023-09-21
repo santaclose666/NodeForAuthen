@@ -58,6 +58,7 @@ const HomePageScreen = ({navigation}) => {
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
+    getAllDocument(dispatch);
     await requestPermissions();
     await getWeatherData(dispatch);
     topicForAll();
@@ -129,12 +130,8 @@ const HomePageScreen = ({navigation}) => {
     ToastAlert('Chức năng đang được phát triển');
   };
 
-  const fetchAllDocumentMv = async () => {
-    try {
-      await getAllDocumentMv(dispatch);
-    } catch (error) {
-      console.log(error);
-    }
+  const fetchAllDocumentMv = () => {
+    getAllDocumentMv(dispatch);
   };
 
   useLayoutEffect(() => {
@@ -153,7 +150,6 @@ const HomePageScreen = ({navigation}) => {
     }
 
     fetchAllNews();
-    getAllDocument(dispatch);
     fetchAllDocumentMv();
 
     return () => clearInterval(interval);

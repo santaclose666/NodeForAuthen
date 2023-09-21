@@ -13,50 +13,57 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import unidecode from 'unidecode';
-import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
+import Images from '../../contants/Images';
 import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
 import {shadowIOS} from '../../contants/propsIOS';
 import Loading from '../../components/LoadingUI';
 import {FlatList} from 'native-base';
 import {Dropdown} from 'react-native-element-dropdown';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
+import Header from '../../components/Header';
 
 export const dataLocation = [
   {
     key: '1',
     name: 'Bộ dữ liệu: Thực vật VQG Cúc Phương',
     ma: 'cp',
+    logo: Images.cucphuong,
   },
   {
     key: '2',
     name: 'Bộ dữ liệu: Thực vật VQG Ba Vì',
     ma: 'bv',
+    logo: Images.bavi,
   },
   {
     key: '3',
     name: 'Bộ dữ liệu: Thực vật VQG Tam Đảo',
     ma: 'td',
+    logo: Images.tamdao,
   },
   {
     key: '4',
     name: 'Bộ dữ liệu: Thực vật VQG Bạch Mã',
     ma: 'bm',
+    logo: Images.bachma,
   },
   {
-    key: '1',
+    key: '5',
     name: ' Bộ dữ liệu: Thực vật VQG Cát Tiên',
     ma: 'ct',
+    logo: Images.cattien,
   },
   {
     key: '6',
     name: 'Bộ dữ liệu: Thực vật VQG Yok Đôn',
     ma: 'yd',
+    logo: Images.yokdon,
   },
 ];
-const width = Dimensions.get('window').width / 2 - 18;
+const width = Dimensions.get('window').width / 2 - 22;
 
 const ListBioScreen = ({navigation}) => {
   const [location, setLocation] = useState(dataLocation[0]);
@@ -66,6 +73,9 @@ const ListBioScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [nameBioSource, setNameBioSrc] = useState(dataLocation[0].name);
   const [isSelectLocation, setIsSelectLocation] = useState(false);
+  const filterAvt = dataLocation.filter(item =>
+    item.name.includes(nameBioSource),
+  )[0];
 
   useEffect(() => {
     getListSpecies();
@@ -122,65 +132,84 @@ const ListBioScreen = ({navigation}) => {
     return formattedText;
   };
 
+  const handlePopupFilter = () => {
+    setIsSelectLocation(true);
+  };
+
   const RenderItem = ({item}) => {
     return (
       <TouchableOpacity
-        style={styles.renderItemBg}
-        activeOpacity={0.8}
         onPress={() => {
           navigation.navigate('SpecieDetail', item);
-        }}>
-        <View style={styles.card}>
-          <View
+        }}
+        style={styles.card}>
+        <View
+          style={{
+            height: width,
+            alignItems: 'center',
+          }}>
+          <Image
+            source={{
+              uri:
+                'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/' +
+                item.hinh1,
+            }}
             style={{
+              width: '100%',
               height: width,
-              alignItems: 'center',
-            }}>
-            <Image
-              source={{
-                uri:
-                  'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/' +
-                  item.hinh1,
-              }}
-              style={{width: width, height: width, resizeMode: 'cover'}}
-            />
-          </View>
-
-          <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
-          <Text
-            style={{
-              paddingBottom: 10,
-              paddingHorizontal: 10,
-              textAlign: 'center',
-              fontSize: 14,
-            }}>
-            {item.loaitv}
-          </Text>
+              resizeMode: 'cover',
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+            }}
+          />
         </View>
+
+        <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
+        <Text
+          style={{
+            paddingBottom: 6,
+            textAlign: 'center',
+            fontSize: Dimension.fontSize(14),
+            fontFamily: Fonts.SF_REGULAR,
+          }}>
+          {item.loaitv}
+        </Text>
       </TouchableOpacity>
     );
   };
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView
         showsVerticalScrollIndicator={false}
         style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+        <Header
+          navigation={navigation}
+          title={'Động thực vật các VQG'}
+          handleFilter={handlePopupFilter}
+        />
+
         <View style={styles.searchFilterContainer}>
-          <TouchableOpacity
-            style={styles.headerContainer}
-            onPress={() => {
-              navigation.goBack();
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: Colors.DEFAULT_GREEN,
+              padding: 1,
+              borderRadius: 50,
+              marginBottom: 6,
             }}>
-            <Image style={styles.backImg} source={Images.back} />
-          </TouchableOpacity>
+            <Image
+              source={filterAvt.logo}
+              style={{
+                width: Dimension.boxHeight(50),
+                height: Dimension.boxHeight(50),
+                borderRadius: 50,
+              }}
+            />
+          </View>
+          <Text style={styles.tile}>{nameBioSource.split(':')[1]}</Text>
           <View style={styles.searchTextInputContainer}>
-            <Icons.FontAwesome name="search" size={20} color="#888" />
+            <Icons.FontAwesome name="search" size={16} color="#888" />
             <TextInput
               onChangeText={e => handleSearch(e)}
               value={input}
@@ -188,17 +217,6 @@ const ListBioScreen = ({navigation}) => {
               placeholder="Tìm kiếm loài"
             />
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              setIsSelectLocation(true);
-            }}
-            style={styles.filterData}>
-            <Image style={{width: 25, height: 25}} source={Images.filter} />
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.tileContainer}>
-          <Text style={styles.tile}>{nameBioSource}</Text>
         </View>
 
         <FlatList
@@ -261,6 +279,7 @@ const ListBioScreen = ({navigation}) => {
                 value={location}
                 onChange={item => {
                   setLocation(item);
+                  console.log(item);
                 }}
               />
               <TouchableOpacity
@@ -270,14 +289,21 @@ const ListBioScreen = ({navigation}) => {
                   setIsSelectLocation(false);
                   setNameBioSrc(location.name);
                 }}>
-                <Text>Chọn</Text>
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontFamily: Fonts.SF_MEDIUM,
+                    fontSize: Dimension.fontSize(14),
+                  }}>
+                  Chọn
+                </Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
         </Modal>
         {loading === true && <Loading />}
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 
@@ -288,10 +314,12 @@ const styles = StyleSheet.create({
   },
 
   searchFilterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: Dimension.setHeight(1),
+    marginBottom: Dimension.setHeight(0.6),
+    marginTop: Dimension.setHeight(1),
+    width: '75%',
+    alignSelf: 'center',
   },
 
   headerContainer: {
@@ -307,22 +335,21 @@ const styles = StyleSheet.create({
   },
 
   searchTextInputContainer: {
-    flex: 7,
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,
-    borderColor: '#ccc',
-    borderWidth: 0.8,
     borderRadius: 12,
     height:
-      Platform.OS == 'ios' ? Dimension.setHeight(5) : Dimension.setHeight(6),
+      Platform.OS == 'ios' ? Dimension.setHeight(4) : Dimension.setHeight(6),
     marginRight: Dimension.setWidth(2),
     backgroundColor: 'white',
+    elevation: 5,
+    ...shadowIOS,
   },
 
   searchTextInput: {
     marginLeft: 10,
-    fontSize: 14,
+    fontSize: Dimension.fontSize(13),
     width: '90%',
     fontFamily: Fonts.SF_REGULAR,
   },
@@ -385,29 +412,35 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: '#F1F1F1',
-    width,
-    marginHorizontal: 6,
+    width: width,
+    marginHorizontal: 8,
     borderRadius: 10,
-    overflow: 'hidden',
     marginBottom: 15,
+    ...shadowIOS,
+    elevation: 5,
   },
   filterData: {
     alignItems: 'center',
-    flex: 1,
     marginRight: Dimension.setWidth(2),
   },
   tileContainer: {
     padding: 5,
     marginLeft: 10,
+    marginTop: Dimension.setHeight(1),
   },
-  tile: {fontWeight: 'bold', fontSize: 19, color: Colors.DEFAULT_GREEN},
-  nameLatin: {
+  tile: {
     fontWeight: 'bold',
+    fontSize: Dimension.fontSize(18),
+    color: Colors.DEFAULT_GREEN,
+    marginBottom: Dimension.setHeight(0.8),
+  },
+  nameLatin: {
+    fontFamily: Fonts.SF_BOLD,
     paddingHorizontal: 10,
     paddingTop: 10,
     paddingBottom: 5,
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
   },
   modalContainer: {
     width: '95%',
@@ -437,13 +470,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: Colors.DEFAULT_BLACK,
-    borderRadius: 15,
-    borderWidth: 1,
-    marginTop: 40,
-  },
-  renderItemBg: {
-    ...shadowIOS,
+    borderRadius: 16,
+    marginTop: Dimension.setHeight(4),
     elevation: 5,
+    ...shadowIOS,
   },
 });
 

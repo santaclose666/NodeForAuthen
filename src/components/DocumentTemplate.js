@@ -199,6 +199,7 @@ const DocumentTemplate = ({
   );
 
   const handleMultiFilter = (thenRemoveExist, identifi) => {
+    console.log(thenRemoveExist);
     const allDoc = data.filter(item => {
       let categoryCondition;
       if (identifi == 'category') {

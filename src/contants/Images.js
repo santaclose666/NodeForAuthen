@@ -181,6 +181,12 @@ const Images = {
   v: require('../assets/images/v.png'),
   F4_Lunar: require('../assets/images/F4_Lunar_.png'),
   propose: require('../assets/images/propose.png'),
+  bachma: require('../assets/images/bachmaLogo.jpeg'),
+  bavi: require('../assets/images/baviLogo.png'),
+  cucphuong: require('../assets/images/cucphuongLogo.png'),
+  tamdao: require('../assets/images/tamdaoLogo.png'),
+  yokdon: require('../assets/images/yokdonLogo.jpeg'),
+  cattien: require('../assets/images/cattienLogo.png'),
 };
 
 export default Images;
