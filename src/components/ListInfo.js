@@ -36,7 +36,7 @@ const ListInfo = ({info, index}) => {
               top: 0,
               left: 0,
               right: 0,
-              bottom: Dimension.setHeight(3.6),
+              bottom: Dimension.setHeight(3.3),
             }}>
             <View style={styles.avtContainer}>
               <Image style={styles.avatarIfee} src={info?.avatar} />
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     borderRadius: 10,
     backgroundColor: '#ffffff',
-    height: Dimension.boxHeight(146),
+    height: Dimension.boxHeight(148),
     marginHorizontal: Dimension.setWidth(10),
     marginTop: Dimension.setHeight(8),
     elevation: 5,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     fontSize: Dimension.fontSize(14),
     color: Colors.DEFAULT_BLACK,
     opacity: 0.6,
-    marginVertical: Platform.OS == 'ios' ? Dimension.setHeight(1) : -3,
+    marginVertical: Platform.OS == 'ios' ? Dimension.setHeight(0.4) : -3,
   },
 
   roleTeamTittle: {

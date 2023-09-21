@@ -96,6 +96,8 @@ export const loginUser = async (user, dispatch, navigation, save) => {
       postToken(data.id_ht);
 
       save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));
+
+      return true;
     }
   } catch (err) {
     console.log(err);
@@ -110,7 +112,6 @@ export const logoutUser = async (dispatch, navigation, user) => {
       token: token,
     });
 
-    console.log(user);
     unSubcribeWorkUnitTopic(user.tendonvi);
     dispatch(logoutSuccess());
 
