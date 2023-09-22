@@ -40,11 +40,9 @@ const LoginScreen = ({navigation}) => {
 
       setLoading(true);
       try {
-        const res = await loginUser(data, dispatch, navigation, save);
+        await loginUser(data, dispatch, navigation, save);
 
-        if (res) {
-          setLoading(false);
-        }
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
