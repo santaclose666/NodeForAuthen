@@ -673,6 +673,23 @@ export const sendFeedback = async data => {
   }
 };
 
+/////////////////////  BIO DATA  ////////////////////
+
+export const getAllEcosystem = async api => {
+  try {
+    const res = await axios.get(api);
+
+    return res.data.sort((a, b) => {
+      const dataA = a.hinh1 ? 1 : 0;
+      const dataB = b.hinh1 ? 1 : 0;
+
+      return dataB - dataA;
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /////////////////////  DOCUMENT DATA  ////////////////////
 export const getAllDocument = async dispatch => {
   dispatch(getDocumentStart());

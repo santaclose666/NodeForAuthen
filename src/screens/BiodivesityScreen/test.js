@@ -1,79 +1,73 @@
-const data = [
+import Images from '../../contants/Images';
+
+export const dataVQG = [
   {
     tendonvi: 'VQG Cúc Phương',
+    logo: Images.cucphuong,
+    link: 'https://cucphuongbio.xuanmaijsc.vn/ddsh/',
     bodulieu: [
       {
-        loaidulieu: 'Thực vật',
-        api: 'http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/cp',
+        loaidulieu: 'Động vật',
+        api: 'https://cucphuongbio.xuanmaijsc.vn/api/all_dongvat',
       },
       {
-        loaidulieu: 'Động vật',
-        api: '',
+        loaidulieu: 'Thực vật',
+        api: 'https://cucphuongbio.xuanmaijsc.vn/api/all_thucvat',
       },
     ],
   },
   {
     tendonvi: 'VQG Ba Vì',
+    logo: Images.bavi,
+    link: 'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/',
     bodulieu: [
       {
         loaidulieu: 'Thực vật',
         api: 'http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/bv',
       },
-      {
-        loaidulieu: 'Động vật',
-        api: '',
-      },
     ],
   },
   {
     tendonvi: 'VQG Tam Đảo',
+    logo: Images.tamdao,
+    link: 'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/',
     bodulieu: [
       {
         loaidulieu: 'Thực vật',
         api: 'http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/td',
       },
-      {
-        loaidulieu: 'Động vật',
-        api: '',
-      },
     ],
   },
   {
     tendonvi: 'VQG Bạch Mã',
+    logo: Images.bachma,
+    link: 'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/',
     bodulieu: [
       {
         loaidulieu: 'Thực vật',
         api: 'http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/bm',
       },
-      {
-        loaidulieu: 'Động vật',
-        api: '',
-      },
     ],
   },
   {
     tendonvi: 'VQG Cát Tiên',
+    logo: Images.cattien,
+    link: 'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/',
     bodulieu: [
       {
         loaidulieu: 'Thực vật',
         api: 'http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/ct',
       },
-      {
-        loaidulieu: 'Động vật',
-        api: '',
-      },
     ],
   },
   {
     tendonvi: 'VQG Yok Đôn',
+    logo: Images.yokdon,
+    link: 'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/',
     bodulieu: [
       {
         loaidulieu: 'Thực vật',
         api: 'http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/yd',
-      },
-      {
-        loaidulieu: 'Động vật',
-        api: '',
       },
     ],
   },
