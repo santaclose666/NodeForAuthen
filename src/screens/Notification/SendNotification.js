@@ -24,7 +24,6 @@ import {
   postNotifcation,
   postNotifiForAll,
   postNotifiForAllUnit,
-  sendNotifiByTopic,
 } from '../../redux/apiRequest';
 import LinearGradientUI from '../../components/LinearGradientUI';
 
