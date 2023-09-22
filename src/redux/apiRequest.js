@@ -677,6 +677,28 @@ export const sendFeedback = async data => {
   }
 };
 
+/////////////////////  BIO DATA  ////////////////////
+
+export const getAllManageData = async () => {
+  try {
+    const res = await axios.get('https://forestry.ifee.edu.vn/api/service/all');
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllEcosystem = async api => {
+  try {
+    const res = await axios.get(api);
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /////////////////////  DOCUMENT DATA  ////////////////////
 export const getAllDocument = async dispatch => {
   dispatch(getDocumentStart());

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useLayoutEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import unidecode from 'unidecode';
-import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
@@ -22,82 +21,89 @@ import {shadowIOS} from '../../contants/propsIOS';
 import Loading from '../../components/LoadingUI';
 import {FlatList} from 'native-base';
 import {Dropdown} from 'react-native-element-dropdown';
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradientUI from '../../components/LinearGradientUI';
+import Header from '../../components/Header';
+import {getAllEcosystem, getAllManageData} from '../../redux/apiRequest';
+import Images from '../../contants/Images';
+import {fontDefault} from '../../contants/Variable';
+import {ToastAlert} from '../../components/Toast';
 
-export const dataLocation = [
-  {
-    key: '1',
-    name: 'Bộ dữ liệu: Thực vật VQG Cúc Phương',
-    ma: 'cp',
-  },
-  {
-    key: '2',
-    name: 'Bộ dữ liệu: Thực vật VQG Ba Vì',
-    ma: 'bv',
-  },
-  {
-    key: '3',
-    name: 'Bộ dữ liệu: Thực vật VQG Tam Đảo',
-    ma: 'td',
-  },
-  {
-    key: '4',
-    name: 'Bộ dữ liệu: Thực vật VQG Bạch Mã',
-    ma: 'bm',
-  },
-  {
-    key: '1',
-    name: ' Bộ dữ liệu: Thực vật VQG Cát Tiên',
-    ma: 'ct',
-  },
-  {
-    key: '6',
-    name: 'Bộ dữ liệu: Thực vật VQG Yok Đôn',
-    ma: 'yd',
-  },
-];
-const width = Dimensions.get('window').width / 2 - 18;
+const width = Dimensions.get('window').width / 2 - 22;
 
 const ListBioScreen = ({navigation}) => {
-  const [location, setLocation] = useState(dataLocation[0]);
+  const [dataVQG, setDataVQG] = useState([]);
+  const [VQGData, setVQGData] = useState([]);
+  const [typeData, setTypeData] = useState(null);
   const [input, setInput] = useState('');
   const [speciesFilled, setSpeciesFilled] = useState(null);
   const [speciesArr, setSpeciesArr] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [nameBioSource, setNameBioSrc] = useState(dataLocation[0].name);
   const [isSelectLocation, setIsSelectLocation] = useState(false);
+  const [heightBtn, setHeightBtn] = useState(0);
+  const [nameVQG, setNameVQG] = useState('');
+  const [logo, setLogo] = useState('');
 
-  useEffect(() => {
-    getListSpecies();
+  useLayoutEffect(() => {
+    fetchAllBioData();
   }, []);
 
-  const getListSpecies = async () => {
+  const fetchAllBioData = async () => {
+    await fetchAllManageData();
+    await fetchAllData();
+  };
+
+  const fetchAllManageData = async () => {
+    try {
+      const res = await getAllManageData();
+      setDataVQG(res);
+      setVQGData(res[0]);
+      setNameVQG(res[0].tendonvi);
+      setLogo(res[0].logo);
+
+      return res[0].bodulieu[0].api;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchAllData = async () => {
     setLoading(true);
-    await fetch(
-      `http://vuonquocgiavietnam.ifee.edu.vn/api/dsLoai/${location.ma}`,
-    )
-      .then(res => res.json())
-      .then(async resJSON => {
-        setSpeciesArr(resJSON);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    setLoading(false);
+    try {
+      if (typeData) {
+        const data = await getAllEcosystem(typeData);
+        if (data) {
+          setSpeciesArr(data);
+          setLoading(false);
+        }
+      } else {
+        const api = await fetchAllManageData();
+
+        const data = await getAllEcosystem(api);
+        if (data) {
+          setSpeciesArr(data);
+          setLoading(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSearch = text => {
     setInput(text);
-    const data = speciesArr.filter(item =>
-      unidecode(item.loaitv.toLowerCase()).includes(
-        unidecode(text.toLowerCase()),
-      ),
-    );
+    const data = speciesArr.filter(item => {
+      let filter;
+      if (item?.loaitv) {
+        filter = unidecode(item?.loaitv?.toLowerCase()).includes(
+          unidecode(text.toLowerCase()),
+        );
+      }
+      return filter;
+    });
 
     setSpeciesFilled(data);
   };
-
-  const fomatLatinName = text => {
+const fomatLatinName = text => {
     const words = text.split(' ');
     let formattedText;
     if (words.length > 1 && (words[1] === 'sp' || words[1] === 'sp.')) {
@@ -122,65 +128,98 @@ const ListBioScreen = ({navigation}) => {
     return formattedText;
   };
 
-  const RenderItem = ({item}) => {
-    return (
-      <TouchableOpacity
-        style={styles.renderItemBg}
-        activeOpacity={0.8}
-        onPress={() => {
-          navigation.navigate('SpecieDetail', item);
-        }}>
-        <View style={styles.card}>
+  const handlePopupFilter = () => {
+    setIsSelectLocation(true);
+  };
+
+  const handlePickOption = () => {
+    if (typeData == null) {
+      ToastAlert('Chưa chọn loại dữ liệu!');
+    } else {
+      fetchAllData();
+      setLogo(VQGData.logo);
+      setNameVQG(VQGData.tendonvi);
+      setIsSelectLocation(false);
+    }
+  };
+
+  const RenderItem = useCallback(
+    ({item, index}) => {
+      return (
+        <TouchableOpacity
+          key={index}
+          onPress={() => {
+            navigation.navigate('SpecieDetail', {
+              data: {...item, link: VQGData.link},
+            });
+          }}
+          style={styles.card}>
           <View
             style={{
               height: width,
               alignItems: 'center',
             }}>
-            <Image
-              source={{
-                uri:
-                  'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/' +
-                  item.hinh1,
-              }}
-              style={{width: width, height: width, resizeMode: 'cover'}}
-            />
+            {item.hinh1 ? (
+              <Image
+                src={VQGData.link + item.hinh1}
+                style={{
+                  width: '100%',
+                  height: width,
+                  resizeMode: 'cover',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                }}
+              />
+            ) : (
+              <Image
+                source={Images.bio_bg}
+                style={{
+                  width: '100%',
+                  height: width,
+                  resizeMode: 'cover',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                }}
+              />
+            )}
           </View>
 
           <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
           <Text
             style={{
-              paddingBottom: 10,
-              paddingHorizontal: 10,
+              paddingBottom: 6,
               textAlign: 'center',
-              fontSize: 14,
+              fontSize: Dimension.fontSize(14),
+              fontFamily: Fonts.SF_REGULAR,
             }}>
             {item.loaitv}
           </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+        </TouchableOpacity>
+      );
+    },
+    [logo],
+  );
 
   return (
-    <LinearGradient
-      colors={['rgba(153,255,153,0.9)', 'rgba(255,204,204,0.8)']}
-      style={{flex: 1}}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+    <LinearGradientUI>
       <SafeAreaView
         showsVerticalScrollIndicator={false}
         style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+        <Header
+          navigation={navigation}
+          title={nameVQG}
+          logo={logo}
+          handleFilter={handlePopupFilter}
+        />
+
         <View style={styles.searchFilterContainer}>
-          <TouchableOpacity
-            style={styles.headerContainer}
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <Image style={styles.backImg} source={Images.back} />
-          </TouchableOpacity>
-          <View style={styles.searchTextInputContainer}>
-            <Icons.FontAwesome name="search" size={20} color="#888" />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}></View>
+<View style={styles.searchTextInputContainer}>
+            <Icons.FontAwesome name="search" size={16} color="#888" />
             <TextInput
               onChangeText={e => handleSearch(e)}
               value={input}
@@ -188,62 +227,53 @@ const ListBioScreen = ({navigation}) => {
               placeholder="Tìm kiếm loài"
             />
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              setIsSelectLocation(true);
+        </View>
+
+        {loading ? (
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Loading bg={false} />
+          </View>
+        ) : (
+          <FlatList
+            columnWrapperStyle={{justifyContent: 'space-between'}}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              marginTop: 10,
+              paddingBottom: 50,
             }}
-            style={styles.filterData}>
-            <Image style={{width: 25, height: 25}} source={Images.filter} />
-          </TouchableOpacity>
-        </View>
+            numColumns={2}
+            data={speciesFilled ? speciesFilled : speciesArr}
+            renderItem={({item, index}) => {
+              return <RenderItem item={item} index={index} />;
+            }}
+            initialNumToRender={8}
+            windowSize={8}
+            removeClippedSubviews={true}
+          />
+        )}
 
-        <View style={styles.tileContainer}>
-          <Text style={styles.tile}>{nameBioSource}</Text>
-        </View>
-
-        <FlatList
-          columnWrapperStyle={{justifyContent: 'space-between'}}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            marginTop: 10,
-            paddingBottom: 50,
-          }}
-          numColumns={2}
-          data={speciesFilled ? speciesFilled : speciesArr}
-          renderItem={({item}) => {
-            return <RenderItem item={item} navigation={navigation} />;
-          }}
-          initialNumToRender={12}
-          windowSize={12}
-          removeClippedSubviews={true}
-          refreshing={true}
-          extraData={speciesFilled ? speciesFilled : speciesArr}
-        />
         <Modal
           isVisible={isSelectLocation}
           animationIn="fadeInUp"
-          animationInTiming={1}
+          animationInTiming={200}
           animationOut="fadeOutDown"
-          animationOutTiming={1}
-          style={{flex: 1}}>
-          <TouchableOpacity
-            onPress={() => {
-              setIsSelectLocation(false);
-            }}
-            style={styles.modalBack}>
+          animationOutTiming={200}>
+          <View style={styles.modalBack}>
             <View style={styles.modalContainer}>
               <Text style={styles.tile}>Chọn dữ liệu</Text>
               <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  alignSelf: 'flex-start',
-                  padding: 5,
-                }}>
+                style={[
+                  styles.labelModal,
+                  {marginTop: Dimension.setHeight(1)},
+                ]}>
                 Chọn khu vực:
               </Text>
               <Dropdown
-                style={styles.dropdown}
+                style={[
+                  styles.dropdown,
+                  {marginBottom: Dimension.setHeight(2)},
+                ]}
                 autoScroll={false}
                 showsVerticalScrollIndicator={false}
                 placeholderStyle={styles.placeholderStyle}
@@ -253,31 +283,70 @@ const ListBioScreen = ({navigation}) => {
                 itemTextStyle={styles.itemText}
                 fontFamily={Fonts.SF_MEDIUM}
                 activeColor="#eef2feff"
-                placeholder="Vùng"
-                data={dataLocation}
+                placeholder="Chọn đơn vị"
+                data={dataVQG}
                 maxHeight={Dimension.setHeight(30)}
-                labelField="name"
-                valueField="ma"
-                value={location}
+                labelField="tendonvi"
+                valueField="tendonvi"
+                value={VQGData}
                 onChange={item => {
-                  setLocation(item);
+                  setTypeData(null);
+                  setVQGData(item);
+                }}
+              />
+              <Text style={styles.labelModal}>Chọn loại dữ liệu:</Text>
+              <Dropdown
+                style={styles.dropdown}
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                placeholder="Chọn loại dữ liệu"
+                data={VQGData?.bodulieu}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="loaidulieu"
+                valueField="api"
+                value={typeData}
+                onChange={item => {
+                  setTypeData(item.api);
                 }}
               />
               <TouchableOpacity
-                style={styles.btnSelect}
+                onLayout={({nativeEvent}) => {
+                  const {x, y, width, height} = nativeEvent.layout;
+                  setHeightBtn(height);
+                }}
+                style={[styles.btnSelect, {bottom: -heightBtn / 2.5}]}
+                onPress={handlePickOption}>
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontFamily: Fonts.SF_MEDIUM,
+                    fontSize: Dimension.fontSize(14),
+                  }}>
+                  Tìm kiếm
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 onPress={() => {
-                  getListSpecies();
                   setIsSelectLocation(false);
-                  setNameBioSrc(location.name);
-                }}>
-                <Text>Chọn</Text>
+                }}
+                style={{position: 'absolute', top: 12, right: 12, zIndex: 999}}>
+                <Image
+                  source={Images.minusclose}
+                  style={{height: 22, width: 22}}
+                />
               </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          </View>
         </Modal>
-        {loading === true && <Loading />}
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradientUI>
   );
 };
 
@@ -288,10 +357,12 @@ const styles = StyleSheet.create({
   },
 
   searchFilterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: Dimension.setHeight(1),
+    marginBottom: Dimension.setHeight(0.6),
+    marginTop: Dimension.setHeight(1),
+    width: '75%',
+    alignSelf: 'center',
   },
 
   headerContainer: {
@@ -307,24 +378,21 @@ const styles = StyleSheet.create({
   },
 
   searchTextInputContainer: {
-    flex: 7,
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,
-    borderColor: '#ccc',
-    borderWidth: 0.8,
     borderRadius: 12,
     height:
-      Platform.OS == 'ios' ? Dimension.setHeight(5) : Dimension.setHeight(6),
+      Platform.OS == 'ios' ? Dimension.setHeight(4) : Dimension.setHeight(5),
     marginRight: Dimension.setWidth(2),
     backgroundColor: 'white',
+    elevation: 5,
+    ...shadowIOS,
   },
 
   searchTextInput: {
     marginLeft: 10,
-    fontSize: 14,
     width: '90%',
-    fontFamily: Fonts.SF_REGULAR,
   },
 
   filerImgContainer: {
@@ -342,7 +410,7 @@ const styles = StyleSheet.create({
   },
 
   featuresTitleContainer: {
-    marginTop: Dimension.setHeight(1),
+marginTop: Dimension.setHeight(1),
   },
 
   featureTextContainer: {
@@ -385,33 +453,39 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: '#F1F1F1',
-    width,
-    marginHorizontal: 6,
+    width: width,
+    marginHorizontal: 8,
     borderRadius: 10,
-    overflow: 'hidden',
     marginBottom: 15,
+    ...shadowIOS,
+    elevation: 5,
   },
   filterData: {
     alignItems: 'center',
-    flex: 1,
     marginRight: Dimension.setWidth(2),
   },
   tileContainer: {
     padding: 5,
     marginLeft: 10,
+    marginTop: Dimension.setHeight(1),
   },
-  tile: {fontWeight: 'bold', fontSize: 19, color: Colors.DEFAULT_GREEN},
+  tile: {
+    fontWeight: 'bold',
+    fontSize: Dimension.fontSize(18),
+    color: Colors.DEFAULT_GREEN,
+    marginBottom: Dimension.setHeight(0.8),
+  },
   nameLatin: {
     fontWeight: 'bold',
     paddingHorizontal: 10,
     paddingTop: 10,
     paddingBottom: 5,
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: Dimension.fontSize(14),
   },
   modalContainer: {
     width: '95%',
-    height: '30%',
+    height: '35%',
     borderRadius: 8,
     backgroundColor: 'white',
     padding: 15,
@@ -428,22 +502,36 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   dropdown: {
-    width: '100%',
+    width: '86%',
+    borderWidth: 0.8,
+    borderColor: Colors.DEFAULT_GREEN,
+    paddingHorizontal: Dimension.setWidth(2),
+    borderRadius: 10,
   },
   btnSelect: {
+    position: 'absolute',
     backgroundColor: Colors.DEFAULT_YELLOW,
     width: Dimension.setWidth(30),
     height: Dimension.setHeight(4),
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: Colors.DEFAULT_BLACK,
-    borderRadius: 15,
-    borderWidth: 1,
-    marginTop: 40,
-  },
-  renderItemBg: {
-    ...shadowIOS,
+    borderRadius: 16,
+    marginTop: Dimension.setHeight(4),
     elevation: 5,
+    ...shadowIOS,
+  },
+
+  containerOptionStyle: {
+    borderRadius: 10,
+  },
+
+  labelModal: {
+    fontSize: Dimension.fontSize(17),
+    fontFamily: Fonts.SF_MEDIUM,
+    alignSelf: 'flex-start',
+    ...fontDefault,
+    marginBottom: Dimension.setHeight(1),
   },
 });
 
