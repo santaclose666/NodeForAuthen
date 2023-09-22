@@ -23,8 +23,7 @@ import {FlatList} from 'native-base';
 import {Dropdown} from 'react-native-element-dropdown';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
-import {dataVQG} from './test';
-import {getAllEcosystem} from '../../redux/apiRequest';
+import {getAllEcosystem, getAllManageData} from '../../redux/apiRequest';
 import Images from '../../contants/Images';
 import {fontDefault} from '../../contants/Variable';
 import {ToastAlert} from '../../components/Toast';
@@ -32,7 +31,8 @@ import {ToastAlert} from '../../components/Toast';
 const width = Dimensions.get('window').width / 2 - 22;
 
 const ListBioScreen = ({navigation}) => {
-  const [VQGData, setVQGData] = useState(dataVQG[0]);
+  const [dataVQG, setDataVQG] = useState([]);
+  const [VQGData, setVQGData] = useState([]);
   const [typeData, setTypeData] = useState(null);
   const [input, setInput] = useState('');
   const [speciesFilled, setSpeciesFilled] = useState(null);
@@ -40,23 +40,49 @@ const ListBioScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [isSelectLocation, setIsSelectLocation] = useState(false);
   const [heightBtn, setHeightBtn] = useState(0);
-  const [nameVQG, setNameVQG] = useState(VQGData.tendonvi);
-  const [logo, setLogo] = useState(VQGData.logo);
+  const [nameVQG, setNameVQG] = useState('');
+  const [logo, setLogo] = useState('');
 
   useLayoutEffect(() => {
-    fetchAllData();
+    fetchAllBioData();
   }, []);
+
+  const fetchAllBioData = async () => {
+    await fetchAllManageData();
+    await fetchAllData();
+  };
+
+  const fetchAllManageData = async () => {
+    try {
+      const res = await getAllManageData();
+      setDataVQG(res);
+      setVQGData(res[0]);
+      setNameVQG(res[0].tendonvi);
+      setLogo(res[0].logo);
+
+      return res[0].bodulieu[0].api;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchAllData = async () => {
     setLoading(true);
     try {
-      const data = await getAllEcosystem(
-        typeData ? typeData : dataVQG[0].bodulieu[0].api,
-      );
+      if (typeData) {
+        const data = await getAllEcosystem(typeData);
+        if (data) {
+          setSpeciesArr(data);
+          setLoading(false);
+        }
+      } else {
+        const api = await fetchAllManageData();
 
-      if (data) {
-        setSpeciesArr(data);
-        setLoading(false);
+        const data = await getAllEcosystem(api);
+        if (data) {
+          setSpeciesArr(data);
+          setLoading(false);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -182,7 +208,8 @@ const ListBioScreen = ({navigation}) => {
         style={styles.container}>
         <Header
           navigation={navigation}
-          title={'Động thực vật các VQG'}
+          title={nameVQG}
+          logo={logo}
           handleFilter={handlePopupFilter}
         />
 
@@ -191,27 +218,7 @@ const ListBioScreen = ({navigation}) => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-            }}>
-            <View
-              style={{
-                borderWidth: 1,
-                borderColor: Colors.DEFAULT_GREEN,
-                padding: 1,
-                borderRadius: 50,
-                marginBottom: 6,
-                marginRight: 3,
-              }}>
-              <Image
-                source={logo}
-                style={{
-                  width: Dimension.boxHeight(28),
-                  height: Dimension.boxHeight(28),
-                  borderRadius: 50,
-                }}
-              />
-            </View>
-            <Text style={styles.tile}>{nameVQG}</Text>
-          </View>
+            }}></View>
           <View style={styles.searchTextInputContainer}>
             <Icons.FontAwesome name="search" size={16} color="#888" />
             <TextInput
@@ -284,6 +291,7 @@ const ListBioScreen = ({navigation}) => {
                 valueField="tendonvi"
                 value={VQGData}
                 onChange={item => {
+                  setTypeData(null);
                   setVQGData(item);
                 }}
               />
@@ -478,7 +486,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: '95%',
-    height: '30%',
+    height: '35%',
     borderRadius: 8,
     backgroundColor: 'white',
     padding: 15,

@@ -11,12 +11,14 @@ import {
 import Images from '../contants/Images';
 import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
+import Colors from '../contants/Colors';
 import {fontDefault, imgDefault} from '../contants/Variable';
 
 const Header = ({
   title,
   navigation,
   refreshData,
+  logo,
   replace = false,
   handleFilter,
 }) => {
@@ -37,7 +39,7 @@ const Header = ({
     title === 'Tiêu chuẩn Việt Nam' ||
     title === 'Giống Lâm nghiệp' ||
     title === 'Văn phòng 809' ||
-    title.includes('Động thực vật');
+    title.includes('VQG');
 
   return (
     <View
@@ -45,7 +47,7 @@ const Header = ({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: Dimension.setHeight(2),
+        paddingVertical: Dimension.setHeight(1.6),
         paddingHorizontal: Dimension.setWidth(2),
         backgroundColor: 'rgba(255, 255, 255, 0.3)',
         marginHorizontal: Dimension.setHeight(1.4),
@@ -70,7 +72,32 @@ const Header = ({
           />
         </TouchableOpacity>
       )}
-      <View style={{flex: 1, alignItems: 'center'}}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        {logo && (
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: Colors.DEFAULT_GREEN,
+              padding: 1,
+              borderRadius: 50,
+              marginRight: 5,
+            }}>
+            <Image
+              src={logo}
+              style={{
+                width: Dimension.boxHeight(25),
+                height: Dimension.boxHeight(25),
+                borderRadius: 50,
+              }}
+            />
+          </View>
+        )}
         <Text
           style={{
             fontFamily: Fonts.SF_BOLD,
