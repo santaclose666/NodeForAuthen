@@ -14,6 +14,10 @@ export const dataVQG = [
         loaidulieu: 'Thực vật',
         api: 'https://cucphuongbio.xuanmaijsc.vn/api/all_thucvat',
       },
+      {
+        loaidulieu: 'Nấm',
+        api: 'https://cucphuongbio.xuanmaijsc.vn/api/all_nam',
+      },
     ],
   },
   {

@@ -187,6 +187,7 @@ const Images = {
   tamdao: require('../assets/images/tamdaoLogo.png'),
   yokdon: require('../assets/images/yokdonLogo.jpeg'),
   cattien: require('../assets/images/cattienLogo.png'),
+  bio_bg: require('../assets/images/bio_bg.jpg'),
 };
 
 export default Images;

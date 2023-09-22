@@ -3,7 +3,7 @@ import {Spinner} from 'native-base';
 import {View} from 'react-native';
 
 const Loading = ({bg}) => {
-  const [defaultBg, setDefaultBg] = useState('rgba(85, 106, 115, 0.40)');
+  const [defaultBg, setDefaultBg] = useState('rgba(85, 106, 115, 0.35)');
 
   useLayoutEffect(() => {
     if (!bg) {

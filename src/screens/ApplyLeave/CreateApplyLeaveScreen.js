@@ -260,7 +260,7 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
           </View>
           <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
         </KeyboardAwareScrollView>
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

@@ -223,7 +223,7 @@ const LoginScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
-      {loading && <Loading />}
+      {loading && <Loading bg={true} />}
     </SafeAreaView>
   );
 };

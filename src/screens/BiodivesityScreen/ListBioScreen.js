@@ -134,16 +134,29 @@ const ListBioScreen = ({navigation}) => {
               height: width,
               alignItems: 'center',
             }}>
-            <Image
-              src={VQGData.link + item.hinh1}
-              style={{
-                width: '100%',
-                height: width,
-                resizeMode: 'cover',
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-              }}
-            />
+            {item.hinh1 ? (
+              <Image
+                src={VQGData.link + item.hinh1}
+                style={{
+                  width: '100%',
+                  height: width,
+                  resizeMode: 'cover',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                }}
+              />
+            ) : (
+              <Image
+                source={Images.bio_bg}
+                style={{
+                  width: '100%',
+                  height: width,
+                  resizeMode: 'cover',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                }}
+              />
+            )}
           </View>
 
           <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
@@ -456,7 +469,7 @@ const styles = StyleSheet.create({
     marginBottom: Dimension.setHeight(0.8),
   },
   nameLatin: {
-    fontFamily: Fonts.SF_BOLD,
+    fontWeight: 'bold',
     paddingHorizontal: 10,
     paddingTop: 10,
     paddingBottom: 5,

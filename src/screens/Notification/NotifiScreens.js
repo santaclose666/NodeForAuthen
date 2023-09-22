@@ -223,7 +223,7 @@ const NotifiScreen = ({navigation, route}) => {
           setToggleModal={setToggleNotifiModal}
           item={selectedItem}
         />
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

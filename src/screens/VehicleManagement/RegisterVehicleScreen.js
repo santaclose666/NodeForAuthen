@@ -314,7 +314,7 @@ const RegisterVehicleScreen = ({navigation, route}) => {
             <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
           </KeyboardAwareScrollView>
         </ScrollView>
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

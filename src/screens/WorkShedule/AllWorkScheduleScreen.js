@@ -208,7 +208,7 @@ const AllWorkScheduleScreen = ({navigation}) => {
           handleWarning={handleWarning}
         />
 
-        {loading && <Loading />}
+        {loading && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

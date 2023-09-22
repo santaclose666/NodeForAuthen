@@ -443,7 +443,7 @@ const CreateWorkSchedule = ({navigation, route}) => {
             <RegisterBtn nameBtn={'Thực hiện'} onEvent={handleRegister} />
           </KeyboardAwareScrollView>
         </ScrollView>
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

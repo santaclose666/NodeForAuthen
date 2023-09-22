@@ -675,6 +675,17 @@ export const sendFeedback = async data => {
 
 /////////////////////  BIO DATA  ////////////////////
 
+// export const getAllManageData = async () => {
+//   try {
+//     const res = await axios.get('https://forestry.ifee.edu.vn/api/service/all');
+
+//     console.log(res.data);
+//     return res.data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 export const getAllEcosystem = async api => {
   try {
     const res = await axios.get(api);
@@ -682,7 +693,6 @@ export const getAllEcosystem = async api => {
     return res.data.sort((a, b) => {
       const dataA = a.hinh1 ? 1 : 0;
       const dataB = b.hinh1 ? 1 : 0;
-
       return dataB - dataA;
     });
   } catch (error) {

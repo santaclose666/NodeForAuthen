@@ -1022,7 +1022,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
             onRequestClose={() => setZoomImg(false)}
           />
         </Modal>
-        {loading && <Loading />}
+        {loading && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );
