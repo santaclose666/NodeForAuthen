@@ -255,10 +255,9 @@ const ListBioScreen = ({navigation}) => {
         <Modal
           isVisible={isSelectLocation}
           animationIn="fadeInUp"
-          animationInTiming={1}
+          animationInTiming={200}
           animationOut="fadeOutDown"
-          animationOutTiming={1}
-          style={{flex: 1}}>
+          animationOutTiming={200}>
           <TouchableWithoutFeedback
             onPress={() => {
               setIsSelectLocation(false);
