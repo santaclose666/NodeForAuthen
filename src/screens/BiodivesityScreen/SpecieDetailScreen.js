@@ -9,6 +9,7 @@ import {
   Dimensions,
   Text,
   ScrollView,
+  Platform,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import Images from '../../contants/Images';
@@ -595,8 +596,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: Dimension.setHeight(1),
     marginLeft: Dimension.setWidth(3),
+    marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
   },
 
   headerContainer: {

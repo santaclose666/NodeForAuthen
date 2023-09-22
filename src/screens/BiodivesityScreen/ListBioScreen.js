@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   Dimensions,
   Platform,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import unidecode from 'unidecode';
@@ -192,22 +193,28 @@ const ListBioScreen = ({navigation}) => {
         <View style={styles.searchFilterContainer}>
           <View
             style={{
-              borderWidth: 1,
-              borderColor: Colors.DEFAULT_GREEN,
-              padding: 1,
-              borderRadius: 50,
-              marginBottom: 6,
+              flexDirection: 'row',
+              alignItems: 'center',
             }}>
-            <Image
-              source={filterAvt.logo}
+            <View
               style={{
-                width: Dimension.boxHeight(50),
-                height: Dimension.boxHeight(50),
+                borderWidth: 1,
+                borderColor: Colors.DEFAULT_GREEN,
+                padding: 1,
                 borderRadius: 50,
-              }}
-            />
+                marginBottom: 6,
+              }}>
+              <Image
+                source={filterAvt.logo}
+                style={{
+                  width: Dimension.boxHeight(28),
+                  height: Dimension.boxHeight(28),
+                  borderRadius: 50,
+                }}
+              />
+            </View>
+            <Text style={styles.tile}>{nameBioSource.split(':')[1]}</Text>
           </View>
-          <Text style={styles.tile}>{nameBioSource.split(':')[1]}</Text>
           <View style={styles.searchTextInputContainer}>
             <Icons.FontAwesome name="search" size={16} color="#888" />
             <TextInput
@@ -219,24 +226,32 @@ const ListBioScreen = ({navigation}) => {
           </View>
         </View>
 
-        <FlatList
-          columnWrapperStyle={{justifyContent: 'space-between'}}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            marginTop: 10,
-            paddingBottom: 50,
-          }}
-          numColumns={2}
-          data={speciesFilled ? speciesFilled : speciesArr}
-          renderItem={({item}) => {
-            return <RenderItem item={item} navigation={navigation} />;
-          }}
-          initialNumToRender={12}
-          windowSize={12}
-          removeClippedSubviews={true}
-          refreshing={true}
-          extraData={speciesFilled ? speciesFilled : speciesArr}
-        />
+        {loading ? (
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Loading bg={false} />
+          </View>
+        ) : (
+          <FlatList
+            columnWrapperStyle={{justifyContent: 'space-between'}}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              marginTop: 10,
+              paddingBottom: 50,
+            }}
+            numColumns={2}
+            data={speciesFilled ? speciesFilled : speciesArr}
+            renderItem={({item}) => {
+              return <RenderItem item={item} navigation={navigation} />;
+            }}
+            initialNumToRender={12}
+            windowSize={12}
+            removeClippedSubviews={true}
+            refreshing={true}
+            extraData={speciesFilled ? speciesFilled : speciesArr}
+          />
+        )}
+
         <Modal
           isVisible={isSelectLocation}
           animationIn="fadeInUp"
@@ -244,64 +259,64 @@ const ListBioScreen = ({navigation}) => {
           animationOut="fadeOutDown"
           animationOutTiming={1}
           style={{flex: 1}}>
-          <TouchableOpacity
+          <TouchableWithoutFeedback
             onPress={() => {
               setIsSelectLocation(false);
-            }}
-            style={styles.modalBack}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.tile}>Chọn dữ liệu</Text>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  alignSelf: 'flex-start',
-                  padding: 5,
-                }}>
-                Chọn khu vực:
-              </Text>
-              <Dropdown
-                style={styles.dropdown}
-                autoScroll={false}
-                showsVerticalScrollIndicator={false}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                containerStyle={styles.containerOptionStyle}
-                itemContainerStyle={styles.itemContainer}
-                itemTextStyle={styles.itemText}
-                fontFamily={Fonts.SF_MEDIUM}
-                activeColor="#eef2feff"
-                placeholder="Vùng"
-                data={dataLocation}
-                maxHeight={Dimension.setHeight(30)}
-                labelField="name"
-                valueField="ma"
-                value={location}
-                onChange={item => {
-                  setLocation(item);
-                  console.log(item);
-                }}
-              />
-              <TouchableOpacity
-                style={styles.btnSelect}
-                onPress={() => {
-                  getListSpecies();
-                  setIsSelectLocation(false);
-                  setNameBioSrc(location.name);
-                }}>
+            }}>
+            <View style={styles.modalBack}>
+              <View style={styles.modalContainer}>
+                <Text style={styles.tile}>Chọn dữ liệu</Text>
                 <Text
                   style={{
-                    color: '#fff',
-                    fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: Dimension.fontSize(14),
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    alignSelf: 'flex-start',
+                    padding: 5,
                   }}>
-                  Chọn
+                  Chọn khu vực:
                 </Text>
-              </TouchableOpacity>
+                <Dropdown
+                  style={styles.dropdown}
+                  autoScroll={false}
+                  showsVerticalScrollIndicator={false}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  containerStyle={styles.containerOptionStyle}
+                  itemContainerStyle={styles.itemContainer}
+                  itemTextStyle={styles.itemText}
+                  fontFamily={Fonts.SF_MEDIUM}
+                  activeColor="#eef2feff"
+                  placeholder="Vùng"
+                  data={dataLocation}
+                  maxHeight={Dimension.setHeight(30)}
+                  labelField="name"
+                  valueField="ma"
+                  value={location}
+                  onChange={item => {
+                    setLocation(item);
+                    console.log(item);
+                  }}
+                />
+                <TouchableOpacity
+                  style={styles.btnSelect}
+                  onPress={() => {
+                    getListSpecies();
+                    setIsSelectLocation(false);
+                    setNameBioSrc(location.name);
+                  }}>
+                  <Text
+                    style={{
+                      color: '#fff',
+                      fontFamily: Fonts.SF_MEDIUM,
+                      fontSize: Dimension.fontSize(14),
+                    }}>
+                    Tìm kiếm
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         </Modal>
-        {loading === true && <Loading />}
       </SafeAreaView>
     </LinearGradientUI>
   );
@@ -340,7 +355,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     borderRadius: 12,
     height:
-      Platform.OS == 'ios' ? Dimension.setHeight(4) : Dimension.setHeight(6),
+      Platform.OS == 'ios' ? Dimension.setHeight(4) : Dimension.setHeight(5),
     marginRight: Dimension.setWidth(2),
     backgroundColor: 'white',
     elevation: 5,
@@ -349,9 +364,7 @@ const styles = StyleSheet.create({
 
   searchTextInput: {
     marginLeft: 10,
-    fontSize: Dimension.fontSize(13),
     width: '90%',
-    fontFamily: Fonts.SF_REGULAR,
   },
 
   filerImgContainer: {
