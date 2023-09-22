@@ -623,6 +623,31 @@ export const postNotifcation = async data => {
   } catch (error) {}
 };
 
+export const postNotifiForAll = async data => {
+  try {
+    const res = await axios.post(
+      `https://forestry.ifee.edu.vn/api/service/postEvent?title=${data.title}&content=${data.content}`,
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const postNotifiForAllUnit = async data => {
+  try {
+    console.log(data);
+    const res = await axios.post(
+      `https://forestry.ifee.edu.vn/api/service/postNoiBo?title=${data.title}&content=${data.content}&id_user=${data.id}`,
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getAllNotifi = async (id, dispatch) => {
   dispatch(getNotifiStart());
   try {
@@ -634,31 +659,6 @@ export const getAllNotifi = async (id, dispatch) => {
     console.log(res.data);
   } catch (error) {
     dispatch(getOnLeaveFailed());
-  }
-};
-
-export const sendNotifiByTopic = async notifi => {
-  try {
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `key=${serverKey}`,
-    };
-    const body = {
-      data: {},
-      notification: {
-        body: notifi.content,
-        title: notifi.title,
-      },
-      to: `/topics/${notifi.id}`,
-    };
-    const res = await axios.post(`https://fcm.googleapis.com/fcm/send`, body, {
-      headers: headers,
-    });
-
-    console.log(res);
-    return res.data;
-  } catch (error) {
-    console.log(error);
   }
 };
 

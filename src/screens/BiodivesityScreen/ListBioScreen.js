@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useCallBack} from 'react';
+import React, {useState, useLayoutEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,6 @@ import {
   SafeAreaView,
   Dimensions,
   Platform,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import unidecode from 'unidecode';
@@ -27,18 +26,22 @@ import Header from '../../components/Header';
 import {dataVQG} from './test';
 import {getAllEcosystem} from '../../redux/apiRequest';
 import Images from '../../contants/Images';
+import {fontDefault} from '../../contants/Variable';
+import {ToastAlert} from '../../components/Toast';
 
 const width = Dimensions.get('window').width / 2 - 22;
 
 const ListBioScreen = ({navigation}) => {
-  const [selected, setSelected] = useState(dataVQG[0]);
-  const [typeData, setTypeData] = useState('');
+  const [VQGData, setVQGData] = useState(dataVQG[0]);
+  const [typeData, setTypeData] = useState(null);
   const [input, setInput] = useState('');
   const [speciesFilled, setSpeciesFilled] = useState(null);
   const [speciesArr, setSpeciesArr] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isSelectLocation, setIsSelectLocation] = useState(false);
   const [heightBtn, setHeightBtn] = useState(0);
+  const [nameVQG, setNameVQG] = useState(VQGData.tendonvi);
+  const [logo, setLogo] = useState(VQGData.logo);
 
   useLayoutEffect(() => {
     fetchAllData();
@@ -47,7 +50,9 @@ const ListBioScreen = ({navigation}) => {
   const fetchAllData = async () => {
     setLoading(true);
     try {
-      const data = await getAllEcosystem(selected.bodulieu[0].api);
+      const data = await getAllEcosystem(
+        typeData ? typeData : dataVQG[0].bodulieu[0].api,
+      );
 
       if (data) {
         setSpeciesArr(data);
@@ -60,11 +65,15 @@ const ListBioScreen = ({navigation}) => {
 
   const handleSearch = text => {
     setInput(text);
-    const data = speciesArr.filter(item =>
-      unidecode(item.loaitv.toLowerCase()).includes(
-        unidecode(text.toLowerCase()),
-      ),
-    );
+    const data = speciesArr.filter(item => {
+      let filter;
+      if (item?.loaitv) {
+        filter = unidecode(item?.loaitv?.toLowerCase()).includes(
+          unidecode(text.toLowerCase()),
+        );
+      }
+      return filter;
+    });
 
     setSpeciesFilled(data);
   };
@@ -99,49 +108,59 @@ const ListBioScreen = ({navigation}) => {
   };
 
   const handlePickOption = () => {
-    fetchAllData();
-    setIsSelectLocation(false);
+    if (typeData == null) {
+      ToastAlert('Chưa chọn loại dữ liệu!');
+    } else {
+      fetchAllData();
+      setLogo(VQGData.logo);
+      setNameVQG(VQGData.tendonvi);
+      setIsSelectLocation(false);
+    }
   };
 
-  const RenderItem = ({item}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('SpecieDetail', {
-            data: {...item, link: selected.link},
-          });
-        }}
-        style={styles.card}>
-        <View
-          style={{
-            height: width,
-            alignItems: 'center',
-          }}>
-          <Image
-            src={selected.link + item.hinh1}
+  const RenderItem = useCallback(
+    ({item, index}) => {
+      return (
+        <TouchableOpacity
+          key={index}
+          onPress={() => {
+            navigation.navigate('SpecieDetail', {
+              data: {...item, link: VQGData.link},
+            });
+          }}
+          style={styles.card}>
+          <View
             style={{
-              width: '100%',
               height: width,
-              resizeMode: 'cover',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-            }}
-          />
-        </View>
+              alignItems: 'center',
+            }}>
+            <Image
+              src={VQGData.link + item.hinh1}
+              style={{
+                width: '100%',
+                height: width,
+                resizeMode: 'cover',
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+              }}
+            />
+          </View>
 
-        <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
-        <Text
-          style={{
-            paddingBottom: 6,
-            textAlign: 'center',
-            fontSize: Dimension.fontSize(14),
-            fontFamily: Fonts.SF_REGULAR,
-          }}>
-          {item.loaitv}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
+          <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
+          <Text
+            style={{
+              paddingBottom: 6,
+              textAlign: 'center',
+              fontSize: Dimension.fontSize(14),
+              fontFamily: Fonts.SF_REGULAR,
+            }}>
+            {item.loaitv}
+          </Text>
+        </TouchableOpacity>
+      );
+    },
+    [logo],
+  );
 
   return (
     <LinearGradientUI>
@@ -170,7 +189,7 @@ const ListBioScreen = ({navigation}) => {
                 marginRight: 3,
               }}>
               <Image
-                source={selected.logo}
+                source={logo}
                 style={{
                   width: Dimension.boxHeight(28),
                   height: Dimension.boxHeight(28),
@@ -178,7 +197,7 @@ const ListBioScreen = ({navigation}) => {
                 }}
               />
             </View>
-            <Text style={styles.tile}>{selected.tendonvi}</Text>
+            <Text style={styles.tile}>{nameVQG}</Text>
           </View>
           <View style={styles.searchTextInputContainer}>
             <Icons.FontAwesome name="search" size={16} color="#888" />
@@ -206,8 +225,8 @@ const ListBioScreen = ({navigation}) => {
             }}
             numColumns={2}
             data={speciesFilled ? speciesFilled : speciesArr}
-            renderItem={({item}) => {
-              return <RenderItem item={item} navigation={navigation} />;
+            renderItem={({item, index}) => {
+              return <RenderItem item={item} index={index} />;
             }}
             initialNumToRender={8}
             windowSize={8}
@@ -225,16 +244,17 @@ const ListBioScreen = ({navigation}) => {
             <View style={styles.modalContainer}>
               <Text style={styles.tile}>Chọn dữ liệu</Text>
               <Text
-                style={{
-                  fontSize: Dimension.fontSize(16),
-                  fontWeight: 'bold',
-                  alignSelf: 'flex-start',
-                  padding: 5,
-                }}>
+                style={[
+                  styles.labelModal,
+                  {marginTop: Dimension.setHeight(1)},
+                ]}>
                 Chọn khu vực:
               </Text>
               <Dropdown
-                style={styles.dropdown}
+                style={[
+                  styles.dropdown,
+                  {marginBottom: Dimension.setHeight(2)},
+                ]}
                 autoScroll={false}
                 showsVerticalScrollIndicator={false}
                 placeholderStyle={styles.placeholderStyle}
@@ -249,20 +269,12 @@ const ListBioScreen = ({navigation}) => {
                 maxHeight={Dimension.setHeight(30)}
                 labelField="tendonvi"
                 valueField="tendonvi"
-                value={selected}
+                value={VQGData}
                 onChange={item => {
-                  setSelected(item);
+                  setVQGData(item);
                 }}
               />
-              <Text
-                style={{
-                  fontSize: Dimension.fontSize(16),
-                  fontWeight: 'bold',
-                  alignSelf: 'flex-start',
-                  padding: 5,
-                }}>
-                Chọn loại dữ liệu:
-              </Text>
+              <Text style={styles.labelModal}>Chọn loại dữ liệu:</Text>
               <Dropdown
                 style={styles.dropdown}
                 autoScroll={false}
@@ -274,14 +286,14 @@ const ListBioScreen = ({navigation}) => {
                 itemTextStyle={styles.itemText}
                 fontFamily={Fonts.SF_MEDIUM}
                 activeColor="#eef2feff"
-                placeholder="Chọn đơn vị"
-                data={selected?.bodulieu}
+                placeholder="Chọn loại dữ liệu"
+                data={VQGData?.bodulieu}
                 maxHeight={Dimension.setHeight(30)}
                 labelField="loaidulieu"
                 valueField="api"
                 value={typeData}
                 onChange={item => {
-                  setTypeData(item);
+                  setTypeData(item.api);
                 }}
               />
               <TouchableOpacity
@@ -492,6 +504,14 @@ const styles = StyleSheet.create({
 
   containerOptionStyle: {
     borderRadius: 10,
+  },
+
+  labelModal: {
+    fontSize: Dimension.fontSize(17),
+    fontFamily: Fonts.SF_MEDIUM,
+    alignSelf: 'flex-start',
+    ...fontDefault,
+    marginBottom: Dimension.setHeight(1),
   },
 });
 

@@ -21,8 +21,9 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
 import {
-  getAllStaffs,
   postNotifcation,
+  postNotifiForAll,
+  postNotifiForAllUnit,
   sendNotifiByTopic,
 } from '../../redux/apiRequest';
 import LinearGradientUI from '../../components/LinearGradientUI';
@@ -83,10 +84,9 @@ const SendNotification = ({navigation}) => {
     let received;
     switch (id) {
       case 0:
-        setDataPicker('allEvent');
         break;
       case 1:
-        setDataPicker(user?.tendonvi);
+        setDataPicker(user?.id_ht);
         break;
       case 2:
         received = IFEEstaffs.filter(item => item.vitri_ifee <= 3).map(item => {
@@ -126,9 +126,18 @@ const SendNotification = ({navigation}) => {
 
       setLoading(true);
       try {
-        const res = await (typeof dataPicker === 'object'
-          ? postNotifcation(data)
-          : sendNotifiByTopic(data));
+        let res;
+
+        switch (groupValue) {
+          case 0:
+            res = await postNotifiForAll(data);
+            break;
+          case 1:
+            res = await postNotifiForAllUnit(data);
+            break;
+          default:
+            res = await postNotifcation(data);
+        }
 
         if (res) {
           ToastSuccess('Gửi thông báo thành công');
@@ -292,7 +301,7 @@ const SendNotification = ({navigation}) => {
             <RegisterBtn nameBtn={'Gửi'} onEvent={handleSendNotification} />
           </KeyboardAwareScrollView>
         </ScrollView>
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );
