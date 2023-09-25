@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect} from 'react';
+import React, {useState, useLayoutEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -111,10 +111,9 @@ const RegisterDevices = ({navigation, route}) => {
       });
 
       const tempArr = arrRender;
-      tempArr.push({type: filterType, name: []});
+      tempArr.push({type: filterType, name: [], typeValue: [], nameValue: []});
 
       setArrRender(tempArr);
-      setTypeDeviceArr(filterType);
       setAllDevice(data);
     } catch (error) {
       console.log(error);
@@ -156,19 +155,22 @@ const RegisterDevices = ({navigation, route}) => {
             maxHeight={Dimension.setHeight(30)}
             labelField="typeDevice"
             valueField="typeDevice"
-            value={typeDeviceValue}
+            value={data.typeValue}
             onChange={item => {
-              let filterItem = allDevice
-                .filter(device => device.loaithietbi == item.typeDevice)
+              const updatedArrRender = [...arrRender];
+              updatedArrRender[index].typeValue = item.typeDevice;
+
+              const filterItem = allDevice
+                .filter(device => device.loaithietbi === item.typeDevice)
                 .map(devices => {
                   return {
                     id: devices.id,
                     seri: devices.seri,
                   };
                 });
-              setDeviceValue([]);
-              setDeviceArr(filterItem);
-              setTypeDeviceValue(item.typeDevice);
+
+              updatedArrRender[index].name = filterItem;
+              setArrRender(updatedArrRender);
             }}
           />
         </View>
@@ -185,7 +187,7 @@ const RegisterDevices = ({navigation, route}) => {
               styles.placeholderStyle,
               {
                 color:
-                  typeDeviceValue.length != 0
+                  data.name.length != 0
                     ? Colors.DEFAULT_BLACK
                     : Colors.INACTIVE_GREY,
               },
@@ -205,15 +207,19 @@ const RegisterDevices = ({navigation, route}) => {
             activeColor="#eef2feff"
             alwaysRenderSelectedItem={false}
             visibleSelectedItem={false}
-            disable={typeDeviceValue.length != 0 ? false : true}
             data={data.name}
             maxHeight={Dimension.setHeight(30)}
             labelField="seri"
-            valueField="seri"
-            placeholder={`${deviceValue.length} thiết bị đã chọn`}
-            value={deviceValue}
+            valueField="id"
+            placeholder={`${data.nameValue.length} thiết bị đã chọn`}
+            value={data.nameValue}
             onChange={item => {
-              setDeviceValue(item);
+              const updatedArrRender = [...arrRender];
+              updatedArrRender[index].nameValue = item;
+
+              console.log(item);
+
+              setArrRender(updatedArrRender);
             }}
           />
         </View>
@@ -266,6 +272,7 @@ const RegisterDevices = ({navigation, route}) => {
               initialNumToRender={6}
               windowSize={6}
               removeClippedSubviews={true}
+              extraData={arrRender}
             />
 
             <View
