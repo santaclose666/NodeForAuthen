@@ -761,3 +761,16 @@ export const getBirthdayList = async () => {
     console.log(error);
   }
 };
+
+/////////////////////  DEVICES LIST  ////////////////////
+export const getAllDevices = async () => {
+  try {
+    const res = await axios.get(
+      'https://management.ifee.edu.vn/api/thietbi/danhsach',
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

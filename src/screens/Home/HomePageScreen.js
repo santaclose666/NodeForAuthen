@@ -513,7 +513,14 @@ const HomePageScreen = ({navigation}) => {
                   <Image source={Images.happybd} style={styles.featureBtn} />
                   <Text style={styles.featureText}>HPBD</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigate('RegisterDevices');
+                  }}
+                  style={styles.buttonFuc}>
+                  <Image source={Images.device} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>Thiết bị</Text>
+                </TouchableOpacity>
               </View>
             </View>
           )}

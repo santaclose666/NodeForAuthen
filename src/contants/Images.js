@@ -188,6 +188,7 @@ const Images = {
   yokdon: require('../assets/images/yokdonLogo.jpeg'),
   cattien: require('../assets/images/cattienLogo.png'),
   bio_bg: require('../assets/images/bio_bg.jpg'),
+  device: require('../assets/images/device.png'),
 };
 
 export default Images;
