@@ -774,3 +774,23 @@ export const getAllDevices = async () => {
     console.log(error);
   }
 };
+
+export const registerDevice = async data => {
+  try {
+    console.log(data);
+    const res = await axios.post(
+      `https://management.ifee.edu.vn/api/thietbi/regTB/${data.id_user}`,
+      {
+        thietbi: data.thietbi,
+        ngaymuon: data.ngaymuon,
+        ngaytra: data.ngaytra,
+        noidung: data.noidung,
+        active: data.active,
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

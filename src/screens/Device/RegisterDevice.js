@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useCallback} from 'react';
+import React, {useState, useLayoutEffect, memo} from 'react';
 import {
   View,
   Text,
@@ -17,7 +17,6 @@ import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
-import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import {
@@ -26,56 +25,66 @@ import {
   formatDateToPost,
   formatTime,
   formatTimeToPost,
-  getCurrentTime,
+  getCurrentDate,
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
-import {getAllDevices, registerPlaneTicket} from '../../redux/apiRequest';
+import {getAllDevices, registerDevice} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
-import {planeCompany, ticketType, airplane} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import Colors from '../../contants/Colors';
 
+const retunOption = [
+  {label: 'Có trả', value: 0},
+  {label: 'Không trả', value: 1},
+];
+
 const RegisterDevices = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const [allDevice, setAllDevice] = useState([]);
   const [arrRender, setArrRender] = useState([]);
   const [typeDeviceArr, setTypeDeviceArr] = useState([]);
-  const [dateTime, setDateTime] = useState('date');
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [checkDateInput, setCheckDateInput] = useState('');
+  const [returnValue, setReturnValue] = useState(0);
+  const [borrowDate, setBorrowDate] = useState(getCurrentDate());
+  const [returnDate, setReturnDate] = useState('');
+  const [content, setContent] = useState('');
 
   const handlePickType = (item, index) => {
-    console.log(item);
     const updatedArrRender = [...arrRender];
 
-    const checkExist = updatedArrRender.some(item =>
-      item.type.filter(filter => filter.typeDevice == item.typeDevice),
+    const checkExist = updatedArrRender.some(
+      filter => filter.typeValue == item.typeDevice,
     );
 
-    console.log(checkExist);
-    updatedArrRender[index].typeValue = item.typeDevice;
-    updatedArrRender[index].nameValue = [];
-    const filterItem = allDevice
-      .filter(device => device.loaithietbi === item.typeDevice)
-      .map(devices => {
-        return {
-          id: devices.id,
-          seri: devices.seri,
-        };
-      });
+    if (checkExist) {
+      ToastAlert('Loại thiết bị đã tồn tại!');
+    } else {
+      updatedArrRender[index].typeValue = item.typeDevice;
+      updatedArrRender[index].nameValue = [];
+      const filterItem = allDevice
+        .filter(device => device.loaithietbi === item.typeDevice)
+        .map(devices => {
+          return {
+            id: devices.id,
+            seri: devices.seri,
+          };
+        });
 
-    updatedArrRender[index].name = filterItem;
-    setArrRender(updatedArrRender);
+      updatedArrRender[index].name = filterItem;
+      setArrRender(updatedArrRender);
+    }
   };
 
   const handleAddDevice = () => {
     const updatedArrRender = [...arrRender];
 
-    if (updatedArrRender.length == 7) {
+    if (updatedArrRender.length == typeDeviceArr.length) {
       ToastAlert('Đã đến giới hạn tổng số loại thiết bị!');
     } else {
       updatedArrRender.push({
@@ -84,52 +93,69 @@ const RegisterDevices = ({navigation, route}) => {
         typeValue: [],
         nameValue: [],
       });
+
+      setArrRender(updatedArrRender);
+    }
+  };
+
+  const handleDelete = index => {
+    const updatedArrRender = [...arrRender];
+
+    if (updatedArrRender.length == 1) {
+      return;
+    } else {
+      updatedArrRender.splice(index, 1);
+
       setArrRender(updatedArrRender);
     }
   };
 
   const handlePickDate = date => {
-    if (dateTime === 'date') {
-      const message = 'Ngày khởi hành không hợp lệ';
-      compareDate(new Date(), date)
-        ? setDateValue(formatDate(date))
+    const message = 'Ngày vừa chọn không hợp lệ';
+    if (checkDateInput == 'borrow') {
+      compareDate(borrowDate, date) &&
+      (returnDate.length == 0 || compareDate(date, returnDate))
+        ? setBorrowDate(formatDate(date))
         : ToastAlert(message);
     } else {
-      setTimeValue(formatTime(date));
+      compareDate(borrowDate, date)
+        ? setReturnDate(formatDate(date))
+        : ToastAlert(message);
     }
     setToggleDatePicker(false);
   };
 
   const handleRegister = async () => {
-    if (multiStaff.length !== 0 && workName.length !== 0) {
+    let idDevice = [];
+    arrRender.forEach(item => {
+      idDevice.push(...item.nameValue);
+    });
+
+    if (
+      idDevice.length != 0 &&
+      borrowDate.length != 0 &&
+      returnDate.length != 0 &&
+      content.length != 0
+    ) {
       const data = {
-        id_user: user?.id,
-        ds_ns: multiStaff,
-        ngoaivien: outSidePerson,
-        chuongtrinh: workName,
-        hangbay: planeCompanyValue,
-        sanbaydi: fromValue,
-        sanbayden: toValue,
-        ngaydi: `${formatDateToPost(dateValue)} ${formatTimeToPost(timeValue)}`,
-        hangve: ticketTypeValue,
-        kygui: kgNumber,
+        id_user: user.id,
+        thietbi: idDevice,
+        ngaymuon: formatDateToPost(borrowDate),
+        ngaytra: formatDateToPost(returnDate),
+        noidung: content,
+        active: returnValue,
       };
+
       setLoading(true);
       try {
-        const res = await registerPlaneTicket(data);
+        const res = await registerDevice(data);
 
         if (res) {
-          ToastSuccess('Đăng kí thành công');
-          navigation.goBack();
-          route.params?.refreshData();
-        } else {
           setLoading(false);
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     } else {
-      ToastAlert('Thiếu thông tin!');
+      ToastAlert('Chưa nhập đầy đủ thông tin!');
     }
   };
 
@@ -162,7 +188,8 @@ const RegisterDevices = ({navigation, route}) => {
     fetchAllDevices();
   }, []);
 
-  const RenderOptionData = ({data, index}) => {
+  const RenderOptionData = memo(({data, index}) => {
+    console.log('rerender');
     return (
       <View
         key={index}
@@ -171,9 +198,9 @@ const RegisterDevices = ({navigation, route}) => {
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
-        <View style={[styles.containerEachLine, {width: '42%'}]}>
+        <View style={[styles.containerEachLine, {width: '41%'}]}>
           <View style={rowAlignCenter}>
-            <Text style={styles.title}>Chọn loại thiết bị</Text>
+            <Text style={styles.title}>Loại thiết bị</Text>
             <RedPoint />
           </View>
           <Dropdown
@@ -199,9 +226,16 @@ const RegisterDevices = ({navigation, route}) => {
             }}
           />
         </View>
-        <View style={[styles.containerEachLine, {width: '55%'}]}>
+        <TouchableOpacity
+          onPress={() => {
+            handleDelete(index);
+          }}
+          style={{alignSelf: 'center'}}>
+          <Image style={{width: 18, height: 18}} source={Images.minus} />
+        </TouchableOpacity>
+        <View style={[styles.containerEachLine, {width: '52%'}]}>
           <View style={rowAlignCenter}>
-            <Text style={styles.title}>Chọn thiết bị</Text>
+            <Text style={styles.title}>Thiết bị</Text>
             <RedPoint />
           </View>
           <MultiSelect
@@ -248,13 +282,13 @@ const RegisterDevices = ({navigation, route}) => {
         </View>
       </View>
     );
-  };
+  });
 
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Đăng kí sử dụng thiết bị" navigation={navigation} />
-        <ScrollView>
+        <ScrollView style={{flex: 1}}>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={{
@@ -269,10 +303,15 @@ const RegisterDevices = ({navigation, route}) => {
             }}>
             <View style={styles.containerEachLine}>
               <Text style={styles.title}>Người đăng kí</Text>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: Dimension.setWidth(1.6),
+                }}>
                 <Image
                   src={mainURL + user?.path}
-                  style={{height: 40, width: 40}}
+                  style={{height: 40, width: 40, borderRadius: 50}}
                 />
                 <Text
                   style={{
@@ -286,6 +325,7 @@ const RegisterDevices = ({navigation, route}) => {
             </View>
 
             <FlatList
+              scrollEnabled={false}
               showsVerticalScrollIndicator={false}
               data={arrRender}
               keyExtractor={(_, index) => index.toString()}
@@ -295,8 +335,36 @@ const RegisterDevices = ({navigation, route}) => {
               initialNumToRender={6}
               windowSize={6}
               removeClippedSubviews={true}
-              extraData={arrRender}
             />
+
+            <View style={[styles.containerEachLine, {width: '100%'}]}>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Dạng đăng kí</Text>
+                <RedPoint />
+              </View>
+              <Dropdown
+                style={styles.dropdown}
+                placeholder="Chọn dạng đăng kí"
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                data={retunOption}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="label"
+                valueField="value"
+                value={returnValue}
+                onChange={item => {
+                  setReturnValue(item.value);
+                }}
+              />
+            </View>
 
             <View
               style={{
@@ -304,71 +372,88 @@ const RegisterDevices = ({navigation, route}) => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-              <View style={{width: '52%'}}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setDateTime('date');
-                    setToggleDatePicker(true);
-                  }}
-                  style={[
-                    styles.containerEachLine,
-                    {
-                      marginBottom: Dimension.setHeight(1),
-                      width: '100%',
-                      paddingVertical: Dimension.setHeight(1),
-                    },
-                  ]}>
-                  <View style={rowAlignCenter}>
-                    <Text style={styles.title}>Ngày tháng</Text>
-                    <RedPoint />
+              <TouchableOpacity
+                onPress={() => {
+                  setCheckDateInput('borrow');
+                  setToggleDatePicker(true);
+                }}
+                style={[
+                  styles.containerEachLine,
+                  {
+                    width: '48%',
+                  },
+                ]}>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.title}>Ngày mượn</Text>
+                  <RedPoint />
+                </View>
+                <View style={styles.dateTimePickerContainer}>
+                  <Text style={styles.dateTimeText}>{borrowDate}</Text>
+                  <View
+                    style={[
+                      styles.dateTimeImgContainer,
+                      {backgroundColor: '#dbd265'},
+                    ]}>
+                    <Image
+                      source={Images.calendarBlack}
+                      style={styles.dateTimeImg}
+                    />
                   </View>
-                  <View style={styles.dateTimePickerContainer}>
-                    <Text style={styles.dateTimeText}>{''}</Text>
-                    <View
-                      style={[
-                        styles.dateTimeImgContainer,
-                        {backgroundColor: '#dbd265'},
-                      ]}>
-                      <Image
-                        source={Images.calendarBlack}
-                        style={styles.dateTimeImg}
-                      />
-                    </View>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setCheckDateInput('return');
+                  setToggleDatePicker(true);
+                }}
+                style={[
+                  styles.containerEachLine,
+                  {
+                    width: '48%',
+                  },
+                ]}>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.title}>Ngày trả</Text>
+                  <RedPoint />
+                </View>
+                <View style={styles.dateTimePickerContainer}>
+                  <Text style={styles.dateTimeText}>{returnDate}</Text>
+                  <View
+                    style={[
+                      styles.dateTimeImgContainer,
+                      {backgroundColor: '#dbd265'},
+                    ]}>
+                    <Image
+                      source={Images.calendarBlack}
+                      style={styles.dateTimeImg}
+                    />
                   </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setDateTime('time');
-                    setToggleDatePicker(true);
-                  }}
-                  style={[
-                    styles.containerEachLine,
-                    {width: '100%', paddingVertical: Dimension.setHeight(1)},
-                  ]}>
-                  <View style={rowAlignCenter}>
-                    <Text style={styles.title}>Thời gian</Text>
-                    <RedPoint />
-                  </View>
-                  <View style={styles.dateTimePickerContainer}>
-                    <Text style={styles.dateTimeText}>{''}</Text>
-                    <View
-                      style={[
-                        styles.dateTimeImgContainer,
-                        {backgroundColor: '#96d1d9'},
-                      ]}>
-                      <Image source={Images.time} style={styles.dateTimeImg} />
-                    </View>
-                  </View>
-                </TouchableOpacity>
-                <DateTimePickerModal
-                  isVisible={toggleDatePicker}
-                  mode={dateTime}
-                  onConfirm={handlePickDate}
-                  onCancel={() => {
-                    setToggleDatePicker(false);
-                  }}
-                />
+                </View>
+              </TouchableOpacity>
+              <DateTimePickerModal
+                isVisible={toggleDatePicker}
+                mode={'date'}
+                onConfirm={handlePickDate}
+                onCancel={() => {
+                  setToggleDatePicker(false);
+                }}
+              />
+            </View>
+
+            <View style={[styles.containerEachLine, {width: '100%'}]}>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Nội dung sử dụng</Text>
+                <RedPoint />
               </View>
+              <TextInput
+                multiline={true}
+                style={styles.inputText}
+                placeholder="Nhập nội dung"
+                value={content}
+                onChangeText={e => {
+                  setContent(e);
+                }}
+              />
             </View>
             <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
           </KeyboardAwareScrollView>
@@ -379,13 +464,14 @@ const RegisterDevices = ({navigation, route}) => {
             position: 'absolute',
             bottom: Dimension.setHeight(4),
             right: Dimension.setWidth(7),
-            padding: 12,
+            padding: 10,
             backgroundColor: Colors.DEFAULT_GREEN,
             borderRadius: 50,
+            opacity: 0.75,
           }}>
           <Image
             source={Images.add}
-            style={{width: 28, height: 28, tintColor: '#ffffff'}}
+            style={{width: 22, height: 22, tintColor: '#ffffff'}}
           />
         </TouchableOpacity>
         {loading === true && <Loading bg={true} />}
@@ -406,8 +492,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e6e6e6',
     borderRadius: 12,
-    paddingVertical: Dimension.setHeight(1.6),
-    paddingHorizontal: Dimension.setWidth(3),
+    paddingVertical: Dimension.setHeight(1),
+    paddingHorizontal: Dimension.setWidth(2),
   },
 
   title: {
@@ -421,8 +507,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.6,
     borderBottomColor: 'gray',
     marginHorizontal: Dimension.setWidth(1.6),
-    fontFamily: Fonts.SF_MEDIUM,
-    fontSize: Dimension.fontSize(16),
     height: Dimension.setHeight(5),
   },
 
@@ -456,7 +540,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   placeholderStyle: {
-    fontSize: Dimension.fontSize(15),
+    fontSize: Dimension.fontSize(13),
   },
   selectedStyle: {
     borderRadius: 12,

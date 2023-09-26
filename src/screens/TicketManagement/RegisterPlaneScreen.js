@@ -141,7 +141,7 @@ const RegisterPlaneScreen = ({navigation, route}) => {
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
                   src={mainURL + user?.path}
-                  style={{height: 40, width: 40}}
+                  style={{height: 40, width: 40, borderRadius: 50}}
                 />
                 <Text
                   style={{

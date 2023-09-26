@@ -127,7 +127,7 @@ export const ApproveCancelModal = ({
             </Text>
           </View>
         )}
-        {screenName === 'registerVehicalAndTicket' && (
+        {screenName === 'registerTicket' && (
           <View
             style={{
               alignItems: 'center',
