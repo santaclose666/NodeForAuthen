@@ -44,12 +44,49 @@ const RegisterDevices = ({navigation, route}) => {
   const [allDevice, setAllDevice] = useState([]);
   const [arrRender, setArrRender] = useState([]);
   const [typeDeviceArr, setTypeDeviceArr] = useState([]);
-  const [typeDeviceValue, setTypeDeviceValue] = useState('');
-  const [deviceArr, setDeviceArr] = useState([]);
-  const [deviceValue, setDeviceValue] = useState([]);
   const [dateTime, setDateTime] = useState('date');
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const handlePickType = (item, index) => {
+    console.log(item);
+    const updatedArrRender = [...arrRender];
+
+    const checkExist = updatedArrRender.some(item =>
+      item.type.filter(filter => filter.typeDevice == item.typeDevice),
+    );
+
+    console.log(checkExist);
+    updatedArrRender[index].typeValue = item.typeDevice;
+    updatedArrRender[index].nameValue = [];
+    const filterItem = allDevice
+      .filter(device => device.loaithietbi === item.typeDevice)
+      .map(devices => {
+        return {
+          id: devices.id,
+          seri: devices.seri,
+        };
+      });
+
+    updatedArrRender[index].name = filterItem;
+    setArrRender(updatedArrRender);
+  };
+
+  const handleAddDevice = () => {
+    const updatedArrRender = [...arrRender];
+
+    if (updatedArrRender.length == 7) {
+      ToastAlert('Đã đến giới hạn tổng số loại thiết bị!');
+    } else {
+      updatedArrRender.push({
+        type: typeDeviceArr,
+        name: [],
+        typeValue: [],
+        nameValue: [],
+      });
+      setArrRender(updatedArrRender);
+    }
+  };
 
   const handlePickDate = date => {
     if (dateTime === 'date') {
@@ -114,6 +151,7 @@ const RegisterDevices = ({navigation, route}) => {
       tempArr.push({type: filterType, name: [], typeValue: [], nameValue: []});
 
       setArrRender(tempArr);
+      setTypeDeviceArr(filterType);
       setAllDevice(data);
     } catch (error) {
       console.log(error);
@@ -157,20 +195,7 @@ const RegisterDevices = ({navigation, route}) => {
             valueField="typeDevice"
             value={data.typeValue}
             onChange={item => {
-              const updatedArrRender = [...arrRender];
-              updatedArrRender[index].typeValue = item.typeDevice;
-
-              const filterItem = allDevice
-                .filter(device => device.loaithietbi === item.typeDevice)
-                .map(devices => {
-                  return {
-                    id: devices.id,
-                    seri: devices.seri,
-                  };
-                });
-
-              updatedArrRender[index].name = filterItem;
-              setArrRender(updatedArrRender);
+              handlePickType(item, index);
             }}
           />
         </View>
@@ -216,8 +241,6 @@ const RegisterDevices = ({navigation, route}) => {
             onChange={item => {
               const updatedArrRender = [...arrRender];
               updatedArrRender[index].nameValue = item;
-
-              console.log(item);
 
               setArrRender(updatedArrRender);
             }}
@@ -350,6 +373,21 @@ const RegisterDevices = ({navigation, route}) => {
             <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
           </KeyboardAwareScrollView>
         </ScrollView>
+        <TouchableOpacity
+          onPress={handleAddDevice}
+          style={{
+            position: 'absolute',
+            bottom: Dimension.setHeight(4),
+            right: Dimension.setWidth(7),
+            padding: 12,
+            backgroundColor: Colors.DEFAULT_GREEN,
+            borderRadius: 50,
+          }}>
+          <Image
+            source={Images.add}
+            style={{width: 28, height: 28, tintColor: '#ffffff'}}
+          />
+        </TouchableOpacity>
         {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
