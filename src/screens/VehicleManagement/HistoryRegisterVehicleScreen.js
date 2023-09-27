@@ -264,8 +264,17 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     [allVehicleData],
   );
 
-  const fetchVehicleData = () => {
-    getVehicleData(dispatch, user?.id);
+  const fetchVehicleData = async () => {
+    setLoading(true);
+    try {
+      const res = await getVehicleData(dispatch, user?.id);
+
+      if (res) {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useLayoutEffect(() => {

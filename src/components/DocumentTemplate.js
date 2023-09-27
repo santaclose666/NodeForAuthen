@@ -632,14 +632,7 @@ const DocumentTemplate = ({
                     style={styles.inputText}
                     placeholder="Nhập tên đơn vị"
                     defaultValue={workUnit}
-                    onChangeText={e =>
-                      setWorkUnit(
-                        e.replace(
-                          /[`~0-9!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,
-                          '',
-                        ),
-                      )
-                    }
+                    onChangeText={e => setWorkUnit(e)}
                   />
                 </View>
                 <View style={styles.containerEachLine}>
@@ -660,14 +653,7 @@ const DocumentTemplate = ({
                     style={styles.inputText}
                     placeholder="Nhập email"
                     defaultValue={email}
-                    onChangeText={e =>
-                      setEmail(
-                        e.replace(
-                          /[`~0-9!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,
-                          '',
-                        ),
-                      )
-                    }
+                    onChangeText={e => setEmail(e)}
                   />
                 </View>
                 <View style={styles.containerEachLine}>

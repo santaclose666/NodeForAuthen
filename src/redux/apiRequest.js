@@ -412,6 +412,8 @@ export const getVehicleData = async (dispatch, id) => {
     );
 
     dispatch(getVehicleSuccess(res.data));
+
+    return true;
   } catch (error) {
     dispatch(getVehicleFailed());
   }
@@ -788,6 +790,17 @@ export const registerDevice = async data => {
         active: data.active,
       },
     );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  OFFICE ITEM LIST  ////////////////////
+export const getAllOfficeItem = async () => {
+  try {
+    const res = await axios.get('https://management.ifee.edu.vn/api/vpp/list');
 
     return res.data;
   } catch (error) {

@@ -189,6 +189,7 @@ const Images = {
   cattien: require('../assets/images/cattienLogo.png'),
   bio_bg: require('../assets/images/bio_bg.jpg'),
   device: require('../assets/images/device.png'),
+  office: require('../assets/images/office.png'),
 };
 
 export default Images;

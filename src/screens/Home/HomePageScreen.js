@@ -139,6 +139,8 @@ const HomePageScreen = ({navigation}) => {
     fcmService.register(onRegister, onNotification, onOpenNotification);
     localNotificationService.configure(onOpenNotification);
 
+    console.log(user);
+
     if (weather) {
       setInTerVal(
         setInterval(() => {
@@ -473,13 +475,10 @@ const HomePageScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.buttonFuc}
                   onPress={() => {
-                    handleNavigate('SendNotification');
+                    handleNavigate('RegisterItemOffice');
                   }}>
-                  <Image
-                    source={Images.sendnotification}
-                    style={styles.featureBtn}
-                  />
-                  <Text style={styles.featureText}>Gửi thông báo</Text>
+                  <Image source={Images.office} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>Văn phòng phẩm</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.btnContainer}>
@@ -522,6 +521,24 @@ const HomePageScreen = ({navigation}) => {
                   <Text style={styles.featureText}>Thiết bị</Text>
                 </TouchableOpacity>
               </View>
+              {user?.quyentruycap == 1 && (
+                <View style={styles.btnContainer}>
+                  <TouchableOpacity
+                    style={styles.buttonFuc}
+                    onPress={() => {
+                      handleNavigate('SendNotification');
+                    }}>
+                    <Image
+                      source={Images.sendnotification}
+                      style={styles.featureBtn}
+                    />
+                    <Text style={styles.featureText}>Gửi thông báo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                </View>
+              )}
             </View>
           )}
 
