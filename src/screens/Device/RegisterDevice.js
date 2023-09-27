@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, memo} from 'react';
+import React, {useState, useLayoutEffect, memo, useRef} from 'react';
 import {
   View,
   Text,
@@ -54,6 +54,7 @@ const RegisterDevices = ({navigation, route}) => {
   const [borrowDate, setBorrowDate] = useState(getCurrentDate());
   const [returnDate, setReturnDate] = useState('');
   const [content, setContent] = useState('');
+  const deviceRef = useRef([]);
 
   const handlePickType = (item, index) => {
     const updatedArrRender = [...arrRender];
@@ -93,6 +94,8 @@ const RegisterDevices = ({navigation, route}) => {
         typeValue: [],
         nameValue: [],
       });
+
+      console.log(updatedArrRender);
 
       setArrRender(updatedArrRender);
     }
@@ -174,7 +177,12 @@ const RegisterDevices = ({navigation, route}) => {
       });
 
       const tempArr = arrRender;
-      tempArr.push({type: filterType, name: [], typeValue: [], nameValue: []});
+      tempArr.push({
+        type: filterType,
+        name: [],
+        typeValue: [],
+        nameValue: [],
+      });
 
       setArrRender(tempArr);
       setTypeDeviceArr(filterType);
@@ -239,6 +247,9 @@ const RegisterDevices = ({navigation, route}) => {
             <RedPoint />
           </View>
           <MultiSelect
+            ref={ref => {
+              deviceRef.current[index] = ref;
+            }}
             style={styles.dropdown}
             autoScroll={false}
             showsVerticalScrollIndicator={false}
@@ -277,6 +288,10 @@ const RegisterDevices = ({navigation, route}) => {
               updatedArrRender[index].nameValue = item;
 
               setArrRender(updatedArrRender);
+
+              setTimeout(() => {
+                deviceRef?.current[index]?.open();
+              });
             }}
           />
         </View>
