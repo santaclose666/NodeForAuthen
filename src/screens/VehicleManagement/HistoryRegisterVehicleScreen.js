@@ -654,14 +654,13 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
           )}
         </BottomSheetModalProvider>
         <ConfirmModal
+          screenName={'HistoryRegisterVehicle'}
           toggleModal={toggleConfirmModal}
           setToggleModal={setToggleConfirmModal}
           item={selectedItem}
           status={isConfirm}
           handleApprove={handleApprove}
           handleCancel={handleCancel}
-          request={request}
-          setRequest={setRequest}
         />
 
         <Modal

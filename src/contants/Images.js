@@ -190,6 +190,8 @@ const Images = {
   bio_bg: require('../assets/images/bio_bg.jpg'),
   device: require('../assets/images/device.png'),
   office: require('../assets/images/office.png'),
+  item: require('../assets/images/item.png'),
+  quantity: require('../assets/images/quantity.png'),
 };
 
 export default Images;

@@ -61,7 +61,7 @@ import {
   getDocumentMvStart,
   getDocumentMvSuccess,
 } from './documentMvSlice';
-import {documentMvURL, serverKey} from '../contants/Variable';
+import {documentMvURL} from '../contants/Variable';
 import {
   subcribeWorkUnitTopic,
   unSubcribeWorkUnitTopic,
@@ -838,5 +838,25 @@ export const getAllListOfficeItem = async dispatch => {
     dispatch(getRegisterOfficeSuccess(res.data));
   } catch (error) {
     dispatch(getRegisterOfficeFailed());
+  }
+};
+
+export const approveRegisterOfficeItem = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/vpp/pheduyet/duyet/${data.id_user}`,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelRegisterOfficeItem = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/vpp/pheduyet/xoa/${data.id_user}`,
+    );
+  } catch (error) {
+    console.log(error);
   }
 };

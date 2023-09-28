@@ -246,19 +246,19 @@ export const ApproveCancelModal = ({
 };
 
 export const ConfirmModal = ({
+  screenName,
   toggleModal,
   setToggleModal,
   item,
   status,
   handleApprove,
   handleCancel,
-  request,
-  setRequest,
 }) => {
-  const approveMess = 'Chắc chắn phê duyệt đăng kí xe';
-  const cancelMess = 'Chắc chắn từ chối đăng kí xe';
+  const approveVehicleMess = 'Chắc chắn phê duyệt đăng kí xe';
+  const cancelVehicleMess = 'Chắc chắn từ chối đăng kí xe';
 
-  console.log(item);
+  const approveItemMess = 'Chắc chắn phê duyệt yêu cầu đăng kí sử dụng của';
+  const cancelItemMess = 'Chắc chắn từ chối yêu cầu đăng sử dụng của';
 
   return (
     <Modal
@@ -299,49 +299,53 @@ export const ConfirmModal = ({
             {status ? 'Phê duyệt' : 'Từ chối'}
           </Text>
         </View>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingVertical: Dimension.setHeight(1.5),
-            paddingHorizontal: Dimension.setWidth(3),
-            width: '100%',
-          }}>
-          <Image source={Images.vehicles} style={{height: 55, width: 55}} />
-          <Text
+        {screenName == 'HistoryRegisterVehicle' && (
+          <View
             style={{
-              marginLeft: Dimension.setWidth(3),
-              fontSize: Dimension.fontSize(17),
-              fontFamily: Fonts.SF_MEDIUM,
-              textAlign: 'center',
-              ...fontDefault,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
             }}>
-            {`${status ? approveMess : cancelMess} ${item?.loaixe}?`}
-          </Text>
-        </View>
+            <Image source={Images.vehicles} style={{height: 55, width: 55}} />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: Dimension.fontSize(17),
+                fontFamily: Fonts.SF_MEDIUM,
+                textAlign: 'center',
+                ...fontDefault,
+              }}>
+              {`${status ? approveVehicleMess : cancelVehicleMess} ${
+                item?.loaixe
+              }?`}
+            </Text>
+          </View>
+        )}
 
-        <View
-          style={{
-            backgroundColor: '#fff',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '77%',
-            marginBottom: Dimension.setHeight(2),
-            paddingVertical: Dimension.setHeight(1),
-            borderRadius: 16,
-          }}>
-          <TextInput
-            placeholder="Nhập đề nghị!"
+        {screenName == 'HistoryRegisterItem' && (
+          <View
             style={{
-              fontFamily: Fonts.SF_REGULAR,
-              fontSize: Dimension.fontSize(14),
-            }}
-            value={request}
-            onChangeText={e => {
-              setRequest(e);
-            }}
-          />
-        </View>
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image source={Images.item} style={{height: 55, width: 55}} />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: Dimension.fontSize(17),
+                fontFamily: Fonts.SF_MEDIUM,
+                textAlign: 'center',
+                ...fontDefault,
+              }}>
+              {`${status ? approveItemMess : cancelItemMess} ${item?.nguoidk}?`}
+            </Text>
+          </View>
+        )}
 
         <View
           style={[

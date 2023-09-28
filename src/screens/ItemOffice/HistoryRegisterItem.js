@@ -27,20 +27,22 @@ import {
 import Colors from '../../contants/Colors';
 import {
   approvePlaneTicket,
+  approveRegisterOfficeItem,
   cancelPlaneTicket,
+  cancelRegisterOfficeItem,
   getAllListOfficeItem,
   getAllPlaneData,
 } from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import StatusUI from '../../components/StatusUI';
-import {ApproveCancelModal} from '../../components/Modal';
+import {ApproveCancelModal, ConfirmModal} from '../../components/Modal';
 import {ToastWarning} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
 import FilterStatusUI from '../../components/FilterStatusUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import {changeFormatDate} from '../../utils/serviceFunction';
-import {fontDefault} from '../../contants/Variable';
+import {fontDefault, mainURL} from '../../contants/Variable';
 
 const HistoryRegisterItem = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -52,15 +54,13 @@ const HistoryRegisterItem = ({navigation}) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [toggleModal, setToggleModal] = useState(false);
   const [checkInput, setCheckInput] = useState(null);
-  const [commentInput, setCommentInput] = useState('');
-  const [reasonCancel, setReasonCancel] = useState('');
   const [indexPicker, setIndexPicker] = useState(0);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
   const handleBottomSheet = useCallback(
-    item => {
-      setSelectedItem(item);
+    (item, path) => {
+      setSelectedItem({...item, path});
       setTimeout(() => {
         handlePresentModalPress();
       });
@@ -78,48 +78,36 @@ const HistoryRegisterItem = ({navigation}) => {
     }
   }, []);
 
-  const handleApprove = useCallback(
-    item => {
-      bottomSheetModalRef.current?.dismiss();
-      setSelectedItem(item);
-      setCheckInput(true);
-      setToggleModal(true);
-    },
-    [selectedItem],
-  );
+  const handlePickItem = useCallback((item, status) => {
+    bottomSheetModalRef.current?.dismiss();
+    setSelectedItem(item);
+    setCheckInput(status);
+    setToggleModal(true);
+  }, []);
 
-  const handleCancel = useCallback(
-    item => {
-      bottomSheetModalRef.current?.dismiss();
-      setSelectedItem(item);
-      setCheckInput(false);
-      setToggleModal(true);
-    },
-    [selectedItem],
-  );
-
-  const handleApproveCancel = () => {
+  const handleApprove = useCallback(item => {
     const data = {
-      id_dulieu: selectedItem.id,
-      noidung: checkInput ? commentInput : reasonCancel,
+      id_user: user?.id,
     };
-    if (
-      (commentInput.length !== 0 || reasonCancel.length !== 0) &&
-      selectedItem !== null
-    ) {
-      if (checkInput) {
-        approvePlaneTicket(data);
-      } else {
-        cancelPlaneTicket(data);
-      }
-      setTimeout(() => {
-        fetchOfficeItemList();
-      });
-      setToggleModal(false);
-    } else {
-      ToastWarning('Nhập đầy đủ thông tin');
-    }
-  };
+
+    approveRegisterOfficeItem(data);
+    setToggleModal(false);
+    setTimeout(() => {
+      fetchOfficeItemList();
+    });
+  }, []);
+
+  const handleCancel = useCallback(item => {
+    const data = {
+      id_user: user?.id,
+    };
+
+    cancelRegisterOfficeItem(data);
+    setToggleModal(false);
+    setTimeout(() => {
+      fetchOfficeItemList();
+    });
+  }, []);
 
   const handlePickOption = useCallback(
     index => {
@@ -144,7 +132,6 @@ const HistoryRegisterItem = ({navigation}) => {
   );
 
   const fetchOfficeItemList = () => {
-    console.log(officeItemData);
     getAllListOfficeItem(dispatch);
   };
 
@@ -158,17 +145,16 @@ const HistoryRegisterItem = ({navigation}) => {
     const status = 'Chờ phê duyệt';
     const icon = Images.pending;
 
+    const filterUser = IFEEstaffs.filter(user => user.id == item.id_user)[0];
+
     const checkRole = () => {
-      return (
-        // item.status === 0 &&
-        user?.quyentruycap <= 2
-      );
+      return user?.quyentruycap <= 2;
     };
 
     return (
       <TouchableOpacity
         onPress={() => {
-          handleBottomSheet(item);
+          handleBottomSheet(item, filterUser?.path);
         }}
         key={index}
         style={{
@@ -220,7 +206,7 @@ const HistoryRegisterItem = ({navigation}) => {
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  handleApprove(item);
+                  handlePickItem(item, true);
                 }}>
                 <Image
                   source={Images.approved}
@@ -229,7 +215,7 @@ const HistoryRegisterItem = ({navigation}) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  handleCancel(item);
+                  handlePickItem(item, false);
                 }}>
                 <Image
                   source={Images.cancelled}
@@ -241,7 +227,7 @@ const HistoryRegisterItem = ({navigation}) => {
         </View>
         <View style={styles.containerEachLine}>
           <Image
-            source={Images.insideperson}
+            src={mainURL + filterUser?.path}
             style={[styles.Iconic, {borderRadius: 50}]}
           />
           <Text style={[styles.title, {width: '90%'}]}>
@@ -267,10 +253,10 @@ const HistoryRegisterItem = ({navigation}) => {
           //   refreshData={fetchOfficeItemList}
         />
         <BottomSheetModalProvider>
-          <FilterStatusUI
+          {/* <FilterStatusUI
             handlePickOption={handlePickOption}
             indexPicker={indexPicker}
-          />
+          /> */}
 
           {handleFilter(indexPicker)?.length !== 0 ? (
             <View
@@ -307,7 +293,9 @@ const HistoryRegisterItem = ({navigation}) => {
           )}
           {selectedItem && (
             <BottomSheetModal
-              backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
+              backgroundStyle={{
+                backgroundColor: selectedItem.bgColorStatus || '#f7d6b2',
+              }}
               ref={bottomSheetModalRef}
               index={0}
               snapPoints={snapPoints}
@@ -331,173 +319,107 @@ const HistoryRegisterItem = ({navigation}) => {
                 </Text>
               </View>
               <BottomSheetScrollView showsVerticalScrollIndicator={false}>
-                <View
-                  style={[
-                    styles.bottomSheetContainer,
-                    {marginTop: Dimension.setHeight(2.5)},
-                  ]}>
-                  <Text style={styles.titleBottomSheet}>Chương trình</Text>
-                  <View style={styles.containerEachLine}>
-                    <Image source={Images.work} style={styles.Iconic} />
-                    <View style={styles.containerLine}>
-                      <Text style={styles.title}>
-                        Tên chương trình:{'  '}
-                        <Text
-                          numberOfLines={3}
-                          ellipsizeMode="tail"
-                          style={styles.content}>
-                          {selectedItem.chuongtrinh}
-                        </Text>
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.containerEachLine}>
-                    <Image source={Images.worklocation} style={styles.Iconic} />
-                    <View style={styles.containerLine}>
-                      <Text style={styles.title}>Địa điểm:{'  '}</Text>
-                      <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={styles.content}>
-                        {selectedItem.filterPlace}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
                 <View style={styles.bottomSheetContainer}>
-                  <Text style={styles.titleBottomSheet}>Người tham gia</Text>
+                  <Text style={styles.titleBottomSheet}>Người đăng kí</Text>
                   <View style={styles.containerEachLine}>
                     <Image
-                      source={Images.registerperson}
-                      style={styles.Iconic}
+                      src={mainURL + selectedItem?.path}
+                      style={[styles.Iconic, {borderRadius: 50}]}
                     />
                     <View style={styles.containerLine}>
-                      <Text style={styles.title}>Người đăng kí:{'  '}</Text>
+                      <Text style={styles.title}>Họ tên:{'  '}</Text>
                       <Text
                         numberOfLines={2}
                         ellipsizeMode="tail"
                         style={styles.content}>
-                        {selectedItem.name_user}
+                        {selectedItem.nguoidk}
                       </Text>
                     </View>
                   </View>
                   <View style={styles.containerEachLine}>
-                    <Image source={Images.insideperson} style={styles.Iconic} />
-                    <Text style={[styles.title, {width: '90%'}]}>
-                      Người trong viện:{' '}
-                      <Text style={styles.content}>
-                        {selectedItem.trongvien?.map((item, index) => {
-                          return <Text key={index}>{item.hoten}, </Text>;
-                        })}
-                      </Text>
-                    </Text>
-                  </View>
-                  <View style={styles.containerEachLine}>
-                    <Image
-                      source={Images.outsideperson}
-                      style={styles.Iconic}
-                    />
+                    <Image source={Images.note} style={styles.Iconic} />
                     <View style={styles.containerLine}>
-                      <Text style={styles.title}>Người ngoài viện:{'  '}</Text>
+                      <Text style={styles.title}>Bộ môn:{'  '}</Text>
                       <Text
                         numberOfLines={2}
                         ellipsizeMode="tail"
                         style={styles.content}>
-                        {selectedItem.ngoaivien?.map((item, index) => {
-                          return <Text key={index}>{item}</Text>;
-                        })}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles.bottomSheetContainer}>
-                  <Text style={styles.titleBottomSheet}>
-                    Thông tin chuyến bay
-                  </Text>
-                  <View style={styles.containerEachLine}>
-                    <Image source={Images.plane} style={styles.Iconic} />
-                    <View style={styles.containerLine}>
-                      <Text style={styles.title}>Hãng bay:{'  '}</Text>
-                      <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={styles.content}>
-                        {selectedItem.hangbay}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.containerEachLine}>
-                    <Image source={Images.planeTicket} style={styles.Iconic} />
-                    <View style={styles.containerLine}>
-                      <Text style={styles.title}>Hạng vé:{'  '}</Text>
-                      <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={styles.content}>
-                        {selectedItem.hangve}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.containerEachLine}>
-                    <Image source={Images.baggage} style={styles.Iconic} />
-                    <View style={styles.containerLine}>
-                      <Text style={styles.title}>Cân nặng hành lý:{'  '}</Text>
-                      <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={styles.content}>
-                        {selectedItem.kygui}KG
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.containerEachLine}>
-                    <Image source={Images.takeoff} style={styles.Iconic} />
-                    <View style={styles.containerLine}>
-                      <Text style={styles.title}>Địa điểm đi:{'  '}</Text>
-                      <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={styles.content}>
-                        {selectedItem.filterStartPlace}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.containerEachLine}>
-                    <Image source={Images.landing} style={styles.Iconic} />
-                    <View style={styles.containerLine}>
-                      <Text style={styles.title}>Địa điểm đến:{'  '}</Text>
-                      <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={styles.content}>
-                        {selectedItem.filterEndPlace}
+                        {selectedItem.bomon}
                       </Text>
                     </View>
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.datetime} style={styles.Iconic} />
                     <View style={styles.containerLine}>
-                      <Text style={styles.title}>Khởi hành lúc:{'  '}</Text>
-                      <Text style={styles.content}>{selectedItem.ngaydi}</Text>
+                      <Text style={styles.title}>Ngày đăng kí:{'  '}</Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={styles.content}>
+                        {changeFormatDate(selectedItem.ngaydk)}
+                      </Text>
                     </View>
                   </View>
+                </View>
+                <View style={styles.bottomSheetContainer}>
+                  <Text style={styles.titleBottomSheet}>Văn phòng phẩm</Text>
+                  {selectedItem.vpp.map((item, index) => {
+                    return (
+                      <View
+                        style={{marginLeft: Dimension.setWidth(2)}}
+                        key={index}>
+                        <Text
+                          style={{
+                            fontSize: Dimension.fontSize(17),
+                            fontFamily: Fonts.SF_BOLD,
+                          }}>{`${index + 1}.`}</Text>
+                        <View style={styles.containerEachLine}>
+                          <Image
+                            source={Images.item}
+                            style={[styles.Iconic, {borderRadius: 50}]}
+                          />
+
+                          <View style={styles.containerLine}>
+                            <Text style={styles.title}>Loại VPP:{'  '}</Text>
+                            <Text
+                              numberOfLines={2}
+                              ellipsizeMode="tail"
+                              style={styles.content}>
+                              {item.vpp}
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={styles.containerEachLine}>
+                          <Image
+                            source={Images.quantity}
+                            style={styles.Iconic}
+                          />
+                          <View style={styles.containerLine}>
+                            <Text style={styles.title}>Số lượng:{'  '}</Text>
+                            <Text
+                              numberOfLines={2}
+                              ellipsizeMode="tail"
+                              style={styles.content}>
+                              {item.soluong}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    );
+                  })}
                 </View>
               </BottomSheetScrollView>
             </BottomSheetModal>
           )}
         </BottomSheetModalProvider>
-        <ApproveCancelModal
-          screenName={'registerTicket'}
-          toggleApproveModal={toggleModal}
-          setToggleApproveModal={setToggleModal}
-          checkInput={checkInput}
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-          commnetInput={commentInput}
-          setCommentInput={setCommentInput}
-          reasonCancel={reasonCancel}
-          setReasonCancel={setReasonCancel}
-          eventFunc={handleApproveCancel}
+        <ConfirmModal
+          screenName={'HistoryRegisterItem'}
+          toggleModal={toggleModal}
+          setToggleModal={setToggleModal}
+          item={selectedItem}
+          status={checkInput}
+          handleApprove={handleApprove}
+          handleCancel={handleCancel}
         />
       </SafeAreaView>
     </LinearGradientUI>
