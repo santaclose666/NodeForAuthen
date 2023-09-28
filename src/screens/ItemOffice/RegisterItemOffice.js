@@ -163,18 +163,8 @@ const RegisterItemOffice = ({navigation, route}) => {
     try {
       const data = await getAllOfficeItem();
 
-      let filterType = [];
-      data.forEach(item => {
-        const typeExist = filterType.some(
-          type => type.typeDevice == item.loaithietbi,
-        );
-        if (!typeExist) {
-          filterType.push({typeDevice: item.loaithietbi});
-        }
-      });
-
       const tempArr = arrRender;
-      tempArr.push({type: filterType, name: [], typeValue: [], nameValue: []});
+      tempArr.push({type: data, name: [], typeValue: [], nameValue: []});
 
       setArrRender(data);
       setAllItem(data);
@@ -187,8 +177,7 @@ const RegisterItemOffice = ({navigation, route}) => {
     fetchAllIOfficeItem();
   }, []);
 
-  const RenderOptionData = memo(({data, index}) => {
-    console.log('rerender');
+  const RenderOptionData = ({data, index}) => {
     return (
       <View
         key={index}
@@ -240,7 +229,7 @@ const RegisterItemOffice = ({navigation, route}) => {
         </View>
       </View>
     );
-  });
+  };
 
   return (
     <LinearGradientUI>
