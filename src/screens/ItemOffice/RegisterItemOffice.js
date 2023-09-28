@@ -163,10 +163,10 @@ const RegisterItemOffice = ({navigation, route}) => {
     try {
       const data = await getAllOfficeItem();
 
-      const tempArr = arrRender;
+      const tempArr = [...arrRender];
       tempArr.push({type: data, name: [], typeValue: [], nameValue: []});
 
-      setArrRender(data);
+      setArrRender(tempArr);
       setAllItem(data);
     } catch (error) {
       console.log(error);
@@ -204,7 +204,7 @@ const RegisterItemOffice = ({navigation, route}) => {
             itemTextStyle={styles.itemText}
             fontFamily={Fonts.SF_MEDIUM}
             activeColor="#eef2feff"
-            data={data.vpp}
+            data={data.type}
             maxHeight={Dimension.setHeight(30)}
             labelField="vpp"
             valueField="vpp"
@@ -286,29 +286,16 @@ const RegisterItemOffice = ({navigation, route}) => {
 
             <View style={[styles.containerEachLine, {width: '100%'}]}>
               <View style={rowAlignCenter}>
-                <Text style={styles.title}>Dạng đăng kí</Text>
+                <Text style={styles.title}>Nội dung đăng kí</Text>
                 <RedPoint />
               </View>
-              <Dropdown
-                style={styles.dropdown}
-                placeholder="Chọn dạng đăng kí"
-                autoScroll={false}
-                showsVerticalScrollIndicator={false}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                containerStyle={styles.containerOptionStyle}
-                iconStyle={styles.iconStyle}
-                itemContainerStyle={styles.itemContainer}
-                itemTextStyle={styles.itemText}
-                fontFamily={Fonts.SF_MEDIUM}
-                activeColor="#eef2feff"
-                data={retunOption}
-                maxHeight={Dimension.setHeight(30)}
-                labelField="label"
-                valueField="value"
-                value={returnValue}
-                onChange={item => {
-                  setReturnValue(item.value);
+              <TextInput
+                multiline={true}
+                style={styles.inputText}
+                placeholder="Nhập nội dung"
+                value={content}
+                onChangeText={e => {
+                  setContent(e);
                 }}
               />
             </View>
@@ -387,21 +374,6 @@ const RegisterItemOffice = ({navigation, route}) => {
               />
             </View>
 
-            <View style={[styles.containerEachLine, {width: '100%'}]}>
-              <View style={rowAlignCenter}>
-                <Text style={styles.title}>Nội dung sử dụng</Text>
-                <RedPoint />
-              </View>
-              <TextInput
-                multiline={true}
-                style={styles.inputText}
-                placeholder="Nhập nội dung"
-                value={content}
-                onChangeText={e => {
-                  setContent(e);
-                }}
-              />
-            </View>
             <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
           </KeyboardAwareScrollView>
         </ScrollView>
