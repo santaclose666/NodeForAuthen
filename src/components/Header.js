@@ -22,11 +22,7 @@ const Header = ({
   replace = false,
   handleFilter,
 }) => {
-  const showCreateButton =
-    title === 'Lịch sử nghỉ phép' ||
-    title === 'Lịch sử đặt vé' ||
-    title === 'Lịch sử công tác' ||
-    title === 'Lịch sử đăng kí xe';
+  const showCreateButton = title.includes('Lịch sử');
 
   const showFitlerButon =
     title === 'Định mức Kinh tế Kĩ thuật' ||
@@ -124,6 +120,10 @@ const Header = ({
               });
             } else if (title === 'Lịch sử đăng kí xe') {
               navigation.navigate('RegisterVehicle', {
+                refreshData: refreshData,
+              });
+            } else if (title === 'Lịch sử đăng kí VPP') {
+              navigation.navigate('RegisterItemOffice', {
                 refreshData: refreshData,
               });
             }

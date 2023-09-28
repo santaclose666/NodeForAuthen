@@ -475,7 +475,7 @@ const HomePageScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.buttonFuc}
                   onPress={() => {
-                    handleNavigate('RegisterItemOffice');
+                    handleNavigate('HistoryItemOffice');
                   }}>
                   <Image source={Images.office} style={styles.featureBtn} />
                   <Text style={styles.featureText}>Văn phòng phẩm</Text>

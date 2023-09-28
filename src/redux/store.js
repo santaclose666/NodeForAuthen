@@ -15,6 +15,7 @@ import documentReducer from './documentSlice';
 import SpeciesReducer from './SpeciesSlice';
 import newsMvReducer from './newsMvSlice';
 import documentMvReducer from './documentMvSlice';
+import officeItemReducer from './officeItemSlice';
 import logger from 'redux-logger';
 import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -41,6 +42,7 @@ const rootReducer = combineReducers({
   document: documentReducer,
   documentMv: documentMvReducer,
   species: SpeciesReducer,
+  officeItem: officeItemReducer,
 });
 const persistedReducer = persistReducer(
   persistConfig,
