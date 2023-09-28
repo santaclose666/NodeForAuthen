@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, memo} from 'react';
+import React, {useState, useLayoutEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -26,12 +26,14 @@ import {
   formatTime,
   formatTimeToPost,
   getCurrentDate,
+  getCurrentTime,
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
 import {
   getAllDevices,
   getAllOfficeItem,
   registerDevice,
+  registerOfficeItem,
 } from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
@@ -41,46 +43,30 @@ import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import Colors from '../../contants/Colors';
 
-const retunOption = [
-  {label: 'Có trả', value: 0},
-  {label: 'Không trả', value: 1},
-];
-
 const RegisterItemOffice = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const [allItem, setAllItem] = useState([]);
   const [arrRender, setArrRender] = useState([]);
-  const [typeDeviceArr, setTypeDeviceArr] = useState([]);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [checkDateInput, setCheckDateInput] = useState('');
-  const [returnValue, setReturnValue] = useState(0);
-  const [borrowDate, setBorrowDate] = useState(getCurrentDate());
-  const [returnDate, setReturnDate] = useState('');
-  const [content, setContent] = useState('');
+  const [dateTime, setDateTime] = useState('date');
+  const [receiveDate, setReceiveDate] = useState(getCurrentDate());
+  const [receiveTime, setReceiveTime] = useState(getCurrentTime());
 
   const handlePickType = (item, index) => {
     const updatedArrRender = [...arrRender];
 
     const checkExist = updatedArrRender.some(
-      filter => filter.typeValue == item.typeDevice,
+      filter => filter.typeValue == item.id,
     );
 
     if (checkExist) {
-      ToastAlert('Loại thiết bị đã tồn tại!');
+      ToastAlert('Văn phòng phẩm đã tồn tại!');
     } else {
-      updatedArrRender[index].typeValue = item.typeDevice;
-      updatedArrRender[index].nameValue = [];
-      const filterItem = allItem
-        .filter(device => device.loaithietbi === item.typeDevice)
-        .map(devices => {
-          return {
-            id: devices.id,
-            seri: devices.seri,
-          };
-        });
+      updatedArrRender[index].typeValue = item.id;
+      updatedArrRender[index].unit = item.donvitinh;
+      updatedArrRender[index].quantity = 1;
 
-      updatedArrRender[index].name = filterItem;
       setArrRender(updatedArrRender);
     }
   };
@@ -89,10 +75,10 @@ const RegisterItemOffice = ({navigation, route}) => {
     const updatedArrRender = [...arrRender];
 
     updatedArrRender.push({
-      type: typeDeviceArr,
-      name: [],
-      typeValue: [],
-      nameValue: [],
+      type: allItem,
+      unit: '',
+      typeValue: '',
+      quantity: 0,
     });
 
     setArrRender(updatedArrRender);
@@ -112,43 +98,38 @@ const RegisterItemOffice = ({navigation, route}) => {
 
   const handlePickDate = date => {
     const message = 'Ngày vừa chọn không hợp lệ';
-    if (checkDateInput == 'borrow') {
-      compareDate(borrowDate, date) &&
-      (returnDate.length == 0 || compareDate(date, returnDate))
-        ? setBorrowDate(formatDate(date))
+    if (dateTime == 'date') {
+      compareDate(new Date(), date)
+        ? setReceiveDate(formatDate(date))
         : ToastAlert(message);
     } else {
-      compareDate(borrowDate, date)
-        ? setReturnDate(formatDate(date))
-        : ToastAlert(message);
+      setReceiveTime(formatTime(date));
     }
     setToggleDatePicker(false);
   };
 
   const handleRegister = async () => {
-    let idDevice = [];
+    let idItem = [];
+    let quantityItem = [];
     arrRender.forEach(item => {
-      idDevice.push(...item.nameValue);
+      if (item.quantity != 0) {
+        idItem.push(item.typeValue);
+        quantityItem.push(item.quantity);
+      }
     });
 
-    if (
-      idDevice.length != 0 &&
-      borrowDate.length != 0 &&
-      returnDate.length != 0 &&
-      content.length != 0
-    ) {
+    if (idItem.length != 0 && quantityItem.length != 0) {
       const data = {
-        id_user: user.id,
-        thietbi: idDevice,
-        ngaymuon: formatDateToPost(borrowDate),
-        ngaytra: formatDateToPost(returnDate),
-        noidung: content,
-        active: returnValue,
+        id_user: user?.id,
+        loaivpp: idItem,
+        soluong: quantityItem,
+        ngaynhan: formatDateToPost(receiveDate),
+        gionhan: formatTimeToPost(receiveTime),
       };
 
       setLoading(true);
       try {
-        const res = await registerDevice(data);
+        const res = await registerOfficeItem(data);
 
         if (res) {
           setLoading(false);
@@ -164,7 +145,7 @@ const RegisterItemOffice = ({navigation, route}) => {
       const data = await getAllOfficeItem();
 
       const tempArr = [...arrRender];
-      tempArr.push({type: data, name: [], typeValue: [], nameValue: []});
+      tempArr.push({type: data, unit: '', typeValue: '', quantity: 0});
 
       setArrRender(tempArr);
       setAllItem(data);
@@ -186,7 +167,7 @@ const RegisterItemOffice = ({navigation, route}) => {
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
-        <View style={[styles.containerEachLine, {width: '50%'}]}>
+        <View style={[styles.containerEachLine, {width: '52%'}]}>
           <View style={rowAlignCenter}>
             <Text style={styles.title}>Loại văn phòng phẩm</Text>
             <RedPoint />
@@ -207,24 +188,67 @@ const RegisterItemOffice = ({navigation, route}) => {
             data={data.type}
             maxHeight={Dimension.setHeight(30)}
             labelField="vpp"
-            valueField="vpp"
+            valueField="id"
             value={data.typeValue}
             onChange={item => {
               handlePickType(item, index);
             }}
           />
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            handleDelete(index);
-          }}
-          style={{alignSelf: 'center'}}>
-          <Image style={{width: 18, height: 18}} source={Images.minus} />
-        </TouchableOpacity>
-        <View style={[styles.containerEachLine, {width: '42%'}]}>
-          <View style={rowAlignCenter}>
-            <Text style={styles.title}>Số lượng</Text>
-            <RedPoint />
+        <View
+          style={[
+            styles.containerEachLine,
+            {
+              width: '45%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+          ]}>
+          <Text style={[styles.title, {alignSelf: 'center'}]}>Số lượng</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                if (data.typeValue.length == 0) {
+                  return ToastAlert('Chưa chọn loại văn phòng phẩm!');
+                }
+
+                if (data.quantity > 1) {
+                  const updatedArrRender = [...arrRender];
+                  updatedArrRender[index].quantity =
+                    updatedArrRender[index].quantity - 1;
+
+                  setArrRender(updatedArrRender);
+                }
+              }}>
+              <Image style={{height: 22, width: 22}} source={Images.minus} />
+            </TouchableOpacity>
+            <Text
+              style={{
+                marginHorizontal: Dimension.setWidth(3),
+                fontFamily: Fonts.SF_MEDIUM,
+                fontSize: Dimension.fontSize(16),
+              }}>
+              {`${data.quantity} ${data.unit}`}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                if (data.typeValue.length == 0) {
+                  return ToastAlert('Chưa chọn loại văn phòng phẩm!');
+                }
+
+                const updatedArrRender = [...arrRender];
+                updatedArrRender[index].quantity =
+                  updatedArrRender[index].quantity + 1;
+
+                setArrRender(updatedArrRender);
+              }}>
+              <Image style={{height: 22, width: 22}} source={Images.plus} />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -284,22 +308,6 @@ const RegisterItemOffice = ({navigation, route}) => {
               removeClippedSubviews={true}
             />
 
-            <View style={[styles.containerEachLine, {width: '100%'}]}>
-              <View style={rowAlignCenter}>
-                <Text style={styles.title}>Nội dung đăng kí</Text>
-                <RedPoint />
-              </View>
-              <TextInput
-                multiline={true}
-                style={styles.inputText}
-                placeholder="Nhập nội dung"
-                value={content}
-                onChangeText={e => {
-                  setContent(e);
-                }}
-              />
-            </View>
-
             <View
               style={{
                 flexDirection: 'row',
@@ -308,7 +316,7 @@ const RegisterItemOffice = ({navigation, route}) => {
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  setCheckDateInput('borrow');
+                  setDateTime('date');
                   setToggleDatePicker(true);
                 }}
                 style={[
@@ -318,11 +326,11 @@ const RegisterItemOffice = ({navigation, route}) => {
                   },
                 ]}>
                 <View style={rowAlignCenter}>
-                  <Text style={styles.title}>Ngày mượn</Text>
+                  <Text style={styles.title}>Ngày nhận</Text>
                   <RedPoint />
                 </View>
                 <View style={styles.dateTimePickerContainer}>
-                  <Text style={styles.dateTimeText}>{borrowDate}</Text>
+                  <Text style={styles.dateTimeText}>{receiveDate}</Text>
                   <View
                     style={[
                       styles.dateTimeImgContainer,
@@ -337,7 +345,7 @@ const RegisterItemOffice = ({navigation, route}) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  setCheckDateInput('return');
+                  setDateTime('time');
                   setToggleDatePicker(true);
                 }}
                 style={[
@@ -347,26 +355,24 @@ const RegisterItemOffice = ({navigation, route}) => {
                   },
                 ]}>
                 <View style={rowAlignCenter}>
-                  <Text style={styles.title}>Ngày trả</Text>
+                  <Text style={styles.title}>Giờ nhận</Text>
                   <RedPoint />
                 </View>
                 <View style={styles.dateTimePickerContainer}>
-                  <Text style={styles.dateTimeText}>{returnDate}</Text>
+                  <Text style={styles.dateTimeText}>{receiveTime}</Text>
                   <View
                     style={[
                       styles.dateTimeImgContainer,
                       {backgroundColor: '#dbd265'},
                     ]}>
-                    <Image
-                      source={Images.calendarBlack}
-                      style={styles.dateTimeImg}
-                    />
+                    <Image source={Images.time} style={styles.dateTimeImg} />
                   </View>
                 </View>
               </TouchableOpacity>
+
               <DateTimePickerModal
                 isVisible={toggleDatePicker}
-                mode={'date'}
+                mode={dateTime}
                 onConfirm={handlePickDate}
                 onCancel={() => {
                   setToggleDatePicker(false);

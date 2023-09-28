@@ -131,7 +131,9 @@ const RegisterDevices = ({navigation, route}) => {
   const handleRegister = async () => {
     let idDevice = [];
     arrRender.forEach(item => {
-      idDevice.push(...item.nameValue);
+      if (item.nameValue.length != 0) {
+        idDevice.push(...item.nameValue);
+      }
     });
 
     if (
