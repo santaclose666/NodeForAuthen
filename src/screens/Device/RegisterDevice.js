@@ -10,7 +10,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
@@ -28,7 +28,11 @@ import {
   getCurrentDate,
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
-import {getAllDevices, registerDevice} from '../../redux/apiRequest';
+import {
+  getAllDevices,
+  getAllListDevice,
+  registerDevice,
+} from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
@@ -56,6 +60,7 @@ const RegisterDevices = ({navigation, route}) => {
   const [returnDate, setReturnDate] = useState(null);
   const [content, setContent] = useState('');
   const deviceRef = useRef([]);
+  const dispatch = useDispatch();
 
   const handlePickType = (item, index) => {
     const updatedArrRender = [...arrRender];
@@ -152,7 +157,12 @@ const RegisterDevices = ({navigation, route}) => {
         const res = await registerDevice(data);
 
         if (res) {
+          ToastSuccess('Đăng kí thành công');
           setLoading(false);
+
+          await fetchAllListDevice();
+
+          navigation.goBack();
         }
       } catch (error) {
         console.log(error);
@@ -160,6 +170,10 @@ const RegisterDevices = ({navigation, route}) => {
     } else {
       ToastAlert('Chưa nhập đầy đủ thông tin!');
     }
+  };
+
+  const fetchAllListDevice = () => {
+    getAllListDevice(dispatch);
   };
 
   const fetchAllDevices = async () => {
