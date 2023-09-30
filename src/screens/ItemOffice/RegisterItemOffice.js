@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useRef} from 'react';
+import React, {useState, useLayoutEffect, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
@@ -31,6 +31,7 @@ import {
 import RegisterBtn from '../../components/RegisterBtn';
 import {
   getAllDevices,
+  getAllListOfficeItem,
   getAllOfficeItem,
   registerDevice,
   registerOfficeItem,
@@ -42,9 +43,11 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import Colors from '../../contants/Colors';
+import {Swipeable} from 'react-native-gesture-handler';
 
 const RegisterItemOffice = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const dispatch = useDispatch();
   const [allItem, setAllItem] = useState([]);
   const [arrRender, setArrRender] = useState([]);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
@@ -79,6 +82,7 @@ const RegisterItemOffice = ({navigation, route}) => {
       unit: '',
       typeValue: '',
       quantity: 0,
+      isOpen: false,
     });
 
     setArrRender(updatedArrRender);
@@ -133,6 +137,9 @@ const RegisterItemOffice = ({navigation, route}) => {
 
         if (res) {
           setLoading(false);
+          ToastSuccess('Đăng kí văn phòng phẩm thành công!');
+          await fetchOfficeItemList();
+          navigation.goBack();
         }
       } catch (error) {}
     } else {
@@ -140,12 +147,22 @@ const RegisterItemOffice = ({navigation, route}) => {
     }
   };
 
+  const fetchOfficeItemList = () => {
+    getAllListOfficeItem(dispatch);
+  };
+
   const fetchAllIOfficeItem = async () => {
     try {
       const data = await getAllOfficeItem();
 
       const tempArr = [...arrRender];
-      tempArr.push({type: data, unit: '', typeValue: '', quantity: 0});
+      tempArr.push({
+        type: data,
+        unit: '',
+        typeValue: '',
+        quantity: 0,
+        isOpen: false,
+      });
 
       setArrRender(tempArr);
       setAllItem(data);
@@ -159,99 +176,117 @@ const RegisterItemOffice = ({navigation, route}) => {
   }, []);
 
   const RenderOptionData = ({data, index}) => {
-    return (
-      <View
-        key={index}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <View style={[styles.containerEachLine, {width: '52%'}]}>
-          <View style={rowAlignCenter}>
-            <Text style={styles.title}>Loại văn phòng phẩm</Text>
-            <RedPoint />
-          </View>
-          <Dropdown
-            style={styles.dropdown}
-            placeholder="Chọn loại VPP"
-            autoScroll={false}
-            showsVerticalScrollIndicator={false}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            containerStyle={styles.containerOptionStyle}
-            iconStyle={styles.iconStyle}
-            itemContainerStyle={styles.itemContainer}
-            itemTextStyle={styles.itemText}
-            fontFamily={Fonts.SF_MEDIUM}
-            activeColor="#eef2feff"
-            data={data.type}
-            maxHeight={Dimension.setHeight(30)}
-            labelField="vpp"
-            valueField="id"
-            value={data.typeValue}
-            onChange={item => {
-              handlePickType(item, index);
+    const rightSwipe = () => {
+      return (
+        <View style={styles.rightSwipeContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              handleDelete(index);
             }}
-          />
+            style={styles.btnRightSwipe}>
+            <Image source={Images.delete} style={{width: 40, height: 40}} />
+          </TouchableOpacity>
         </View>
+      );
+    };
+    return (
+      <Swipeable
+        renderRightActions={() => {
+          return rightSwipe(index);
+        }}>
         <View
-          style={[
-            styles.containerEachLine,
-            {
-              width: '45%',
-              alignItems: 'center',
-              justifyContent: 'center',
-            },
-          ]}>
-          <Text style={[styles.title, {alignSelf: 'center'}]}>Số lượng</Text>
+          key={index}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <View style={[styles.containerEachLine, {width: '52%'}]}>
+            <View style={rowAlignCenter}>
+              <Text style={styles.title}>Loại văn phòng phẩm</Text>
+              <RedPoint />
+            </View>
+            <Dropdown
+              style={styles.dropdown}
+              placeholder="Chọn loại VPP"
+              autoScroll={false}
+              showsVerticalScrollIndicator={false}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              containerStyle={styles.containerOptionStyle}
+              iconStyle={styles.iconStyle}
+              itemContainerStyle={styles.itemContainer}
+              itemTextStyle={styles.itemText}
+              fontFamily={Fonts.SF_MEDIUM}
+              activeColor="#eef2feff"
+              data={data.type}
+              maxHeight={Dimension.setHeight(30)}
+              labelField="vpp"
+              valueField="id"
+              value={data.typeValue}
+              onChange={item => {
+                handlePickType(item, index);
+              }}
+            />
+          </View>
           <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                if (data.typeValue.length == 0) {
-                  return ToastAlert('Chưa chọn loại văn phòng phẩm!');
-                }
+            style={[
+              styles.containerEachLine,
+              {
+                width: '45%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+            ]}>
+            <Text style={[styles.title, {alignSelf: 'center'}]}>Số lượng</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (data.typeValue.length == 0) {
+                    return ToastAlert('Chưa chọn loại văn phòng phẩm!');
+                  }
 
-                if (data.quantity > 1) {
+                  if (data.quantity > 1) {
+                    const updatedArrRender = [...arrRender];
+                    updatedArrRender[index].quantity =
+                      updatedArrRender[index].quantity - 1;
+
+                    setArrRender(updatedArrRender);
+                  }
+                }}>
+                <Image style={{height: 22, width: 22}} source={Images.minus} />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  marginHorizontal: Dimension.setWidth(3),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: Dimension.fontSize(16),
+                }}>
+                {`${data.quantity} ${data.unit}`}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  if (data.typeValue.length == 0) {
+                    return ToastAlert('Chưa chọn loại văn phòng phẩm!');
+                  }
+
                   const updatedArrRender = [...arrRender];
                   updatedArrRender[index].quantity =
-                    updatedArrRender[index].quantity - 1;
+                    updatedArrRender[index].quantity + 1;
 
                   setArrRender(updatedArrRender);
-                }
-              }}>
-              <Image style={{height: 22, width: 22}} source={Images.minus} />
-            </TouchableOpacity>
-            <Text
-              style={{
-                marginHorizontal: Dimension.setWidth(3),
-                fontFamily: Fonts.SF_MEDIUM,
-                fontSize: Dimension.fontSize(16),
-              }}>
-              {`${data.quantity} ${data.unit}`}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                if (data.typeValue.length == 0) {
-                  return ToastAlert('Chưa chọn loại văn phòng phẩm!');
-                }
-
-                const updatedArrRender = [...arrRender];
-                updatedArrRender[index].quantity =
-                  updatedArrRender[index].quantity + 1;
-
-                setArrRender(updatedArrRender);
-              }}>
-              <Image style={{height: 22, width: 22}} source={Images.plus} />
-            </TouchableOpacity>
+                }}>
+                <Image style={{height: 22, width: 22}} source={Images.plus} />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
+      </Swipeable>
     );
   };
 
@@ -259,7 +294,7 @@ const RegisterItemOffice = ({navigation, route}) => {
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Đăng kí văn phòng phẩm" navigation={navigation} />
-        <ScrollView style={{flex: 1}}>
+        <ScrollView>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={{
@@ -303,9 +338,6 @@ const RegisterItemOffice = ({navigation, route}) => {
               renderItem={({item, index}) => (
                 <RenderOptionData data={item} index={index} />
               )}
-              initialNumToRender={6}
-              windowSize={6}
-              removeClippedSubviews={true}
             />
 
             <View
@@ -501,6 +533,14 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: Dimension.setWidth(1.3),
+  },
+
+  rightSwipeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 6,
+    paddingBottom: Dimension.setHeight(1.6),
   },
 });
 

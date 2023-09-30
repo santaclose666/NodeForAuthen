@@ -33,6 +33,7 @@ import SelectProvinceFFWScreen from '../screens/ForestFire/SelectProvinceFFWScre
 import RegisterDevices from '../screens/Device/RegisterDevice';
 import RegisterItemOffice from '../screens/ItemOffice/RegisterItemOffice';
 import HistoryRegisterItem from '../screens/ItemOffice/HistoryRegisterItem';
+import HistoryRegisterDevice from '../screens/Device/HistoryRegisterDevice';
 
 const Stack = createStackNavigator();
 
@@ -70,6 +71,10 @@ const StactNavigator = () => {
       <Stack.Screen name="CreateWorkSchedule" component={CreateWorkSchedule} />
       <Stack.Screen name="HistoryWorkShedule" component={HistoryWorkShedule} />
       <Stack.Screen name="AllWorkSchedule" component={AllWorkScheduleScreen} />
+      <Stack.Screen
+        name="HistoryRegisterDevice"
+        component={HistoryRegisterDevice}
+      />
       <Stack.Screen name="RegisterDevices" component={RegisterDevices} />
       <Stack.Screen name="HistoryItemOffice" component={HistoryRegisterItem} />
       <Stack.Screen name="RegisterItemOffice" component={RegisterItemOffice} />

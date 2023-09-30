@@ -192,6 +192,7 @@ const Images = {
   office: require('../assets/images/office.png'),
   item: require('../assets/images/item.png'),
   quantity: require('../assets/images/quantity.png'),
+  delete: require('../assets/images/delete.png'),
 };
 
 export default Images;

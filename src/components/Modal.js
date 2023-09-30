@@ -347,6 +347,31 @@ export const ConfirmModal = ({
           </View>
         )}
 
+        {screenName == 'HistoryRegisterDevice' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image source={Images.item} style={{height: 55, width: 55}} />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: Dimension.fontSize(17),
+                fontFamily: Fonts.SF_MEDIUM,
+                textAlign: 'center',
+                ...fontDefault,
+              }}>
+              {`${status ? approveItemMess : cancelItemMess} ${
+                item?.nguoidangky
+              }?`}
+            </Text>
+          </View>
+        )}
+
         <View
           style={[
             styles.containerEachLine,

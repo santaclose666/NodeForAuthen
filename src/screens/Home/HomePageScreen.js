@@ -514,7 +514,7 @@ const HomePageScreen = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    handleNavigate('RegisterDevices');
+                    handleNavigate('HistoryRegisterDevice');
                   }}
                   style={styles.buttonFuc}>
                   <Image source={Images.device} style={styles.featureBtn} />

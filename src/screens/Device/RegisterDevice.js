@@ -36,6 +36,7 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import Colors from '../../contants/Colors';
+import {Swipeable} from 'react-native-gesture-handler';
 
 const retunOption = [
   {label: 'Có trả', value: 0},
@@ -52,7 +53,7 @@ const RegisterDevices = ({navigation, route}) => {
   const [checkDateInput, setCheckDateInput] = useState('');
   const [returnValue, setReturnValue] = useState(0);
   const [borrowDate, setBorrowDate] = useState(getCurrentDate());
-  const [returnDate, setReturnDate] = useState('');
+  const [returnDate, setReturnDate] = useState(null);
   const [content, setContent] = useState('');
   const deviceRef = useRef([]);
 
@@ -136,17 +137,12 @@ const RegisterDevices = ({navigation, route}) => {
       }
     });
 
-    if (
-      idDevice.length != 0 &&
-      borrowDate.length != 0 &&
-      returnDate.length != 0 &&
-      content.length != 0
-    ) {
+    if (idDevice.length != 0 && borrowDate.length != 0 && content.length != 0) {
       const data = {
         id_user: user.id,
         thietbi: idDevice,
         ngaymuon: formatDateToPost(borrowDate),
-        ngaytra: formatDateToPost(returnDate),
+        ngaytra: returnDate ? formatDateToPost(returnDate) : returnDate,
         noidung: content,
         active: returnValue,
       };
@@ -158,7 +154,9 @@ const RegisterDevices = ({navigation, route}) => {
         if (res) {
           setLoading(false);
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       ToastAlert('Chưa nhập đầy đủ thông tin!');
     }
@@ -199,105 +197,115 @@ const RegisterDevices = ({navigation, route}) => {
   }, []);
 
   const RenderOptionData = memo(({data, index}) => {
-    console.log('rerender');
+    const rightSwipe = () => {
+      return (
+        <View style={styles.rightSwipeContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              handleDelete(index);
+            }}
+            style={styles.btnRightSwipe}>
+            <Image source={Images.delete} style={{width: 40, height: 40}} />
+          </TouchableOpacity>
+        </View>
+      );
+    };
     return (
-      <View
-        key={index}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+      <Swipeable
+        renderRightActions={() => {
+          return rightSwipe(index);
         }}>
-        <View style={[styles.containerEachLine, {width: '41%'}]}>
-          <View style={rowAlignCenter}>
-            <Text style={styles.title}>Loại thiết bị</Text>
-            <RedPoint />
+        <View
+          key={index}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <View style={[styles.containerEachLine, {width: '42%'}]}>
+            <View style={rowAlignCenter}>
+              <Text style={styles.title}>Loại thiết bị</Text>
+              <RedPoint />
+            </View>
+            <Dropdown
+              style={styles.dropdown}
+              placeholder="Chọn loại thiết bị"
+              autoScroll={false}
+              showsVerticalScrollIndicator={false}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              containerStyle={styles.containerOptionStyle}
+              iconStyle={styles.iconStyle}
+              itemContainerStyle={styles.itemContainer}
+              itemTextStyle={styles.itemText}
+              fontFamily={Fonts.SF_MEDIUM}
+              activeColor="#eef2feff"
+              data={data.type}
+              maxHeight={Dimension.setHeight(30)}
+              labelField="typeDevice"
+              valueField="typeDevice"
+              value={data.typeValue}
+              onChange={item => {
+                handlePickType(item, index);
+              }}
+            />
           </View>
-          <Dropdown
-            style={styles.dropdown}
-            placeholder="Chọn loại thiết bị"
-            autoScroll={false}
-            showsVerticalScrollIndicator={false}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            containerStyle={styles.containerOptionStyle}
-            iconStyle={styles.iconStyle}
-            itemContainerStyle={styles.itemContainer}
-            itemTextStyle={styles.itemText}
-            fontFamily={Fonts.SF_MEDIUM}
-            activeColor="#eef2feff"
-            data={data.type}
-            maxHeight={Dimension.setHeight(30)}
-            labelField="typeDevice"
-            valueField="typeDevice"
-            value={data.typeValue}
-            onChange={item => {
-              handlePickType(item, index);
-            }}
-          />
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            handleDelete(index);
-          }}
-          style={{alignSelf: 'center'}}>
-          <Image style={{width: 18, height: 18}} source={Images.minus} />
-        </TouchableOpacity>
-        <View style={[styles.containerEachLine, {width: '52%'}]}>
-          <View style={rowAlignCenter}>
-            <Text style={styles.title}>Thiết bị</Text>
-            <RedPoint />
+          <View style={[styles.containerEachLine, {width: '54%'}]}>
+            <View style={rowAlignCenter}>
+              <Text style={styles.title}>Thiết bị</Text>
+              <RedPoint />
+            </View>
+            <MultiSelect
+              ref={ref => {
+                deviceRef.current[index] = ref;
+              }}
+              style={styles.dropdown}
+              autoScroll={false}
+              showsVerticalScrollIndicator={false}
+              placeholderStyle={[
+                styles.placeholderStyle,
+                {
+                  color:
+                    data.name.length != 0
+                      ? Colors.DEFAULT_BLACK
+                      : Colors.INACTIVE_GREY,
+                },
+              ]}
+              selectedStyle={styles.selectedStyle}
+              selectedTextStyle={[
+                styles.selectedTextStyle,
+                {
+                  fontSize: Dimension.fontSize(13),
+                },
+              ]}
+              containerStyle={styles.containerOptionStyle}
+              iconStyle={styles.iconStyle}
+              itemContainerStyle={styles.itemContainer}
+              itemTextStyle={styles.itemText}
+              fontFamily={Fonts.SF_MEDIUM}
+              activeColor="#eef2feff"
+              alwaysRenderSelectedItem={false}
+              visibleSelectedItem={false}
+              data={data.name}
+              maxHeight={Dimension.setHeight(30)}
+              labelField="seri"
+              valueField="id"
+              placeholder={`${data.nameValue.length} thiết bị đã chọn`}
+              value={data.nameValue}
+              onChange={item => {
+                const updatedArrRender = [...arrRender];
+                updatedArrRender[index].nameValue = item;
+
+                setArrRender(updatedArrRender);
+
+                setTimeout(() => {
+                  deviceRef?.current[index]?.open();
+                });
+              }}
+            />
           </View>
-          <MultiSelect
-            ref={ref => {
-              deviceRef.current[index] = ref;
-            }}
-            style={styles.dropdown}
-            autoScroll={false}
-            showsVerticalScrollIndicator={false}
-            placeholderStyle={[
-              styles.placeholderStyle,
-              {
-                color:
-                  data.name.length != 0
-                    ? Colors.DEFAULT_BLACK
-                    : Colors.INACTIVE_GREY,
-              },
-            ]}
-            selectedStyle={styles.selectedStyle}
-            selectedTextStyle={[
-              styles.selectedTextStyle,
-              {
-                fontSize: Dimension.fontSize(13),
-              },
-            ]}
-            containerStyle={styles.containerOptionStyle}
-            iconStyle={styles.iconStyle}
-            itemContainerStyle={styles.itemContainer}
-            itemTextStyle={styles.itemText}
-            fontFamily={Fonts.SF_MEDIUM}
-            activeColor="#eef2feff"
-            alwaysRenderSelectedItem={false}
-            visibleSelectedItem={false}
-            data={data.name}
-            maxHeight={Dimension.setHeight(30)}
-            labelField="seri"
-            valueField="id"
-            placeholder={`${data.nameValue.length} thiết bị đã chọn`}
-            value={data.nameValue}
-            onChange={item => {
-              const updatedArrRender = [...arrRender];
-              updatedArrRender[index].nameValue = item;
-
-              setArrRender(updatedArrRender);
-
-              setTimeout(() => {
-                deviceRef?.current[index]?.open();
-              });
-            }}
-          />
         </View>
-      </View>
+      </Swipeable>
     );
   });
 
@@ -419,6 +427,7 @@ const RegisterDevices = ({navigation, route}) => {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
+                disabled={returnValue == 1 ? true : false}
                 onPress={() => {
                   setCheckDateInput('return');
                   setToggleDatePicker(true);
@@ -430,7 +439,16 @@ const RegisterDevices = ({navigation, route}) => {
                   },
                 ]}>
                 <View style={rowAlignCenter}>
-                  <Text style={styles.title}>Ngày trả</Text>
+                  <Text
+                    style={[
+                      styles.title,
+                      {
+                        color:
+                          returnValue == 1 ? Colors.INACTIVE_GREY : '#8bc7bc',
+                      },
+                    ]}>
+                    Ngày trả
+                  </Text>
                   <RedPoint />
                 </View>
                 <View style={styles.dateTimePickerContainer}>
@@ -438,7 +456,10 @@ const RegisterDevices = ({navigation, route}) => {
                   <View
                     style={[
                       styles.dateTimeImgContainer,
-                      {backgroundColor: '#dbd265'},
+                      {
+                        backgroundColor:
+                          returnValue == 1 ? Colors.INACTIVE_GREY : '#dbd265',
+                      },
                     ]}>
                     <Image
                       source={Images.calendarBlack}
@@ -593,6 +614,13 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: Dimension.setWidth(1.3),
+  },
+  rightSwipeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 6,
+    paddingBottom: Dimension.setHeight(1.6),
   },
 });
 

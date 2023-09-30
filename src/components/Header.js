@@ -123,9 +123,9 @@ const Header = ({
                 refreshData: refreshData,
               });
             } else if (title === 'Lịch sử đăng kí VPP') {
-              navigation.navigate('RegisterItemOffice', {
-                refreshData: refreshData,
-              });
+              navigation.navigate('RegisterItemOffice');
+            } else if (title == 'Lịch sử đăng kí thiết bị') {
+              navigation.navigate('RegisterDevices');
             }
           }}>
           <Image source={Images.adjust} style={styles.rightIcon} />

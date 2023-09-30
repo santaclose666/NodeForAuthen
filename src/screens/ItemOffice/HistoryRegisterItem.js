@@ -26,20 +26,15 @@ import {
 } from '@gorhom/bottom-sheet';
 import Colors from '../../contants/Colors';
 import {
-  approvePlaneTicket,
   approveRegisterOfficeItem,
-  cancelPlaneTicket,
   cancelRegisterOfficeItem,
   getAllListOfficeItem,
-  getAllPlaneData,
 } from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import StatusUI from '../../components/StatusUI';
-import {ApproveCancelModal, ConfirmModal} from '../../components/Modal';
-import {ToastWarning} from '../../components/Toast';
+import {ConfirmModal} from '../../components/Modal';
 import {shadowIOS} from '../../contants/propsIOS';
-import FilterStatusUI from '../../components/FilterStatusUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import {fontDefault, mainURL} from '../../contants/Variable';
@@ -380,12 +375,11 @@ const HistoryRegisterItem = ({navigation}) => {
                           />
 
                           <View style={styles.containerLine}>
-                            <Text style={styles.title}>Loại VPP:{'  '}</Text>
-                            <Text
-                              numberOfLines={2}
-                              ellipsizeMode="tail"
-                              style={styles.content}>
-                              {item.vpp}
+                            <Text style={styles.title}>
+                              Loại VPP:{'  '}
+                              <Text numberOfLines={2} style={styles.content}>
+                                {item.vpp}
+                              </Text>
                             </Text>
                           </View>
                         </View>
