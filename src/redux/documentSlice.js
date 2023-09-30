@@ -26,16 +26,13 @@ const documentSlice = createSlice({
       const filterCategory = data => {
         let categoryFilter = ['Tất cả'];
         data.forEach(item => {
-          if (item.id_loaivanban == 5) {
-            if (!categoryFilter.includes(item.loaivbpl)) {
-              categoryFilter.push(item.loaivbpl);
-            }
-          }
+          // if (item.id_loaivanban == 5) {
+          //   if (!categoryFilter.includes(item.loaivbpl)) {
+          //     categoryFilter.push(item.loaivbpl);
+          //   }
+          // }
 
-          if (
-            !categoryFilter.includes(item.loaivanban) &&
-            item.id_loaivanban != 5
-          ) {
+          if (!categoryFilter.includes(item.loaivanban)) {
             categoryFilter.push(item.loaivanban);
           }
         });
