@@ -330,10 +330,7 @@ const HistoryRegisterDevice = ({navigation}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header
-          title={`Lịch sử đăng kí thiết bị ${checkRoleUser() ? '' : 'của tôi'}`}
-          navigation={navigation}
-        />
+        <Header title={`Lịch sử đăng kí thiết bị`} navigation={navigation} />
         <BottomSheetModalProvider>
           <FilterStatusUI
             handlePickOption={handlePickOption}
@@ -592,7 +589,7 @@ const HistoryRegisterDevice = ({navigation}) => {
           handleApprove={handleApprove}
           handleCancel={handleCancel}
         />
-        {loading && <Loading />}
+        {loading && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

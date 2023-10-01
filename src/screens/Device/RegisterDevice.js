@@ -32,6 +32,7 @@ import {
   getAllDevices,
   getAllListDevice,
   registerDevice,
+  getMyListDevice,
 } from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
@@ -161,8 +162,9 @@ const RegisterDevices = ({navigation, route}) => {
           setLoading(false);
 
           await fetchAllListDevice();
-
-          navigation.goBack();
+          setTimeout(() => {
+            navigation.goBack();
+          });
         }
       } catch (error) {
         console.log(error);
@@ -172,8 +174,13 @@ const RegisterDevices = ({navigation, route}) => {
     }
   };
 
-  const fetchAllListDevice = () => {
-    getAllListDevice(dispatch);
+  const fetchAllListDevice = async () => {
+    const data = {
+      id_user: user?.id,
+    };
+
+    await getAllListDevice(dispatch);
+    await getMyListDevice(dispatch, data);
   };
 
   const fetchAllDevices = async () => {
