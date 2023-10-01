@@ -226,9 +226,9 @@ const HistoryRegisterDevice = ({navigation}) => {
             }}>
             {checkRoleUser()
               ? `Tổng cộng ${
-                  item.thietbi?.length
+                  item.daduyet?.length
                 } văn phòng phẩm ${status.toLocaleLowerCase()}`
-              : `Thiết bị ${item?.tentb}`}
+              : `Thiết bị ${item?.thietbi}`}
           </Text>
         </View>
         <View
@@ -556,7 +556,7 @@ const HistoryRegisterDevice = ({navigation}) => {
                         <Image source={Images.datetime} style={styles.Iconic} />
                         <Text style={styles.title}>Tên thiết bị:{'  '}</Text>
                         <Text style={styles.content}>
-                          {selectedItem?.tentb}
+                          {selectedItem?.thietbi}
                         </Text>
                       </View>
                       <View style={styles.containerEachLine}>
