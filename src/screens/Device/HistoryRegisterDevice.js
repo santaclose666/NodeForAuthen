@@ -477,7 +477,7 @@ const HistoryRegisterDevice = ({navigation}) => {
                               <Text style={styles.title}>
                                 Thiết bị:{'  '}
                                 <Text numberOfLines={2} style={styles.content}>
-                                  {item?.tentb}
+                                  {item?.thietbi}
                                 </Text>
                               </Text>
                             </View>
