@@ -196,7 +196,9 @@ const HistoryRegisterDevice = ({navigation}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          handleBottomSheet(item, filterUser?.path, bgColorStatus);
+          checkRoleUser()
+            ? handleBottomSheet(item, filterUser?.path, bgColorStatus)
+            : null;
         }}
         key={index}
         style={{
@@ -305,24 +307,6 @@ const HistoryRegisterDevice = ({navigation}) => {
             </View>
           </>
         )}
-
-        {indexPicker == 0 ? (
-          <View style={styles.containerEachLine}>
-            <Image source={Images.datetime} style={styles.Iconic} />
-            <Text style={styles.title}>Ngày đăng kí:{'  '}</Text>
-            <Text style={styles.content}>
-              {changeFormatDate(item.ngaymuon)}
-            </Text>
-          </View>
-        ) : (
-          <View style={styles.containerEachLine}>
-            <Image source={Images.datetime} style={styles.Iconic} />
-            <Text style={styles.title}>Ngày duyệt:{'  '}</Text>
-            <Text style={styles.content}>
-              {changeFormatDate(item.ngayduyet)}
-            </Text>
-          </View>
-        )}
       </TouchableOpacity>
     );
   });
@@ -398,10 +382,10 @@ const HistoryRegisterDevice = ({navigation}) => {
                 </Text>
               </View>
               <BottomSheetScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.bottomSheetContainer}>
-                  <Text style={styles.titleBottomSheet}>Đăng kí</Text>
+                {checkRoleUser() && (
+                  <View style={styles.bottomSheetContainer}>
+                    <Text style={styles.titleBottomSheet}>Đăng kí</Text>
 
-                  {checkRoleUser() && (
                     <View style={styles.containerEachLine}>
                       <Image
                         src={mainURL + selectedItem?.path}
@@ -417,44 +401,12 @@ const HistoryRegisterDevice = ({navigation}) => {
                         </Text>
                       </View>
                     </View>
-                  )}
-                  <View style={styles.containerEachLine}>
-                    <Image source={Images.admin} style={styles.Iconic} />
-                    <View style={styles.containerLine}>
-                      <Text style={styles.title}>Người duyệt:{'  '}</Text>
-                      <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={styles.content}>
-                        {selectedItem?.nguoiduyet
-                          ? selectedItem?.nguoiduyet
-                          : getNameApprover()}
-                      </Text>
-                    </View>
                   </View>
-
-                  {indexPicker == 0 ? (
-                    <View style={styles.containerEachLine}>
-                      <Image source={Images.datetime} style={styles.Iconic} />
-                      <Text style={styles.title}>Ngày đăng kí:{'  '}</Text>
-                      <Text style={styles.content}>
-                        {changeFormatDate(selectedItem.ngaymuon)}
-                      </Text>
-                    </View>
-                  ) : (
-                    <View style={styles.containerEachLine}>
-                      <Image source={Images.datetime} style={styles.Iconic} />
-                      <Text style={styles.title}>Ngày duyệt:{'  '}</Text>
-                      <Text style={styles.content}>
-                        {changeFormatDate(selectedItem.ngayduyet)}
-                      </Text>
-                    </View>
-                  )}
-                </View>
+                )}
                 <View style={styles.bottomSheetContainer}>
                   <Text style={styles.titleBottomSheet}>Thiết bị</Text>
                   {checkRoleUser() ? (
-                    selectedItem?.thietbi?.map((item, index) => {
+                    selectedItem?.daduyet?.map((item, index) => {
                       return (
                         <View
                           style={{marginLeft: Dimension.setWidth(2)}}
@@ -498,33 +450,18 @@ const HistoryRegisterDevice = ({navigation}) => {
                             </View>
                           </View>
 
-                          {indexPicker == 0 ? (
-                            <View style={styles.containerEachLine}>
-                              <Image
-                                source={Images.datetime}
-                                style={styles.Iconic}
-                              />
-                              <Text style={styles.title}>
-                                Ngày đăng kí:{'  '}
-                              </Text>
-                              <Text style={styles.content}>
-                                {changeFormatDate(item.ngaymuon)}
-                              </Text>
-                            </View>
-                          ) : (
-                            <View style={styles.containerEachLine}>
-                              <Image
-                                source={Images.datetime}
-                                style={styles.Iconic}
-                              />
-                              <Text style={styles.title}>
-                                Ngày duyệt:{'  '}
-                              </Text>
-                              <Text style={styles.content}>
-                                {changeFormatDate(item.ngayduyet)}
-                              </Text>
-                            </View>
-                          )}
+                          <View style={styles.containerEachLine}>
+                            <Image
+                              source={Images.datetime}
+                              style={styles.Iconic}
+                            />
+                            <Text style={styles.title}>
+                              Ngày đăng kí:{'  '}
+                            </Text>
+                            <Text style={styles.content}>
+                              {changeFormatDate(item.ngaymuon)}
+                            </Text>
+                          </View>
 
                           <View style={styles.containerEachLine}>
                             <Image source={Images.note} style={styles.Iconic} />
