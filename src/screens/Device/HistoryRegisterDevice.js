@@ -89,7 +89,7 @@ const HistoryRegisterDevice = ({navigation}) => {
 
   const handleApprove = useCallback(item => {
     const data = {
-      id_user: user?.id,
+      id_user: item?.id_user,
     };
 
     approveRegisterDevice(data);
@@ -101,7 +101,7 @@ const HistoryRegisterDevice = ({navigation}) => {
 
   const handleCancel = useCallback(item => {
     const data = {
-      id_user: user?.id,
+      id_user: item?.id_user,
     };
 
     cancelRegisterDevice(data);

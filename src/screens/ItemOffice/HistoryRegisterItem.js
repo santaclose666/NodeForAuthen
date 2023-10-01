@@ -82,9 +82,8 @@ const HistoryRegisterItem = ({navigation}) => {
 
   const handleApprove = useCallback(item => {
     const data = {
-      id_user: user?.id,
+      id_user: item?.id_user,
     };
-
     approveRegisterOfficeItem(data);
     setToggleModal(false);
     setTimeout(() => {
@@ -94,7 +93,7 @@ const HistoryRegisterItem = ({navigation}) => {
 
   const handleCancel = useCallback(item => {
     const data = {
-      id_user: user?.id,
+      id_user: item?.id_user,
     };
 
     cancelRegisterOfficeItem(data);
