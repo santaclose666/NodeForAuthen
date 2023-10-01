@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useRef, useMemo, useEffect} from 'react';
+import React, {useCallback, useState, useRef, useMemo} from 'react';
 import {
   View,
   Text,
@@ -37,11 +37,20 @@ import {IOSDownload, AndroidDownload} from '../utils/download';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
 
-const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
+const DocumentTemplate = ({
+  screenName,
+  navigation,
+  data,
+  groupOption,
+  yearOption,
+  hieuLuc,
+  unitOption,
+}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const dispatch = useDispatch();
   const bottomSheetModalRef = useRef(null);
   const bottomSheetFilter = useRef(null);
+  const scrollCategory = useRef(null);
   const snapPoints = useMemo(() => ['96%'], []);
   const [toggleCheckDownload, setToggleCheckDownload] = useState(false);
   const [name, setName] = useState('');
@@ -64,50 +73,6 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
   const [stateHieuLuc, setStateHieuLuc] = useState([]);
   const [unitValue, setUnitValue] = useState([]);
   const [results, setResults] = useState(0);
-
-  const filterYear = useCallback(() => {
-    let year = [];
-
-    data.forEach(item => {
-      let filterYear = parseInt(item?.nam?.split('/')[2]);
-      if (filterYear && !year.includes(filterYear)) {
-        year.push(filterYear);
-      }
-    });
-    return year.sort((a, b) => {
-      return b - a;
-    });
-  }, []);
-  let yearOption = filterYear();
-
-  const unitName = useCallback(() => {
-    let unit = [];
-
-    data.forEach(item => {
-      if (!unit.includes(item.donvi)) {
-        unit.push(item.donvi);
-      }
-    });
-    return unit;
-  }, []);
-  let unitOption = unitName();
-  const hieulucFunc = useCallback(() => {
-    let hieuluc = [];
-
-    data.forEach(item => {
-      if (!hieuluc.includes(item.hieuluc)) {
-        if (item.hieuluc != null) {
-          hieuluc.push(item.hieuluc);
-        }
-      }
-    });
-    return hieuluc;
-  }, []);
-  let hieuLuc = hieulucFunc();
-
-  useEffect(() => {
-    console.log(hieuLuc);
-  }, []);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -202,13 +167,15 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
 
   const handleRefresh = async () => {
     setRefresh(true);
-
     try {
       await getAllDocument(dispatch);
 
       setDocument(null);
       setPickOptionIndex({item: null, index: 0});
       setRefresh(false);
+      if (scrollCategory.current) {
+        scrollCategory.current?.scrollTo({x: 0, y: 0, animated: true});
+      }
     } catch (error) {
       console.log(error);
     }
@@ -235,12 +202,14 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
     const allDoc = data.filter(item => {
       let categoryCondition;
       if (identifi == 'category') {
-        categoryCondition = thenRemoveExist.some(
-          cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
-        );
+        categoryCondition =
+          thenRemoveExist.length == 0 ||
+          thenRemoveExist.some(
+            cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
+          );
       } else {
         categoryCondition =
-          categoryValue.length === 0 ||
+          categoryValue.length == 0 ||
           categoryValue.some(
             cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
           );
@@ -248,12 +217,14 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
 
       let yearCondition;
       if (identifi == 'year') {
-        yearCondition = thenRemoveExist.some(
-          year => parseInt(item?.nam?.split('/')[2]) == year.item,
-        );
+        yearCondition =
+          thenRemoveExist.length == 0 ||
+          thenRemoveExist.some(
+            year => parseInt(item?.nam?.split('/')[2]) == year.item,
+          );
       } else {
         yearCondition =
-          yearValue.length === 0 ||
+          yearValue.length == 0 ||
           yearValue.some(
             year => parseInt(item?.nam?.split('/')[2]) == year.item,
           );
@@ -261,21 +232,23 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
 
       let stateCondition;
       if (identifi == 'hieuluc') {
-        stateCondition = thenRemoveExist.some(
-          hieuluc => item.hieuluc == hieuluc.item,
-        );
+        stateCondition =
+          thenRemoveExist.length == 0 ||
+          thenRemoveExist.some(hieuluc => item.hieuluc == hieuluc.item);
       } else {
         stateCondition =
-          stateHieuLuc.length === 0 ||
+          stateHieuLuc.length == 0 ||
           stateHieuLuc.some(hieuluc => item.hieuluc == hieuluc.item);
       }
 
       let unitCondition;
       if (identifi == 'unit') {
-        unitCondition = thenRemoveExist.some(unit => item.donvi == unit.item);
+        unitCondition =
+          thenRemoveExist.length == 0 ||
+          thenRemoveExist.some(unit => item.donvi == unit.item);
       } else {
         unitCondition =
-          unitValue.length === 0 ||
+          unitValue.length == 0 ||
           unitValue.some(unit => item.donvi == unit.item);
       }
 
@@ -295,13 +268,13 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
     bottomSheetFilter?.current?.dismiss();
   }, []);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setCategoryValue([]);
     setStateHieuLuc([]);
     setYearValue([]);
     setUnitValue([]);
     setResults(0);
-  };
+  }, []);
 
   const RenderDocument = useCallback(
     ({item, index}) => {
@@ -312,7 +285,7 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
           ? '#cc2333'
           : item.hieuluc == 'Sắp có hiệu lực'
           ? '#c7b841'
-          : {...fontDefault};
+          : fontDefault;
 
       return (
         <View style={{flex: 1, zIndex: 999}}>
@@ -516,7 +489,10 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
 
         {groupOption && (
           <View style={styles.optionContainer}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <ScrollView
+              ref={scrollCategory}
+              horizontal
+              showsHorizontalScrollIndicator={false}>
               {groupOption?.map((item, index) => {
                 return (
                   <TouchableOpacity
@@ -656,14 +632,7 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                     style={styles.inputText}
                     placeholder="Nhập tên đơn vị"
                     defaultValue={workUnit}
-                    onChangeText={e =>
-                      setWorkUnit(
-                        e.replace(
-                          /[`~0-9!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,
-                          '',
-                        ),
-                      )
-                    }
+                    onChangeText={e => setWorkUnit(e)}
                   />
                 </View>
                 <View style={styles.containerEachLine}>
@@ -684,14 +653,7 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                     style={styles.inputText}
                     placeholder="Nhập email"
                     defaultValue={email}
-                    onChangeText={e =>
-                      setEmail(
-                        e.replace(
-                          /[`~0-9!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,
-                          '',
-                        ),
-                      )
-                    }
+                    onChangeText={e => setEmail(e)}
                   />
                 </View>
                 <View style={styles.containerEachLine}>
@@ -774,8 +736,8 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                 <Text style={styles.titleBottom}>Thể loại</Text>
                 <View style={styles.containerItemRender}>
                   {groupOption
-                    .filter(item => item != 'Tất cả')
-                    .map((item, index) => {
+                    ?.filter(item => item != 'Tất cả')
+                    ?.map((item, index) => {
                       const filter = categoryValue?.some(
                         cate => cate.index == index,
                       );
@@ -795,7 +757,7 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                             {
                               backgroundColor: filter
                                 ? Colors.DEFAULT_BLACK
-                                : 'transparent',
+                                : '#fff',
                             },
                           ]}
                           key={index}>
@@ -816,7 +778,7 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                     })}
                 </View>
               </View>
-              {yearOption.length != 0 && (
+              {yearOption?.length != 0 && (
                 <View style={styles.containerLineBottom}>
                   <Text style={styles.titleBottom}>Năm ban hành</Text>
                   <View style={styles.containerItemRender}>
@@ -840,7 +802,7 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                             {
                               backgroundColor: filter
                                 ? Colors.DEFAULT_BLACK
-                                : 'transparent',
+                                : '#fff',
                             },
                           ]}
                           key={index}>
@@ -862,11 +824,11 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                   </View>
                 </View>
               )}
-              {hieuLuc.length != 0 && (
+              {hieuLuc?.length != 0 && (
                 <View style={styles.containerLineBottom}>
                   <Text style={styles.titleBottom}>Trạng thái hiệu lực</Text>
                   <View style={styles.containerItemRender}>
-                    {hieuLuc.map((item, index) => {
+                    {hieuLuc?.map((item, index) => {
                       const filter = stateHieuLuc.some(
                         cate => cate.index == index,
                       );
@@ -886,7 +848,7 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                             {
                               backgroundColor: filter
                                 ? Colors.DEFAULT_BLACK
-                                : 'transparent',
+                                : '#fff',
                             },
                           ]}
                           key={index}>
@@ -916,11 +878,11 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                   </View>
                 </View>
               )}
-              {unitOption && (
+              {unitOption?.length != 0 && (
                 <View style={styles.containerLineBottom}>
                   <Text style={styles.titleBottom}>Đơn vị</Text>
                   <View style={styles.containerItemRender}>
-                    {unitOption.map((item, index) => {
+                    {unitOption?.map((item, index) => {
                       const filter = unitValue.some(
                         cate => cate.index == index,
                       );
@@ -940,15 +902,29 @@ const DocumentTemplate = ({screenName, navigation, data, groupOption}) => {
                             {
                               backgroundColor: filter
                                 ? Colors.DEFAULT_BLACK
-                                : 'transparent',
+                                : '#fff',
                             },
                           ]}
                           key={index}>
+                          {item != 'Người đóng góp' && (
+                            <Image
+                              source={Images.certicate}
+                              style={{
+                                width: 16,
+                                height: 16,
+                                marginRight: 2,
+                              }}
+                            />
+                          )}
                           <Text
                             style={[
                               styles.itemBottom,
                               {
-                                color: filter ? '#fff' : item.color,
+                                color: filter
+                                  ? '#fff'
+                                  : item != 'Người đóng góp'
+                                  ? '#63c8f5'
+                                  : Colors.DEFAULT_BLACK,
                               },
                             ]}>
                             {item}
@@ -1130,6 +1106,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.INACTIVE_GREY,
     paddingHorizontal: Dimension.setWidth(2.6),
     paddingVertical: Dimension.setHeight(0.4),
+    elevation: 5,
+    ...shadowIOS,
   },
 
   titleBottom: {

@@ -7,6 +7,7 @@ import {
   FlatList,
   StyleSheet,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
@@ -113,7 +114,7 @@ const NotifiScreen = ({navigation, route}) => {
                             notifiMenuId === index
                               ? Fonts.SF_SEMIBOLD
                               : Fonts.SF_REGULAR,
-                          fontSize: Dimension.fontSize(16),
+                          fontSize: Dimension.fontSize(16.6),
                           opacity: 0.8,
                           color:
                             notifiMenuId === index
@@ -129,86 +130,100 @@ const NotifiScreen = ({navigation, route}) => {
             />
           </View>
         )}
-        <FlatList
-          data={handleFilterNotifi()}
-          keyExtractor={(_, index) => index}
-          showsVerticalScrollIndicator={false}
-          initialNumToRender={6}
-          windowSize={6}
-          removeClippedSubviews={true}
-          refreshing={true}
-          renderItem={({item, index}) => {
-            const filterTime = item?.giotao.slice(0, 5);
-            const halfDay = item?.giotao.slice(0, 2) > 12 ? 'PM' : 'AM';
-            const avt =
-              item?.type != 'sinhnhat' ? item?.avatar : item?.user_sn.path;
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          {handleFilterNotifi()?.length != 0 ? (
+            <FlatList
+              data={handleFilterNotifi()}
+              keyExtractor={(_, index) => index}
+              showsVerticalScrollIndicator={false}
+              initialNumToRender={6}
+              windowSize={6}
+              removeClippedSubviews={true}
+              refreshing={true}
+              renderItem={({item, index}) => {
+                const filterTime = item?.giotao.slice(0, 5);
+                const halfDay = item?.giotao.slice(0, 2) > 12 ? 'PM' : 'AM';
+                const avt =
+                  item?.type != 'sinhnhat' ? item?.avatar : item?.user_sn.path;
 
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  handlePickItem(item);
-                }}
-                key={index}
-                style={styles.notifiContainer}>
-                <View style={{width: '77%'}}>
-                  <View
-                    style={{
-                      width: Dimension.setWidth(55),
-                      marginBottom: Dimension.setHeight(0.5),
-                    }}>
-                    <Text numberOfLines={2} style={styles.obj1}>
-                      {item?.noidung}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      width: Dimension.setWidth(66),
-                    }}>
-                    {!item?.nguoigui.includes('Forestry 4.0') && (
-                      <>
-                        <Text
-                          style={{
-                            color: '#1b2061',
-                            fontFamily: Fonts.SF_REGULAR,
-                            fontSize: Dimension.fontSize(15),
-                          }}>
-                          {item?.nguoigui}
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handlePickItem(item);
+                    }}
+                    key={index}
+                    style={styles.notifiContainer}>
+                    <View style={{width: '80%'}}>
+                      <View
+                        style={{
+                          width: '90%',
+                          marginBottom:
+                            Platform.OS == 'ios' ? Dimension.setHeight(0.5) : 0,
+                        }}>
+                        <Text numberOfLines={2} style={styles.obj1}>
+                          {item?.noidung}
                         </Text>
-                        <Image
-                          source={Images.dot}
-                          style={{
-                            width: 8,
-                            height: 8,
-                            marginHorizontal: Dimension.setWidth(0.6),
-                            tintColor: Colors.INACTIVE_GREY,
-                          }}
-                        />
-                      </>
-                    )}
-                    <Text
-                      style={styles.time}>{`${filterTime} ${halfDay}`}</Text>
-
-                    <Separation />
-                    <Text style={styles.time}>
-                      {`${changeFormatDate(item?.ngaytao)} `}
-                    </Text>
-                  </View>
-                </View>
-                <View>
-                  <Image src={mainURL + avt} style={styles.notifiImg} />
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                        }}>
+                        {!item?.nguoigui.includes('Forestry 4.0') && (
+                          <>
+                            <Text
+                              style={{
+                                color: '#1b2061',
+                                fontFamily: Fonts.SF_REGULAR,
+                                fontSize: Dimension.fontSize(15),
+                              }}>
+                              {item?.nguoigui}
+                            </Text>
+                            <Image
+                              source={Images.dot}
+                              style={{
+                                width: 8,
+                                height: 8,
+                                marginHorizontal: Dimension.setWidth(0.6),
+                                tintColor: Colors.INACTIVE_GREY,
+                              }}
+                            />
+                          </>
+                        )}
+                        <Text
+                          style={
+                            styles.time
+                          }>{`${filterTime} ${halfDay}`}</Text>
+                        <Separation />
+                        <Text style={styles.time}>
+                          {`${changeFormatDate(item?.ngaytao)} `}
+                        </Text>
+                      </View>
+                    </View>
+                    <View>
+                      <Image src={mainURL + avt} style={styles.notifiImg} />
+                    </View>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          ) : (
+            <Text
+              style={{
+                fontSize: Dimension.fontSize(18),
+                fontFamily: Fonts.SF_MEDIUM,
+                color: Colors.INACTIVE_GREY,
+              }}>
+              Không có thông báo nào
+            </Text>
+          )}
+        </View>
         <DisplayNotificationModal
           toggleModal={toggleNotifiModal}
           setToggleModal={setToggleNotifiModal}
           item={selectedItem}
         />
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

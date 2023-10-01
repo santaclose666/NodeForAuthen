@@ -180,6 +180,21 @@ const Images = {
   reset: require('../assets/images/reset.png'),
   v: require('../assets/images/v.png'),
   F4_Lunar: require('../assets/images/F4_Lunar_.png'),
+  propose: require('../assets/images/propose.png'),
+  bachma: require('../assets/images/bachmaLogo.jpeg'),
+  bavi: require('../assets/images/baviLogo.png'),
+  cucphuong: require('../assets/images/cucphuongLogo.png'),
+  tamdao: require('../assets/images/tamdaoLogo.png'),
+  yokdon: require('../assets/images/yokdonLogo.jpeg'),
+  cattien: require('../assets/images/cattienLogo.png'),
+  bio_bg: require('../assets/images/bio_bg.jpg'),
+  device: require('../assets/images/device.png'),
+  office: require('../assets/images/office.png'),
+  item: require('../assets/images/item.png'),
+  quantity: require('../assets/images/quantity.png'),
+  delete: require('../assets/images/delete.png'),
+  borrowDate: require('../assets/images/borrowDate.png'),
+  returnDate: require('../assets/images/returnDate.png'),
 };
 
 export default Images;

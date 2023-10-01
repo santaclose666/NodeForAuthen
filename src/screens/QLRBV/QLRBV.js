@@ -9,6 +9,15 @@ const QLRBVScreen = ({navigation}) => {
   const groupOption = useSelector(
     state => state.document.documentSlice?.QLRBVData?.category,
   );
+  const yearOption = useSelector(
+    state => state.document.documentSlice?.QLRBVData?.year,
+  );
+  const unitOption = useSelector(
+    state => state.document.documentSlice?.QLRBVData?.unit,
+  );
+  const hieuLuc = useSelector(
+    state => state.document.documentSlice?.QLRBVData?.hieuluc,
+  );
 
   return (
     <DocumentTemplate
@@ -16,6 +25,9 @@ const QLRBVScreen = ({navigation}) => {
       navigation={navigation}
       data={data}
       groupOption={groupOption}
+      yearOption={yearOption}
+      unitOption={unitOption}
+      hieuLuc={hieuLuc}
     />
   );
 };

@@ -21,9 +21,9 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
 import {
-  getAllStaffs,
   postNotifcation,
-  sendNotifiByTopic,
+  postNotifiForAll,
+  postNotifiForAllUnit,
 } from '../../redux/apiRequest';
 import LinearGradientUI from '../../components/LinearGradientUI';
 
@@ -83,14 +83,9 @@ const SendNotification = ({navigation}) => {
     let received;
     switch (id) {
       case 0:
-        setDataPicker('allEvent');
         break;
       case 1:
-        // received = IFEEstaffs.map(item => {
-        //   return item.id_ht;
-        // });
-        // setDataPicker(received);
-        setDataPicker(user?.tendonvi);
+        setDataPicker(user?.id_ht);
         break;
       case 2:
         received = IFEEstaffs.filter(item => item.vitri_ifee <= 3).map(item => {
@@ -130,9 +125,18 @@ const SendNotification = ({navigation}) => {
 
       setLoading(true);
       try {
-        const res = await (typeof dataPicker === 'object'
-          ? postNotifcation(data)
-          : sendNotifiByTopic(data));
+        let res;
+
+        switch (groupValue) {
+          case 0:
+            res = await postNotifiForAll(data);
+            break;
+          case 1:
+            res = await postNotifiForAllUnit(data);
+            break;
+          default:
+            res = await postNotifcation(data);
+        }
 
         if (res) {
           ToastSuccess('Gửi thông báo thành công');
@@ -143,14 +147,6 @@ const SendNotification = ({navigation}) => {
       }
     } else {
       ToastAlert('Thiếu thông tin!');
-    }
-  };
-
-  const fetchStaff = async () => {
-    try {
-      await getAllStaffs();
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -304,7 +300,7 @@ const SendNotification = ({navigation}) => {
             <RegisterBtn nameBtn={'Gửi'} onEvent={handleSendNotification} />
           </KeyboardAwareScrollView>
         </ScrollView>
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

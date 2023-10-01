@@ -6,12 +6,7 @@ import {
   logoutSuccess,
 } from './authSlice';
 import {getStaffStart, getStaffSuccess, getStaffFailed} from './staffSlice';
-import {
-  deleteNotifiSuccess,
-  getNotifiFailed,
-  getNotifiStart,
-  getNotifiSuccess,
-} from './notifiSlice';
+import {getNotifiStart, getNotifiSuccess} from './notifiSlice';
 import {CommonActions} from '@react-navigation/native';
 import {changeFormatDate, getCoords} from '../utils/serviceFunction';
 import {
@@ -66,11 +61,22 @@ import {
   getDocumentMvStart,
   getDocumentMvSuccess,
 } from './documentMvSlice';
-import {documentMvURL, serverKey} from '../contants/Variable';
+import {documentMvURL} from '../contants/Variable';
 import {
   subcribeWorkUnitTopic,
   unSubcribeWorkUnitTopic,
 } from '../utils/AllTopic';
+import {
+  getRegisterOfficeFailed,
+  getRegisterOfficeStart,
+  getRegisterOfficeSuccess,
+} from './officeItemSlice';
+import {getDeviceStart, getDeviceSuccess} from './deviceSlice';
+import {
+  getMyDeviceStart,
+  getMyDeviceFailed,
+  getMyDeviceSuccess,
+} from './myListDeviceSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -101,6 +107,8 @@ export const loginUser = async (user, dispatch, navigation, save) => {
       postToken(data.id_ht);
 
       save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));
+
+      return true;
     }
   } catch (err) {
     console.log(err);
@@ -115,7 +123,6 @@ export const logoutUser = async (dispatch, navigation, user) => {
       token: token,
     });
 
-    console.log(user);
     unSubcribeWorkUnitTopic(user.tendonvi);
     dispatch(logoutSuccess());
 
@@ -416,6 +423,8 @@ export const getVehicleData = async (dispatch, id) => {
     );
 
     dispatch(getVehicleSuccess(res.data));
+
+    return true;
   } catch (error) {
     dispatch(getVehicleFailed());
   }
@@ -627,6 +636,31 @@ export const postNotifcation = async data => {
   } catch (error) {}
 };
 
+export const postNotifiForAll = async data => {
+  try {
+    const res = await axios.post(
+      `https://forestry.ifee.edu.vn/api/service/postEvent?title=${data.title}&content=${data.content}`,
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const postNotifiForAllUnit = async data => {
+  try {
+    console.log(data);
+    const res = await axios.post(
+      `https://forestry.ifee.edu.vn/api/service/postNoiBo?title=${data.title}&content=${data.content}&id_user=${data.id}`,
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getAllNotifi = async (id, dispatch) => {
   dispatch(getNotifiStart());
   try {
@@ -638,31 +672,6 @@ export const getAllNotifi = async (id, dispatch) => {
     console.log(res.data);
   } catch (error) {
     dispatch(getOnLeaveFailed());
-  }
-};
-
-export const sendNotifiByTopic = async notifi => {
-  try {
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `key=${serverKey}`,
-    };
-    const body = {
-      data: {},
-      notification: {
-        body: notifi.content,
-        title: notifi.title,
-      },
-      to: `/topics/${notifi.id}`,
-    };
-    const res = await axios.post(`https://fcm.googleapis.com/fcm/send`, body, {
-      headers: headers,
-    });
-
-    console.log(res);
-    return res.data;
-  } catch (error) {
-    console.log(error);
   }
 };
 
@@ -705,9 +714,7 @@ export const getAllDocument = async dispatch => {
   try {
     const res = await axios.get(`https://forestry.ifee.edu.vn/api/vanban`);
 
-    const result = await dispatch(getDocumentSuccess(res.data)).unwrap();
-
-    console.log(result);
+    dispatch(getDocumentSuccess(res.data));
   } catch (error) {
     console.log(error);
     dispatch(getDocumentFailed());
@@ -763,6 +770,145 @@ export const getBirthdayList = async () => {
     const res = await axios.get(`https://forestry.ifee.edu.vn/api/birthday`);
 
     return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  DEVICES LIST  ////////////////////
+export const getAllDevices = async () => {
+  try {
+    const res = await axios.get(
+      'https://management.ifee.edu.vn/api/thietbi/danhsach',
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const registerDevice = async data => {
+  try {
+    console.log(data);
+    const res = await axios.post(
+      `https://management.ifee.edu.vn/api/thietbi/regTB/${data.id_user}`,
+      {
+        thietbi: data.thietbi,
+        ngaymuon: data.ngaymuon,
+        ngaytra: data.ngaytra,
+        noidung: data.noidung,
+        active: data.active,
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllListDevice = async dispatch => {
+  dispatch(getDeviceStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/thietbi/pheduyet/list`,
+    );
+
+    dispatch(getDeviceSuccess(res.data));
+  } catch (error) {
+    dispatch(getDocumentFailed());
+  }
+};
+
+export const getMyListDevice = async (dispatch, data) => {
+  dispatch(getMyDeviceStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/thietbi/historyTB/${data.id_user}`,
+    );
+
+    dispatch(getMyDeviceSuccess(res.data));
+  } catch (error) {
+    dispatch(getMyDeviceFailed());
+  }
+};
+
+export const approveRegisterDevice = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/thietbi/pheduyet/duyet/${data.id_user}`,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelRegisterDevice = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/thietbi/pheduyet/xoa/${data.id_user}`,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  OFFICE ITEM LIST  ////////////////////
+export const getAllOfficeItem = async () => {
+  try {
+    const res = await axios.get('https://management.ifee.edu.vn/api/vpp/list');
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const registerOfficeItem = async data => {
+  try {
+    const res = await axios.post('https://management.ifee.edu.vn/api/vpp/reg', {
+      id_user: data.id_user,
+      loaivpp: data.loaivpp,
+      soluong: data.soluong,
+      ngaynhan: data.ngaynhan,
+      gionhan: data.gionhan,
+    });
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllListOfficeItem = async dispatch => {
+  dispatch(getRegisterOfficeStart());
+  try {
+    const res = await axios.get(
+      'https://management.ifee.edu.vn/api/vpp/pheduyet/danhsach',
+    );
+
+    dispatch(getRegisterOfficeSuccess(res.data));
+  } catch (error) {
+    dispatch(getRegisterOfficeFailed());
+  }
+};
+
+export const approveRegisterOfficeItem = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/vpp/pheduyet/duyet/${data.id_user}`,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelRegisterOfficeItem = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/vpp/pheduyet/xoa/${data.id_user}`,
+    );
   } catch (error) {
     console.log(error);
   }

@@ -34,6 +34,8 @@ import {mainURL} from '../../contants/Variable';
 import {planeCompany, ticketType, airplane} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import RedPoint from '../../components/RedPoint';
+import {rowAlignCenter} from '../../contants/CssFE';
 
 const workData = [
   {
@@ -85,20 +87,19 @@ const RegisterPlaneScreen = ({navigation, route}) => {
   };
 
   const handleRegister = async () => {
-    const data = {
-      id_user: user?.id,
-      ds_ns: multiStaff,
-      ngoaivien: outSidePerson,
-      chuongtrinh: workName,
-      hangbay: planeCompanyValue,
-      sanbaydi: fromValue,
-      sanbayden: toValue,
-      ngaydi: `${formatDateToPost(dateValue)} ${formatTimeToPost(timeValue)}`,
-      hangve: ticketTypeValue,
-      kygui: kgNumber,
-    };
-
     if (multiStaff.length !== 0 && workName.length !== 0) {
+      const data = {
+        id_user: user?.id,
+        ds_ns: multiStaff,
+        ngoaivien: outSidePerson,
+        chuongtrinh: workName,
+        hangbay: planeCompanyValue,
+        sanbaydi: fromValue,
+        sanbayden: toValue,
+        ngaydi: `${formatDateToPost(dateValue)} ${formatTimeToPost(timeValue)}`,
+        hangve: ticketTypeValue,
+        kygui: kgNumber,
+      };
       setLoading(true);
       try {
         const res = await registerPlaneTicket(data);
@@ -140,7 +141,7 @@ const RegisterPlaneScreen = ({navigation, route}) => {
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
                   src={mainURL + user?.path}
-                  style={{height: 40, width: 40}}
+                  style={{height: 40, width: 40, borderRadius: 50}}
                 />
                 <Text
                   style={{
@@ -153,7 +154,10 @@ const RegisterPlaneScreen = ({navigation, route}) => {
               </View>
             </View>
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Thuộc chương trình</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Thuộc chương trình</Text>
+                <RedPoint />
+              </View>
               <Dropdown
                 style={styles.dropdown}
                 autoScroll={false}
@@ -178,7 +182,10 @@ const RegisterPlaneScreen = ({navigation, route}) => {
               />
             </View>
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Tên chương trình</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Tên chương trình</Text>
+                <RedPoint />
+              </View>
               {workValue === 1 && workNameData ? (
                 <Dropdown
                   style={styles.dropdown}
@@ -214,24 +221,11 @@ const RegisterPlaneScreen = ({navigation, route}) => {
                 />
               )}
             </View>
-            {/* <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Tên chương trình</Text>
-              <TextInput
-                style={{
-                  borderBottomWidth: 0.6,
-                  borderBottomColor: 'gray',
-                  marginHorizontal: Dimension.setWidth(1.6),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  fontSize: Dimension.fontSize(16),
-                  height: Dimension.setHeight(5),
-                }}
-                placeholder="Nhập tên chương trình"
-                value={workName}
-                onChangeText={e => setWorkName(e)}
-              />
-            </View> */}
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Người công tác</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Người công tác</Text>
+                <RedPoint />
+              </View>
               <MultiSelect
                 style={styles.dropdown}
                 autoScroll={false}
@@ -289,7 +283,10 @@ const RegisterPlaneScreen = ({navigation, route}) => {
                 justifyContent: 'space-between',
               }}>
               <View style={[styles.containerEachLine, {width: '54%'}]}>
-                <Text style={styles.title}>Hãng bay</Text>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.title}>Hãng bay</Text>
+                  <RedPoint />
+                </View>
                 <Dropdown
                   style={styles.dropdown}
                   autoScroll={false}
@@ -323,7 +320,10 @@ const RegisterPlaneScreen = ({navigation, route}) => {
                 />
               </View>
               <View style={[styles.containerEachLine, {width: '44%'}]}>
-                <Text style={styles.title}>Hạng vé</Text>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.title}>Hạng vé</Text>
+                  <RedPoint />
+                </View>
                 <Dropdown
                   style={styles.dropdown}
                   autoScroll={false}
@@ -375,7 +375,10 @@ const RegisterPlaneScreen = ({navigation, route}) => {
                       paddingVertical: Dimension.setHeight(1),
                     },
                   ]}>
-                  <Text style={styles.title}>Ngày tháng</Text>
+                  <View style={rowAlignCenter}>
+                    <Text style={styles.title}>Ngày tháng</Text>
+                    <RedPoint />
+                  </View>
                   <View style={styles.dateTimePickerContainer}>
                     <Text style={styles.dateTimeText}>{dateValue}</Text>
                     <View
@@ -399,7 +402,10 @@ const RegisterPlaneScreen = ({navigation, route}) => {
                     styles.containerEachLine,
                     {width: '100%', paddingVertical: Dimension.setHeight(1)},
                   ]}>
-                  <Text style={styles.title}>Thời gian</Text>
+                  <View style={rowAlignCenter}>
+                    <Text style={styles.title}>Thời gian</Text>
+                    <RedPoint />
+                  </View>
                   <View style={styles.dateTimePickerContainer}>
                     <Text style={styles.dateTimeText}>{timeValue}</Text>
                     <View
@@ -470,7 +476,10 @@ const RegisterPlaneScreen = ({navigation, route}) => {
               </View>
             </View>
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Bay từ</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Bay từ</Text>
+                <RedPoint />
+              </View>
               <Dropdown
                 style={styles.dropdown}
                 autoScroll={false}
@@ -502,7 +511,10 @@ const RegisterPlaneScreen = ({navigation, route}) => {
               />
             </View>
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Đến</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Đến</Text>
+                <RedPoint />
+              </View>
               <Dropdown
                 style={styles.dropdown}
                 autoScroll={false}
@@ -537,7 +549,7 @@ const RegisterPlaneScreen = ({navigation, route}) => {
             <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
           </KeyboardAwareScrollView>
         </ScrollView>
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

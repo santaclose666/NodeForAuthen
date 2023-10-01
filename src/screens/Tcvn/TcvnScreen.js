@@ -9,6 +9,15 @@ const TcvnScreen = ({navigation}) => {
   const groupOption = useSelector(
     state => state.document.documentSlice?.tcvnData?.category,
   );
+  const yearOption = useSelector(
+    state => state.document.documentSlice?.tcvnData?.year,
+  );
+  const unitOption = useSelector(
+    state => state.document.documentSlice?.tcvnData?.unit,
+  );
+  const hieuLuc = useSelector(
+    state => state.document.documentSlice?.tcvnData?.hieuluc,
+  );
 
   return (
     <DocumentTemplate
@@ -16,6 +25,9 @@ const TcvnScreen = ({navigation}) => {
       navigation={navigation}
       data={data}
       groupOption={groupOption}
+      yearOption={yearOption}
+      unitOption={unitOption}
+      hieuLuc={hieuLuc}
     />
   );
 };

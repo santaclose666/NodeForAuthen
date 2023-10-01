@@ -29,6 +29,8 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import RedPoint from '../../components/RedPoint';
+import {rowAlignCenter} from '../../contants/CssFE';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 0.5},
@@ -69,11 +71,9 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
       setLoading(true);
       try {
         const res = await registerOnLeave(data);
-
         if (res) {
           const message = 'Đăng kí thành công';
           ToastSuccess(message);
-
           navigation.goBack();
           route.params?.refreshData();
         } else {
@@ -122,7 +122,10 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
             </View>
           </View>
           <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Số ngày nghỉ</Text>
+            <View style={rowAlignCenter}>
+              <Text style={styles.title}>Số ngày nghỉ</Text>
+              <RedPoint />
+            </View>
             <Dropdown
               style={styles.dropdown}
               autoScroll={false}
@@ -160,7 +163,10 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
                 styles.containerEachLine,
                 {width: '48%', paddingVertical: Dimension.setHeight(1.8)},
               ]}>
-              <Text style={styles.title}>Nghỉ từ</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Nghỉ từ</Text>
+                <RedPoint />
+              </View>
               <View style={styles.dateTimePickerContainer}>
                 <Text style={styles.dateTimeText}>{startDay}</Text>
                 <View
@@ -194,9 +200,10 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
                     justifyContent: 'center',
                   },
                 ]}>
-                <Text style={[styles.title, {alignSelf: 'center'}]}>
-                  Số ngày nghỉ phép
-                </Text>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.title}>Số ngày nghỉ phép</Text>
+                  <RedPoint />
+                </View>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -234,7 +241,10 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
             )}
           </View>
           <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Lý do cụ thể</Text>
+            <View style={rowAlignCenter}>
+              <Text style={styles.title}>Lý do cụ thể</Text>
+              <RedPoint />
+            </View>
             <TextInput
               style={{
                 height: Dimension.setHeight(5.3),
@@ -250,7 +260,7 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
           </View>
           <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
         </KeyboardAwareScrollView>
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

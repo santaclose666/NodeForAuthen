@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import DocumentTemplate from '../../components/DocumentTemplate';
 import {useSelector} from 'react-redux';
 
@@ -9,6 +9,15 @@ const DocumentListScreen = ({navigation}) => {
   const groupOption = useSelector(
     state => state.document.documentSlice?.dvmtrData?.category,
   );
+  const yearOption = useSelector(
+    state => state.document.documentSlice?.dvmtrData?.year,
+  );
+  const unitOption = useSelector(
+    state => state.document.documentSlice?.dvmtrData?.unit,
+  );
+  const hieuLuc = useSelector(
+    state => state.document.documentSlice?.dvmtrData?.hieuluc,
+  );
 
   return (
     <DocumentTemplate
@@ -16,6 +25,9 @@ const DocumentListScreen = ({navigation}) => {
       navigation={navigation}
       data={data}
       groupOption={groupOption}
+      yearOption={yearOption}
+      unitOption={unitOption}
+      hieuLuc={hieuLuc}
     />
   );
 };

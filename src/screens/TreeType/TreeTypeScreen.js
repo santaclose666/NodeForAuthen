@@ -9,6 +9,15 @@ const TreeTypeScreen = ({navigation}) => {
   const groupOption = useSelector(
     state => state.document.documentSlice?.gionglnData?.category,
   );
+  const yearOption = useSelector(
+    state => state.document.documentSlice?.gionglnData?.year,
+  );
+  const unitOption = useSelector(
+    state => state.document.documentSlice?.gionglnData?.unit,
+  );
+  const hieuLuc = useSelector(
+    state => state.document.documentSlice?.gionglnData?.hieuluc,
+  );
 
   return (
     <DocumentTemplate
@@ -16,6 +25,9 @@ const TreeTypeScreen = ({navigation}) => {
       navigation={navigation}
       data={data}
       groupOption={groupOption}
+      yearOption={yearOption}
+      unitOption={unitOption}
+      hieuLuc={hieuLuc}
     />
   );
 };

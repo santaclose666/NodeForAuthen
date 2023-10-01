@@ -58,6 +58,7 @@ const HomePageScreen = ({navigation}) => {
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
+    getAllDocument(dispatch);
     await requestPermissions();
     await getWeatherData(dispatch);
     topicForAll();
@@ -129,18 +130,16 @@ const HomePageScreen = ({navigation}) => {
     ToastAlert('Chức năng đang được phát triển');
   };
 
-  const fetchAllDocumentMv = async () => {
-    try {
-      await getAllDocumentMv(dispatch);
-    } catch (error) {
-      console.log(error);
-    }
+  const fetchAllDocumentMv = () => {
+    getAllDocumentMv(dispatch);
   };
 
   useLayoutEffect(() => {
     fcmService.registerAppWithFCM();
     fcmService.register(onRegister, onNotification, onOpenNotification);
     localNotificationService.configure(onOpenNotification);
+
+    console.log(user);
 
     if (weather) {
       setInTerVal(
@@ -153,7 +152,6 @@ const HomePageScreen = ({navigation}) => {
     }
 
     fetchAllNews();
-    getAllDocument(dispatch);
     fetchAllDocumentMv();
 
     return () => clearInterval(interval);
@@ -477,13 +475,10 @@ const HomePageScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.buttonFuc}
                   onPress={() => {
-                    handleNavigate('SendNotification');
+                    handleNavigate('HistoryItemOffice');
                   }}>
-                  <Image
-                    source={Images.sendnotification}
-                    style={styles.featureBtn}
-                  />
-                  <Text style={styles.featureText}>Gửi thông báo</Text>
+                  <Image source={Images.office} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>Văn phòng phẩm</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.btnContainer}>
@@ -517,8 +512,33 @@ const HomePageScreen = ({navigation}) => {
                   <Image source={Images.happybd} style={styles.featureBtn} />
                   <Text style={styles.featureText}>HPBD</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigate('HistoryRegisterDevice');
+                  }}
+                  style={styles.buttonFuc}>
+                  <Image source={Images.device} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>Thiết bị</Text>
+                </TouchableOpacity>
               </View>
+              {user?.quyentruycap == 1 && (
+                <View style={styles.btnContainer}>
+                  <TouchableOpacity
+                    style={styles.buttonFuc}
+                    onPress={() => {
+                      handleNavigate('SendNotification');
+                    }}>
+                    <Image
+                      source={Images.sendnotification}
+                      style={styles.featureBtn}
+                    />
+                    <Text style={styles.featureText}>Gửi thông báo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                </View>
+              )}
             </View>
           )}
 

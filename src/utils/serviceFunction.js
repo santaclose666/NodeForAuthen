@@ -32,6 +32,12 @@ export const getCurrentYear = () => {
   return date;
 };
 
+export const getCurrentDate = () => {
+  const date = moment(new Date()).format('DD/MM/YYYY');
+
+  return date;
+};
+
 export const getFormattedDate = () => {
   const today = new Date();
   const day = String(today.getDate()).padStart(2, '0');

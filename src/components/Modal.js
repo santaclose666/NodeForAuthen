@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Images from '../contants/Images';
@@ -92,12 +93,13 @@ export const ApproveCancelModal = ({
             }}>
             <Image
               src={mainURL + avatar[0]?.path}
-              style={{height: 55, width: 55}}
+              style={{height: 55, width: 55, borderRadius: 50}}
             />
             <Text
               style={{
                 fontSize: Dimension.fontSize(18),
                 fontFamily: Fonts.SF_SEMIBOLD,
+                ...fontDefault,
               }}>
               {selectedItem?.hoten}
             </Text>
@@ -125,7 +127,7 @@ export const ApproveCancelModal = ({
             </Text>
           </View>
         )}
-        {screenName === 'registerVehicalAndTicket' && (
+        {screenName === 'registerTicket' && (
           <View
             style={{
               alignItems: 'center',
@@ -244,6 +246,7 @@ export const ApproveCancelModal = ({
 };
 
 export const ConfirmModal = ({
+  screenName,
   toggleModal,
   setToggleModal,
   item,
@@ -251,8 +254,11 @@ export const ConfirmModal = ({
   handleApprove,
   handleCancel,
 }) => {
-  const approveMess = 'Chắc chắn xác nhận phê duyệt đăng kí?';
-  const cancelMess = 'Chắc chắn xác nhận từ chối đăng kí?';
+  const approveVehicleMess = 'Chắc chắn phê duyệt đăng kí xe';
+  const cancelVehicleMess = 'Chắc chắn từ chối đăng kí xe';
+
+  const approveItemMess = 'Chắc chắn phê duyệt yêu cầu đăng kí sử dụng của';
+  const cancelItemMess = 'Chắc chắn từ chối yêu cầu đăng sử dụng của';
 
   return (
     <Modal
@@ -293,24 +299,78 @@ export const ConfirmModal = ({
             {status ? 'Phê duyệt' : 'Từ chối'}
           </Text>
         </View>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingVertical: Dimension.setHeight(1.5),
-            paddingHorizontal: Dimension.setWidth(3),
-            width: '100%',
-          }}>
-          <Image source={Images.vehicles} style={{height: 55, width: 55}} />
-          <Text
+        {screenName == 'HistoryRegisterVehicle' && (
+          <View
             style={{
-              marginLeft: Dimension.setWidth(3),
-              fontSize: Dimension.fontSize(18),
-              fontFamily: Fonts.SF_SEMIBOLD,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
             }}>
-            {status ? approveMess : cancelMess}
-          </Text>
-        </View>
+            <Image source={Images.vehicles} style={{height: 55, width: 55}} />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: Dimension.fontSize(17),
+                fontFamily: Fonts.SF_MEDIUM,
+                textAlign: 'center',
+                ...fontDefault,
+              }}>
+              {`${status ? approveVehicleMess : cancelVehicleMess} ${
+                item?.loaixe
+              }?`}
+            </Text>
+          </View>
+        )}
+
+        {screenName == 'HistoryRegisterItem' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image source={Images.item} style={{height: 55, width: 55}} />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: Dimension.fontSize(17),
+                fontFamily: Fonts.SF_MEDIUM,
+                textAlign: 'center',
+                ...fontDefault,
+              }}>
+              {`${status ? approveItemMess : cancelItemMess} ${item?.nguoidk}?`}
+            </Text>
+          </View>
+        )}
+
+        {screenName == 'HistoryRegisterDevice' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image source={Images.item} style={{height: 55, width: 55}} />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: Dimension.fontSize(17),
+                fontFamily: Fonts.SF_MEDIUM,
+                textAlign: 'center',
+                ...fontDefault,
+              }}>
+              {`${status ? approveItemMess : cancelItemMess} ${
+                item?.nguoidangky
+              }?`}
+            </Text>
+          </View>
+        )}
 
         <View
           style={[
@@ -415,15 +475,18 @@ export const WarningModal = ({
           />
           <Text
             style={{
-              fontSize: Dimension.fontSize(16),
-              fontFamily: Fonts.SF_SEMIBOLD,
+              fontSize: Dimension.fontSize(17),
+              fontFamily: Fonts.SF_MEDIUM,
+              ...fontDefault,
+              marginBottom: Dimension.setHeight(0.6),
             }}>
             {item?.name}
           </Text>
           <Text
             style={{
-              fontSize: Dimension.fontSize(18),
-              fontFamily: Fonts.SF_SEMIBOLD,
+              fontSize: Dimension.fontSize(16),
+              fontFamily: Fonts.SF_MEDIUM,
+              ...fontDefault,
             }}>
             {item?.content}
           </Text>
@@ -433,7 +496,6 @@ export const WarningModal = ({
           <Image source={Images.comment} style={styles.iconic} />
           <TextInput
             multiline={true}
-            placeholder="Lý do cảnh báo"
             style={{
               backgroundColor: '#ffffff',
               paddingHorizontal: Dimension.setWidth(2),
@@ -441,7 +503,6 @@ export const WarningModal = ({
               fontFamily: Fonts.SF_REGULAR,
               width: '70%',
               height: Dimension.setHeight(6),
-              maxHeight: Dimension.setHeight(9),
             }}
             onChangeText={e => setReasonInput(e)}
             value={reasonInput}

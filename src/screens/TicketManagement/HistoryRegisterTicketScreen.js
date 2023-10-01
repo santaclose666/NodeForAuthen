@@ -231,7 +231,9 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
             width: '66%',
             marginBottom: Dimension.setHeight(0.5),
           }}>
-          <Text style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18}}>
+          <Text
+            numberOfLines={2}
+            style={{fontFamily: Fonts.SF_SEMIBOLD, fontSize: 18}}>
             {item.chuongtrinh}
           </Text>
         </View>
@@ -329,23 +331,25 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
           />
 
           {handleFilter(indexPicker)?.length !== 0 ? (
-            <FlatList
-              showsVerticalScrollIndicator={false}
+            <View
               style={{
                 flex: 1,
                 paddingTop: Dimension.setHeight(3),
-              }}
-              data={handleFilter(indexPicker)}
-              keyExtractor={(_, index) => index.toString()}
-              renderItem={({item, index}) => (
-                <RenderTicketData item={item} index={index} />
-              )}
-              initialNumToRender={6}
-              windowSize={6}
-              removeClippedSubviews={true}
-              refreshing={true}
-              extraData={ticketPlaneData}
-            />
+              }}>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={handleFilter(indexPicker)}
+                keyExtractor={(_, index) => index.toString()}
+                renderItem={({item, index}) => (
+                  <RenderTicketData item={item} index={index} />
+                )}
+                initialNumToRender={6}
+                windowSize={6}
+                removeClippedSubviews={true}
+                refreshing={true}
+                extraData={ticketPlaneData}
+              />
+            </View>
           ) : (
             <View
               style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -393,11 +397,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                   <Text style={styles.titleBottomSheet}>Chương trình</Text>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.work} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '90%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>
                         Tên chương trình:{'  '}
                         <Text
@@ -411,11 +411,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.worklocation} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Địa điểm:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -433,11 +429,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                       source={Images.registerperson}
                       style={styles.Iconic}
                     />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Người đăng kí:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -463,11 +455,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                       source={Images.outsideperson}
                       style={styles.Iconic}
                     />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Người ngoài viện:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -486,11 +474,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                   </Text>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.plane} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Hãng bay:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -502,11 +486,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.planeTicket} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Hạng vé:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -518,11 +498,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.baggage} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Cân nặng hành lý:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -534,11 +510,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.takeoff} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Địa điểm đi:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -550,11 +522,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.landing} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Địa điểm đến:{'  '}</Text>
                       <Text
                         numberOfLines={2}
@@ -566,11 +534,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.datetime} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Khởi hành lúc:{'  '}</Text>
                       <Text style={styles.content}>{selectedItem.ngaydi}</Text>
                     </View>
@@ -651,6 +615,12 @@ const styles = StyleSheet.create({
   approvedIcon: {
     width: 30,
     height: 30,
+  },
+
+  containerLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '88%',
   },
 });
 

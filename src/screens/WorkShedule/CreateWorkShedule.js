@@ -30,6 +30,8 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import RedPoint from '../../components/RedPoint';
+import {rowAlignCenter} from '../../contants/CssFE';
 
 const optionData = [
   {
@@ -131,9 +133,6 @@ const CreateWorkSchedule = ({navigation, route}) => {
       endDay !== null &&
       placeInput !== '' &&
       contentInput !== '' &&
-      clueInput !== '' &&
-      componentInput !== '' &&
-      noteInput !== '' &&
       (workValue === 2 ? ortherWorkInput !== '' : workNameValue !== '')
     ) {
       setLoading(true);
@@ -191,7 +190,10 @@ const CreateWorkSchedule = ({navigation, route}) => {
               </View>
             </View>
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Lựa chọn loại</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Lựa chọn loại</Text>
+                <RedPoint />
+              </View>
               <Dropdown
                 style={styles.dropdown}
                 autoScroll={false}
@@ -224,7 +226,10 @@ const CreateWorkSchedule = ({navigation, route}) => {
             </View>
 
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Địa điểm</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Địa điểm</Text>
+                <RedPoint />
+              </View>
               <TextInput
                 style={styles.inputText}
                 placeholder="Nhập địa điểm"
@@ -250,7 +255,11 @@ const CreateWorkSchedule = ({navigation, route}) => {
                     width: '48%',
                   },
                 ]}>
-                <Text style={styles.title}>Từ ngày</Text>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.title}>Từ ngày</Text>
+                  <RedPoint />
+                </View>
+
                 <View style={styles.dateTimePickerContainer}>
                   <Text style={styles.dateTimeText}>{startDay}</Text>
                   <View
@@ -277,7 +286,11 @@ const CreateWorkSchedule = ({navigation, route}) => {
                     width: '48%',
                   },
                 ]}>
-                <Text style={styles.title}>Đến ngày</Text>
+                <View style={rowAlignCenter}>
+                  <Text style={styles.title}>Đến ngày</Text>
+                  <RedPoint />
+                </View>
+
                 <View style={styles.dateTimePickerContainer}>
                   <Text style={styles.dateTimeText}>
                     {endDay ? endDay : 'Chọn ngày'}
@@ -304,7 +317,10 @@ const CreateWorkSchedule = ({navigation, route}) => {
               }}
             />
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Thuộc chương trình</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Thuộc chương trình</Text>
+                <RedPoint />
+              </View>
               <Dropdown
                 style={styles.dropdown}
                 autoScroll={false}
@@ -329,7 +345,11 @@ const CreateWorkSchedule = ({navigation, route}) => {
             </View>
 
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Tên chương trình</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Tên chương trình</Text>
+                <RedPoint />
+              </View>
+
               {workValue === 1 && workNameData ? (
                 <Dropdown
                   style={styles.dropdown}
@@ -367,7 +387,10 @@ const CreateWorkSchedule = ({navigation, route}) => {
             </View>
 
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Nội dung</Text>
+              <View style={rowAlignCenter}>
+                <Text style={styles.title}>Nội dung</Text>
+                <RedPoint />
+              </View>
               <TextInput
                 style={styles.inputText}
                 placeholder="Nhập nội dung"
@@ -420,7 +443,7 @@ const CreateWorkSchedule = ({navigation, route}) => {
             <RegisterBtn nameBtn={'Thực hiện'} onEvent={handleRegister} />
           </KeyboardAwareScrollView>
         </ScrollView>
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

@@ -21,6 +21,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ToastAlert} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
 import {fontDefault} from '../../contants/Variable';
+import Loading from '../../components/LoadingUI';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -31,11 +32,20 @@ const LoginScreen = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [checkShowHide, setCheckShowHide] = useState(true);
   const [save, setSave] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (email !== '' && password !== '') {
       const data = {email, password};
-      loginUser(data, dispatch, navigation, save);
+
+      setLoading(true);
+      try {
+        await loginUser(data, dispatch, navigation, save);
+
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       const mess = 'Vui lòng nhập đầy đủ thông tin!';
       ToastAlert(mess);
@@ -211,6 +221,7 @@ const LoginScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
+      {loading && <Loading bg={true} />}
     </SafeAreaView>
   );
 };

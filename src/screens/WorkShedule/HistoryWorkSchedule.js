@@ -645,11 +645,7 @@ const HistoryWorkShedule = ({navigation}) => {
                   <Text style={styles.titleBottomSheet}>Chương trình</Text>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.work} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        flex: 1,
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text ellipsizeMode="tail" style={styles.title}>
                         Tên chương trình:{' '}
                         <Text style={styles.content}>
@@ -660,11 +656,7 @@ const HistoryWorkShedule = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.worklocation} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '66%',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Địa điểm:</Text>
                       <Text
                         numberOfLines={2}
@@ -676,11 +668,7 @@ const HistoryWorkShedule = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.content} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        flex: 1,
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text ellipsizeMode="tail" style={styles.title}>
                         Nội dung:{' '}
                         <Text style={styles.content}>
@@ -698,13 +686,9 @@ const HistoryWorkShedule = ({navigation}) => {
                   <View style={styles.containerEachLine}>
                     <Image
                       src={mainURL + selectedItem.avatar}
-                      style={styles.Iconic}
+                      style={[styles.Iconic, {borderRadius: 50}]}
                     />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        flex: 1,
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Người công tác:{''}</Text>
                       <Text
                         numberOfLines={2}
@@ -716,11 +700,7 @@ const HistoryWorkShedule = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.note} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        flex: 1,
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Bộ môn:{''}</Text>
                       <Text
                         numberOfLines={2}
@@ -732,11 +712,7 @@ const HistoryWorkShedule = ({navigation}) => {
                   </View>
                   <View style={styles.containerEachLine}>
                     <Image source={Images.datetime} style={styles.Iconic} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}>
+                    <View style={styles.containerLine}>
                       <Text style={styles.title}>Thời gian:{''}</Text>
                       <Text style={styles.content}>
                         {changeFormatDate(selectedItem.tungay)}
@@ -941,6 +917,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: Dimension.setHeight(1.4),
     marginLeft: Dimension.setWidth(1.6),
+  },
+
+  containerLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '88%',
   },
 
   Iconic: {

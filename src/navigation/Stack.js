@@ -30,6 +30,11 @@ import TreeTypeScreen from '../screens/TreeType/TreeTypeScreen';
 import DMKTKTScreen from '../screens/DMKTKT/DMKTKTScreen';
 import VP809Screen from '../screens/VP809/VP809Screen';
 import SelectProvinceFFWScreen from '../screens/ForestFire/SelectProvinceFFWScreen';
+import RegisterDevices from '../screens/Device/RegisterDevice';
+import RegisterItemOffice from '../screens/ItemOffice/RegisterItemOffice';
+import HistoryRegisterItem from '../screens/ItemOffice/HistoryRegisterItem';
+import HistoryRegisterDevice from '../screens/Device/HistoryRegisterDevice';
+
 const Stack = createStackNavigator();
 
 const StactNavigator = () => {
@@ -66,6 +71,13 @@ const StactNavigator = () => {
       <Stack.Screen name="CreateWorkSchedule" component={CreateWorkSchedule} />
       <Stack.Screen name="HistoryWorkShedule" component={HistoryWorkShedule} />
       <Stack.Screen name="AllWorkSchedule" component={AllWorkScheduleScreen} />
+      <Stack.Screen
+        name="HistoryRegisterDevice"
+        component={HistoryRegisterDevice}
+      />
+      <Stack.Screen name="RegisterDevices" component={RegisterDevices} />
+      <Stack.Screen name="HistoryItemOffice" component={HistoryRegisterItem} />
+      <Stack.Screen name="RegisterItemOffice" component={RegisterItemOffice} />
       <Stack.Screen name="SelectWMSLayer" component={SelectWMSLayerScreen} />
       <Stack.Screen name="MapWMS" component={MapScreen} />
       <Stack.Screen name="ListBio" component={ListBioScreen} />

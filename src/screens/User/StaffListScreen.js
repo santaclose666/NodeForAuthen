@@ -216,7 +216,7 @@ const StaffListScreen = ({navigation}) => {
           removeClippedSubviews={true}
         />
 
-        {loading === true && <Loading />}
+        {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

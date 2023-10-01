@@ -9,6 +9,7 @@ import {
   Dimensions,
   Text,
   ScrollView,
+  Platform,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import Images from '../../contants/Images';
@@ -23,11 +24,13 @@ const SpecieDetailScreen = ({navigation}) => {
   const [images, setImages] = useState([]);
   const [isImageViewVisible, setImageViewVisible] = useState(false);
   const route = useRoute();
-  const item = route.params;
+  const data = route.params.data;
 
-  const words = item.loailatin.split(' ');
+  console.log(data);
+
+  const words = data.loailatin?.split(' ');
   let formattedText;
-  if (words.length > 1 && (words[1] === 'sp' || words[1] === 'sp.')) {
+  if (words?.length > 1 && (words[1] === 'sp' || words[1] === 'sp.')) {
     formattedText = (
       <Text style={{fontWeight: '600'}}>
         <Text>
@@ -47,29 +50,21 @@ const SpecieDetailScreen = ({navigation}) => {
     );
   }
 
-  console.log(item);
-
   const getListImage = () => {
     var listImg = [];
-    if (item.hinh1 != '') {
+    if (data.hinh1 != '') {
       listImg.push({
-        uri:
-          'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/' +
-          item.hinh1,
+        uri: data.link + data.hinh1,
       });
     }
-    if (item.hinh2 != '') {
+    if (data.hinh2 != '') {
       listImg.push({
-        uri:
-          'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/' +
-          item.hinh2,
+        uri: data.link + data.hinh2,
       });
     }
-    if (item.hinh3 != '') {
+    if (data.hinh3 != '') {
       listImg.push({
-        uri:
-          'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/' +
-          item.hinh3,
+        uri: data.link + data.hinh3,
       });
     }
 
@@ -123,7 +118,7 @@ const SpecieDetailScreen = ({navigation}) => {
               fontSize: Dimension.fontSize(22),
               marginHorizontal: 8,
             }}>
-            {item.loaitv}
+            {data.loaitv}
           </Text>
 
           <Text
@@ -137,7 +132,7 @@ const SpecieDetailScreen = ({navigation}) => {
             {formattedText}
           </Text>
 
-          {(item.iucn != null) | (item.sachdo != null) | (item.nd != null) ? (
+          {(data.iucn != null) | (data.sachdo != null) | (data.nd != null) ? (
             <>
               <Text
                 style={{
@@ -174,7 +169,7 @@ const SpecieDetailScreen = ({navigation}) => {
                       fontSize: Dimension.fontSize(14),
                       fontWeight: 'bold',
                     }}>
-                    {item.iucn}
+                    {data.iucn}
                   </Text>
                 </View>
               </View>
@@ -203,7 +198,7 @@ const SpecieDetailScreen = ({navigation}) => {
                       fontSize: Dimension.fontSize(14),
                       fontWeight: 'bold',
                     }}>
-                    {item.nd}
+                    {data.nd}
                   </Text>
                 </View>
               </View>
@@ -232,7 +227,7 @@ const SpecieDetailScreen = ({navigation}) => {
                       fontSize: Dimension.fontSize(14),
                       fontWeight: 'bold',
                     }}>
-                    {item.sachdo}
+                    {data.sachdo}
                   </Text>
                 </View>
               </View>
@@ -257,7 +252,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
-                {item.nganhlatin}
+                {data.nganhlatin}
               </Text>
             </View>
           </View>
@@ -279,7 +274,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
-                {item.nganhtv}
+                {data.nganhtv}
               </Text>
             </View>
           </View>
@@ -302,7 +297,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
-                {item.loplatin}
+                {data.loplatin}
               </Text>
             </View>
           </View>
@@ -325,7 +320,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
-                {item.loptv}
+                {data.loptv}
               </Text>
             </View>
           </View>
@@ -348,7 +343,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
-                {item.bolatin}
+                {data.bolatin}
               </Text>
             </View>
           </View>
@@ -371,7 +366,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
                 }}>
-                {item.botv}
+                {data.botv}
               </Text>
             </View>
           </View>
@@ -394,7 +389,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   fontWeight: 'bold',
                   fontStyle: 'italic',
                 }}>
-                {item.holatin}
+                {data.holatin}
               </Text>
             </View>
           </View>
@@ -416,7 +411,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                 }}>
-                {item.hotv}
+                {data.hotv}
               </Text>
             </View>
           </View>
@@ -439,7 +434,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   fontWeight: 'bold',
                   fontStyle: 'italic',
                 }}>
-                {item.chilatin}
+                {data.chilatin}
               </Text>
             </View>
           </View>
@@ -461,7 +456,7 @@ const SpecieDetailScreen = ({navigation}) => {
                   fontSize: Dimension.fontSize(14),
                   fontWeight: 'bold',
                 }}>
-                {item.chitv}
+                {data.chitv}
               </Text>
             </View>
           </View>
@@ -478,7 +473,7 @@ const SpecieDetailScreen = ({navigation}) => {
               marginTop: 8,
               flex: 1,
             }}>
-            {item.hinh1 != '' && (
+            {data.hinh1 != '' && (
               <View
                 style={{
                   flex: 1,
@@ -488,15 +483,13 @@ const SpecieDetailScreen = ({navigation}) => {
                 }}>
                 <Image
                   source={{
-                    uri:
-                      'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/' +
-                      item.hinh1,
+                    uri: data.link + data.hinh1,
                   }}
                   style={{height: width / 3 - 25, width: width / 3 - 25}}
                 />
               </View>
             )}
-            {item.hinh2 != '' && (
+            {data.hinh2 != '' && (
               <View
                 style={{
                   flex: 1,
@@ -505,15 +498,13 @@ const SpecieDetailScreen = ({navigation}) => {
                 }}>
                 <Image
                   source={{
-                    uri:
-                      'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/' +
-                      item.hinh2,
+                    uri: data.link + data.hinh2,
                   }}
                   style={{height: width / 3 - 25, width: width / 3 - 25}}
                 />
               </View>
             )}
-            {item.hinh3 != '' && (
+            {data.hinh3 != '' && (
               <View
                 style={{
                   flex: 1,
@@ -523,9 +514,7 @@ const SpecieDetailScreen = ({navigation}) => {
                 }}>
                 <Image
                   source={{
-                    uri:
-                      'http://vuonquocgiavietnam.ifee.edu.vn/web/images/img_ddsh/' +
-                      item.hinh3,
+                    uri: data.link + data.hinh3,
                   }}
                   style={{height: width / 3 - 25, width: width / 3 - 25}}
                 />
@@ -542,7 +531,7 @@ const SpecieDetailScreen = ({navigation}) => {
               marginTop: 8,
               textAlign: 'justify',
             }}>
-            {item.dacdiem}
+            {data.dacdiem}
           </Text>
 
           <Text style={styles.font2}>Giá trị</Text>
@@ -554,7 +543,7 @@ const SpecieDetailScreen = ({navigation}) => {
               marginTop: 8,
               textAlign: 'justify',
             }}>
-            {item.giatri}
+            {data.giatri}
           </Text>
 
           <Text style={styles.font2}>Phân bố</Text>
@@ -566,7 +555,7 @@ const SpecieDetailScreen = ({navigation}) => {
               marginTop: 8,
               textAlign: 'justify',
             }}>
-            {item.phanbo}
+            {data.phanbo}
           </Text>
 
           <Text style={styles.font2}>Nguồn</Text>
@@ -578,7 +567,7 @@ const SpecieDetailScreen = ({navigation}) => {
               marginTop: 8,
               textAlign: 'left',
             }}>
-            {item.nguon}
+            {data.nguon}
           </Text>
         </View>
       </ScrollView>
@@ -595,8 +584,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: Dimension.setHeight(1),
     marginLeft: Dimension.setWidth(3),
+    marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
   },
 
   headerContainer: {

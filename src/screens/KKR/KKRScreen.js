@@ -6,10 +6,17 @@ const ForestPrice = ({navigation}) => {
   const data = useSelector(
     state => state.document.documentSlice?.kkrData?.data,
   );
-
-  console.log(data);
   const groupOption = useSelector(
     state => state.document.documentSlice?.kkrData?.category,
+  );
+  const yearOption = useSelector(
+    state => state.document.documentSlice?.kkrData?.year,
+  );
+  const unitOption = useSelector(
+    state => state.document.documentSlice?.kkrData?.unit,
+  );
+  const hieuLuc = useSelector(
+    state => state.document.documentSlice?.kkrData?.hieuluc,
   );
 
   return (
@@ -18,6 +25,9 @@ const ForestPrice = ({navigation}) => {
       navigation={navigation}
       data={data}
       groupOption={groupOption}
+      yearOption={yearOption}
+      unitOption={unitOption}
+      hieuLuc={hieuLuc}
     />
   );
 };
