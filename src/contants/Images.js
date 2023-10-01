@@ -193,6 +193,8 @@ const Images = {
   item: require('../assets/images/item.png'),
   quantity: require('../assets/images/quantity.png'),
   delete: require('../assets/images/delete.png'),
+  borrowDate: require('../assets/images/borrowDate.png'),
+  returnDate: require('../assets/images/returnDate.png'),
 };
 
 export default Images;

@@ -72,6 +72,11 @@ import {
   getRegisterOfficeSuccess,
 } from './officeItemSlice';
 import {getDeviceStart, getDeviceSuccess} from './deviceSlice';
+import {
+  getMyDeviceStart,
+  getMyDeviceFailed,
+  getMyDeviceSuccess,
+} from './myListDeviceSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -813,6 +818,19 @@ export const getAllListDevice = async dispatch => {
     dispatch(getDeviceSuccess(res.data));
   } catch (error) {
     dispatch(getDocumentFailed());
+  }
+};
+
+export const getMyListDevice = async (dispatch, data) => {
+  dispatch(getMyDeviceStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/thietbi/historyTB/${data.id_user}`,
+    );
+
+    dispatch(getMyDeviceSuccess(res.data));
+  } catch (error) {
+    dispatch(getMyDeviceFailed());
   }
 };
 

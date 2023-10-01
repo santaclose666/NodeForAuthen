@@ -36,6 +36,7 @@ import {
   getAllListDevice,
   getAllListOfficeItem,
   getAllPlaneData,
+  getMyListDevice,
 } from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -47,16 +48,19 @@ import FilterStatusUI from '../../components/FilterStatusUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import {fontDefault, mainURL} from '../../contants/Variable';
+import Loading from '../../components/LoadingUI';
 
 const HistoryRegisterDevice = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const deviceData = useSelector(state => state.device.deviceSlice?.data);
+  const myDeviceData = useSelector(state => state.myDevice.myDeviceSlice?.data);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const dispatch = useDispatch();
   const [selectedItem, setSelectedItem] = useState(null);
   const [toggleModal, setToggleModal] = useState(false);
   const [checkInput, setCheckInput] = useState(null);
   const [indexPicker, setIndexPicker] = useState(0);
+  const [loading, setLoading] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
@@ -79,6 +83,13 @@ const HistoryRegisterDevice = ({navigation}) => {
       setSelectedItem(null);
     }
   }, []);
+
+  const getNameApprover = () => {
+    let approver = IFEEstaffs.filter(
+      item => item.id == selectedItem?.id_nguoiduyet,
+    )[0];
+    return approver?.hoten;
+  };
 
   const handlePickItem = useCallback((item, status) => {
     bottomSheetModalRef.current?.dismiss();
@@ -122,9 +133,11 @@ const HistoryRegisterDevice = ({navigation}) => {
     index => {
       switch (index) {
         case 0:
-          return deviceData?.data;
+          return checkRoleUser() ? deviceData?.data : myDeviceData?.choduyet;
         case 1:
-          return deviceData?.data_dapheduyet;
+          return checkRoleUser()
+            ? deviceData?.data_dapheduyet
+            : myDeviceData.lichsu;
         case 2:
           return [];
       }
@@ -132,8 +145,24 @@ const HistoryRegisterDevice = ({navigation}) => {
     [deviceData],
   );
 
-  const fetchAllListDevice = () => {
-    getAllListDevice(dispatch);
+  const checkRoleUser = () => {
+    return user?.quyentruycap == 1 || user?.id_ht == 6;
+  };
+
+  const fetchAllListDevice = async () => {
+    const data = {
+      id_user: user?.id,
+    };
+
+    setLoading(true);
+    try {
+      await getAllListDevice(dispatch);
+      await getMyListDevice(dispatch, data);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useLayoutEffect(() => {
@@ -161,7 +190,7 @@ const HistoryRegisterDevice = ({navigation}) => {
     const filterUser = IFEEstaffs.filter(user => user.id == item.id_user)[0];
 
     const checkRole = () => {
-      return indexPicker == 0 && (user?.quyentruycap == 1 || user?.id_ht == 6);
+      return indexPicker == 0 && checkRoleUser();
     };
 
     return (
@@ -195,9 +224,11 @@ const HistoryRegisterDevice = ({navigation}) => {
               fontSize: Dimension.fontSize(18),
               ...fontDefault,
             }}>
-            {`Tổng cộng ${
-              item.thietbi.length
-            } văn phòng phẩm ${status.toLocaleLowerCase()}`}
+            {checkRoleUser()
+              ? `Tổng cộng ${
+                  item.thietbi?.length
+                } văn phòng phẩm ${status.toLocaleLowerCase()}`
+              : `Thiết bị ${item?.tentb}`}
           </Text>
         </View>
         <View
@@ -238,16 +269,42 @@ const HistoryRegisterDevice = ({navigation}) => {
             </View>
           )}
         </View>
-        <View style={styles.containerEachLine}>
-          <Image
-            src={mainURL + filterUser?.path}
-            style={[styles.Iconic, {borderRadius: 50}]}
-          />
-          <Text style={[styles.title, {width: '90%'}]}>
-            Người đăng kí:{' '}
-            <Text style={styles.content}>{item.nguoidangky}</Text>
-          </Text>
-        </View>
+
+        {checkRoleUser() ? (
+          <View style={styles.containerEachLine}>
+            <Image
+              src={mainURL + filterUser?.path}
+              style={[styles.Iconic, {borderRadius: 50}]}
+            />
+            <Text style={[styles.title, {width: '90%'}]}>
+              Người đăng kí:{' '}
+              <Text style={styles.content}>{item.nguoidangky}</Text>
+            </Text>
+          </View>
+        ) : (
+          <>
+            <View style={styles.containerEachLine}>
+              <Image source={Images.borrowDate} style={styles.Iconic} />
+              <Text style={[styles.title, {width: '90%'}]}>
+                Ngày mượn:{' '}
+                <Text style={styles.content}>
+                  {changeFormatDate(item.ngaymuon)}
+                </Text>
+              </Text>
+            </View>
+            <View style={styles.containerEachLine}>
+              <Image source={Images.returnDate} style={styles.Iconic} />
+              <Text style={[styles.title, {width: '90%'}]}>
+                Ngày trả:{' '}
+                <Text style={styles.content}>
+                  {item.ngaytra
+                    ? changeFormatDate(item.ngaytra)
+                    : 'Không xác định'}
+                </Text>
+              </Text>
+            </View>
+          </>
+        )}
 
         {indexPicker == 0 ? (
           <View style={styles.containerEachLine}>
@@ -273,7 +330,10 @@ const HistoryRegisterDevice = ({navigation}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title="Lịch sử đăng kí thiết bị" navigation={navigation} />
+        <Header
+          title={`Lịch sử đăng kí thiết bị ${checkRoleUser() ? '' : 'của tôi'}`}
+          navigation={navigation}
+        />
         <BottomSheetModalProvider>
           <FilterStatusUI
             handlePickOption={handlePickOption}
@@ -342,22 +402,25 @@ const HistoryRegisterDevice = ({navigation}) => {
               </View>
               <BottomSheetScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.bottomSheetContainer}>
-                  <Text style={styles.titleBottomSheet}>Người đăng kí</Text>
-                  <View style={styles.containerEachLine}>
-                    <Image
-                      src={mainURL + selectedItem?.path}
-                      style={[styles.Iconic, {borderRadius: 50}]}
-                    />
-                    <View style={styles.containerLine}>
-                      <Text style={styles.title}>Họ tên:{'  '}</Text>
-                      <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={styles.content}>
-                        {selectedItem.nguoidangky}
-                      </Text>
+                  <Text style={styles.titleBottomSheet}>Đăng kí</Text>
+
+                  {checkRoleUser() && (
+                    <View style={styles.containerEachLine}>
+                      <Image
+                        src={mainURL + selectedItem?.path}
+                        style={[styles.Iconic, {borderRadius: 50}]}
+                      />
+                      <View style={styles.containerLine}>
+                        <Text style={styles.title}>Họ tên:{'  '}</Text>
+                        <Text
+                          numberOfLines={2}
+                          ellipsizeMode="tail"
+                          style={styles.content}>
+                          {selectedItem.nguoidangky}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
+                  )}
                   <View style={styles.containerEachLine}>
                     <Image source={Images.admin} style={styles.Iconic} />
                     <View style={styles.containerLine}>
@@ -366,10 +429,13 @@ const HistoryRegisterDevice = ({navigation}) => {
                         numberOfLines={2}
                         ellipsizeMode="tail"
                         style={styles.content}>
-                        {selectedItem.nguoiduyet}
+                        {selectedItem?.nguoiduyet
+                          ? selectedItem?.nguoiduyet
+                          : getNameApprover()}
                       </Text>
                     </View>
                   </View>
+
                   {indexPicker == 0 ? (
                     <View style={styles.containerEachLine}>
                       <Image source={Images.datetime} style={styles.Iconic} />
@@ -390,96 +456,128 @@ const HistoryRegisterDevice = ({navigation}) => {
                 </View>
                 <View style={styles.bottomSheetContainer}>
                   <Text style={styles.titleBottomSheet}>Thiết bị</Text>
-                  {selectedItem.thietbi.map((item, index) => {
-                    return (
-                      <View
-                        style={{marginLeft: Dimension.setWidth(2)}}
-                        key={index}>
-                        <Text
-                          style={{
-                            fontSize: Dimension.fontSize(17),
-                            fontFamily: Fonts.SF_BOLD,
-                          }}>{`${index + 1}.`}</Text>
+                  {checkRoleUser() ? (
+                    selectedItem?.thietbi?.map((item, index) => {
+                      return (
+                        <View
+                          style={{marginLeft: Dimension.setWidth(2)}}
+                          key={index}>
+                          <Text
+                            style={{
+                              fontSize: Dimension.fontSize(17),
+                              fontFamily: Fonts.SF_BOLD,
+                            }}>{`${index + 1}.`}</Text>
 
-                        <View style={styles.containerEachLine}>
-                          <Image
-                            source={Images.item}
-                            style={[styles.Iconic, {borderRadius: 50}]}
-                          />
-                          <View style={styles.containerLine}>
-                            <Text style={styles.title}>
-                              Thiết bị:{'  '}
-                              <Text numberOfLines={2} style={styles.content}>
-                                {item.id_thietbi}
+                          <View style={styles.containerEachLine}>
+                            <Image
+                              source={Images.item}
+                              style={[styles.Iconic, {borderRadius: 50}]}
+                            />
+                            <View style={styles.containerLine}>
+                              <Text style={styles.title}>
+                                Thiết bị:{'  '}
+                                <Text numberOfLines={2} style={styles.content}>
+                                  {item?.tentb}
+                                </Text>
                               </Text>
-                            </Text>
+                            </View>
                           </View>
-                        </View>
 
-                        <View style={styles.containerEachLine}>
-                          <Image
-                            source={Images.quantity}
-                            style={styles.Iconic}
-                          />
-                          <View style={styles.containerLine}>
-                            <Text style={styles.title}>
-                              Dạng đăng kí:{'  '}
-                            </Text>
-                            <Text
-                              numberOfLines={2}
-                              ellipsizeMode="tail"
-                              style={styles.content}>
-                              {item.active == 1 ? 'Không trả' : 'Có trả'}
-                            </Text>
-                          </View>
-                        </View>
-
-                        {indexPicker == 0 ? (
                           <View style={styles.containerEachLine}>
                             <Image
-                              source={Images.datetime}
+                              source={Images.quantity}
                               style={styles.Iconic}
                             />
-                            <Text style={styles.title}>
-                              Ngày đăng kí:{'  '}
-                            </Text>
-                            <Text style={styles.content}>
-                              {changeFormatDate(item.ngaymuon)}
-                            </Text>
-                          </View>
-                        ) : (
-                          <View style={styles.containerEachLine}>
-                            <Image
-                              source={Images.datetime}
-                              style={styles.Iconic}
-                            />
-                            <Text style={styles.title}>Ngày duyệt:{'  '}</Text>
-                            <Text style={styles.content}>
-                              {changeFormatDate(item.ngayduyet)}
-                            </Text>
-                          </View>
-                        )}
-
-                        <View style={styles.containerEachLine}>
-                          <Image source={Images.note} style={styles.Iconic} />
-                          <View style={styles.containerLine}>
-                            <Text style={styles.title}>
-                              Nội dung mượn:{'  '}
+                            <View style={styles.containerLine}>
+                              <Text style={styles.title}>
+                                Dạng đăng kí:{'  '}
+                              </Text>
                               <Text
                                 numberOfLines={2}
                                 ellipsizeMode="tail"
-                                style={[
-                                  styles.content,
-                                  {color: item.noidung ? '#747476' : '#eb5a6e'},
-                                ]}>
-                                {item.noidung ? item.noidung : 'Không có'}
+                                style={styles.content}>
+                                {item.active == 1 ? 'Không trả' : 'Có trả'}
                               </Text>
-                            </Text>
+                            </View>
+                          </View>
+
+                          {indexPicker == 0 ? (
+                            <View style={styles.containerEachLine}>
+                              <Image
+                                source={Images.datetime}
+                                style={styles.Iconic}
+                              />
+                              <Text style={styles.title}>
+                                Ngày đăng kí:{'  '}
+                              </Text>
+                              <Text style={styles.content}>
+                                {changeFormatDate(item.ngaymuon)}
+                              </Text>
+                            </View>
+                          ) : (
+                            <View style={styles.containerEachLine}>
+                              <Image
+                                source={Images.datetime}
+                                style={styles.Iconic}
+                              />
+                              <Text style={styles.title}>
+                                Ngày duyệt:{'  '}
+                              </Text>
+                              <Text style={styles.content}>
+                                {changeFormatDate(item.ngayduyet)}
+                              </Text>
+                            </View>
+                          )}
+
+                          <View style={styles.containerEachLine}>
+                            <Image source={Images.note} style={styles.Iconic} />
+                            <View style={styles.containerLine}>
+                              <Text style={styles.title}>
+                                Nội dung mượn:{'  '}
+                                <Text
+                                  numberOfLines={2}
+                                  ellipsizeMode="tail"
+                                  style={[
+                                    styles.content,
+                                    {
+                                      color: item.noidung
+                                        ? '#747476'
+                                        : '#eb5a6e',
+                                    },
+                                  ]}>
+                                  {item.noidung ? item.noidung : 'Không có'}
+                                </Text>
+                              </Text>
+                            </View>
                           </View>
                         </View>
+                      );
+                    })
+                  ) : (
+                    <>
+                      <View style={styles.containerEachLine}>
+                        <Image source={Images.datetime} style={styles.Iconic} />
+                        <Text style={styles.title}>Tên thiết bị:{'  '}</Text>
+                        <Text style={styles.content}>
+                          {selectedItem?.tentb}
+                        </Text>
                       </View>
-                    );
-                  })}
+                      <View style={styles.containerEachLine}>
+                        <Image
+                          source={Images.returnDate}
+                          style={styles.Iconic}
+                        />
+                        <Text style={[styles.title, {width: '90%'}]}>
+                          Ngày trả:{' '}
+                          <Text style={styles.content}>
+                            {selectedItem?.ngaytra
+                              ? changeFormatDate(selectedItem?.ngaytra)
+                              : 'Không xác định'}
+                          </Text>
+                        </Text>
+                      </View>
+                    </>
+                  )}
                 </View>
               </BottomSheetScrollView>
             </BottomSheetModal>
@@ -494,6 +592,7 @@ const HistoryRegisterDevice = ({navigation}) => {
           handleApprove={handleApprove}
           handleCancel={handleCancel}
         />
+        {loading && <Loading />}
       </SafeAreaView>
     </LinearGradientUI>
   );
