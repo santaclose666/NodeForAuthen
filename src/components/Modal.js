@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
-  Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Images from '../contants/Images';

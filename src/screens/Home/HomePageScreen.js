@@ -79,9 +79,10 @@ const HomePageScreen = ({navigation}) => {
 
   const handleOpenApp = async link => {
     try {
-      return Linking.openURL(link);
+      Linking.openURL(link);
     } catch (error) {
       console.log(error);
+      ToastAlert('Không thể chuyển hướng trên thiết bị của bạn!');
     }
   };
 

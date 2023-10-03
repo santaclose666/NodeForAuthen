@@ -72,11 +72,6 @@ import {
   getRegisterOfficeSuccess,
 } from './officeItemSlice';
 import {getDeviceFailed, getDeviceStart, getDeviceSuccess} from './deviceSlice';
-import {
-  getMyDeviceStart,
-  getMyDeviceFailed,
-  getMyDeviceSuccess,
-} from './myListDeviceSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -848,6 +843,26 @@ export const cancelRegisterDevice = async data => {
     await axios.get(
       `https://management.ifee.edu.vn/api/thietbi/pheduyet/xoa/${data.id_user}`,
     );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const returnDevice = async data => {
+  try {
+    const res = await axios.post(
+      `https://management.ifee.edu.vn/api/thietbi/traTB/tra/${data.id_user}`,
+      {
+        id_thietbi: data.id_thietbi,
+        ngaytra_thucte: data.ngaytra_thucte,
+        tinhtrangTB: data.tinhtrangTB,
+        nguyennhan: data.nguyennhan,
+      },
+    );
+
+    console.log(res);
+
+    return true;
   } catch (error) {
     console.log(error);
   }

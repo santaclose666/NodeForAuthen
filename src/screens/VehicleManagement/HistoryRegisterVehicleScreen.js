@@ -401,10 +401,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                 alignSelf: 'flex-end',
                 marginTop: Dimension.setHeight(0.6),
               }}>
-              <Image
-                source={Images.returncar}
-                style={{width: 36, height: 36}}
-              />
+              <Image source={Images.return} style={{width: 36, height: 36}} />
             </TouchableOpacity>
           )}
         </View>

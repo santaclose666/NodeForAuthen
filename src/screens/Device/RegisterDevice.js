@@ -32,7 +32,6 @@ import {
   getAllDevices,
   getAllListDevice,
   registerDevice,
-  getMyListDevice,
 } from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
@@ -62,6 +61,10 @@ const RegisterDevices = ({navigation, route}) => {
   const [content, setContent] = useState('');
   const deviceRef = useRef([]);
   const dispatch = useDispatch();
+
+  const checkRoleUser = () => {
+    return user?.quyentruycap == 1 || user?.id_ht == 6;
+  };
 
   const handlePickType = (item, index) => {
     const updatedArrRender = [...arrRender];
@@ -161,10 +164,8 @@ const RegisterDevices = ({navigation, route}) => {
           ToastSuccess('Đăng kí thành công');
           setLoading(false);
 
-          await fetchAllListDevice();
-          setTimeout(() => {
-            navigation.goBack();
-          });
+          fetchAllListDevice();
+          navigation.goBack();
         }
       } catch (error) {
         console.log(error);
@@ -178,9 +179,7 @@ const RegisterDevices = ({navigation, route}) => {
     const data = {
       id_user: user?.id,
     };
-
-    await getAllListDevice(dispatch);
-    await getMyListDevice(dispatch, data);
+    await getAllListDevice(dispatch, data, checkRoleUser());
   };
 
   const fetchAllDevices = async () => {
@@ -505,7 +504,6 @@ const RegisterDevices = ({navigation, route}) => {
                 <RedPoint />
               </View>
               <TextInput
-                multiline={true}
                 style={styles.inputText}
                 placeholder="Nhập nội dung"
                 value={content}
