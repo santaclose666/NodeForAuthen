@@ -118,7 +118,7 @@ const Images = {
   personal: require('../assets/images/personal.png'),
   flagnocolor: require('../assets/images/flagnocolor.png'),
   flagcolor: require('../assets/images/flagcolor.png'),
-  returncar: require('../assets/images/returncar.png'),
+  return: require('../assets/images/return.png'),
   petro: require('../assets/images/petro.png'),
   km: require('../assets/images/km.png'),
   maintenance: require('../assets/images/maintenance.png'),
@@ -195,6 +195,7 @@ const Images = {
   delete: require('../assets/images/delete.png'),
   borrowDate: require('../assets/images/borrowDate.png'),
   returnDate: require('../assets/images/returnDate.png'),
+  errorDevice: require('../assets/images/errorDevice.png'),
 };
 
 export default Images;
