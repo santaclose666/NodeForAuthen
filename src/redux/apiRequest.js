@@ -710,8 +710,6 @@ export const getAllDocument = async dispatch => {
     const res = await axios.get(`https://forestry.ifee.edu.vn/api/vanban`);
 
     dispatch(getDocumentSuccess(res.data));
-
-    return true
   } catch (error) {
     console.log(error);
     dispatch(getDocumentFailed());

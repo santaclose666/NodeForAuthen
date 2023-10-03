@@ -55,36 +55,27 @@ const HomePageScreen = ({navigation}) => {
   const [titleInput, setTitleInput] = useState('');
   const [contentInput, setContentInput] = useState('');
   const [gmailInput, setGmailInput] = useState('');
-  const [loading, setLoading] = useState(false);
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
     try {
+      await getAllDocument(dispatch);
       await requestPermissions();
-      setLoading(true);
-      const res = await getAllDocument(dispatch);
-
       await getWeatherData(dispatch);
       topicForAll();
-
-      if (res) {
-        setLoading(false);
-      }
     } catch (error) {
       console.log(error);
     }
   };
 
   const fetchAllNews = async () => {
-    setLoading(true);
     try {
       const res = await getallNews(dispatch);
 
-      if (res) {
-        setNewArr(res);
-        setLoading(false);
-      }
+      setNewArr(res);
+
+      getAllDocumentMv(dispatch);
     } catch (error) {
       console.log(error);
     }
@@ -154,10 +145,6 @@ const HomePageScreen = ({navigation}) => {
     ToastAlert('Chức năng đang được phát triển');
   };
 
-  const fetchAllDocumentMv = () => {
-    getAllDocumentMv(dispatch);
-  };
-
   useLayoutEffect(() => {
     fcmService.registerAppWithFCM();
     fcmService.register(onRegister, onNotification, onOpenNotification);
@@ -174,7 +161,6 @@ const HomePageScreen = ({navigation}) => {
     }
 
     fetchAllNews();
-    fetchAllDocumentMv();
 
     return () => clearInterval(interval);
   }, []);
@@ -803,7 +789,6 @@ const HomePageScreen = ({navigation}) => {
             </View>
           </Modal>
         </ScrollView>
-        {loading && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );
