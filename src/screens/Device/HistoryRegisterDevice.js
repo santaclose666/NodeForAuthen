@@ -137,7 +137,7 @@ const HistoryRegisterDevice = ({navigation}) => {
         case 1:
           return checkRoleUser()
             ? deviceData?.data_dapheduyet
-            : myDeviceData.lichsu;
+            : myDeviceData?.lichsu;
         case 2:
           return [];
       }
