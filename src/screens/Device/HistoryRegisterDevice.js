@@ -26,23 +26,15 @@ import {
 } from '@gorhom/bottom-sheet';
 import Colors from '../../contants/Colors';
 import {
-  approvePlaneTicket,
   approveRegisterDevice,
-  approveRegisterOfficeItem,
-  cancelPlaneTicket,
   cancelRegisterDevice,
-  cancelRegisterOfficeItem,
-  getAllDevices,
   getAllListDevice,
-  getAllListOfficeItem,
-  getAllPlaneData,
   getMyListDevice,
 } from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import StatusUI from '../../components/StatusUI';
-import {ApproveCancelModal, ConfirmModal} from '../../components/Modal';
-import {ToastWarning} from '../../components/Toast';
+import {ConfirmModal} from '../../components/Modal';
 import {shadowIOS} from '../../contants/propsIOS';
 import FilterStatusUI from '../../components/FilterStatusUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
@@ -53,7 +45,6 @@ import Loading from '../../components/LoadingUI';
 const HistoryRegisterDevice = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const deviceData = useSelector(state => state.device.deviceSlice?.data);
-  const myDeviceData = useSelector(state => state.myDevice.myDeviceSlice?.data);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const dispatch = useDispatch();
   const [selectedItem, setSelectedItem] = useState(null);
@@ -63,6 +54,10 @@ const HistoryRegisterDevice = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
+
+  const checkRoleUser = () => {
+    return user?.quyentruycap == 1 || user?.id_ht == 6;
+  };
 
   const handleBottomSheet = useCallback(
     (item, path, bgColorStatus) => {
@@ -83,13 +78,6 @@ const HistoryRegisterDevice = ({navigation}) => {
       setSelectedItem(null);
     }
   }, []);
-
-  const getNameApprover = () => {
-    let approver = IFEEstaffs.filter(
-      item => item.id == selectedItem?.id_nguoiduyet,
-    )[0];
-    return approver?.hoten;
-  };
 
   const handlePickItem = useCallback((item, status) => {
     bottomSheetModalRef.current?.dismiss();
@@ -133,11 +121,9 @@ const HistoryRegisterDevice = ({navigation}) => {
     index => {
       switch (index) {
         case 0:
-          return checkRoleUser() ? deviceData?.data : myDeviceData?.choduyet;
+          return deviceData?.pending;
         case 1:
-          return checkRoleUser()
-            ? deviceData?.data_dapheduyet
-            : myDeviceData.lichsu;
+          return deviceData?.approved;
         case 2:
           return [];
       }
@@ -145,21 +131,18 @@ const HistoryRegisterDevice = ({navigation}) => {
     [deviceData],
   );
 
-  const checkRoleUser = () => {
-    return user?.quyentruycap == 1 || user?.id_ht == 6;
-  };
-
   const fetchAllListDevice = async () => {
-    const data = {
-      id_user: user?.id,
-    };
-
     setLoading(true);
     try {
-      await getAllListDevice(dispatch);
-      await getMyListDevice(dispatch, data);
+      const data = {
+        id_user: user?.id,
+      };
 
-      setLoading(false);
+      const res = await getAllListDevice(dispatch, data, checkRoleUser());
+
+      if (res) {
+        setLoading(false);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -228,9 +211,9 @@ const HistoryRegisterDevice = ({navigation}) => {
             }}>
             {checkRoleUser()
               ? `Tổng cộng ${
-                  item.daduyet?.length
+                  indexPicker == 0 ? item.thietbi?.length : item.daduyet?.length
                 } văn phòng phẩm ${status.toLocaleLowerCase()}`
-              : `Thiết bị ${item?.thietbi}`}
+              : `${item?.thietbi}`}
           </Text>
         </View>
         <View
@@ -337,7 +320,6 @@ const HistoryRegisterDevice = ({navigation}) => {
                 initialNumToRender={6}
                 windowSize={6}
                 removeClippedSubviews={true}
-                refreshing={true}
                 extraData={deviceData}
               />
             </View>
@@ -405,113 +387,88 @@ const HistoryRegisterDevice = ({navigation}) => {
                 )}
                 <View style={styles.bottomSheetContainer}>
                   <Text style={styles.titleBottomSheet}>Thiết bị</Text>
-                  {checkRoleUser() ? (
-                    selectedItem?.daduyet?.map((item, index) => {
-                      return (
-                        <View
-                          style={{marginLeft: Dimension.setWidth(2)}}
-                          key={index}>
-                          <Text
-                            style={{
-                              fontSize: Dimension.fontSize(17),
-                              fontFamily: Fonts.SF_BOLD,
-                            }}>{`${index + 1}.`}</Text>
+                  {(indexPicker == 0
+                    ? selectedItem?.thietbi
+                    : selectedItem?.daduyet
+                  ).map((item, index) => {
+                    return (
+                      <View
+                        style={{marginLeft: Dimension.setWidth(2)}}
+                        key={index}>
+                        <Text
+                          style={{
+                            fontSize: Dimension.fontSize(17),
+                            fontFamily: Fonts.SF_BOLD,
+                          }}>{`${index + 1}.`}</Text>
 
-                          <View style={styles.containerEachLine}>
-                            <Image
-                              source={Images.item}
-                              style={[styles.Iconic, {borderRadius: 50}]}
-                            />
-                            <View style={styles.containerLine}>
-                              <Text style={styles.title}>
-                                Thiết bị:{'  '}
-                                <Text numberOfLines={2} style={styles.content}>
-                                  {item?.thietbi}
-                                </Text>
+                        <View style={styles.containerEachLine}>
+                          <Image
+                            source={Images.item}
+                            style={[styles.Iconic, {borderRadius: 50}]}
+                          />
+                          <View style={styles.containerLine}>
+                            <Text style={styles.title}>
+                              Thiết bị:{'  '}
+                              <Text numberOfLines={2} style={styles.content}>
+                                {item?.thietbi}
                               </Text>
-                            </View>
+                            </Text>
                           </View>
+                        </View>
 
-                          <View style={styles.containerEachLine}>
-                            <Image
-                              source={Images.quantity}
-                              style={styles.Iconic}
-                            />
-                            <View style={styles.containerLine}>
-                              <Text style={styles.title}>
-                                Dạng đăng kí:{'  '}
-                              </Text>
+                        <View style={styles.containerEachLine}>
+                          <Image
+                            source={Images.quantity}
+                            style={styles.Iconic}
+                          />
+                          <View style={styles.containerLine}>
+                            <Text style={styles.title}>
+                              Dạng đăng kí:{'  '}
+                            </Text>
+                            <Text
+                              numberOfLines={2}
+                              ellipsizeMode="tail"
+                              style={styles.content}>
+                              {item.active == 1 ? 'Không trả' : 'Có trả'}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.containerEachLine}>
+                          <Image
+                            source={Images.datetime}
+                            style={styles.Iconic}
+                          />
+                          <Text style={styles.title}>Ngày trả:{'  '}</Text>
+                          <Text style={styles.content}>
+                            {item.ngaytra
+                              ? changeFormatDate(item.ngaytra)
+                              : 'Không xác định'}
+                          </Text>
+                        </View>
+
+                        <View style={styles.containerEachLine}>
+                          <Image source={Images.note} style={styles.Iconic} />
+                          <View style={styles.containerLine}>
+                            <Text style={styles.title}>
+                              Nội dung mượn:{'  '}
                               <Text
                                 numberOfLines={2}
                                 ellipsizeMode="tail"
-                                style={styles.content}>
-                                {item.active == 1 ? 'Không trả' : 'Có trả'}
+                                style={[
+                                  styles.content,
+                                  {
+                                    color: item.noidung ? '#747476' : '#eb5a6e',
+                                  },
+                                ]}>
+                                {item.noidung ? item.noidung : 'Không có'}
                               </Text>
-                            </View>
-                          </View>
-
-                          <View style={styles.containerEachLine}>
-                            <Image
-                              source={Images.datetime}
-                              style={styles.Iconic}
-                            />
-                            <Text style={styles.title}>
-                              Ngày đăng kí:{'  '}
                             </Text>
-                            <Text style={styles.content}>
-                              {changeFormatDate(item.ngaymuon)}
-                            </Text>
-                          </View>
-
-                          <View style={styles.containerEachLine}>
-                            <Image source={Images.note} style={styles.Iconic} />
-                            <View style={styles.containerLine}>
-                              <Text style={styles.title}>
-                                Nội dung mượn:{'  '}
-                                <Text
-                                  numberOfLines={2}
-                                  ellipsizeMode="tail"
-                                  style={[
-                                    styles.content,
-                                    {
-                                      color: item.noidung
-                                        ? '#747476'
-                                        : '#eb5a6e',
-                                    },
-                                  ]}>
-                                  {item.noidung ? item.noidung : 'Không có'}
-                                </Text>
-                              </Text>
-                            </View>
                           </View>
                         </View>
-                      );
-                    })
-                  ) : (
-                    <>
-                      <View style={styles.containerEachLine}>
-                        <Image source={Images.datetime} style={styles.Iconic} />
-                        <Text style={styles.title}>Tên thiết bị:{'  '}</Text>
-                        <Text style={styles.content}>
-                          {selectedItem?.thietbi}
-                        </Text>
                       </View>
-                      <View style={styles.containerEachLine}>
-                        <Image
-                          source={Images.returnDate}
-                          style={styles.Iconic}
-                        />
-                        <Text style={[styles.title, {width: '90%'}]}>
-                          Ngày trả:{' '}
-                          <Text style={styles.content}>
-                            {selectedItem?.ngaytra
-                              ? changeFormatDate(selectedItem?.ngaytra)
-                              : 'Không xác định'}
-                          </Text>
-                        </Text>
-                      </View>
-                    </>
-                  )}
+                    );
+                  })}
                 </View>
               </BottomSheetScrollView>
             </BottomSheetModal>
