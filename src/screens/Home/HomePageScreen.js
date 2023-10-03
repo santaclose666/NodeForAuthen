@@ -42,6 +42,7 @@ import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import {requestPermissions} from '../../utils/permissionFunc';
 import {topicForAll} from '../../utils/AllTopic';
+import Loading from '../../components/LoadingUI';
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -54,20 +55,36 @@ const HomePageScreen = ({navigation}) => {
   const [titleInput, setTitleInput] = useState('');
   const [contentInput, setContentInput] = useState('');
   const [gmailInput, setGmailInput] = useState('');
+  const [loading, setLoading] = useState(false);
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();
 
   const fetchImportantData = async () => {
-    getAllDocument(dispatch);
-    await requestPermissions();
-    await getWeatherData(dispatch);
-    topicForAll();
+    try {
+      await requestPermissions();
+      setLoading(true);
+      const res = await getAllDocument(dispatch);
+
+      await getWeatherData(dispatch);
+      topicForAll();
+
+      if (res) {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const fetchAllNews = async () => {
+    setLoading(true);
     try {
       const res = await getallNews(dispatch);
-      setNewArr(res);
+
+      if (res) {
+        setNewArr(res);
+        setLoading(false);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -145,8 +162,6 @@ const HomePageScreen = ({navigation}) => {
     fcmService.registerAppWithFCM();
     fcmService.register(onRegister, onNotification, onOpenNotification);
     localNotificationService.configure(onOpenNotification);
-
-    console.log(user);
 
     if (weather) {
       setInTerVal(
@@ -788,6 +803,7 @@ const HomePageScreen = ({navigation}) => {
             </View>
           </Modal>
         </ScrollView>
+        {loading && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );
