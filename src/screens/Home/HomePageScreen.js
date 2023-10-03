@@ -471,24 +471,7 @@ const HomePageScreen = ({navigation}) => {
                     Lịch công tác
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    handleNavigate('HistoryApplyLeave');
-                  }}>
-                  <Image source={Images.busy} style={styles.featureBtn} />
-                  <Text style={styles.featureText}>Nghỉ phép</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    handleNavigate('HistoryItemOffice');
-                  }}>
-                  <Image source={Images.office} style={styles.featureBtn} />
-                  <Text style={styles.featureText}>Văn phòng phẩm</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.btnContainer}>
+
                 <TouchableOpacity
                   style={styles.buttonFuc}
                   onPress={() => {
@@ -503,6 +486,24 @@ const HomePageScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.buttonFuc}
                   onPress={() => {
+                    handleNavigate('HistoryItemOffice');
+                  }}>
+                  <Image source={Images.office} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>Văn phòng phẩm</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.btnContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigate('HistoryRegisterDevice');
+                  }}
+                  style={styles.buttonFuc}>
+                  <Image source={Images.device} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>Thiết bị</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
                     handleNavigate('HistoryPlaneTicket');
                   }}>
                   <Image
@@ -512,20 +513,20 @@ const HomePageScreen = ({navigation}) => {
                   <Text style={styles.featureText}>Đăng kí vé</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  style={styles.buttonFuc}
+                  onPress={() => {
+                    handleNavigate('HistoryApplyLeave');
+                  }}>
+                  <Image source={Images.busy} style={styles.featureBtn} />
+                  <Text style={styles.featureText}>Nghỉ phép</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={() => {
                     handleNavigate('HappyBirthdayList');
                   }}
                   style={styles.buttonFuc}>
                   <Image source={Images.happybd} style={styles.featureBtn} />
                   <Text style={styles.featureText}>HPBD</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleNavigate('HistoryRegisterDevice');
-                  }}
-                  style={styles.buttonFuc}>
-                  <Image source={Images.device} style={styles.featureBtn} />
-                  <Text style={styles.featureText}>Thiết bị</Text>
                 </TouchableOpacity>
               </View>
               {user?.quyentruycap == 1 && (
