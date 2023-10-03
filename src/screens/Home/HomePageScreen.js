@@ -80,6 +80,7 @@ const HomePageScreen = ({navigation}) => {
   const handleOpenApp = async link => {
     try {
       const openSupport = await Linking.canOpenURL(link);
+      console.log(openSupport);
       if (openSupport) {
         await Linking.openURL(link);
       } else {
@@ -87,6 +88,7 @@ const HomePageScreen = ({navigation}) => {
       }
     } catch (error) {
       console.log(error);
+      ToastAlert('Không thể mở ứng dụng bây giờ!');
     }
   };
 
