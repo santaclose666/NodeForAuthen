@@ -25,10 +25,12 @@
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
 
-  [RNSplashScreen show];
-
-  // return YES;
-  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+  BOOL ret = [super application:application didFinishLaunchingWithOptions:launchOptions];
+  if (ret == YES) {
+    [RNSplashScreen show]; 
+  }
+  return ret;
+  // return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 

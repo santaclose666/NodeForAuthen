@@ -9,7 +9,12 @@ import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
   useEffect(() => {
+    const ac = new AbortController();
     SplashScreen.hide();
+
+    return () => {
+      ac.abort();
+    };
   }, []);
 
   return (
