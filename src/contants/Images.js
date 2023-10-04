@@ -196,6 +196,10 @@ const Images = {
   borrowDate: require('../assets/images/borrowDate.png'),
   returnDate: require('../assets/images/returnDate.png'),
   errorDevice: require('../assets/images/errorDevice.png'),
+  nationalPark: require('../assets/images/nationalPark.png'),
+  conservation: require('../assets/images/conservation.png'),
+  vnForest: require('../assets/images/logo_vnforest.png'),
+  mangroves: require('../assets/images/mangrove.png'),
 };
 
 export default Images;

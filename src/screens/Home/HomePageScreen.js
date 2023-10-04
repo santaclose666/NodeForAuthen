@@ -43,6 +43,14 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import {requestPermissions} from '../../utils/permissionFunc';
 import {topicForAll} from '../../utils/AllTopic';
 import Loading from '../../components/LoadingUI';
+import {
+  VNUF,
+  forestryDepartment,
+  internal,
+  rangersDepartment,
+  utilities,
+} from './homeVariable';
+import {rowAlignCenter} from '../../contants/CssFE';
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -280,165 +288,127 @@ const HomePageScreen = ({navigation}) => {
               </View>
             </View>
           </View>
+
           <View style={styles.featureBtnContainer}>
             <View style={styles.featureContainer}>
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_BOLD,
-                  fontSize: Dimension.fontSize(16),
-                  color: Colors.DEFAULT_BLACK,
-                  opacity: 0.9,
-                }}>
-                Công cụ tiện ích
-              </Text>
+              <Text style={styles.label}>Công cụ tiện ích</Text>
             </View>
             <View style={styles.btnContainer}>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('DocumentList');
-                }}>
-                <Image
-                  source={Images.documentation}
-                  style={styles.featureBtn}
-                />
-                <Text style={styles.featureText}>DVMTR</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('SelectWMSLayer');
-                }}>
-                <Image source={Images.map} style={styles.featureBtn} />
-                <Text style={styles.featureText}>DV bản đồ</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('SelectProvinceFFW');
-                }}>
-                <Image source={Images.forestFire} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Cảnh báo cháy</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('ListBio');
-                }}>
-                <Image source={Images.biodiversity} style={styles.featureBtn} />
-                <Text style={styles.featureText}>ĐDSH</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnContainer}>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('ForestPrice');
-                }}>
-                <Image source={Images.trees1} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Khung giá rừng</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('KKR');
-                }}>
-                <Image source={Images.trees} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Kiểm kê rừng</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('TCVN');
-                }}>
-                <Image source={Images.standard} style={styles.featureBtn} />
-                <Text style={styles.featureText}>TCVN</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('TreeType');
-                }}>
-                <Image source={Images.seed} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Giống LN</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.btnContainer}>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('DMKTKT');
-                }}>
-                <Image source={Images.norms} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Định mức KTKT</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('VP809');
-                }}>
-                <Image source={Images.book} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Văn Phòng 809</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('QLRBV');
-                }}>
-                <Image source={Images.forest} style={styles.featureBtn} />
-                <Text style={styles.featureText}>QLRBV</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleNavigate('Muavu');
-                }}>
-                <Image source={Images.muavu} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Mùa vụ</Text>
-              </TouchableOpacity>
+              <FlatList
+                scrollEnabled={false}
+                data={utilities}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <TouchableOpacity
+                      disabled={item.featureName ? false : true}
+                      style={styles.buttonFuc}
+                      onPress={() => {
+                        item.component
+                          ? handleNavigate(item.component)
+                          : handleAlert();
+                      }}>
+                      <Image source={item.icon} style={styles.featureBtn} />
+                      <Text style={styles.featureText}>{item.featureName}</Text>
+                    </TouchableOpacity>
+                  );
+                }}
+                keyExtractor={(_, index) => index}
+                numColumns={4}
+              />
             </View>
           </View>
 
           <View style={styles.featureBtnContainer}>
-            <View
-              style={[
-                styles.featureContainer,
-                {flexDirection: 'row', alignItems: 'center'},
-              ]}>
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_BOLD,
-                  fontSize: Dimension.fontSize(16),
-                  color: Colors.DEFAULT_BLACK,
-                  opacity: 0.9,
-                  marginRight: Dimension.setWidth(1),
-                }}>
-                Trường Đại học Lâm nghiệp
-              </Text>
+            <View style={styles.featureContainer}>
+              <Text style={styles.label}>Cục Lâm nghiệp</Text>
             </View>
             <View style={styles.btnContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  handleNavigate('Forestry');
+              <FlatList
+                scrollEnabled={false}
+                data={forestryDepartment}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <TouchableOpacity
+                      disabled={item.featureName ? false : true}
+                      style={styles.buttonFuc}
+                      onPress={() => {
+                        item.component
+                          ? handleNavigate(item.component)
+                          : handleAlert();
+                      }}>
+                      <Image source={item.icon} style={styles.featureBtn} />
+                      <Text style={styles.featureText}>{item.featureName}</Text>
+                    </TouchableOpacity>
+                  );
                 }}
-                style={styles.buttonFuc}>
-                <Image
-                  source={Images.logo_LamHoc}
-                  style={[styles.featureBtn, {borderRadius: 50}]}
-                />
-                <Text style={styles.featureText}> Lâm học</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc} onPress={handleAlert}>
-                <Image
-                  source={Images.logo_KTQTKD}
-                  style={[styles.featureBtn, {borderRadius: 50}]}
-                />
-                <Text style={styles.featureText}>KT-QTKD</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                keyExtractor={(_, index) => index}
+                numColumns={4}
+              />
+            </View>
+          </View>
+
+          <View style={styles.featureBtnContainer}>
+            <View style={styles.featureContainer}>
+              <Text style={styles.label}>Cục Kiểm lâm</Text>
+            </View>
+            <View style={styles.btnContainer}>
+              <FlatList
+                scrollEnabled={false}
+                data={rangersDepartment}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <TouchableOpacity
+                      disabled={item.featureName ? false : true}
+                      style={styles.buttonFuc}
+                      onPress={() => {
+                        item.component
+                          ? handleNavigate(item.component)
+                          : handleAlert();
+                      }}>
+                      <Image source={item.icon} style={styles.featureBtn} />
+                      <Text style={styles.featureText}>{item.featureName}</Text>
+                    </TouchableOpacity>
+                  );
+                }}
+                keyExtractor={(_, index) => index}
+                numColumns={4}
+              />
+            </View>
+          </View>
+
+          <View style={styles.featureBtnContainer}>
+            <View style={styles.featureContainer}>
+              <Text style={styles.label}>Trường Đại học Lâm nghiệp</Text>
+            </View>
+            <View style={styles.btnContainer}>
+              <FlatList
+                scrollEnabled={false}
+                data={VNUF}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <TouchableOpacity
+                      disabled={item.featureName ? false : true}
+                      style={styles.buttonFuc}
+                      onPress={() => {
+                        item.component
+                          ? handleNavigate(item.component)
+                          : handleAlert();
+                      }}>
+                      <Image
+                        source={item.icon}
+                        style={[styles.featureBtn, {borderRadius: 50}]}
+                      />
+                      <Text style={styles.featureText}>{item.featureName}</Text>
+                    </TouchableOpacity>
+                  );
+                }}
+                keyExtractor={(_, index) => index}
+                numColumns={4}
+              />
             </View>
           </View>
 
@@ -456,100 +426,43 @@ const HomePageScreen = ({navigation}) => {
                 </Text>
               </View>
               <View style={styles.btnContainer}>
-                <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    handleNavigate('StaffList');
-                  }}>
-                  <Image source={Images.staff} style={styles.featureBtn} />
-                  <Text style={styles.featureText}>Nhân sự</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    handleNavigate('HistoryWorkShedule');
-                  }}>
-                  <Image source={Images.calendar2} style={styles.featureBtn} />
-                  <Text style={[styles.featureText, {alignSelf: 'center'}]}>
-                    Lịch công tác
-                  </Text>
-                </TouchableOpacity>
+                <FlatList
+                  scrollEnabled={false}
+                  data={internal}
+                  showsVerticalScrollIndicator={false}
+                  renderItem={({item, index}) => {
+                    const adminCheck = () => {
+                      if (!item.isAdmin) {
+                        return true;
+                      } else if (item.isAdmin && user?.quyentruycap == 1) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    };
 
-                <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    handleNavigate('HistoryRegisterVehicle');
-                  }}>
-                  <Image
-                    source={Images.registervehicle}
-                    style={styles.featureBtn}
-                  />
-                  <Text style={styles.featureText}>Đăng kí xe</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    handleNavigate('HistoryItemOffice');
-                  }}>
-                  <Image source={Images.office} style={styles.featureBtn} />
-                  <Text style={styles.featureText}>Văn phòng phẩm</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.btnContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleNavigate('HistoryRegisterDevice');
+                    if (adminCheck()) {
+                      return (
+                        <TouchableOpacity
+                          disabled={item.featureName ? false : true}
+                          style={styles.buttonFuc}
+                          onPress={() => {
+                            item.component
+                              ? handleNavigate(item.component)
+                              : handleAlert();
+                          }}>
+                          <Image source={item.icon} style={styles.featureBtn} />
+                          <Text style={styles.featureText}>
+                            {item.featureName}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    }
                   }}
-                  style={styles.buttonFuc}>
-                  <Image source={Images.device} style={styles.featureBtn} />
-                  <Text style={styles.featureText}>Thiết bị</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    handleNavigate('HistoryPlaneTicket');
-                  }}>
-                  <Image
-                    source={Images.registerticket}
-                    style={styles.featureBtn}
-                  />
-                  <Text style={styles.featureText}>Đăng kí vé</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.buttonFuc}
-                  onPress={() => {
-                    handleNavigate('HistoryApplyLeave');
-                  }}>
-                  <Image source={Images.busy} style={styles.featureBtn} />
-                  <Text style={styles.featureText}>Nghỉ phép</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleNavigate('HappyBirthdayList');
-                  }}
-                  style={styles.buttonFuc}>
-                  <Image source={Images.happybd} style={styles.featureBtn} />
-                  <Text style={styles.featureText}>HPBD</Text>
-                </TouchableOpacity>
+                  keyExtractor={(_, index) => index}
+                  numColumns={4}
+                />
               </View>
-              {user?.quyentruycap == 1 && (
-                <View style={styles.btnContainer}>
-                  <TouchableOpacity
-                    style={styles.buttonFuc}
-                    onPress={() => {
-                      handleNavigate('SendNotification');
-                    }}>
-                    <Image
-                      source={Images.sendnotification}
-                      style={styles.featureBtn}
-                    />
-                    <Text style={styles.featureText}>Gửi thông báo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
-                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
-                  <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
-                </View>
-              )}
             </View>
           )}
 
@@ -631,6 +544,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
             </View>
           </View>
+
           <View style={styles.newTextContainer}>
             <Text style={styles.newsText}>Tin tức mới</Text>
             <TouchableOpacity
@@ -894,11 +808,10 @@ const styles = StyleSheet.create({
   },
 
   featureContainer: {
-    marginBottom: Dimension.setHeight(0.8),
+    marginBottom: Dimension.setHeight(1),
   },
 
   featureBtnContainer: {
-    marginBottom: 10,
     marginHorizontal: Dimension.setWidth(3.6),
   },
 
@@ -912,6 +825,7 @@ const styles = StyleSheet.create({
   buttonFuc: {
     flex: 1,
     alignItems: 'center',
+    marginBottom: Dimension.setHeight(0.8),
   },
 
   featureBtn: {
@@ -960,14 +874,15 @@ const styles = StyleSheet.create({
     ...shadowIOS,
     marginHorizontal: 5,
     width: Dimension.setWidth(72),
-    paddingVertical: Dimension.setHeight(1.2),
-    paddingHorizontal: Dimension.setWidth(1.2),
+    paddingVertical: Dimension.setHeight(0.6),
   },
 
   newsImg: {
-    width: Dimension.setWidth(66.5),
+    width: Dimension.setWidth(69),
     height: Dimension.setHeight(18),
     borderRadius: 18,
+    elevation: 6,
+    ...shadowIOS,
   },
 
   newsTitleText: {
@@ -975,7 +890,6 @@ const styles = StyleSheet.create({
     fontSize: Dimension.fontSize(14),
     ...fontDefault,
     paddingHorizontal: Dimension.setHeight(1),
-    textAlign: 'justify',
   },
 
   newsLocationText: {
@@ -1054,6 +968,14 @@ const styles = StyleSheet.create({
     fontSize: Dimension.fontSize(15),
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1),
+  },
+
+  label: {
+    fontFamily: Fonts.SF_BOLD,
+    fontSize: Dimension.fontSize(16),
+    color: Colors.DEFAULT_BLACK,
+    opacity: 0.9,
+    marginRight: Dimension.setWidth(1),
   },
 });
 
