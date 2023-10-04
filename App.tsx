@@ -5,14 +5,11 @@ import {Provider} from 'react-redux';
 import {store, persistor} from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import 'react-native-gesture-handler';
-import {Platform} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
   useEffect(() => {
-    if (Platform.OS == 'android') {
-      SplashScreen.hide();
-    }
+    SplashScreen.hide();
   }, []);
 
   return (
