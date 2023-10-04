@@ -55,6 +55,7 @@ const HomePageScreen = ({navigation}) => {
   const [titleInput, setTitleInput] = useState('');
   const [contentInput, setContentInput] = useState('');
   const [gmailInput, setGmailInput] = useState('');
+  const [loading, setLoading] = useState(false);
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();
 
@@ -70,12 +71,14 @@ const HomePageScreen = ({navigation}) => {
   };
 
   const fetchAllNews = async () => {
+    setLoading(true);
     try {
       const res = await getallNews(dispatch);
 
       setNewArr(res);
 
       getAllDocumentMv(dispatch);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -85,18 +88,17 @@ const HomePageScreen = ({navigation}) => {
     navigation.navigate(routeName);
   };
 
-  const handleOpenApp = async link => {
+  const handleOpenApp = async (appUrl, webUrl) => {
     try {
-      const openSupport = await Linking.canOpenURL(link);
-      console.log(openSupport);
+      const openSupport = await Linking.canOpenURL(appUrl);
+
       if (openSupport) {
-        await Linking.openURL(link);
+        await Linking.openURL(appUrl);
       } else {
-        ToastAlert('Không thể mở ứng dụng bây giờ!');
+        await Linking.openURL(webUrl);
       }
     } catch (error) {
-      console.log(error);
-      ToastAlert('Không thể mở ứng dụng bây giờ!');
+      await Linking.openURL(webUrl);
     }
   };
 
@@ -588,7 +590,10 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  handleOpenApp('fb://profile/100051879741625');
+                  handleOpenApp(
+                    'fb://profile/100051879741625',
+                    'https://www.facebook.com/lamnghiep4.0',
+                  );
                 }}>
                 <Image source={Images.fb} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Facebook</Text>
@@ -596,7 +601,10 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  handleOpenApp('vnd.youtube:/@viensinhthairungvamoitruon4033');
+                  handleOpenApp(
+                    'vnd.youtube:/@viensinhthairungvamoitruon4033',
+                    'https://www.youtube.com/channel/UCMMHXxI1RsJbNj1KjhnMZKQ',
+                  );
                 }}>
                 <Image source={Images.youtube} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Youtube</Text>
@@ -789,6 +797,7 @@ const HomePageScreen = ({navigation}) => {
             </View>
           </Modal>
         </ScrollView>
+        {loading && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

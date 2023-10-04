@@ -287,7 +287,7 @@ const HistoryRegisterDevice = ({navigation}) => {
                     indexPicker == 0
                       ? item.thietbi?.length
                       : item.daduyet?.length
-                  } văn phòng phẩm ${status.toLocaleLowerCase()}`
+                  } thiết bị ${status.toLocaleLowerCase()}`
                 : `${item?.thietbi}`}
             </Text>
           </View>
