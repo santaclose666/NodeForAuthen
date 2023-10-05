@@ -38,7 +38,7 @@ import {useDispatch} from 'react-redux';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL, newsURL, fontDefault} from '../../contants/Variable';
 import Modal from 'react-native-modal';
-import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import {ToastAlert, ToastSuccess, ToastWarning} from '../../components/Toast';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import {requestPermissions} from '../../utils/permissionFunc';
 import {topicForAll} from '../../utils/AllTopic';
@@ -431,33 +431,27 @@ const HomePageScreen = ({navigation}) => {
                   data={internal}
                   showsVerticalScrollIndicator={false}
                   renderItem={({item, index}) => {
-                    const adminCheck = () => {
-                      if (!item.isAdmin) {
-                        return true;
-                      } else if (item.isAdmin && user?.quyentruycap == 1) {
-                        return true;
-                      } else {
-                        return false;
-                      }
-                    };
-
-                    if (adminCheck()) {
-                      return (
-                        <TouchableOpacity
-                          disabled={item.featureName ? false : true}
-                          style={styles.buttonFuc}
-                          onPress={() => {
+                    return (
+                      <TouchableOpacity
+                        disabled={item.featureName ? false : true}
+                        style={styles.buttonFuc}
+                        onPress={() => {
+                          if (item.isAdmin && user?.quyentruycap == 1) {
                             item.component
                               ? handleNavigate(item.component)
                               : handleAlert();
-                          }}>
-                          <Image source={item.icon} style={styles.featureBtn} />
-                          <Text style={styles.featureText}>
-                            {item.featureName}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    }
+                          } else {
+                            ToastWarning(
+                              'Tính năng chỉ dành cho quản trị viên!',
+                            );
+                          }
+                        }}>
+                        <Image source={item.icon} style={styles.featureBtn} />
+                        <Text style={styles.featureText}>
+                          {item.featureName}
+                        </Text>
+                      </TouchableOpacity>
+                    );
                   }}
                   keyExtractor={(_, index) => index}
                   numColumns={4}
