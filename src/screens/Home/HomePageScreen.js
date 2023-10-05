@@ -301,6 +301,7 @@ const HomePageScreen = ({navigation}) => {
                 renderItem={({item, index}) => {
                   return (
                     <TouchableOpacity
+                      key={index}
                       disabled={item.featureName ? false : true}
                       style={styles.buttonFuc}
                       onPress={() => {
@@ -313,7 +314,6 @@ const HomePageScreen = ({navigation}) => {
                     </TouchableOpacity>
                   );
                 }}
-                keyExtractor={(_, index) => index}
                 numColumns={4}
               />
             </View>
@@ -331,6 +331,7 @@ const HomePageScreen = ({navigation}) => {
                 renderItem={({item, index}) => {
                   return (
                     <TouchableOpacity
+                      key={index}
                       disabled={item.featureName ? false : true}
                       style={styles.buttonFuc}
                       onPress={() => {
@@ -343,7 +344,6 @@ const HomePageScreen = ({navigation}) => {
                     </TouchableOpacity>
                   );
                 }}
-                keyExtractor={(_, index) => index}
                 numColumns={4}
               />
             </View>
@@ -361,6 +361,7 @@ const HomePageScreen = ({navigation}) => {
                 renderItem={({item, index}) => {
                   return (
                     <TouchableOpacity
+                      key={index}
                       disabled={item.featureName ? false : true}
                       style={styles.buttonFuc}
                       onPress={() => {
@@ -373,7 +374,6 @@ const HomePageScreen = ({navigation}) => {
                     </TouchableOpacity>
                   );
                 }}
-                keyExtractor={(_, index) => index}
                 numColumns={4}
               />
             </View>
@@ -391,6 +391,7 @@ const HomePageScreen = ({navigation}) => {
                 renderItem={({item, index}) => {
                   return (
                     <TouchableOpacity
+                      key={index}
                       disabled={item.featureName ? false : true}
                       style={styles.buttonFuc}
                       onPress={() => {
@@ -406,7 +407,6 @@ const HomePageScreen = ({navigation}) => {
                     </TouchableOpacity>
                   );
                 }}
-                keyExtractor={(_, index) => index}
                 numColumns={4}
               />
             </View>
@@ -433,17 +433,24 @@ const HomePageScreen = ({navigation}) => {
                   renderItem={({item, index}) => {
                     return (
                       <TouchableOpacity
+                        key={index}
                         disabled={item.featureName ? false : true}
                         style={styles.buttonFuc}
                         onPress={() => {
-                          if (item.isAdmin && user?.quyentruycap == 1) {
+                          if (item.isAdmin) {
+                            if (user?.quyentruycap == 1) {
+                              item.component
+                                ? handleNavigate(item.component)
+                                : handleAlert();
+                            } else {
+                              ToastWarning(
+                                'Tính năng chỉ dành cho quản trị viên!',
+                              );
+                            }
+                          } else {
                             item.component
                               ? handleNavigate(item.component)
                               : handleAlert();
-                          } else {
-                            ToastWarning(
-                              'Tính năng chỉ dành cho quản trị viên!',
-                            );
                           }
                         }}>
                         <Image source={item.icon} style={styles.featureBtn} />
@@ -453,7 +460,6 @@ const HomePageScreen = ({navigation}) => {
                       </TouchableOpacity>
                     );
                   }}
-                  keyExtractor={(_, index) => index}
                   numColumns={4}
                 />
               </View>
@@ -583,7 +589,6 @@ const HomePageScreen = ({navigation}) => {
                 </TouchableOpacity>
               );
             }}
-            keyExtractor={(_, index) => index}
           />
 
           <Modal

@@ -5,7 +5,7 @@ export const ToastWarning = message => {
   Toast.show({
     render: () => {
       return (
-        <Box bg="danger.400" px="2" py="2" rounded="sm" mb={10}>
+        <Box bg="danger.400" px="2" py="2" rounded="sm" mb={12}>
           <Text
             textAlign={'center'}
             fontSize={18}
@@ -23,7 +23,7 @@ export const ToastSuccess = message => {
   Toast.show({
     render: () => {
       return (
-        <Box bg="success.400" px="2" py="2" rounded="sm" mb={10}>
+        <Box bg="success.400" px="2" py="2" rounded="sm" mb={12}>
           <Text
             textAlign={'center'}
             fontSize={18}
@@ -41,7 +41,7 @@ export const ToastAlert = message => {
   Toast.show({
     render: () => {
       return (
-        <Box bg="yellow.400" px="2" py="2" rounded="sm" mb={10}>
+        <Box bg="yellow.400" px="2" py="2" rounded="sm" mb={12}>
           <Text
             textAlign={'center'}
             fontSize={18}
