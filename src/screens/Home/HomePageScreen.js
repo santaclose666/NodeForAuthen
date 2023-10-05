@@ -51,6 +51,7 @@ import {
   utilities,
 } from './homeVariable';
 import {rowAlignCenter} from '../../contants/CssFE';
+import {screen} from '../AllScreen/allScreen';
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -487,7 +488,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('Contributor');
+                  navigation.navigate(screen.contributor);
                 }}>
                 <Image source={Images.information} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Tác giả</Text>
@@ -527,7 +528,7 @@ const HomePageScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.buttonFuc}
                 onPress={() => {
-                  navigation.navigate('ContributionData');
+                  navigation.navigate(screen.contributorData);
                 }}>
                 <Image source={Images.contribution} style={styles.featureBtn} />
                 <Text style={styles.featureText}>Vì cộng đồng</Text>
@@ -549,7 +550,7 @@ const HomePageScreen = ({navigation}) => {
             <Text style={styles.newsText}>Tin tức mới</Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('AllNews');
+                navigation.navigate(screen.newsList);
               }}>
               <Text style={styles.viewAllText}>Xem tất cả</Text>
             </TouchableOpacity>
@@ -562,7 +563,7 @@ const HomePageScreen = ({navigation}) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('DetailNews', {item: item});
+                    navigation.navigate(screen.detailNews, {item: item});
                   }}
                   key={index}
                   style={styles.newsContainer}>

@@ -54,6 +54,7 @@ import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert} from '../../components/Toast';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import { screen } from '../AllScreen/allScreen';
 
 const approveArr = [
   {
@@ -278,11 +279,11 @@ const HistoryWorkShedule = ({navigation}) => {
   );
 
   const handleRedirectCreate = () => {
-    navigation.navigate('CreateWorkSchedule');
+    navigation.navigate(screen.registerWorkSchedule);
   };
 
   const handleRedirectMyWorkSchedule = useCallback(() => {
-    navigation.navigate('AllWorkSchedule');
+    navigation.navigate(screen.allWorkSchedule);
   }, []);
 
   const fetchWorkSchedule = useCallback(() => {

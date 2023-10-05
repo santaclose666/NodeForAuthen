@@ -13,6 +13,7 @@ import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
 import {fontDefault, imgDefault} from '../contants/Variable';
+import {screen} from '../screens/AllScreen/allScreen';
 
 const Header = ({
   title,
@@ -107,25 +108,25 @@ const Header = ({
         <TouchableOpacity
           onPress={() => {
             if (title === 'Lịch sử nghỉ phép') {
-              navigation.navigate('RegisterApplyLeave', {
+              navigation.navigate(screen.registerApplyLeave, {
                 refreshData: refreshData,
               });
             } else if (title === 'Lịch sử đặt vé') {
-              navigation.navigate('RegisterPlaneTicket', {
+              navigation.navigate(screen.registerPlaneTicket, {
                 refreshData: refreshData,
               });
             } else if (title === 'Lịch sử công tác') {
-              navigation.navigate('CreateWorkSchedule', {
+              navigation.navigate(screen.registerWorkSchedule, {
                 refreshData: refreshData,
               });
             } else if (title === 'Lịch sử đăng kí xe') {
-              navigation.navigate('RegisterVehicle', {
+              navigation.navigate(screen.registerVehicle, {
                 refreshData: refreshData,
               });
             } else if (title === 'Lịch sử đăng kí VPP') {
-              navigation.navigate('RegisterItemOffice');
+              navigation.navigate(screen.registerOfficeItem);
             } else if (title == 'Lịch sử đăng kí thiết bị') {
-              navigation.navigate('RegisterDevices');
+              navigation.navigate(screen.registerDevice);
             }
           }}>
           <Image source={Images.adjust} style={styles.rightIcon} />

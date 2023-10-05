@@ -22,6 +22,7 @@ import {DisplayNotificationModal} from '../../components/Modal';
 import Images from '../../contants/Images';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
+import { screen } from '../AllScreen/allScreen';
 
 const NotifiScreen = ({navigation, route}) => {
   const receiveNotifi = route.params?.notifi;
@@ -39,7 +40,7 @@ const NotifiScreen = ({navigation, route}) => {
 
     if (notifi.type == 'sinhnhat') {
       const item = notifi.user_sn;
-      navigation.navigate('HappyBirthday', {item: item});
+      navigation.navigate(screen.hpbd, {item: item});
     } else {
       setToggleNotifiModal(true);
     }

@@ -36,6 +36,7 @@ import {IOSDownload, AndroidDownload} from '../utils/download';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
 import LinearGradientUI from './LinearGradientUI';
+import {screen} from '../screens/AllScreen/allScreen';
 
 const DocumentTemplate = ({
   screenName,
@@ -111,7 +112,7 @@ const DocumentTemplate = ({
   }, [pickOptionIndex]);
 
   const handlePress = useCallback(path => {
-    navigation.navigate('PDF', {link: encodeURI(path)});
+    navigation.navigate(screen.pdf, {link: encodeURI(path)});
   }, []);
 
   const handleCheckDownload = (id, path) => {

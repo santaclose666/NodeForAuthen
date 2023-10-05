@@ -19,6 +19,7 @@ import Header from '../../components/Header';
 import {XMGGroup, IFEEGroup} from '../../contants/Variable';
 import {getAllStaffs} from '../../redux/apiRequest';
 import Loading from '../../components/LoadingUI';
+import {screen} from '../AllScreen/allScreen';
 
 const StaffListScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -69,7 +70,7 @@ const StaffListScreen = ({navigation}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('DetailStaff', {item: item});
+          navigation.navigate(screen.staffDetail, {item: item});
         }}
         key={index}
         style={{
