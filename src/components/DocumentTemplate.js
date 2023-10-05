@@ -20,7 +20,6 @@ import Dimension from '../contants/Dimension';
 import {shadowIOS} from '../contants/propsIOS';
 import {fontDefault} from '../contants/Variable';
 import Header from '../components/Header';
-import LinearGradientUI from './LinearGradientUI';
 import {CheckDownLoadModal} from './Modal';
 import {useSelector} from 'react-redux';
 import {
@@ -36,6 +35,7 @@ import {getAllDocument, sendRequestUseDocument} from '../redux/apiRequest';
 import {IOSDownload, AndroidDownload} from '../utils/download';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
+import LinearGradientUI from './LinearGradientUI';
 
 const DocumentTemplate = ({
   screenName,
