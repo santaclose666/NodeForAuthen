@@ -124,7 +124,6 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation platform('com.google.firebase:firebase-bom:32.2.3')
     implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation project(':react-native-splash-screen')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
