@@ -5,7 +5,6 @@
 #import <UserNotifications/UserNotifications.h>
 #import <RNCPushNotificationIOS.h>
 #import "RNFBMessagingModule.h"
-#import "RNSplashScreen.h"
 
 @implementation AppDelegate
 
@@ -25,12 +24,7 @@
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
 
-  BOOL ret = [super application:application didFinishLaunchingWithOptions:launchOptions];
-  if (ret == YES) {
-    [RNSplashScreen show]; 
-  }
-  return ret;
-  // return [super application:application didFinishLaunchingWithOptions:launchOptions];
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 
