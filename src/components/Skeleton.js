@@ -35,7 +35,7 @@ export const BioSkeleton = () => {
                 borderColor: 'coolGray.200',
               }}>
               <Skeleton h="40" startColor="success.100" />
-              <Skeleton.Text lines={2} alignItems="center" px="4" mb={3} />
+              <Skeleton.Text lines={2} alignItems="center" px="4" mb={1} />
               <Skeleton.Text
                 w={'66%'}
                 lines={1}
