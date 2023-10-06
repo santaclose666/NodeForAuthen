@@ -38,6 +38,8 @@ import {shadowIOS} from '../../contants/propsIOS';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import {fontDefault, mainURL} from '../../contants/Variable';
+import {EmptyList} from '../../components/FlatlistComponent';
+import {InternalSkeleton} from '../../components/Skeleton';
 
 const HistoryRegisterItem = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -50,6 +52,7 @@ const HistoryRegisterItem = ({navigation}) => {
   const [toggleModal, setToggleModal] = useState(false);
   const [checkInput, setCheckInput] = useState(null);
   const [indexPicker, setIndexPicker] = useState(0);
+  const [loading, setLoading] = useState(true);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
@@ -125,8 +128,14 @@ const HistoryRegisterItem = ({navigation}) => {
     [officeItemData],
   );
 
-  const fetchOfficeItemList = () => {
-    getAllListOfficeItem(dispatch);
+  const fetchOfficeItemList = async () => {
+    try {
+      await getAllListOfficeItem(dispatch);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useLayoutEffect(() => {
@@ -241,50 +250,38 @@ const HistoryRegisterItem = ({navigation}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header
-          title="Lịch sử đăng kí VPP"
-          navigation={navigation}
-          //   refreshData={fetchOfficeItemList}
-        />
+        <Header title="Lịch sử đăng kí VPP" navigation={navigation} />
         <BottomSheetModalProvider>
           {/* <FilterStatusUI
             handlePickOption={handlePickOption}
             indexPicker={indexPicker}
           /> */}
 
-          {handleFilter(indexPicker)?.length !== 0 ? (
-            <View
-              style={{
+          {loading ? (
+            <InternalSkeleton />
+          ) : (
+            <FlatList
+              contentContainerStyle={{
                 flex: 1,
                 paddingTop: Dimension.setHeight(3),
-              }}>
-              <FlatList
-                showsVerticalScrollIndicator={false}
-                data={handleFilter(indexPicker)}
-                keyExtractor={(_, index) => index.toString()}
-                renderItem={({item, index}) => (
-                  <RenderTicketData item={item} index={index} />
-                )}
-                initialNumToRender={6}
-                windowSize={6}
-                removeClippedSubviews={true}
-                refreshing={true}
-                extraData={officeItemData}
-              />
-            </View>
-          ) : (
-            <View
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-              <Text
-                style={{
-                  fontSize: Dimension.fontSize(20),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  color: Colors.INACTIVE_GREY,
-                }}>
-                Không có dữ liệu nào được tìm thấy
-              </Text>
-            </View>
+              }}
+              showsVerticalScrollIndicator={false}
+              data={handleFilter(indexPicker)}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <RenderTicketData item={item} index={index} />
+              )}
+              initialNumToRender={6}
+              windowSize={6}
+              removeClippedSubviews={true}
+              refreshing={true}
+              extraData={officeItemData}
+              ListEmptyComponent={() => {
+                return <EmptyList />;
+              }}
+            />
           )}
+
           {selectedItem && (
             <BottomSheetModal
               backgroundStyle={{

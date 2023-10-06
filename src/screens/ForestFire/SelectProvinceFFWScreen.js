@@ -243,7 +243,7 @@ const SelectProvinceFFWScreen = ({navigation}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title="Chọn lớp bản đồ" navigation={navigation} />
+        <Header title="Bản đồ cảnh báo cháy" navigation={navigation} />
         <ScrollView>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="handled"

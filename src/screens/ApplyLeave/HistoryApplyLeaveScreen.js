@@ -39,6 +39,8 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {defaultIFEE, mainURL} from '../../contants/Variable';
 import FilterStatusUI from '../../components/FilterStatusUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import {EmptyList} from '../../components/FlatlistComponent';
+import {InternalSkeleton} from '../../components/Skeleton';
 
 const HistoryApplyLeaveScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -55,6 +57,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
   const [toggleCancelAdjust, setToggleCancelAdjust] = useState(false);
   const [refreshComponent, setRefreshComponent] = useState(false);
   const [indexPicker, setIndexPicker] = useState(0);
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
 
@@ -62,8 +65,14 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
     handleGetAllLeaveData();
   }, []);
 
-  const handleGetAllLeaveData = () => {
-    getAllOnLeaveData(user?.id, dispatch);
+  const handleGetAllLeaveData = async () => {
+    try {
+      await getAllOnLeaveData(user?.id, dispatch);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handlePickItem = item => {
@@ -443,10 +452,12 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
           indexPicker={indexPicker}
         />
 
-        {handleFilter(indexPicker)?.length !== 0 ? (
+        {loading ? (
+          <InternalSkeleton />
+        ) : (
           <FlatList
             showsVerticalScrollIndicator={false}
-            style={{
+            contentContainerStyle={{
               flex: 1,
               paddingTop: Dimension.setHeight(3),
             }}
@@ -458,19 +469,10 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
             removeClippedSubviews={true}
             refreshing={true}
             extraData={leaveData}
+            ListEmptyComponent={() => {
+              return <EmptyList />;
+            }}
           />
-        ) : (
-          <View
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text
-              style={{
-                fontSize: Dimension.fontSize(20),
-                fontFamily: Fonts.SF_MEDIUM,
-                color: Colors.INACTIVE_GREY,
-              }}>
-              Không có dữ liệu nào được tìm thấy
-            </Text>
-          </View>
         )}
 
         <ApproveCancelModal

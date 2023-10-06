@@ -36,7 +36,7 @@ const ListInfo = ({info, index}) => {
               top: 0,
               left: 0,
               right: 0,
-              bottom: Dimension.setHeight(3.3),
+              bottom: Dimension.setHeight(4.4),
             }}>
             <View style={styles.avtContainer}>
               <Image style={styles.avatarIfee} src={info?.avatar} />

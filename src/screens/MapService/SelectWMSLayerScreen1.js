@@ -283,7 +283,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title="Chọn lớp bản đồ" navigation={navigation} />
+        <Header title="Dịch vụ bản đồ" navigation={navigation} />
         <ScrollView>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="handled"

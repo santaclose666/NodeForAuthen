@@ -51,11 +51,13 @@ import {TextInput} from 'react-native-gesture-handler';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert} from '../../components/Toast';
 import {launchImageLibrary} from 'react-native-image-picker';
-import Loading from '../../components/LoadingUI';
+import Loading, {TransparentFullScreen} from '../../components/LoadingUI';
 import ImageView from 'react-native-image-viewing';
 import {Dropdown} from 'react-native-element-dropdown';
 import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
+import {EmptyList} from '../../components/FlatlistComponent';
+import {InternalSkeleton} from '../../components/Skeleton';
 
 export const approveArr = [
   {
@@ -103,9 +105,8 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const [maintenancePerson, setMaintenancePerson] = useState(null);
   const [filePicker, setFilePicker] = useState(null);
   const [zoomImg, setZoomImg] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [propose, setPropose] = useState('');
-  const [request, setRequest] = useState('');
   const allStaffs = IFEEstaffs.map(item => {
     return {name: item.hoten};
   });
@@ -265,7 +266,6 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   );
 
   const fetchVehicleData = async () => {
-    setLoading(true);
     try {
       const res = await getVehicleData(dispatch, user?.id);
 
@@ -497,39 +497,32 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
             );
           })}
         </View>
-        <BottomSheetModalProvider>
-          {handleFilter(indexPicker)?.length !== 0 ? (
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              style={{
-                flex: 1,
-                paddingTop: Dimension.setHeight(3),
-              }}
-              data={handleFilter(indexPicker)}
-              keyExtractor={(_, index) => index.toString()}
-              renderItem={({item, index}) => (
-                <RenderVehicleData item={item} index={index} />
-              )}
-              initialNumToRender={6}
-              windowSize={6}
-              removeClippedSubviews={true}
-              refreshing={true}
-              extraData={allVehicleData}
-            />
-          ) : (
-            <View
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-              <Text
-                style={{
-                  fontSize: Dimension.fontSize(20),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  color: Colors.INACTIVE_GREY,
-                }}>
-                Không có dữ liệu nào được tìm thấy
-              </Text>
-            </View>
-          )}
 
+        {loading ? (
+          <InternalSkeleton />
+        ) : (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              flex: 1,
+              paddingTop: Dimension.setHeight(3),
+            }}
+            data={handleFilter(indexPicker)}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <RenderVehicleData item={item} index={index} />
+            )}
+            initialNumToRender={6}
+            windowSize={6}
+            removeClippedSubviews={true}
+            refreshing={true}
+            extraData={allVehicleData}
+            ListEmptyComponent={() => {
+              return <EmptyList />;
+            }}
+          />
+        )}
+        <BottomSheetModalProvider>
           {selectedItem && (
             <BottomSheetModal
               backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
@@ -1027,7 +1020,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
             onRequestClose={() => setZoomImg(false)}
           />
         </Modal>
-        {loading && <Loading bg={true} />}
+        {loading && <TransparentFullScreen />}
       </SafeAreaView>
     </LinearGradientUI>
   );

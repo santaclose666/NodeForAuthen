@@ -54,7 +54,9 @@ import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert} from '../../components/Toast';
 import LinearGradientUI from '../../components/LinearGradientUI';
-import { screen } from '../AllScreen/allScreen';
+import {screen} from '../AllScreen/allScreen';
+import {EmptyList} from '../../components/FlatlistComponent';
+import {InternalSkeleton} from '../../components/Skeleton';
 
 const approveArr = [
   {
@@ -103,6 +105,7 @@ const HistoryWorkShedule = ({navigation}) => {
   const [reasonCancel, setReasonCancel] = useState('');
   const [toggleFinishModal, setToggleFinishModal] = useState(false);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
+  const [loading, setLoading] = useState(true);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
@@ -286,8 +289,14 @@ const HistoryWorkShedule = ({navigation}) => {
     navigation.navigate(screen.allWorkSchedule);
   }, []);
 
-  const fetchWorkSchedule = useCallback(() => {
-    getAllWorkSchedule(dispatch, user?.id);
+  const fetchWorkSchedule = useCallback(async () => {
+    try {
+      await getAllWorkSchedule(dispatch, user?.id);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useLayoutEffect(() => {
@@ -581,10 +590,12 @@ const HistoryWorkShedule = ({navigation}) => {
           })}
         </View>
         <BottomSheetModalProvider>
-          {handleFilter(indexPicker)?.length !== 0 ? (
+          {loading ? (
+            <InternalSkeleton />
+          ) : (
             <FlatList
               showsVerticalScrollIndicator={false}
-              style={{
+              contentContainerStyle={{
                 flex: 1,
                 paddingTop: Dimension.setHeight(3),
               }}
@@ -598,20 +609,12 @@ const HistoryWorkShedule = ({navigation}) => {
               removeClippedSubviews={true}
               refreshing={true}
               extraData={workSheduleData}
+              ListEmptyComponent={() => {
+                return <EmptyList />;
+              }}
             />
-          ) : (
-            <View
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-              <Text
-                style={{
-                  fontSize: Dimension.fontSize(20),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  color: Colors.INACTIVE_GREY,
-                }}>
-                Không có dữ liệu nào được tìm thấy
-              </Text>
-            </View>
           )}
+
           {selectedItem && (
             <BottomSheetModal
               backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}

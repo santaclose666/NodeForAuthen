@@ -21,7 +21,7 @@ const DocumentListScreen = ({navigation}) => {
 
   return (
     <DocumentTemplate
-      screenName={'Dịch vụ môi trường rừng'}
+      screenName={'Quỹ bảo vệ phát triển rừng'}
       navigation={navigation}
       data={data}
       groupOption={groupOption}

@@ -10,6 +10,8 @@ import {
   ScrollView,
   FlatList,
   Platform,
+  UIManager,
+  LayoutAnimation,
 } from 'react-native';
 import unidecode from 'unidecode';
 import Images from '../contants/Images';
@@ -37,6 +39,10 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
 import LinearGradientUI from './LinearGradientUI';
 import {screen} from '../screens/AllScreen/allScreen';
+
+if (Platform.OS == 'android') {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const DocumentTemplate = ({
   screenName,
@@ -381,6 +387,9 @@ const DocumentTemplate = ({
 
             <TouchableOpacity
               onPress={() => {
+                LayoutAnimation.configureNext(
+                  LayoutAnimation.create(246, 'easeInEaseOut', 'opacity'),
+                );
                 pickFileIndex !== index
                   ? setpickFileIndex(index)
                   : setpickFileIndex(null);

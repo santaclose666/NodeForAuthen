@@ -27,7 +27,7 @@ const Header = ({
 
   const showFitlerButon =
     title === 'Định mức Kinh tế Kĩ thuật' ||
-    title === 'Dịch vụ môi trường rừng' ||
+    title === 'Quỹ bảo vệ phát triển rừng' ||
     title === 'Khung giá rừng' ||
     title === 'Ngành Lâm học' ||
     title === 'Kiểm kê rừng' ||
@@ -50,6 +50,7 @@ const Header = ({
         marginHorizontal: Dimension.setHeight(1.4),
         borderRadius: 25,
         marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
+        height: Dimension.setHeight(7),
       }}>
       <StatusBar
         translucent

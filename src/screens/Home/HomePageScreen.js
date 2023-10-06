@@ -352,7 +352,7 @@ const HomePageScreen = ({navigation}) => {
 
           <View style={styles.featureBtnContainer}>
             <View style={styles.featureContainer}>
-              <Text style={styles.label}>Cục Kiểm lâm</Text>
+              <Text style={styles.label}>Lĩnh vực Kiểm lâm</Text>
             </View>
             <View style={styles.btnContainer}>
               <FlatList
@@ -438,16 +438,14 @@ const HomePageScreen = ({navigation}) => {
                         disabled={item.featureName ? false : true}
                         style={styles.buttonFuc}
                         onPress={() => {
-                          if (item.isAdmin) {
-                            if (user?.quyentruycap == 1) {
-                              item.component
-                                ? handleNavigate(item.component)
-                                : handleAlert();
-                            } else {
-                              ToastWarning(
-                                'Tính năng chỉ dành cho quản trị viên!',
-                              );
-                            }
+                          if (item.isAdmin && user?.quyentruycap == 1) {
+                            item.component
+                              ? handleNavigate(item.component)
+                              : handleAlert();
+                          } else if (item.isAdmin && user?.quyentruycap != 1) {
+                            ToastWarning(
+                              'Tính năng chỉ dành cho quản trị viên!',
+                            );
                           } else {
                             item.component
                               ? handleNavigate(item.component)

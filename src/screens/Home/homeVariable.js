@@ -22,26 +22,6 @@ export const utilities = [
     component: null,
     icon: Images.nationalPark,
   },
-  {
-    featureName: 'KBTTN',
-    component: null,
-    icon: Images.conservation,
-  },
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
 ];
 
 export const forestryDepartment = [
@@ -61,7 +41,7 @@ export const forestryDepartment = [
     icon: Images.documentation,
   },
   {
-    featureName: 'Mùa vụ TR',
+    featureName: 'Mùa vụ',
     component: screen.muavu,
     icon: Images.muavu,
   },
@@ -138,7 +118,7 @@ export const VNUF = [
   },
   {
     featureName: 'Khoa KT-QTKD',
-    component: screen.fireWarning,
+    component: null,
     icon: Images.logo_KTQTKD,
   },
   {
