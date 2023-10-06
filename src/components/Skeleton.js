@@ -79,8 +79,8 @@ export const InternalSkeleton = () => {
               <Skeleton.Text w="66%" lines={2} px="1" _line={{h: 5}} />
               <Skeleton h={'5'} w="30%" rounded={6} />
             </HStack>
-            <Skeleton.Text w="16%" lines={1} pl="1" mb={3} />
-            <HStack space="2" mb={2} alignItems="center">
+            <Skeleton.Text w="16%" lines={1} pl="1" mb={2} />
+            <HStack space="2" mb={1} alignItems="center">
               <Skeleton size="8" rounded="full" />
               <Skeleton.Text w="66%" lines={1} rounded="33" _line={{h: 4}} />
             </HStack>

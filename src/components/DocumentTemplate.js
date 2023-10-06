@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useRef, useMemo} from 'react';
+import React, {useCallback, useState, useRef, useMemo, memo} from 'react';
 import {
   View,
   Text,
@@ -206,74 +206,68 @@ const DocumentTemplate = ({
   );
 
   const handleMultiFilter = (thenRemoveExist, identifi) => {
-    if (thenRemoveExist.length != 0) {
-      const allDoc = data.filter(item => {
-        let categoryCondition;
-        if (identifi == 'category') {
-          categoryCondition =
-            thenRemoveExist.length == 0 ||
-            thenRemoveExist.some(
-              cate =>
-                item.loaivanban == cate.item || item.loaivbpl == cate.item,
-            );
-        } else {
-          categoryCondition =
-            categoryValue.length == 0 ||
-            categoryValue.some(
-              cate =>
-                item.loaivanban == cate.item || item.loaivbpl == cate.item,
-            );
-        }
-
-        let yearCondition;
-        if (identifi == 'year') {
-          yearCondition =
-            thenRemoveExist.length == 0 ||
-            thenRemoveExist.some(
-              year => parseInt(item?.nam?.split('/')[2]) == year.item,
-            );
-        } else {
-          yearCondition =
-            yearValue.length == 0 ||
-            yearValue.some(
-              year => parseInt(item?.nam?.split('/')[2]) == year.item,
-            );
-        }
-
-        let stateCondition;
-        if (identifi == 'hieuluc') {
-          stateCondition =
-            thenRemoveExist.length == 0 ||
-            thenRemoveExist.some(hieuluc => item.hieuluc == hieuluc.item);
-        } else {
-          stateCondition =
-            stateHieuLuc.length == 0 ||
-            stateHieuLuc.some(hieuluc => item.hieuluc == hieuluc.item);
-        }
-
-        let unitCondition;
-        if (identifi == 'unit') {
-          unitCondition =
-            thenRemoveExist.length == 0 ||
-            thenRemoveExist.some(unit => item.donvi == unit.item);
-        } else {
-          unitCondition =
-            unitValue.length == 0 ||
-            unitValue.some(unit => item.donvi == unit.item);
-        }
-
-        return (
-          categoryCondition && yearCondition && stateCondition && unitCondition
-        );
-      });
-
-      setResults(allDoc.length);
-      if (allDoc.length != 0) {
-        setDocument(allDoc);
-        setPickOptionIndex({item: null, index: null});
+    const allDoc = data.filter(item => {
+      let categoryCondition;
+      if (identifi == 'category') {
+        categoryCondition =
+          thenRemoveExist.length == 0 ||
+          thenRemoveExist.some(
+            cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
+          );
+      } else {
+        categoryCondition =
+          categoryValue.length == 0 ||
+          categoryValue.some(
+            cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
+          );
       }
-    } else {
-      setResults(0);
+
+      let yearCondition;
+      if (identifi == 'year') {
+        yearCondition =
+          thenRemoveExist.length == 0 ||
+          thenRemoveExist.some(
+            year => parseInt(item?.nam?.split('/')[2]) == year.item,
+          );
+      } else {
+        yearCondition =
+          yearValue.length == 0 ||
+          yearValue.some(
+            year => parseInt(item?.nam?.split('/')[2]) == year.item,
+          );
+      }
+
+      let stateCondition;
+      if (identifi == 'hieuluc') {
+        stateCondition =
+          thenRemoveExist.length == 0 ||
+          thenRemoveExist.some(hieuluc => item.hieuluc == hieuluc.item);
+      } else {
+        stateCondition =
+          stateHieuLuc.length == 0 ||
+          stateHieuLuc.some(hieuluc => item.hieuluc == hieuluc.item);
+      }
+
+      let unitCondition;
+      if (identifi == 'unit') {
+        unitCondition =
+          thenRemoveExist.length == 0 ||
+          thenRemoveExist.some(unit => item.donvi == unit.item);
+      } else {
+        unitCondition =
+          unitValue.length == 0 ||
+          unitValue.some(unit => item.donvi == unit.item);
+      }
+
+      return (
+        categoryCondition && yearCondition && stateCondition && unitCondition
+      );
+    });
+
+    setResults(allDoc.length);
+    if (allDoc.length != 0) {
+      setDocument(allDoc);
+      setPickOptionIndex({item: null, index: null});
     }
   };
 
