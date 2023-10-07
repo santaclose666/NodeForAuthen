@@ -371,7 +371,7 @@ const HistoryWorkShedule = ({navigation}) => {
         ((item.status == 0 || item.kt_congtac == 1) &&
           item.id_user != user?.id &&
           user?.vitri_ifee == 3 &&
-          filterUser.vitri_ifee > 3) ||
+          filterUser?.vitri_ifee > 3) ||
         (user?.vitri_ifee == 1 && (item.status == 0 || item.kt_congtac == 1))
       );
     };
@@ -421,7 +421,7 @@ const HistoryWorkShedule = ({navigation}) => {
               fontFamily: Fonts.SF_SEMIBOLD,
               fontSize: Dimension.fontSize(19),
             }}>
-            {item.thuocchuongtrinh}
+            {item?.thuocchuongtrinh}
           </Text>
         </View>
         <View
@@ -509,7 +509,7 @@ const HistoryWorkShedule = ({navigation}) => {
             color: '#747476',
             marginVertical: Dimension.setHeight(0.6),
           }}>
-          {item.diadiem}
+          {item?.diadiem}
         </Text>
 
         <View style={styles.containerEachLine}>
@@ -521,16 +521,16 @@ const HistoryWorkShedule = ({navigation}) => {
             numberOfLines={2}
             ellipsizeMode="tail"
             style={[styles.title, {width: '90%'}]}>
-            Họ tên: <Text style={styles.content}>{item.name_user}</Text>
+            Họ tên: <Text style={styles.content}>{item?.name_user}</Text>
           </Text>
         </View>
 
         <View style={styles.containerEachLine}>
           <Image source={Images.datetime} style={styles.Iconic} />
           <Text style={styles.title}>Thời gian:</Text>
-          <Text style={styles.content}>{changeFormatDate(item.tungay)}</Text>
+          <Text style={styles.content}>{changeFormatDate(item?.tungay)}</Text>
           <Separation />
-          <Text style={styles.content}>{changeFormatDate(item.denngay)}</Text>
+          <Text style={styles.content}>{changeFormatDate(item?.denngay)}</Text>
         </View>
       </TouchableOpacity>
     );
