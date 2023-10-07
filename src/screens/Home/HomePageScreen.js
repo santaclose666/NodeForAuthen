@@ -352,7 +352,7 @@ const HomePageScreen = ({navigation}) => {
 
           <View style={styles.featureBtnContainer}>
             <View style={styles.featureContainer}>
-              <Text style={styles.label}>Lĩnh vực Kiểm lâm</Text>
+              <Text style={styles.label}>Cục Kiểm lâm</Text>
             </View>
             <View style={styles.btnContainer}>
               <FlatList
