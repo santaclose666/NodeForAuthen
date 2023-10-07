@@ -51,6 +51,12 @@ export const forestryDepartment = [
     icon: Images.seed,
   },
   {
+    featureName: 'Rừng ven biển',
+    component: screen.mapService,
+    icon: Images.mangroves,
+    data: {modeView: 'RVB'},
+  },
+  {
     featureName: 'KGR',
     component: screen.kgr,
     icon: Images.trees1,
@@ -65,11 +71,7 @@ export const forestryDepartment = [
     component: screen.tcvn,
     icon: Images.standard,
   },
-  {
-    featureName: 'Rừng ven biển',
-    component: null,
-    icon: Images.mangroves,
-  },
+
   {
     featureName: null,
     component: null,

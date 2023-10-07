@@ -40,4 +40,5 @@ export const screen = {
   dmktkt: 'DMKTKT',
   vp809: 'VP809',
   forestry: 'Forestry',
+  rungvenbien: 'CoastalForest',
 };

@@ -93,8 +93,8 @@ const HomePageScreen = ({navigation}) => {
     }
   };
 
-  const handleNavigate = routeName => {
-    navigation.navigate(routeName);
+  const handleNavigate = (routeName, data) => {
+    navigation.navigate(routeName, data);
   };
 
   const handleOpenApp = async (appUrl, webUrl) => {
@@ -337,7 +337,10 @@ const HomePageScreen = ({navigation}) => {
                       style={styles.buttonFuc}
                       onPress={() => {
                         item.component
-                          ? handleNavigate(item.component)
+                          ? handleNavigate(
+                              item.component,
+                              item.data ? item.data : null,
+                            )
                           : handleAlert();
                       }}>
                       <Image source={item.icon} style={styles.featureBtn} />

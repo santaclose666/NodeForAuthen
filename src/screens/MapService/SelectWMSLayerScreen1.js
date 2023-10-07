@@ -19,11 +19,13 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {ToastAlert} from '../../components/Toast';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import {screen} from '../AllScreen/allScreen';
+import {useRoute} from '@react-navigation/native';
 
 const vnRegionMapData = require('../../utils/VnRegionMap.json');
 const listLayerWMS = require('../../utils/listLayerWMSGeoPfes.json');
 
 const SelectWMSLayerScreen1 = ({navigation}) => {
+  const route = useRoute();
   const [listTypeMap, setListTypeMap] = useState([]);
   const [listProvinces, setListProvinces] = useState([]);
   const [listDistricts, setListDistricts] = useState([]);
@@ -42,20 +44,31 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
   const [selectCommuneCode, setSelectCommuneCode] = useState(undefined);
   const [nameRegionCol, setNameRegionCol] = useState('');
 
+  const data = route.params;
+
   useEffect(() => {
-    getListMap();
+    getListMap(data?.modeView);
   }, []);
 
-  const getListMap = () => {
+  const getListMap = modeView => {
     let listLayerRaw = [];
+    console.log(modeView);
     for (var i = 0; i < listLayerWMS.length; i++) {
       let layer = {
         nameLayer: listLayerWMS[i].nameMapGroup,
         value: listLayerWMS[i].codeMapGroup,
       };
-      if (layer.value !== '5') {
-        if (!listLayerRaw.some(obj => obj.value === layer.value)) {
-          listLayerRaw.push(layer);
+      if (modeView == 'RVB') {
+        if (layer.value == '2' || layer.value == '3') {
+          if (!listLayerRaw.some(obj => obj.value === layer.value)) {
+            listLayerRaw.push(layer);
+          }
+        }
+      } else {
+        if (layer.value !== '5') {
+          if (!listLayerRaw.some(obj => obj.value === layer.value)) {
+            listLayerRaw.push(layer);
+          }
         }
       }
     }
