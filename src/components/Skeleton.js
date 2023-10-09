@@ -163,9 +163,9 @@ export const DocumentSkeleton = () => {
               paddingBottom: Dimension.setHeight(1.2),
             }}>
             <HStack space="4" mb={3}>
-              <Skeleton h={'12'} w="11%" rounded={6} />
+              <Skeleton h={'10'} w="10%" rounded={6} />
               <Skeleton.Text w="66%" lines={2} px="1" _line={{h: 4}} />
-              <Skeleton h={'12'} w="11%" rounded={6} />
+              <Skeleton h={'9'} w="9%" rounded={6} />
             </HStack>
             <Skeleton mb={1} alignSelf={'center'} size={1} w="80%" />
             <Skeleton.Text
