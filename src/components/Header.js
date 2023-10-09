@@ -13,6 +13,7 @@ import Fonts from '../contants/Fonts';
 import Dimension from '../contants/Dimension';
 import Colors from '../contants/Colors';
 import {fontDefault, imgDefault} from '../contants/Variable';
+import {screen} from '../screens/AllScreen/allScreen';
 
 const Header = ({
   title,
@@ -26,11 +27,10 @@ const Header = ({
 
   const showFitlerButon =
     title === 'Định mức Kinh tế Kĩ thuật' ||
-    title === 'Dịch vụ môi trường rừng' ||
+    title === 'Quỹ bảo vệ phát triển rừng' ||
     title === 'Khung giá rừng' ||
     title === 'Ngành Lâm học' ||
     title === 'Kiểm kê rừng' ||
-    title === 'Tài liệu Mùa vụ' ||
     title === 'Quản lý rừng bền vững' ||
     title === 'Tiêu chuẩn Việt Nam' ||
     title === 'Giống Lâm nghiệp' ||
@@ -49,6 +49,7 @@ const Header = ({
         marginHorizontal: Dimension.setHeight(1.4),
         borderRadius: 25,
         marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
+        height: Dimension.setHeight(7),
       }}>
       <StatusBar
         translucent
@@ -107,37 +108,39 @@ const Header = ({
         <TouchableOpacity
           onPress={() => {
             if (title === 'Lịch sử nghỉ phép') {
-              navigation.navigate('RegisterApplyLeave', {
+              navigation.navigate(screen.registerApplyLeave, {
                 refreshData: refreshData,
               });
             } else if (title === 'Lịch sử đặt vé') {
-              navigation.navigate('RegisterPlaneTicket', {
+              navigation.navigate(screen.registerPlaneTicket, {
                 refreshData: refreshData,
               });
             } else if (title === 'Lịch sử công tác') {
-              navigation.navigate('CreateWorkSchedule', {
+              navigation.navigate(screen.registerWorkSchedule, {
                 refreshData: refreshData,
               });
             } else if (title === 'Lịch sử đăng kí xe') {
-              navigation.navigate('RegisterVehicle', {
+              navigation.navigate(screen.registerVehicle, {
                 refreshData: refreshData,
               });
             } else if (title === 'Lịch sử đăng kí VPP') {
-              navigation.navigate('RegisterItemOffice');
+              navigation.navigate(screen.registerOfficeItem);
             } else if (title == 'Lịch sử đăng kí thiết bị') {
-              navigation.navigate('RegisterDevices');
+              navigation.navigate(screen.registerDevice);
             }
           }}>
           <Image source={Images.adjust} style={styles.rightIcon} />
         </TouchableOpacity>
       )}
-      {showFitlerButon && (
+      {showFitlerButon ? (
         <TouchableOpacity onPress={handleFilter}>
           <Image
             source={Images.filter}
             style={{width: 23, height: 23, ...imgDefault}}
           />
         </TouchableOpacity>
+      ) : (
+        <View style={styles.rightIcon} />
       )}
     </View>
   );

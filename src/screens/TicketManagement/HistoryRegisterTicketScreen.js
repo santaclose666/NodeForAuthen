@@ -38,6 +38,8 @@ import {ToastWarning} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
 import FilterStatusUI from '../../components/FilterStatusUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import {EmptyList} from '../../components/FlatlistComponent';
+import {InternalSkeleton} from '../../components/Skeleton';
 
 const HistoryRegisterTicketScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -52,6 +54,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
   const [commentInput, setCommentInput] = useState('');
   const [reasonCancel, setReasonCancel] = useState('');
   const [indexPicker, setIndexPicker] = useState(0);
+  const [loading, setLoading] = useState(true);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
@@ -153,8 +156,14 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
     [ticketPlaneData],
   );
 
-  const fetchPlaneData = () => {
-    getAllPlaneData(dispatch);
+  const fetchPlaneData = async () => {
+    try {
+      await getAllPlaneData(dispatch);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useLayoutEffect(() => {
@@ -330,39 +339,31 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
             indexPicker={indexPicker}
           />
 
-          {handleFilter(indexPicker)?.length !== 0 ? (
-            <View
-              style={{
+          {loading ? (
+            <InternalSkeleton />
+          ) : (
+            <FlatList
+              contentContainerStyle={{
                 flex: 1,
                 paddingTop: Dimension.setHeight(3),
-              }}>
-              <FlatList
-                showsVerticalScrollIndicator={false}
-                data={handleFilter(indexPicker)}
-                keyExtractor={(_, index) => index.toString()}
-                renderItem={({item, index}) => (
-                  <RenderTicketData item={item} index={index} />
-                )}
-                initialNumToRender={6}
-                windowSize={6}
-                removeClippedSubviews={true}
-                refreshing={true}
-                extraData={ticketPlaneData}
-              />
-            </View>
-          ) : (
-            <View
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-              <Text
-                style={{
-                  fontSize: Dimension.fontSize(20),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  color: Colors.INACTIVE_GREY,
-                }}>
-                Không có dữ liệu nào được tìm thấy
-              </Text>
-            </View>
+              }}
+              showsVerticalScrollIndicator={false}
+              data={handleFilter(indexPicker)}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <RenderTicketData item={item} index={index} />
+              )}
+              initialNumToRender={6}
+              windowSize={6}
+              removeClippedSubviews={true}
+              refreshing={true}
+              extraData={ticketPlaneData}
+              ListEmptyComponent={() => {
+                return <EmptyList />;
+              }}
+            />
           )}
+
           {selectedItem && (
             <BottomSheetModal
               backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}

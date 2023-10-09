@@ -18,6 +18,7 @@ import {changeFormatDate} from '../utils/serviceFunction';
 import LinearGradientUI from '../components/LinearGradientUI';
 import Header from '../components/Header';
 import {fontDefault} from '../contants/Variable';
+import {screen} from '../screens/AllScreen/allScreen';
 
 const NewsTemplate = ({
   screenName,
@@ -103,7 +104,7 @@ const NewsTemplate = ({
                       ...item,
                       screenName,
                     };
-                    navigation.navigate('DetailNews', {item: data});
+                    navigation.navigate(screen.detailNews, {item: data});
                   }}
                   style={styles.hotNewsContainer}
                   key={index}>

@@ -18,11 +18,14 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {shadowIOS} from '../../contants/propsIOS';
 import {ToastAlert} from '../../components/Toast';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import {screen} from '../AllScreen/allScreen';
+import {useRoute} from '@react-navigation/native';
 
 const vnRegionMapData = require('../../utils/VnRegionMap.json');
 const listLayerWMS = require('../../utils/listLayerWMSGeoPfes.json');
 
 const SelectWMSLayerScreen1 = ({navigation}) => {
+  const route = useRoute();
   const [listTypeMap, setListTypeMap] = useState([]);
   const [listProvinces, setListProvinces] = useState([]);
   const [listDistricts, setListDistricts] = useState([]);
@@ -41,20 +44,31 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
   const [selectCommuneCode, setSelectCommuneCode] = useState(undefined);
   const [nameRegionCol, setNameRegionCol] = useState('');
 
+  const data = route.params;
+
   useEffect(() => {
-    getListMap();
+    getListMap(data?.modeView);
   }, []);
 
-  const getListMap = () => {
+  const getListMap = modeView => {
     let listLayerRaw = [];
+    console.log(modeView);
     for (var i = 0; i < listLayerWMS.length; i++) {
       let layer = {
         nameLayer: listLayerWMS[i].nameMapGroup,
         value: listLayerWMS[i].codeMapGroup,
       };
-      if (layer.value !== '5') {
-        if (!listLayerRaw.some(obj => obj.value === layer.value)) {
-          listLayerRaw.push(layer);
+      if (modeView == 'RVB') {
+        if (layer.value == '2' || layer.value == '3') {
+          if (!listLayerRaw.some(obj => obj.value === layer.value)) {
+            listLayerRaw.push(layer);
+          }
+        }
+      } else {
+        if (layer.value !== '5' && layer.value !== '2' && layer.value !== '3') {
+          if (!listLayerRaw.some(obj => obj.value === layer.value)) {
+            listLayerRaw.push(layer);
+          }
         }
       }
     }
@@ -272,7 +286,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
           linkRootQueryInfo: linkRootQueryInfo,
           centerPoint: centerPoint,
         };
-        navigation.navigate('MapWMS', data);
+        navigation.navigate(screen.mapDetail, data);
       } else {
         ToastAlert('Không đủ thông tin');
       }
@@ -282,7 +296,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title="Chọn lớp bản đồ" navigation={navigation} />
+        <Header title="Dịch vụ bản đồ" navigation={navigation} />
         <ScrollView>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="handled"

@@ -13,6 +13,7 @@ import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import {getBirthdayList} from '../../redux/apiRequest';
 import {mainURL, imgDefault} from '../../contants/Variable';
+import {screen} from '../AllScreen/allScreen';
 
 const HappyBirthdayList = ({navigation}) => {
   const [birthdayList, setBirthdayList] = useState([]);
@@ -96,7 +97,7 @@ const HappyBirthdayList = ({navigation}) => {
                   <TouchableOpacity
                     style={styles.containerAvt}
                     onPress={() => {
-                      navigation.navigate('HappyBirthday', {item: item});
+                      navigation.navigate(screen.hpbd, {item: item});
                     }}>
                     <Image src={mainURL + item.path} style={styles.avt} />
                   </TouchableOpacity>

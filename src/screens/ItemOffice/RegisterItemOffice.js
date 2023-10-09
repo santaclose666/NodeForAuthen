@@ -136,9 +136,9 @@ const RegisterItemOffice = ({navigation, route}) => {
         const res = await registerOfficeItem(data);
 
         if (res) {
-          setLoading(false);
+          fetchOfficeItemList();
           ToastSuccess('Đăng kí văn phòng phẩm thành công!');
-          await fetchOfficeItemList();
+          setLoading(false);
           navigation.goBack();
         }
       } catch (error) {}
@@ -147,8 +147,8 @@ const RegisterItemOffice = ({navigation, route}) => {
     }
   };
 
-  const fetchOfficeItemList = () => {
-    getAllListOfficeItem(dispatch);
+  const fetchOfficeItemList = async () => {
+    await getAllListOfficeItem(dispatch);
   };
 
   const fetchAllIOfficeItem = async () => {

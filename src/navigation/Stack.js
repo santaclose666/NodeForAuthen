@@ -34,72 +34,61 @@ import RegisterDevices from '../screens/Device/RegisterDevice';
 import RegisterItemOffice from '../screens/ItemOffice/RegisterItemOffice';
 import HistoryRegisterItem from '../screens/ItemOffice/HistoryRegisterItem';
 import HistoryRegisterDevice from '../screens/Device/HistoryRegisterDevice';
+import {screen} from '../screens/AllScreen/allScreen';
 
 const Stack = createStackNavigator();
 
 const StactNavigator = () => {
+  const dataNavigator = [
+    {name: screen.home, component: HomePageScreen},
+    {name: screen.staffList, component: StaffListScreen},
+    {name: screen.staffDetail, component: DetailStaffScreen},
+    {name: screen.notification, component: NotifiScreen},
+    {name: screen.vnff, component: DocumentListScreen},
+    {name: screen.applyLeaveList, component: HistoryApplyLeaveScreen},
+    {name: screen.registerApplyLeave, component: CreateApplyLeaveScreen},
+    {name: screen.registerPlaneTicket, component: RegisterPlaneScreen},
+    {name: screen.planeTicketList, component: HistoryRegisterTicketScreen},
+    {name: screen.registerVehicle, component: RegisterVehicleScreen},
+    {name: screen.vehicleList, component: HistoryRegisterVehicleScreen},
+    {name: screen.registerWorkSchedule, component: CreateWorkSchedule},
+    {name: screen.workScheduleList, component: HistoryWorkShedule},
+    {name: screen.allWorkSchedule, component: AllWorkScheduleScreen},
+    {name: screen.deviceList, component: HistoryRegisterDevice},
+    {name: screen.registerDevice, component: RegisterDevices},
+    {name: screen.officeItemList, component: HistoryRegisterItem},
+    {name: screen.registerOfficeItem, component: RegisterItemOffice},
+    {name: screen.mapService, component: SelectWMSLayerScreen},
+    {name: screen.mapDetail, component: MapScreen},
+    {name: screen.bioList, component: ListBioScreen},
+    {name: screen.bioDetail, component: SpecieDetailScreen},
+    {name: screen.contributor, component: ContributorScreen},
+    {name: screen.kgr, component: ForestPrice},
+    {name: screen.qlrbv, component: QLRBVScreen},
+    {name: screen.forestry, component: ForestryScreen},
+    {name: screen.sendNotification, component: SendNotification},
+    {name: screen.kkr, component: KKRScreen},
+    {name: screen.tcvn, component: TcvnScreen},
+    {name: screen.giongln, component: TreeTypeScreen},
+    {name: screen.dmktkt, component: DMKTKTScreen},
+    {name: screen.fireWarning, component: SelectProvinceFFWScreen},
+    {name: screen.vp809, component: VP809Screen},
+    {name: screen.contributorData, component: ContributionDataScreen},
+  ];
+
   return (
     <Stack.Navigator
       initialRouteName="HomePage"
       screenOptions={{headerShown: false}}>
-      <Stack.Screen name="HomePage" component={HomePageScreen} />
-      <Stack.Screen name="StaffList" component={StaffListScreen} />
-      <Stack.Screen name="DetailStaff" component={DetailStaffScreen} />
-      <Stack.Screen name="Notification" component={NotifiScreen} />
-      <Stack.Screen name="DocumentList" component={DocumentListScreen} />
-      <Stack.Screen
-        name="HistoryApplyLeave"
-        component={HistoryApplyLeaveScreen}
-      />
-      <Stack.Screen
-        name="RegisterApplyLeave"
-        component={CreateApplyLeaveScreen}
-      />
-      <Stack.Screen
-        name="RegisterPlaneTicket"
-        component={RegisterPlaneScreen}
-      />
-      <Stack.Screen
-        name="HistoryPlaneTicket"
-        component={HistoryRegisterTicketScreen}
-      />
-      <Stack.Screen name="RegisterVehicle" component={RegisterVehicleScreen} />
-      <Stack.Screen
-        name="HistoryRegisterVehicle"
-        component={HistoryRegisterVehicleScreen}
-      />
-      <Stack.Screen name="CreateWorkSchedule" component={CreateWorkSchedule} />
-      <Stack.Screen name="HistoryWorkShedule" component={HistoryWorkShedule} />
-      <Stack.Screen name="AllWorkSchedule" component={AllWorkScheduleScreen} />
-      <Stack.Screen
-        name="HistoryRegisterDevice"
-        component={HistoryRegisterDevice}
-      />
-      <Stack.Screen name="RegisterDevices" component={RegisterDevices} />
-      <Stack.Screen name="HistoryItemOffice" component={HistoryRegisterItem} />
-      <Stack.Screen name="RegisterItemOffice" component={RegisterItemOffice} />
-      <Stack.Screen name="SelectWMSLayer" component={SelectWMSLayerScreen} />
-      <Stack.Screen name="MapWMS" component={MapScreen} />
-      <Stack.Screen name="ListBio" component={ListBioScreen} />
-      <Stack.Screen name="SpecieDetail" component={SpecieDetailScreen} />
-      <Stack.Screen name="Contributor" component={ContributorScreen} />
-      <Stack.Screen name="ForestPrice" component={ForestPrice} />
-      <Stack.Screen name="QLRBV" component={QLRBVScreen} />
-      <Stack.Screen name="Forestry" component={ForestryScreen} />
-      <Stack.Screen name="SendNotification" component={SendNotification} />
-      <Stack.Screen
-        name="ContributionData"
-        component={ContributionDataScreen}
-      />
-      <Stack.Screen name="KKR" component={KKRScreen} />
-      <Stack.Screen name="TCVN" component={TcvnScreen} />
-      <Stack.Screen name="TreeType" component={TreeTypeScreen} />
-      <Stack.Screen name="DMKTKT" component={DMKTKTScreen} />
-      <Stack.Screen
-        name="SelectProvinceFFW"
-        component={SelectProvinceFFWScreen}
-      />
-      <Stack.Screen name="VP809" component={VP809Screen} />
+      {dataNavigator.map((item, index) => {
+        return (
+          <Stack.Screen
+            key={index}
+            name={item.name}
+            component={item.component}
+          />
+        );
+      })}
     </Stack.Navigator>
   );
 };

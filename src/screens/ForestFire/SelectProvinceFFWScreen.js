@@ -18,6 +18,7 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {shadowIOS} from '../../contants/propsIOS';
 import {ToastAlert} from '../../components/Toast';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import {screen} from '../AllScreen/allScreen';
 
 const vnRegionMapData = require('../../utils/VnRegionMap.json');
 const listLayerWMS = require('../../utils/listLayerWMSGeoPfes.json');
@@ -233,8 +234,7 @@ const SelectProvinceFFWScreen = ({navigation}) => {
         mapCode: curentMapLevelCode,
         provinceCode: selectProvinceCode,
       };
-      console.log(data);
-      navigation.navigate('MapWMS', data);
+      navigation.navigate(screen.mapDetail, data);
     } else {
       ToastAlert('Không đủ thông tin');
     }
@@ -243,7 +243,7 @@ const SelectProvinceFFWScreen = ({navigation}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title="Chọn lớp bản đồ" navigation={navigation} />
+        <Header title="Bản đồ cảnh báo cháy" navigation={navigation} />
         <ScrollView>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="handled"

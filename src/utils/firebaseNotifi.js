@@ -3,6 +3,7 @@ import messaging from '@react-native-firebase/messaging';
 import PushNotification, {Importance} from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import {Platform} from 'react-native';
+import {screen} from '../screens/AllScreen/allScreen';
 
 PushNotification.createChannel(
   {
@@ -28,7 +29,7 @@ export const getToken = async () => {
 };
 
 export const handleNavigate = navigation => {
-  navigation.navigate('Notification');
+  navigation.navigate(screen.notification);
 };
 
 export const notificationListenerData = navigation => {
@@ -68,23 +69,6 @@ export const notificationListenerData = navigation => {
     requestPermissions: true,
   });
 };
-
-// export const notificationOpenApp = async navigation => {
-//   const notificationOpen = await messaging().getInitialNotification();
-//   if (notificationOpen) {
-//     const data = notificationOpen.data;
-//     // handleNavigate(navigation);
-//     navigation.navigate(data.screen, {item: data.data});
-//   }
-
-//   messaging().onNotificationOpenedApp(async remoteMessage => {
-//     if (remoteMessage) {
-//       const data = remoteMessage.data;
-//       // handleNavigate(navigation);
-//       navigation.navigate(data.screen, {item: data.data});
-//     }
-//   });
-// };
 
 export const ForegroundListener = () => {
   useEffect(() => {

@@ -27,6 +27,8 @@ import {getAllEcosystem, getAllManageData} from '../../redux/apiRequest';
 import Images from '../../contants/Images';
 import {fontDefault} from '../../contants/Variable';
 import {ToastAlert} from '../../components/Toast';
+import {screen} from '../AllScreen/allScreen';
+import {BioSkeleton} from '../../components/Skeleton';
 
 const width = Dimensions.get('window').width / 2 - 22;
 
@@ -149,7 +151,7 @@ const ListBioScreen = ({navigation}) => {
         <TouchableOpacity
           key={index}
           onPress={() => {
-            navigation.navigate('SpecieDetail', {
+            navigation.navigate(screen.bioDetail, {
               data: {...item, link: VQGData.link},
             });
           }}
@@ -183,7 +185,6 @@ const ListBioScreen = ({navigation}) => {
               />
             )}
           </View>
-
           <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
           <Text
             style={{
@@ -230,10 +231,7 @@ const ListBioScreen = ({navigation}) => {
         </View>
 
         {loading ? (
-          <View
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Loading bg={false} />
-          </View>
+          <BioSkeleton />
         ) : (
           <FlatList
             columnWrapperStyle={{justifyContent: 'space-between'}}

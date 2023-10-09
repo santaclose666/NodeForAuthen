@@ -52,6 +52,8 @@ import {rowAlignCenter} from '../../contants/CssFE';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {compareDate, formatDate} from '../../utils/serviceFunction';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import {EmptyList} from '../../components/FlatlistComponent';
+import {InternalSkeleton} from '../../components/Skeleton';
 
 const deviceState = [{state: 'Bình thường'}, {state: 'Hỏng'}, {state: 'Lỗi'}];
 
@@ -66,7 +68,7 @@ const HistoryRegisterDevice = ({navigation}) => {
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [checkInput, setCheckInput] = useState(null);
   const [indexPicker, setIndexPicker] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [deviceStateValue, setDeviceStateValue] = useState(
     deviceState[0].state,
   );
@@ -188,7 +190,6 @@ const HistoryRegisterDevice = ({navigation}) => {
   );
 
   const fetchAllListDevice = async () => {
-    setLoading(true);
     try {
       const data = {
         id_user: user?.id,
@@ -287,7 +288,7 @@ const HistoryRegisterDevice = ({navigation}) => {
                     indexPicker == 0
                       ? item.thietbi?.length
                       : item.daduyet?.length
-                  } văn phòng phẩm ${status.toLocaleLowerCase()}`
+                  } thiết bị ${status.toLocaleLowerCase()}`
                 : `${item?.thietbi}`}
             </Text>
           </View>
@@ -413,38 +414,30 @@ const HistoryRegisterDevice = ({navigation}) => {
             indexPicker={indexPicker}
           />
 
-          {handleFilter(indexPicker)?.length !== 0 ? (
-            <View
-              style={{
-                flex: 1,
-                paddingTop: Dimension.setHeight(3),
-              }}>
-              <FlatList
-                showsVerticalScrollIndicator={false}
-                data={handleFilter(indexPicker)}
-                keyExtractor={(_, index) => index.toString()}
-                renderItem={({item, index}) => (
-                  <RenderTicketData item={item} index={index} />
-                )}
-                initialNumToRender={6}
-                windowSize={6}
-                removeClippedSubviews={true}
-                extraData={deviceData}
-              />
-            </View>
+          {loading ? (
+            <InternalSkeleton />
           ) : (
-            <View
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-              <Text
-                style={{
-                  fontSize: Dimension.fontSize(20),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  color: Colors.INACTIVE_GREY,
-                }}>
-                Không có dữ liệu nào được tìm thấy
-              </Text>
-            </View>
+            <FlatList
+              contentContainerStyle={{
+                flex: 1,
+                marginTop: Dimension.setHeight(1),
+              }}
+              showsVerticalScrollIndicator={false}
+              data={handleFilter(indexPicker)}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <RenderTicketData item={item} index={index} />
+              )}
+              initialNumToRender={6}
+              windowSize={6}
+              removeClippedSubviews={true}
+              extraData={deviceData}
+              ListEmptyComponent={() => {
+                return <EmptyList />;
+              }}
+            />
           )}
+
           {selectedItem && (
             <BottomSheetModal
               backgroundStyle={{
@@ -846,8 +839,6 @@ const HistoryRegisterDevice = ({navigation}) => {
             }}
           />
         </Modal>
-
-        {loading && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
   );

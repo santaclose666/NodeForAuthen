@@ -54,6 +54,9 @@ import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert} from '../../components/Toast';
 import LinearGradientUI from '../../components/LinearGradientUI';
+import {screen} from '../AllScreen/allScreen';
+import {EmptyList} from '../../components/FlatlistComponent';
+import {InternalSkeleton} from '../../components/Skeleton';
 
 const approveArr = [
   {
@@ -102,6 +105,7 @@ const HistoryWorkShedule = ({navigation}) => {
   const [reasonCancel, setReasonCancel] = useState('');
   const [toggleFinishModal, setToggleFinishModal] = useState(false);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
+  const [loading, setLoading] = useState(true);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
@@ -278,15 +282,21 @@ const HistoryWorkShedule = ({navigation}) => {
   );
 
   const handleRedirectCreate = () => {
-    navigation.navigate('CreateWorkSchedule');
+    navigation.navigate(screen.registerWorkSchedule);
   };
 
   const handleRedirectMyWorkSchedule = useCallback(() => {
-    navigation.navigate('AllWorkSchedule');
+    navigation.navigate(screen.allWorkSchedule);
   }, []);
 
-  const fetchWorkSchedule = useCallback(() => {
-    getAllWorkSchedule(dispatch, user?.id);
+  const fetchWorkSchedule = useCallback(async () => {
+    try {
+      await getAllWorkSchedule(dispatch, user?.id);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useLayoutEffect(() => {
@@ -358,11 +368,11 @@ const HistoryWorkShedule = ({navigation}) => {
 
     const checkRole = () => {
       return (
-        ((item.status == 0 || item.kt_congtac == 1) &&
-          item.id_user != user?.id &&
+        ((item?.status == 0 || item?.kt_congtac == 1) &&
+          item?.id_user != user?.id &&
           user?.vitri_ifee == 3 &&
-          filterUser.vitri_ifee > 3) ||
-        (user?.vitri_ifee == 1 && (item.status == 0 || item.kt_congtac == 1))
+          filterUser?.vitri_ifee > 3) ||
+        (user?.vitri_ifee == 1 && (item?.status == 0 || item?.kt_congtac == 1))
       );
     };
 
@@ -411,7 +421,7 @@ const HistoryWorkShedule = ({navigation}) => {
               fontFamily: Fonts.SF_SEMIBOLD,
               fontSize: Dimension.fontSize(19),
             }}>
-            {item.thuocchuongtrinh}
+            {item?.thuocchuongtrinh}
           </Text>
         </View>
         <View
@@ -499,7 +509,7 @@ const HistoryWorkShedule = ({navigation}) => {
             color: '#747476',
             marginVertical: Dimension.setHeight(0.6),
           }}>
-          {item.diadiem}
+          {item?.diadiem}
         </Text>
 
         <View style={styles.containerEachLine}>
@@ -511,16 +521,16 @@ const HistoryWorkShedule = ({navigation}) => {
             numberOfLines={2}
             ellipsizeMode="tail"
             style={[styles.title, {width: '90%'}]}>
-            Họ tên: <Text style={styles.content}>{item.name_user}</Text>
+            Họ tên: <Text style={styles.content}>{item?.name_user}</Text>
           </Text>
         </View>
 
         <View style={styles.containerEachLine}>
           <Image source={Images.datetime} style={styles.Iconic} />
           <Text style={styles.title}>Thời gian:</Text>
-          <Text style={styles.content}>{changeFormatDate(item.tungay)}</Text>
+          <Text style={styles.content}>{changeFormatDate(item?.tungay)}</Text>
           <Separation />
-          <Text style={styles.content}>{changeFormatDate(item.denngay)}</Text>
+          <Text style={styles.content}>{changeFormatDate(item?.denngay)}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -580,10 +590,12 @@ const HistoryWorkShedule = ({navigation}) => {
           })}
         </View>
         <BottomSheetModalProvider>
-          {handleFilter(indexPicker)?.length !== 0 ? (
+          {loading ? (
+            <InternalSkeleton />
+          ) : (
             <FlatList
               showsVerticalScrollIndicator={false}
-              style={{
+              contentContainerStyle={{
                 flex: 1,
                 paddingTop: Dimension.setHeight(3),
               }}
@@ -597,20 +609,12 @@ const HistoryWorkShedule = ({navigation}) => {
               removeClippedSubviews={true}
               refreshing={true}
               extraData={workSheduleData}
+              ListEmptyComponent={() => {
+                return <EmptyList />;
+              }}
             />
-          ) : (
-            <View
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-              <Text
-                style={{
-                  fontSize: Dimension.fontSize(20),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  color: Colors.INACTIVE_GREY,
-                }}>
-                Không có dữ liệu nào được tìm thấy
-              </Text>
-            </View>
           )}
+
           {selectedItem && (
             <BottomSheetModal
               backgroundStyle={{backgroundColor: selectedItem.bgColorStatus}}
