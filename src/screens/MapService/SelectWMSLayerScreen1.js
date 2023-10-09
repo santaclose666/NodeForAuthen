@@ -65,7 +65,7 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
           }
         }
       } else {
-        if (layer.value !== '5') {
+        if (layer.value !== '5' && layer.value !== '2' && layer.value !== '3') {
           if (!listLayerRaw.some(obj => obj.value === layer.value)) {
             listLayerRaw.push(layer);
           }
