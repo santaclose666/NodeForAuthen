@@ -29,7 +29,6 @@ import {
   getAllDocumentMv,
   getallNews,
   sendFeedback,
-  getAllDocument,
 } from '../../redux/apiRequest';
 import {fcmService} from '../../services/FCMService';
 import {localNotificationService} from '../../services/LocalNotificationService';
@@ -70,7 +69,6 @@ const HomePageScreen = ({navigation}) => {
 
   const fetchImportantData = async () => {
     try {
-      await getAllDocument(dispatch);
       await requestPermissions();
       await getWeatherData(dispatch);
       topicForAll();

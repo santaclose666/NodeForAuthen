@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useRef, useMemo, memo} from 'react';
+import React, {useCallback, useState, useRef, useMemo} from 'react';
 import {
   View,
   Text,
@@ -39,12 +39,14 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
 import LinearGradientUI from './LinearGradientUI';
 import {screen} from '../screens/AllScreen/allScreen';
+import {CategorySkeleton, DocumentSkeleton} from './Skeleton';
 
 if (Platform.OS == 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 const DocumentTemplate = ({
+  loading,
   screenName,
   navigation,
   data,
@@ -105,17 +107,13 @@ const DocumentTemplate = ({
     [input],
   );
 
-  const handlePickOption = useCallback(() => {
-    if (pickOptionIndex?.index === 0) {
+  const handlePickOption = () => {
+    if (pickOptionIndex?.index == 0) {
       return data;
     } else {
-      return data.filter(
-        item =>
-          item.loaivanban === pickOptionIndex?.item ||
-          item.loaivbpl === pickOptionIndex?.item,
-      );
+      return data.filter(item => item.loaivanban == pickOptionIndex?.item);
     }
-  }, [pickOptionIndex]);
+  };
 
   const handlePress = useCallback(path => {
     navigation.navigate(screen.pdf, {link: encodeURI(path)});
@@ -211,15 +209,11 @@ const DocumentTemplate = ({
       if (identifi == 'category') {
         categoryCondition =
           thenRemoveExist.length == 0 ||
-          thenRemoveExist.some(
-            cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
-          );
+          thenRemoveExist.some(cate => item.loaivanban == cate.item);
       } else {
         categoryCondition =
           categoryValue.length == 0 ||
-          categoryValue.some(
-            cate => item.loaivanban == cate.item || item.loaivbpl == cate.item,
-          );
+          categoryValue.some(cate => item.loaivanban == cate.item);
       }
 
       let yearCondition;
@@ -496,57 +490,63 @@ const DocumentTemplate = ({
           />
         </View>
 
-        {groupOption && (
-          <View style={styles.optionContainer}>
-            <ScrollView
-              ref={scrollCategory}
-              horizontal
-              showsHorizontalScrollIndicator={false}>
-              {groupOption?.map((item, index) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (document) {
-                        setDocument(null);
-                      }
-                      setPickOptionIndex({item: item, index: index});
-                      setpickFileIndex(null);
-                    }}
-                    key={index}
-                    style={{
-                      marginRight: Dimension.setWidth(4.4),
-                      paddingVertical: 3,
-                      borderBottomWidth:
-                        pickOptionIndex.index === index ? 2 : 0,
-                      borderBottomColor:
-                        pickOptionIndex.index === index
-                          ? Colors.DEFAULT_GREEN
-                          : '#fff',
-                    }}>
-                    <Text
+        {loading ? (
+          <CategorySkeleton />
+        ) : (
+          groupOption && (
+            <View style={styles.optionContainer}>
+              <ScrollView
+                ref={scrollCategory}
+                horizontal
+                showsHorizontalScrollIndicator={false}>
+                {groupOption?.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (document) {
+                          setDocument(null);
+                        }
+                        setPickOptionIndex({item: item, index: index});
+                        setpickFileIndex(null);
+                      }}
+                      key={index}
                       style={{
-                        fontFamily:
-                          pickOptionIndex.index === index
-                            ? Fonts.SF_SEMIBOLD
-                            : Fonts.SF_REGULAR,
-                        fontSize: Dimension.fontSize(16),
-                        opacity: 0.8,
-                        color:
+                        marginRight: Dimension.setWidth(4.4),
+                        paddingVertical: 3,
+                        borderBottomWidth:
+                          pickOptionIndex.index === index ? 2 : 0,
+                        borderBottomColor:
                           pickOptionIndex.index === index
                             ? Colors.DEFAULT_GREEN
-                            : Colors.DEFAULT_BLACK,
+                            : '#fff',
                       }}>
-                      {item}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
+                      <Text
+                        style={{
+                          fontFamily:
+                            pickOptionIndex.index === index
+                              ? Fonts.SF_SEMIBOLD
+                              : Fonts.SF_REGULAR,
+                          fontSize: Dimension.fontSize(16),
+                          opacity: 0.8,
+                          color:
+                            pickOptionIndex.index === index
+                              ? Colors.DEFAULT_GREEN
+                              : Colors.DEFAULT_BLACK,
+                        }}>
+                        {item}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
+          )
         )}
 
         <View style={styles.fileListContainer}>
-          {document?.length != 0 ? (
+          {loading ? (
+            <DocumentSkeleton />
+          ) : (
             <FlatList
               data={document ? document : handlePickOption()}
               keyExtractor={item => item.id.toString()}
@@ -560,22 +560,6 @@ const DocumentTemplate = ({
               refreshing={refresh}
               onRefresh={handleRefresh}
             />
-          ) : (
-            <View
-              style={{
-                height: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: Dimension.fontSize(20),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  color: Colors.INACTIVE_GREY,
-                }}>
-                Không tìm thấy dữ liệu nào
-              </Text>
-            </View>
           )}
         </View>
 

@@ -704,12 +704,71 @@ export const getAllEcosystem = async api => {
 };
 
 /////////////////////  DOCUMENT DATA  ////////////////////
-export const getAllDocument = async dispatch => {
+
+export const getDocument = async (dispatch, name) => {
   dispatch(getDocumentStart());
   try {
-    const res = await axios.get(`https://forestry.ifee.edu.vn/api/vanban`);
+    const res = await axios.get(
+      `https://forestry.ifee.edu.vn/api/vanban/${name}`,
+    );
 
-    dispatch(getDocumentSuccess(res.data));
+    const filterCategory = data => {
+      let categoryFilter = ['Tất cả'];
+      data.forEach(item => {
+        if (!categoryFilter.includes(item.loaivanban)) {
+          categoryFilter.push(item.loaivanban);
+        }
+      });
+
+      return categoryFilter.filter(item => item != 'Khác');
+    };
+    const filterYear = data => {
+      let year = [];
+
+      data.forEach(item => {
+        let filterYear = parseInt(item?.nam?.split('/')[2]);
+        if (filterYear && !year.includes(filterYear)) {
+          year.push(filterYear);
+        }
+      });
+      return year.sort((a, b) => {
+        return b - a;
+      });
+    };
+    const filterHieuLuc = data => {
+      let hieuluc = [];
+
+      data.forEach(item => {
+        if (!hieuluc.includes(item.hieuluc)) {
+          if (item.hieuluc != null) {
+            hieuluc.push(item.hieuluc);
+          }
+        }
+      });
+      return hieuluc;
+    };
+    const filterUnit = data => {
+      let unit = [];
+
+      data.forEach(item => {
+        if (!unit.includes(item.donvi)) {
+          unit.push(item.donvi);
+        }
+      });
+      return unit;
+    };
+
+    const allData = {
+      [name]: {
+        category: filterCategory(res.data),
+        year: filterYear(res.data),
+        hieuluc: filterHieuLuc(res.data),
+        unit: filterUnit(res.data),
+        data: res.data,
+      },
+    };
+
+    dispatch(getDocumentSuccess(allData));
   } catch (error) {
     console.log(error);
     dispatch(getDocumentFailed());

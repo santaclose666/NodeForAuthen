@@ -1,26 +1,40 @@
-import React from 'react';
+import React, {useLayoutEffect, useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import DocumentTemplate from '../../components/DocumentTemplate';
-import {useSelector} from 'react-redux';
+import {getDocument} from '../../redux/apiRequest';
 
 const DocumentListScreen = ({navigation}) => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
   const data = useSelector(
-    state => state.document.documentSlice?.dvmtrData?.data,
+    state => state.document.documentSlice?.data.dvmtr?.data,
   );
   const groupOption = useSelector(
-    state => state.document.documentSlice?.dvmtrData?.category,
+    state => state.document.documentSlice?.data.dvmtr?.category,
   );
   const yearOption = useSelector(
-    state => state.document.documentSlice?.dvmtrData?.year,
+    state => state.document.documentSlice?.data.dvmtr?.year,
   );
   const unitOption = useSelector(
-    state => state.document.documentSlice?.dvmtrData?.unit,
+    state => state.document.documentSlice?.data.dvmtr?.unit,
   );
   const hieuLuc = useSelector(
-    state => state.document.documentSlice?.dvmtrData?.hieuluc,
+    state => state.document.documentSlice?.data.dvmtr?.hieuluc,
   );
+
+  const fetchDocument = async () => {
+    const name = 'dvmtr';
+    await getDocument(dispatch, name);
+    setLoading(false);
+  };
+
+  useLayoutEffect(() => {
+    fetchDocument();
+  }, []);
 
   return (
     <DocumentTemplate
+      loading={loading}
       screenName={'Quỹ bảo vệ phát triển rừng'}
       navigation={navigation}
       data={data}
