@@ -42,6 +42,7 @@ const DocumentListScreen = ({navigation}) => {
       yearOption={yearOption}
       unitOption={unitOption}
       hieuLuc={hieuLuc}
+      resetFunction={fetchDocument}
     />
   );
 };

@@ -43,6 +43,7 @@ const VP809Screen = ({navigation}) => {
       yearOption={yearOption}
       unitOption={unitOption}
       hieuLuc={hieuLuc}
+      resetFunction={fetchDocument}
     />
   );
 };

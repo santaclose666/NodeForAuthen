@@ -42,6 +42,7 @@ const ForestryScreen = ({navigation}) => {
       yearOption={yearOption}
       unitOption={unitOption}
       hieuLuc={hieuLuc}
+      resetFunction={fetchDocument}
     />
   );
 };

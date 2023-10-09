@@ -778,7 +778,6 @@ export const getDocument = async (dispatch, name) => {
 
     dispatch(getDocumentSuccess(allData));
   } catch (error) {
-    console.log(error);
     dispatch(getDocumentFailed());
   }
 };

@@ -43,6 +43,7 @@ const TreeTypeScreen = ({navigation}) => {
       yearOption={yearOption}
       unitOption={unitOption}
       hieuLuc={hieuLuc}
+      resetFunction={fetchDocument}
     />
   );
 };

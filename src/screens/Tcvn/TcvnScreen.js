@@ -43,6 +43,7 @@ const TcvnScreen = ({navigation}) => {
       yearOption={yearOption}
       unitOption={unitOption}
       hieuLuc={hieuLuc}
+      resetFunction={fetchDocument}
     />
   );
 };

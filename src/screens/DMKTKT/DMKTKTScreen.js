@@ -7,19 +7,19 @@ const DMKTKTScreen = ({navigation}) => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const data = useSelector(
-    state => state.document.documentSlice?.data.dinhmuc_ktkt?.data,
+    state => state.document.documentSlice?.data?.dinhmuc_ktkt?.data,
   );
   const groupOption = useSelector(
-    state => state.document.documentSlice?.data.dinhmuc_ktkt?.category,
+    state => state.document.documentSlice?.data?.dinhmuc_ktkt?.category,
   );
   const yearOption = useSelector(
-    state => state.document.documentSlice?.data.dinhmuc_ktkt?.year,
+    state => state.document.documentSlice?.data?.dinhmuc_ktkt?.year,
   );
   const unitOption = useSelector(
-    state => state.document.documentSlice?.data.dinhmuc_ktkt?.unit,
+    state => state.document.documentSlice?.data?.dinhmuc_ktkt?.unit,
   );
   const hieuLuc = useSelector(
-    state => state.document.documentSlice?.data.dinhmuc_ktkt?.hieuluc,
+    state => state.document.documentSlice?.data?.dinhmuc_ktkt?.hieuluc,
   );
 
   const fetchDocument = async () => {
@@ -43,6 +43,7 @@ const DMKTKTScreen = ({navigation}) => {
       yearOption={yearOption}
       unitOption={unitOption}
       hieuLuc={hieuLuc}
+      resetFunction={fetchDocument}
     />
   );
 };

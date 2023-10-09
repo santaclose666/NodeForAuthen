@@ -33,7 +33,7 @@ import {
 import {Checkbox} from 'native-base';
 import RegisterBtn from './RegisterBtn';
 import {ToastAlert, ToastSuccess} from './Toast';
-import {getAllDocument, sendRequestUseDocument} from '../redux/apiRequest';
+import {sendRequestUseDocument} from '../redux/apiRequest';
 import {IOSDownload, AndroidDownload} from '../utils/download';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
@@ -54,9 +54,9 @@ const DocumentTemplate = ({
   yearOption,
   hieuLuc,
   unitOption,
+  resetFunction,
 }) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const dispatch = useDispatch();
   const bottomSheetModalRef = useRef(null);
   const bottomSheetFilter = useRef(null);
   const scrollCategory = useRef(null);
@@ -173,7 +173,7 @@ const DocumentTemplate = ({
   const handleRefresh = async () => {
     setRefresh(true);
     try {
-      await getAllDocument(dispatch);
+      await resetFunction();
 
       setDocument(null);
       setPickOptionIndex({item: null, index: 0});
