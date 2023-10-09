@@ -98,10 +98,18 @@ export const loginUser = async (user, dispatch, navigation, save) => {
       navigation.navigate('BottomTab');
 
       subcribeWorkUnitTopic(data.tendonvi);
-      getAllStaffs(dispatch);
+
       postToken(data.id_ht);
 
-      save ? dispatch(saveSuccess(user)) : dispatch(saveSuccess(null));
+      if (data.tendonvi == 'IFEE' || data.tendonvi == 'XMG') {
+        getAllStaffs(dispatch);
+      }
+
+      if (save) {
+        dispatch(saveSuccess(user));
+      } else {
+        dispatch(saveSuccess(null));
+      }
 
       return true;
     }

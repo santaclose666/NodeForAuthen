@@ -31,7 +31,6 @@ const Header = ({
     title === 'Khung giá rừng' ||
     title === 'Ngành Lâm học' ||
     title === 'Kiểm kê rừng' ||
-    title === 'Tài liệu Mùa vụ' ||
     title === 'Quản lý rừng bền vững' ||
     title === 'Tiêu chuẩn Việt Nam' ||
     title === 'Giống Lâm nghiệp' ||
@@ -133,13 +132,15 @@ const Header = ({
           <Image source={Images.adjust} style={styles.rightIcon} />
         </TouchableOpacity>
       )}
-      {showFitlerButon && (
+      {showFitlerButon ? (
         <TouchableOpacity onPress={handleFilter}>
           <Image
             source={Images.filter}
             style={{width: 23, height: 23, ...imgDefault}}
           />
         </TouchableOpacity>
+      ) : (
+        <View style={styles.rightIcon} />
       )}
     </View>
   );

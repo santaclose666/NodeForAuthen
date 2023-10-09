@@ -104,28 +104,28 @@ export const CategorySkeleton = () => {
       }}>
       <HStack space="3" mb={1}>
         <Skeleton.Text
-          startColor={'success.100'}
+          startColor={'cyan.300'}
           w="20%"
           lines={1}
           px="1"
           _line={{h: 4}}
         />
         <Skeleton.Text
-          startColor={'success.100'}
+          startColor={'cyan.300'}
           w="25%"
           lines={1}
           px="1"
           _line={{h: 4}}
         />
         <Skeleton.Text
-          startColor={'success.100'}
+          startColor={'cyan.300'}
           w="18%"
           lines={1}
           px="1"
           _line={{h: 4}}
         />
         <Skeleton.Text
-          startColor={'success.100'}
+          startColor={'cyan.300'}
           w="32%"
           lines={1}
           px="1"
