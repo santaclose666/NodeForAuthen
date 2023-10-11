@@ -10,7 +10,6 @@ import {
   useWindowDimensions,
   Platform,
 } from 'react-native';
-import ReactNativeBlobUtil from 'react-native-blob-util';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
@@ -20,7 +19,7 @@ import {fontDefault, newsMvURL, newsURL} from '../../contants/Variable';
 import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
 import RenderHtml from 'react-native-render-html';
 import WebView from 'react-native-webview';
-import {AndroidDownload, IOSDownload, shareAndroid} from '../../utils/download';
+import {IOSDownload, shareAndroid} from '../../utils/download';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;

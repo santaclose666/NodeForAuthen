@@ -5,7 +5,6 @@ import NotifiScreen from '../screens/Notification/NotifiScreens';
 import DetailStaffScreen from '../screens/User/DetailStaffScreen';
 import HomePageScreen from '../screens/Home/HomePageScreen';
 import HistoryApplyLeaveScreen from '../screens/ApplyLeave/HistoryApplyLeaveScreen';
-import DocumentListScreen from '../screens/Document/DocumentListScreen';
 import CreateApplyLeaveScreen from '../screens/ApplyLeave/CreateApplyLeaveScreen';
 import RegisterPlaneScreen from '../screens/TicketManagement/RegisterPlaneScreen';
 import RegisterVehicleScreen from '../screens/VehicleManagement/RegisterVehicleScreen';
@@ -44,7 +43,7 @@ const StactNavigator = () => {
     {name: screen.staffList, component: StaffListScreen},
     {name: screen.staffDetail, component: DetailStaffScreen},
     {name: screen.notification, component: NotifiScreen},
-    {name: screen.vnff, component: DocumentListScreen},
+
     {name: screen.applyLeaveList, component: HistoryApplyLeaveScreen},
     {name: screen.registerApplyLeave, component: CreateApplyLeaveScreen},
     {name: screen.registerPlaneTicket, component: RegisterPlaneScreen},
