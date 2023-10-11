@@ -6,6 +6,7 @@ import {store, persistor} from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import 'react-native-gesture-handler';
 import BootSplash from 'react-native-bootsplash';
+import Rectangle from './src/screens/test';
 
 const App = () => {
   useEffect(() => {
@@ -15,13 +16,14 @@ const App = () => {
   }, []);
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NativeBaseProvider>
-          <RootNavigator />
-        </NativeBaseProvider>
-      </PersistGate>
-    </Provider>
+    // <Provider store={store}>
+    //   <PersistGate loading={null} persistor={persistor}>
+    //     <NativeBaseProvider>
+    //       <RootNavigator />
+    //     </NativeBaseProvider>
+    //   </PersistGate>
+    // </Provider>
+    <Rectangle />
   );
 };
 
