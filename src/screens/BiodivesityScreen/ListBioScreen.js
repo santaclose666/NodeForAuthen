@@ -18,7 +18,6 @@ import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
 import Icons from '../../contants/Icons';
 import {shadowIOS} from '../../contants/propsIOS';
-import Loading from '../../components/LoadingUI';
 import {FlatList} from 'native-base';
 import {Dropdown} from 'react-native-element-dropdown';
 import LinearGradientUI from '../../components/LinearGradientUI';
@@ -30,7 +29,7 @@ import {ToastAlert} from '../../components/Toast';
 import {screen} from '../AllScreen/allScreen';
 import {BioSkeleton} from '../../components/Skeleton';
 
-const width = Dimensions.get('window').width / 2 - 22;
+const width = Dimensions.get('window').width / 2 - 16;
 
 const ListBioScreen = ({navigation}) => {
   const [dataVQG, setDataVQG] = useState([]);
@@ -449,7 +448,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   card: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: '#F1F1F1',
     width: width,
     marginHorizontal: 8,

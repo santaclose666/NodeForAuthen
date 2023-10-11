@@ -4,30 +4,23 @@ import Images from '../../contants/Images';
 import Dimension from '../../contants/Dimension';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
-import DocumentMV from './DocumentMV';
-import NewsMV from './NewsMV';
-import MuaVuMapScreen from './MuaVuMapScreen';
+import DocumentListScreen from './DocumentListScreen';
 
-const MainMV = ({navigation}) => {
+const MainVNFF = ({navigation}) => {
   const menuArr = [
     {
       title: 'Bản đồ',
       icon: Images.documentmv,
-      component: <MuaVuMapScreen navigation={navigation} />,
+      component: null, //add map here
     },
     {
       title: 'Tài liệu',
       icon: Images.storage,
-      component: <DocumentMV navigation={navigation} />,
-    },
-    {
-      title: 'Chỉ đạo',
-      icon: Images.newsmv,
-      component: <NewsMV navigation={navigation} />,
+      component: <DocumentListScreen navigation={navigation} />,
     },
   ];
-  const [menuId, setMenuId] = useState(0);
-  const [ComponentPicker, setComponentPicker] = useState(menuArr[0].component);
+  const [menuId, setMenuId] = useState(1);
+  const [ComponentPicker, setComponentPicker] = useState(menuArr[1].component);
 
   return (
     <View style={{flex: 1}}>
@@ -79,4 +72,4 @@ const MainMV = ({navigation}) => {
   );
 };
 
-export default MainMV;
+export default MainVNFF;

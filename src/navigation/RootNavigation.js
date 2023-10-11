@@ -9,6 +9,7 @@ import HappyBirthdayList from '../screens/Happybirthday/HappyBirthdayList';
 import MainMV from '../screens/MuaVu/MainMV';
 import DisplayPDF from '../screens/Document/DisplayPDFScreen';
 import {screen} from '../screens/AllScreen/allScreen';
+import MainVNFF from '../screens/Document/MainVNFF';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ const RootNavigator = () => {
     {name: screen.hpbd, component: HappyBirthdayScreen},
     {name: screen.hpbdList, component: HappyBirthdayList},
     {name: screen.muavu, component: MainMV},
+    {name: screen.vnff, component: MainVNFF},
   ];
 
   return (

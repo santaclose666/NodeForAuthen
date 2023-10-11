@@ -140,7 +140,7 @@ const Header = ({
           />
         </TouchableOpacity>
       ) : (
-        <View style={styles.rightIcon} />
+        <View style={{width: 6}} />
       )}
     </View>
   );
@@ -148,8 +148,8 @@ const Header = ({
 
 const styles = StyleSheet.create({
   rightIcon: {
-    width: 25,
-    height: 25,
+    width: Dimension.boxHeight(26),
+    height: Dimension.boxHeight(26),
     ...imgDefault,
   },
 });
