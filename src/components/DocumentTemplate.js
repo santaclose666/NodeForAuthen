@@ -204,7 +204,7 @@ const DocumentTemplate = ({
   );
 
   const handleMultiFilter = (thenRemoveExist, identifi) => {
-    const allDoc = data.filter(item => {
+    const allDoc = data?.filter(item => {
       let categoryCondition;
       if (identifi == 'category') {
         categoryCondition =
@@ -259,7 +259,7 @@ const DocumentTemplate = ({
     });
 
     setResults(allDoc.length);
-    if (allDoc.length != 0) {
+    if (allDoc?.length != 0) {
       setDocument(allDoc);
       setPickOptionIndex({item: null, index: null});
     }
@@ -275,8 +275,6 @@ const DocumentTemplate = ({
     setYearValue([]);
     setUnitValue([]);
     setResults(0);
-    setDocument(null);
-    setPickOptionIndex({item: null, index: 0});
   }, []);
 
   const RenderDocument = ({item, index}) => {
