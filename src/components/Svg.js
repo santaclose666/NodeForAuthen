@@ -9,7 +9,7 @@ import {
 
 const SvgBg = ({children}) => {
   const defaultW = wp('100%');
-  const defaultH = hp('25%');
+  const defaultH = hp('22%');
 
   return (
     <View>
