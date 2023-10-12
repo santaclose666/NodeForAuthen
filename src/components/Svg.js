@@ -2,17 +2,21 @@ import React from 'react';
 import {View, Dimensions} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 import Dimension from '../contants/Dimension';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const SvgBg = ({children}) => {
-  const {width, height} = Dimensions.get('window');
+  const defaultW = wp('100%');
+  const defaultH = hp('25%');
 
   return (
     <View>
       <Svg
-        width={width}
-        height={Dimension.boxHeight(height / 4.7)}
-        preserveAspectRatio="xMinYMin slice"
-        viewBox={`0 0 ${width} 190`}
+        width={defaultW}
+        height={defaultH}
+        viewBox={`0 0 ${defaultW} ${defaultH}`}
         fill="none"
         xmlns="http://www.w3.org/2000/svg">
         <Path
