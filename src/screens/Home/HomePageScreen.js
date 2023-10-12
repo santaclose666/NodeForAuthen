@@ -242,6 +242,7 @@ const HomePageScreen = ({navigation}) => {
                   borderRadius: 8,
                   backgroundColor: Colors.DEFAULT_GREEN,
                   paddingVertical: Dimension.setHeight(1.1),
+                  zIndex: 999,
                 }}
                 onPress={() => {
                   handleNavigate('Login');
@@ -753,6 +754,7 @@ const styles = StyleSheet.create({
   },
 
   avatarUserContainer: {
+    zIndex: 999,
     borderWidth: 1,
     borderRadius: 50,
     padding: 1,

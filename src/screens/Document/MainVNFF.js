@@ -32,7 +32,6 @@ const MainVNFF = ({navigation}) => {
           flexDirection: 'row',
           alignItems: 'center',
           elevation: 5,
-          marginBottom: 5,
         }}>
         {menuArr.map((item, index) => {
           const borderTopColor =
