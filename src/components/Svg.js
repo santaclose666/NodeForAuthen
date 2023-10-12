@@ -9,7 +9,7 @@ const SvgBg = ({children}) => {
   return (
     <Svg
       width={width}
-      height={height / 5.1}
+      height={height / 5.2}
       viewBox={`0 0 430 178`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg">

@@ -200,10 +200,11 @@ const HomePageScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         backgroundColor: '#ffffff',
+        // marginTop: Platform.OS == 'android' ? 0 : -StatusBar.currentHeight,
       }}>
       <StatusBar
         translucent
@@ -211,6 +212,9 @@ const HomePageScreen = ({navigation}) => {
         barStyle="light-content"
       />
       <ScrollView
+        alwaysBounceHorizontal={false}
+        alwaysBounceVertical={false}
+        bounces={false}
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={false}
         style={styles.container}>
@@ -262,7 +266,7 @@ const HomePageScreen = ({navigation}) => {
           }}
           style={[
             styles.todayInforContainer,
-            {marginTop: -(weatherHeight / 2)},
+            {marginTop: -(weatherHeight / 1.8)},
           ]}>
           <View style={styles.calendarContainer}>
             <Image source={Images.calendar} style={styles.calendarImg} />
@@ -715,7 +719,7 @@ const HomePageScreen = ({navigation}) => {
         </Modal>
       </ScrollView>
       {loading && <Loading bg={true} />}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -729,7 +733,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginHorizontal: Dimension.setWidth(5),
-    marginTop: Dimension.setHeight(3.8),
+    marginTop:
+      Platform.OS == 'android'
+        ? Dimension.setHeight(3.8)
+        : Dimension.setHeight(5.5),
   },
 
   userNameText: {
