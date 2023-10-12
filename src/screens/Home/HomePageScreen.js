@@ -266,7 +266,7 @@ const HomePageScreen = ({navigation}) => {
           }}
           style={[
             styles.todayInforContainer,
-            {marginTop: -(weatherHeight / 1.8)},
+            {marginTop: -(weatherHeight / 1.6)},
           ]}>
           <View style={styles.calendarContainer}>
             <Image source={Images.calendar} style={styles.calendarImg} />
@@ -735,7 +735,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(5),
     marginTop:
       Platform.OS == 'android'
-        ? Dimension.setHeight(3.8)
+        ? Dimension.setHeight(4.4)
         : Dimension.setHeight(5.5),
   },
 

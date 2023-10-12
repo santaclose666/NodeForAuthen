@@ -8,13 +8,14 @@ const {width, height} = Dimensions.get('window');
 const SvgBg = ({children}) => {
   return (
     <Svg
-      width={width}
-      height={height / 5.2}
-      viewBox={`0 0 430 178`}
+      width="100%"
+      height={Dimension.boxHeight(height / 4.7)}
+      preserveAspectRatio="none"
+      viewBox={`0 0 ${'100%'} 190`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <Path
-        d="M0 0H430V152.658C267.707 186.261 173.406 186.633 0 152.658V0Z"
+        d="M0.5 0H430C430 0 430 88.6956 430 161.546C430 234.396 184.833 46.5914 26.4167 161.546C-132 276.5 0.5 0 0.5 0Z"
         fill="#8EE297"
       />
       {children}
