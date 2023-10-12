@@ -51,6 +51,7 @@ import {
 } from './homeVariable';
 import {rowAlignCenter} from '../../contants/CssFE';
 import {screen} from '../AllScreen/allScreen';
+import SvgBg from '../../components/Svg';
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -64,6 +65,7 @@ const HomePageScreen = ({navigation}) => {
   const [contentInput, setContentInput] = useState('');
   const [gmailInput, setGmailInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [weatherHeight, setWeatherHeight] = useState(0);
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();
 
@@ -198,21 +200,21 @@ const HomePageScreen = ({navigation}) => {
   };
 
   return (
-    <LinearGradientUI>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
-        }}>
-        <StatusBar
-          translucent
-          backgroundColor="transparent"
-          barStyle="light-content"
-        />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          nestedScrollEnabled={false}
-          style={styles.container}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: '#ffffff',
+      }}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={false}
+        style={styles.container}>
+        <SvgBg>
           <View style={styles.userInforContainer}>
             <View style={styles.userNameContainer}>
               <Text style={styles.userNameText}>Welcome, {user?.hoten} </Text>
@@ -251,475 +253,475 @@ const HomePageScreen = ({navigation}) => {
               </TouchableOpacity>
             )}
           </View>
-          <View style={styles.todayInforContainer}>
-            <View style={styles.calendarContainer}>
-              <Image source={Images.calendar} style={styles.calendarImg} />
-              <View
-                style={{
-                  marginLeft: Dimension.setWidth(2),
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={styles.dayInWeekText}>{weekdays}</Text>
-                <Text style={styles.calendarText}>{date}</Text>
-              </View>
-            </View>
-            <View style={styles.weatherContainer}>
-              <Image
-                source={{uri: weather?.iconUrl}}
-                style={styles.weatherImg}
-              />
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={styles.dayInWeekText}>Thời tiết</Text>
-                {!weather ? (
-                  <HStack space={8} justifyContent="center" alignItems="center">
-                    <Spinner size="sm" />
-                  </HStack>
-                ) : (
-                  <Text style={styles.calendarText}>
-                    {weather?.name} {weather?.temp}°C
-                  </Text>
-                )}
-              </View>
-            </View>
-          </View>
+        </SvgBg>
 
-          <View style={styles.featureBtnContainer}>
-            <View style={styles.featureContainer}>
-              <Text style={styles.label}>Công cụ tiện ích</Text>
-            </View>
-            <View style={styles.btnContainer}>
-              <FlatList
-                scrollEnabled={false}
-                data={utilities}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item, index}) => {
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      disabled={item.featureName ? false : true}
-                      style={styles.buttonFuc}
-                      onPress={() => {
-                        item.component
-                          ? handleNavigate(item.component)
-                          : handleAlert();
-                      }}>
-                      <Image source={item.icon} style={styles.featureBtn} />
-                      <Text style={styles.featureText}>{item.featureName}</Text>
-                    </TouchableOpacity>
-                  );
-                }}
-                numColumns={4}
-              />
-            </View>
-          </View>
-
-          <View style={styles.featureBtnContainer}>
-            <View style={styles.featureContainer}>
-              <Text style={styles.label}>Cục Lâm nghiệp</Text>
-            </View>
-            <View style={styles.btnContainer}>
-              <FlatList
-                scrollEnabled={false}
-                data={forestryDepartment}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item, index}) => {
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      disabled={item.featureName ? false : true}
-                      style={styles.buttonFuc}
-                      onPress={() => {
-                        item.component
-                          ? handleNavigate(
-                              item.component,
-                              item.data ? item.data : null,
-                            )
-                          : handleAlert();
-                      }}>
-                      <Image source={item.icon} style={styles.featureBtn} />
-                      <Text style={styles.featureText}>{item.featureName}</Text>
-                    </TouchableOpacity>
-                  );
-                }}
-                numColumns={4}
-              />
-            </View>
-          </View>
-
-          <View style={styles.featureBtnContainer}>
-            <View style={styles.featureContainer}>
-              <Text style={styles.label}>Cục Kiểm lâm</Text>
-            </View>
-            <View style={styles.btnContainer}>
-              <FlatList
-                scrollEnabled={false}
-                data={rangersDepartment}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item, index}) => {
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      disabled={item.featureName ? false : true}
-                      style={styles.buttonFuc}
-                      onPress={() => {
-                        item.component
-                          ? handleNavigate(item.component)
-                          : handleAlert();
-                      }}>
-                      <Image source={item.icon} style={styles.featureBtn} />
-                      <Text style={styles.featureText}>{item.featureName}</Text>
-                    </TouchableOpacity>
-                  );
-                }}
-                numColumns={4}
-              />
-            </View>
-          </View>
-
-          <View style={styles.featureBtnContainer}>
-            <View style={styles.featureContainer}>
-              <Text style={styles.label}>Trường Đại học Lâm nghiệp</Text>
-            </View>
-            <View style={styles.btnContainer}>
-              <FlatList
-                scrollEnabled={false}
-                data={VNUF}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item, index}) => {
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      disabled={item.featureName ? false : true}
-                      style={styles.buttonFuc}
-                      onPress={() => {
-                        item.component
-                          ? handleNavigate(item.component)
-                          : handleAlert();
-                      }}>
-                      <Image
-                        source={item.icon}
-                        style={[styles.featureBtn, {borderRadius: 50}]}
-                      />
-                      <Text style={styles.featureText}>{item.featureName}</Text>
-                    </TouchableOpacity>
-                  );
-                }}
-                numColumns={4}
-              />
-            </View>
-          </View>
-
-          {user?.tendonvi === 'IFEE' && (
-            <View style={styles.featureBtnContainer}>
-              <View style={styles.featureContainer}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.SF_BOLD,
-                    fontSize: Dimension.fontSize(16),
-                    color: Colors.DEFAULT_BLACK,
-                    opacity: 0.9,
-                  }}>
-                  IFEE Management
-                </Text>
-              </View>
-              <View style={styles.btnContainer}>
-                <FlatList
-                  scrollEnabled={false}
-                  data={internal}
-                  showsVerticalScrollIndicator={false}
-                  renderItem={({item, index}) => {
-                    return (
-                      <TouchableOpacity
-                        key={index}
-                        disabled={item.featureName ? false : true}
-                        style={styles.buttonFuc}
-                        onPress={() => {
-                          if (item.isAdmin && user?.quyentruycap == 1) {
-                            item.component
-                              ? handleNavigate(item.component)
-                              : handleAlert();
-                          } else if (item.isAdmin && user?.quyentruycap != 1) {
-                            ToastWarning(
-                              'Tính năng chỉ dành cho quản trị viên!',
-                            );
-                          } else {
-                            item.component
-                              ? handleNavigate(item.component)
-                              : handleAlert();
-                          }
-                        }}>
-                        <Image source={item.icon} style={styles.featureBtn} />
-                        <Text style={styles.featureText}>
-                          {item.featureName}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  }}
-                  numColumns={4}
-                />
-              </View>
-            </View>
-          )}
-
-          <View style={styles.featureBtnContainer}>
+        <View
+          onLayout={({nativeEvent}) => {
+            const {x, y, width, height} = nativeEvent.layout;
+            setWeatherHeight(height);
+          }}
+          style={[
+            styles.todayInforContainer,
+            {marginTop: -(weatherHeight / 2)},
+          ]}>
+          <View style={styles.calendarContainer}>
+            <Image source={Images.calendar} style={styles.calendarImg} />
             <View
-              style={[
-                styles.featureContainer,
-                {flexDirection: 'row', alignItems: 'center'},
-              ]}>
+              style={{
+                marginLeft: Dimension.setWidth(2),
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={styles.dayInWeekText}>{weekdays}</Text>
+              <Text style={styles.calendarText}>{date}</Text>
+            </View>
+          </View>
+          <View style={styles.weatherContainer}>
+            <Image source={{uri: weather?.iconUrl}} style={styles.weatherImg} />
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={styles.dayInWeekText}>Thời tiết</Text>
+              {!weather ? (
+                <HStack space={8} justifyContent="center" alignItems="center">
+                  <Spinner size="sm" />
+                </HStack>
+              ) : (
+                <Text style={styles.calendarText}>
+                  {weather?.name} {weather?.temp}°C
+                </Text>
+              )}
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.featureBtnContainer}>
+          <View style={styles.featureContainer}>
+            <Text style={styles.label}>Công cụ tiện ích</Text>
+          </View>
+          <View style={styles.btnContainer}>
+            <FlatList
+              scrollEnabled={false}
+              data={utilities}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    disabled={item.featureName ? false : true}
+                    style={styles.buttonFuc}
+                    onPress={() => {
+                      item.component
+                        ? handleNavigate(item.component)
+                        : handleAlert();
+                    }}>
+                    <Image source={item.icon} style={styles.featureBtn} />
+                    <Text style={styles.featureText}>{item.featureName}</Text>
+                  </TouchableOpacity>
+                );
+              }}
+              numColumns={4}
+            />
+          </View>
+        </View>
+
+        <View style={styles.featureBtnContainer}>
+          <View style={styles.featureContainer}>
+            <Text style={styles.label}>Cục Lâm nghiệp</Text>
+          </View>
+          <View style={styles.btnContainer}>
+            <FlatList
+              scrollEnabled={false}
+              data={forestryDepartment}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    disabled={item.featureName ? false : true}
+                    style={styles.buttonFuc}
+                    onPress={() => {
+                      item.component
+                        ? handleNavigate(
+                            item.component,
+                            item.data ? item.data : null,
+                          )
+                        : handleAlert();
+                    }}>
+                    <Image source={item.icon} style={styles.featureBtn} />
+                    <Text style={styles.featureText}>{item.featureName}</Text>
+                  </TouchableOpacity>
+                );
+              }}
+              numColumns={4}
+            />
+          </View>
+        </View>
+
+        <View style={styles.featureBtnContainer}>
+          <View style={styles.featureContainer}>
+            <Text style={styles.label}>Cục Kiểm lâm</Text>
+          </View>
+          <View style={styles.btnContainer}>
+            <FlatList
+              scrollEnabled={false}
+              data={rangersDepartment}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    disabled={item.featureName ? false : true}
+                    style={styles.buttonFuc}
+                    onPress={() => {
+                      item.component
+                        ? handleNavigate(item.component)
+                        : handleAlert();
+                    }}>
+                    <Image source={item.icon} style={styles.featureBtn} />
+                    <Text style={styles.featureText}>{item.featureName}</Text>
+                  </TouchableOpacity>
+                );
+              }}
+              numColumns={4}
+            />
+          </View>
+        </View>
+
+        <View style={styles.featureBtnContainer}>
+          <View style={styles.featureContainer}>
+            <Text style={styles.label}>Trường Đại học Lâm nghiệp</Text>
+          </View>
+          <View style={styles.btnContainer}>
+            <FlatList
+              scrollEnabled={false}
+              data={VNUF}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    disabled={item.featureName ? false : true}
+                    style={styles.buttonFuc}
+                    onPress={() => {
+                      item.component
+                        ? handleNavigate(item.component)
+                        : handleAlert();
+                    }}>
+                    <Image
+                      source={item.icon}
+                      style={[styles.featureBtn, {borderRadius: 50}]}
+                    />
+                    <Text style={styles.featureText}>{item.featureName}</Text>
+                  </TouchableOpacity>
+                );
+              }}
+              numColumns={4}
+            />
+          </View>
+        </View>
+
+        {user?.tendonvi === 'IFEE' && (
+          <View style={styles.featureBtnContainer}>
+            <View style={styles.featureContainer}>
               <Text
                 style={{
                   fontFamily: Fonts.SF_BOLD,
                   fontSize: Dimension.fontSize(16),
                   color: Colors.DEFAULT_BLACK,
                   opacity: 0.9,
-                  marginRight: Dimension.setWidth(1),
                 }}>
-                Kết nối
+                IFEE Management
               </Text>
             </View>
             <View style={styles.btnContainer}>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  navigation.navigate(screen.contributor);
-                }}>
-                <Image source={Images.information} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Tác giả</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  setToggleFeedBack(true);
-                }}>
-                <Image source={Images.feedback} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Phản hồi</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleOpenApp(
-                    'fb://profile/100051879741625',
-                    'https://www.facebook.com/lamnghiep4.0',
+              <FlatList
+                scrollEnabled={false}
+                data={internal}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      disabled={item.featureName ? false : true}
+                      style={styles.buttonFuc}
+                      onPress={() => {
+                        if (item.isAdmin && user?.quyentruycap == 1) {
+                          item.component
+                            ? handleNavigate(item.component)
+                            : handleAlert();
+                        } else if (item.isAdmin && user?.quyentruycap != 1) {
+                          ToastWarning('Tính năng chỉ dành cho quản trị viên!');
+                        } else {
+                          item.component
+                            ? handleNavigate(item.component)
+                            : handleAlert();
+                        }
+                      }}>
+                      <Image source={item.icon} style={styles.featureBtn} />
+                      <Text style={styles.featureText}>{item.featureName}</Text>
+                    </TouchableOpacity>
                   );
-                }}>
-                <Image source={Images.fb} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Facebook</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  handleOpenApp(
-                    'vnd.youtube:/@viensinhthairungvamoitruon4033',
-                    'https://www.youtube.com/channel/UCMMHXxI1RsJbNj1KjhnMZKQ',
-                  );
-                }}>
-                <Image source={Images.youtube} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Youtube</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnContainer}>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  navigation.navigate(screen.contributorData);
-                }}>
-                <Image source={Images.contribution} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Vì cộng đồng</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonFuc}
-                onPress={() => {
-                  shareApp();
-                }}>
-                <Image source={Images.network} style={styles.featureBtn} />
-                <Text style={styles.featureText}>Chia sẻ</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+                }}
+                numColumns={4}
+              />
             </View>
           </View>
+        )}
 
-          <View style={styles.newTextContainer}>
-            <Text style={styles.newsText}>Tin tức mới</Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate(screen.newsList);
+        <View style={styles.featureBtnContainer}>
+          <View
+            style={[
+              styles.featureContainer,
+              {flexDirection: 'row', alignItems: 'center'},
+            ]}>
+            <Text
+              style={{
+                fontFamily: Fonts.SF_BOLD,
+                fontSize: Dimension.fontSize(16),
+                color: Colors.DEFAULT_BLACK,
+                opacity: 0.9,
+                marginRight: Dimension.setWidth(1),
               }}>
-              <Text style={styles.viewAllText}>Xem tất cả</Text>
+              Kết nối
+            </Text>
+          </View>
+          <View style={styles.btnContainer}>
+            <TouchableOpacity
+              style={styles.buttonFuc}
+              onPress={() => {
+                navigation.navigate(screen.contributor);
+              }}>
+              <Image source={Images.information} style={styles.featureBtn} />
+              <Text style={styles.featureText}>Tác giả</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonFuc}
+              onPress={() => {
+                setToggleFeedBack(true);
+              }}>
+              <Image source={Images.feedback} style={styles.featureBtn} />
+              <Text style={styles.featureText}>Phản hồi</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonFuc}
+              onPress={() => {
+                handleOpenApp(
+                  'fb://profile/100051879741625',
+                  'https://www.facebook.com/lamnghiep4.0',
+                );
+              }}>
+              <Image source={Images.fb} style={styles.featureBtn} />
+              <Text style={styles.featureText}>Facebook</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonFuc}
+              onPress={() => {
+                handleOpenApp(
+                  'vnd.youtube:/@viensinhthairungvamoitruon4033',
+                  'https://www.youtube.com/channel/UCMMHXxI1RsJbNj1KjhnMZKQ',
+                );
+              }}>
+              <Image source={Images.youtube} style={styles.featureBtn} />
+              <Text style={styles.featureText}>Youtube</Text>
             </TouchableOpacity>
           </View>
-          <FlatList
-            data={newArr}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate(screen.detailNews, {item: item});
-                  }}
-                  key={index}
-                  style={styles.newsContainer}>
-                  <View
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <Image
-                      src={newsURL + item.avatar}
-                      resizeMode="cover"
-                      style={styles.newsImg}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      marginTop: Dimension.setHeight(0.8),
-                      marginHorizontal: Dimension.setWidth(1),
-                    }}>
-                    <Text numberOfLines={2} style={styles.newsTitleText}>
-                      {item.title}
-                    </Text>
-                    <Text style={styles.newsLocationText}>
-                      {changeFormatDate(item.date_created)}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
-
-          <Modal
-            isVisible={toggleFeedBack}
-            animationIn="fadeInUp"
-            animationInTiming={100}
-            animationOut="fadeOutDown"
-            animationOutTiming={100}
-            avoidKeyboard={true}>
-            <View
-              style={{
-                flex: 1,
-                position: 'absolute',
-                alignSelf: 'center',
-                backgroundColor: '#def8ed',
-                width: Dimension.setWidth(85),
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 14,
-                paddingHorizontal: Dimension.setWidth(3),
+          <View style={styles.btnContainer}>
+            <TouchableOpacity
+              style={styles.buttonFuc}
+              onPress={() => {
+                navigation.navigate(screen.contributorData);
               }}>
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginVertical: Dimension.setHeight(1),
-                  borderBottomWidth: 0.8,
-                  borderBlockColor: Colors.INACTIVE_GREY,
-                  width: '100%',
-                  height: Dimension.setHeight(4.5),
-                }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.SF_BOLD,
-                    fontSize: Dimension.fontSize(20),
-                    color: '#57b85d',
-                  }}>
-                  Phản hồi góp ý
-                </Text>
-              </View>
+              <Image source={Images.contribution} style={styles.featureBtn} />
+              <Text style={styles.featureText}>Vì cộng đồng</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonFuc}
+              onPress={() => {
+                shareApp();
+              }}>
+              <Image source={Images.network} style={styles.featureBtn} />
+              <Text style={styles.featureText}>Chia sẻ</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+            <TouchableOpacity style={styles.buttonFuc}></TouchableOpacity>
+          </View>
+        </View>
 
-              <View style={styles.containerEachLine}>
-                <Text style={styles.title}>Họ tên</Text>
-                <TextInput
-                  style={{
-                    borderBottomWidth: 0.6,
-                    borderBottomColor: 'gray',
-                    marginHorizontal: Dimension.setWidth(1.6),
-                    fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: Dimension.fontSize(16),
-                    height: Dimension.setHeight(6),
-                  }}
-                  placeholder="Nhập tên"
-                  value={nameInput}
-                  onChangeText={e => setNameInput(e)}
-                />
-              </View>
-              <View style={styles.containerEachLine}>
-                <Text style={styles.title}>Địa chỉ email</Text>
-                <TextInput
-                  style={{
-                    borderBottomWidth: 0.6,
-                    borderBottomColor: 'gray',
-                    marginHorizontal: Dimension.setWidth(1.6),
-                    fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: Dimension.fontSize(16),
-                    height: Dimension.setHeight(6),
-                  }}
-                  placeholder="Nhập gmail"
-                  value={gmailInput}
-                  onChangeText={e => setGmailInput(e)}
-                />
-              </View>
-              <View style={styles.containerEachLine}>
-                <Text style={styles.title}>Tiêu đề</Text>
-                <TextInput
-                  style={{
-                    borderBottomWidth: 0.6,
-                    borderBottomColor: 'gray',
-                    marginHorizontal: Dimension.setWidth(1.6),
-                    fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: Dimension.fontSize(16),
-                    height: Dimension.setHeight(6),
-                  }}
-                  placeholder="Nhập tiêu đề"
-                  value={titleInput}
-                  onChangeText={e => setTitleInput(e)}
-                />
-              </View>
-              <View style={styles.containerEachLine}>
-                <Text style={styles.title}>Nội dung</Text>
-                <TextInput
-                  multiline
-                  style={{
-                    borderBottomWidth: 0.6,
-                    borderBottomColor: 'gray',
-                    marginHorizontal: Dimension.setWidth(1.6),
-                    fontFamily: Fonts.SF_MEDIUM,
-                    fontSize: Dimension.fontSize(16),
-                    height: Dimension.setHeight(12),
-                  }}
-                  value={contentInput}
-                  onChangeText={e => setContentInput(e)}
-                />
-              </View>
-
+        <View style={styles.newTextContainer}>
+          <Text style={styles.newsText}>Tin tức mới</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(screen.newsList);
+            }}>
+            <Text style={styles.viewAllText}>Xem tất cả</Text>
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          data={newArr}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item, index}) => {
+            return (
               <TouchableOpacity
                 onPress={() => {
-                  setToggleFeedBack(false);
+                  navigation.navigate(screen.detailNews, {item: item});
                 }}
-                style={{position: 'absolute', left: 12, top: 12}}>
-                <Image source={Images.minusclose} style={styles.btnModal} />
+                key={index}
+                style={styles.newsContainer}>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Image
+                    src={newsURL + item.avatar}
+                    resizeMode="cover"
+                    style={styles.newsImg}
+                  />
+                </View>
+                <View
+                  style={{
+                    marginTop: Dimension.setHeight(0.8),
+                    marginHorizontal: Dimension.setWidth(1),
+                  }}>
+                  <Text numberOfLines={2} style={styles.newsTitleText}>
+                    {item.title}
+                  </Text>
+                  <Text style={styles.newsLocationText}>
+                    {changeFormatDate(item.date_created)}
+                  </Text>
+                </View>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleSendFeedback}
-                style={{position: 'absolute', right: 12, top: 12}}>
-                <Image source={Images.confirm} style={styles.btnModal} />
-              </TouchableOpacity>
+            );
+          }}
+        />
+
+        <Modal
+          isVisible={toggleFeedBack}
+          animationIn="fadeInUp"
+          animationInTiming={100}
+          animationOut="fadeOutDown"
+          animationOutTiming={100}
+          avoidKeyboard={true}>
+          <View
+            style={{
+              flex: 1,
+              position: 'absolute',
+              alignSelf: 'center',
+              backgroundColor: '#def8ed',
+              width: Dimension.setWidth(85),
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 14,
+              paddingHorizontal: Dimension.setWidth(3),
+            }}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: Dimension.setHeight(1),
+                borderBottomWidth: 0.8,
+                borderBlockColor: Colors.INACTIVE_GREY,
+                width: '100%',
+                height: Dimension.setHeight(4.5),
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: Dimension.fontSize(20),
+                  color: '#57b85d',
+                }}>
+                Phản hồi góp ý
+              </Text>
             </View>
-          </Modal>
-        </ScrollView>
-        {loading && <Loading bg={true} />}
-      </SafeAreaView>
-    </LinearGradientUI>
+
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Họ tên</Text>
+              <TextInput
+                style={{
+                  borderBottomWidth: 0.6,
+                  borderBottomColor: 'gray',
+                  marginHorizontal: Dimension.setWidth(1.6),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: Dimension.fontSize(16),
+                  height: Dimension.setHeight(6),
+                }}
+                placeholder="Nhập tên"
+                value={nameInput}
+                onChangeText={e => setNameInput(e)}
+              />
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Địa chỉ email</Text>
+              <TextInput
+                style={{
+                  borderBottomWidth: 0.6,
+                  borderBottomColor: 'gray',
+                  marginHorizontal: Dimension.setWidth(1.6),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: Dimension.fontSize(16),
+                  height: Dimension.setHeight(6),
+                }}
+                placeholder="Nhập gmail"
+                value={gmailInput}
+                onChangeText={e => setGmailInput(e)}
+              />
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Tiêu đề</Text>
+              <TextInput
+                style={{
+                  borderBottomWidth: 0.6,
+                  borderBottomColor: 'gray',
+                  marginHorizontal: Dimension.setWidth(1.6),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: Dimension.fontSize(16),
+                  height: Dimension.setHeight(6),
+                }}
+                placeholder="Nhập tiêu đề"
+                value={titleInput}
+                onChangeText={e => setTitleInput(e)}
+              />
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Nội dung</Text>
+              <TextInput
+                multiline
+                style={{
+                  borderBottomWidth: 0.6,
+                  borderBottomColor: 'gray',
+                  marginHorizontal: Dimension.setWidth(1.6),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  fontSize: Dimension.fontSize(16),
+                  height: Dimension.setHeight(12),
+                }}
+                value={contentInput}
+                onChangeText={e => setContentInput(e)}
+              />
+            </View>
+
+            <TouchableOpacity
+              onPress={() => {
+                setToggleFeedBack(false);
+              }}
+              style={{position: 'absolute', left: 12, top: 12}}>
+              <Image source={Images.minusclose} style={styles.btnModal} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleSendFeedback}
+              style={{position: 'absolute', right: 12, top: 12}}>
+              <Image source={Images.confirm} style={styles.btnModal} />
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      </ScrollView>
+      {loading && <Loading bg={true} />}
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 3,
   },
 
   userInforContainer: {
@@ -727,7 +729,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginHorizontal: Dimension.setWidth(5),
-    marginTop: Dimension.setHeight(1.6),
+    marginTop: Dimension.setHeight(3.8),
   },
 
   userNameText: {
@@ -758,9 +760,9 @@ const styles = StyleSheet.create({
   todayInforContainer: {
     flexDirection: 'row',
     borderRadius: 16,
-    marginVertical: Dimension.setHeight(3),
-    marginHorizontal: Dimension.setWidth(3),
-    backgroundColor: '#f5f5f9',
+    marginBottom: Dimension.setHeight(2.5),
+    marginHorizontal: Dimension.setWidth(5),
+    backgroundColor: '#f5f5f5',
     elevation: 5,
     ...shadowIOS,
     paddingVertical: Dimension.setHeight(1.8),
@@ -780,13 +782,13 @@ const styles = StyleSheet.create({
   },
 
   dayInWeekText: {
-    fontSize: Dimension.fontSize(18),
+    fontSize: Dimension.fontSize(16.6),
     fontFamily: Fonts.SF_BOLD,
     ...fontDefault,
   },
 
   calendarText: {
-    fontSize: Dimension.fontSize(13),
+    fontSize: Dimension.fontSize(12.6),
     fontFamily: Fonts.SF_BOLD,
     ...fontDefault,
     opacity: 0.6,

@@ -26,8 +26,6 @@ const SpecieDetailScreen = ({navigation}) => {
   const route = useRoute();
   const data = route.params.data;
 
-  console.log(data);
-
   const words = data.loailatin?.split(' ');
   let formattedText;
   if (words?.length > 1 && (words[1] === 'sp' || words[1] === 'sp.')) {
