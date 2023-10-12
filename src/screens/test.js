@@ -2,6 +2,12 @@ import React from 'react';
 import {View, Dimensions} from 'react-native';
 import Svg, {Path, RadialGradient, Defs, Stop} from 'react-native-svg';
 import Dimension from '../contants/Dimension';
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  moderateVerticalScale,
+} from 'react-native-size-matters';
 
 const {width, height} = Dimensions.get('window');
 
@@ -10,9 +16,9 @@ const calHeight = height / 4 + 6;
 const Rectangle = () => {
   return (
     <Svg
-      width={width}
-      height={calHeight}
-      viewBox={`0 0 ${width} ${calHeight}`}
+      width={scale(350)}
+      height={verticalScale(175)}
+      viewBox={`0 0 ${scale(350)} ${verticalScale(175)}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <Path
