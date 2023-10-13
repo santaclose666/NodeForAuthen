@@ -503,9 +503,9 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
         ) : (
           <FlatList
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
+            style={{
               flex: 1,
-              paddingTop: Dimension.setHeight(3),
+              paddingTop: Dimension.setHeight(2),
             }}
             data={handleFilter(indexPicker)}
             keyExtractor={(_, index) => index.toString()}

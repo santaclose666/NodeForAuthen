@@ -743,8 +743,8 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimension.setWidth(5),
     marginTop:
       Platform.OS == 'android'
-        ? Dimension.setHeight(4.4)
-        : Dimension.setHeight(5.5),
+        ? Dimension.setHeight(5)
+        : Dimension.setHeight(6),
   },
 
   userNameText: {

@@ -343,9 +343,9 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
             <InternalSkeleton />
           ) : (
             <FlatList
-              contentContainerStyle={{
+              style={{
                 flex: 1,
-                paddingTop: Dimension.setHeight(3),
+                paddingTop: Dimension.setHeight(2),
               }}
               showsVerticalScrollIndicator={false}
               data={handleFilter(indexPicker)}
