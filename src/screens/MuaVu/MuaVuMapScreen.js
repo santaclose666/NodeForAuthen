@@ -141,6 +141,8 @@ const MuaVuMapScreen = ({navigation}) => {
       )}&height=${Math.round(mapViewHeight)}&x=${Math.round(x)}&y=${Math.round(
         y,
       )}`;
+
+      console.log(linkAPIGetInfoFull);
       setSelectRegion([]);
       const ApiCall = await fetch(linkAPIGetInfoFull);
       const regionFeatureInfo = await ApiCall.json();

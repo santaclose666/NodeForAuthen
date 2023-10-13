@@ -200,6 +200,8 @@ const Images = {
   conservation: require('../assets/images/conservation.png'),
   vnForest: require('../assets/images/logo_vnforest.png'),
   mangroves: require('../assets/images/mangrove.png'),
+  nmtb: require('../assets/images/nmtd.png'),
+  nmns: require('../assets/images/nmns.png'),
 };
 
 export default Images;

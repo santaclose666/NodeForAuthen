@@ -37,7 +37,7 @@ export const forestryDepartment = [
   },
   {
     featureName: 'VNFF',
-    component: screen.vnff,
+    component: screen.dvmtrMap,
     icon: Images.documentation,
   },
   {
