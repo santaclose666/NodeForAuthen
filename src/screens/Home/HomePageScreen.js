@@ -277,9 +277,9 @@ const HomePageScreen = ({navigation}) => {
         </Svg>
 
         <View
-          onLayout={({nativeEvent}) => {
+          onLayout={async ({nativeEvent}) => {
             const {x, y, width, height} = nativeEvent.layout;
-            setWeatherHeight(height);
+            await setWeatherHeight(height);
           }}
           style={[
             styles.todayInforContainer,
@@ -792,6 +792,7 @@ const styles = StyleSheet.create({
     ...shadowIOS,
     paddingVertical: Dimension.setHeight(1.8),
     paddingHorizontal: Dimension.setWidth(1.5),
+    height: hp('10%'),
   },
 
   calendarContainer: {
