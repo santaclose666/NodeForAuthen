@@ -51,7 +51,14 @@ import {
 } from './homeVariable';
 import {rowAlignCenter} from '../../contants/CssFE';
 import {screen} from '../AllScreen/allScreen';
-import SvgBg from '../../components/Svg';
+import Svg, {Path} from 'react-native-svg';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
+const defaultW = wp('100%');
+const defaultH = hp('22%');
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -218,12 +225,22 @@ const HomePageScreen = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={false}
         style={styles.container}>
-        <SvgBg>
+        <Svg
+          width={defaultW}
+          height={defaultH}
+          viewBox={`0 0 ${defaultW} ${defaultH}`}
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <Path
+            d="M0.5 0H430C430 0 430 88.6956 430 161.546C430 234.396 184.833 46.5914 26.4167 161.546C-132 276.5 0.5 0 0.5 0Z"
+            fill="#8EE297"
+          />
           <View style={styles.userInforContainer}>
             <View style={styles.userNameContainer}>
-              <Text style={styles.userNameText}>Welcome, {user?.hoten} </Text>
+              <Text style={styles.userNameText}>Welcome, {user?.hoten}</Text>
               <Text style={styles.companyText}>Forestry 4.0</Text>
             </View>
+
             {user ? (
               <TouchableOpacity
                 onPress={() => {
@@ -242,7 +259,6 @@ const HomePageScreen = ({navigation}) => {
                   borderRadius: 8,
                   backgroundColor: Colors.DEFAULT_GREEN,
                   paddingVertical: Dimension.setHeight(1.1),
-                  zIndex: 999,
                 }}
                 onPress={() => {
                   handleNavigate('Login');
@@ -258,7 +274,7 @@ const HomePageScreen = ({navigation}) => {
               </TouchableOpacity>
             )}
           </View>
-        </SvgBg>
+        </Svg>
 
         <View
           onLayout={({nativeEvent}) => {

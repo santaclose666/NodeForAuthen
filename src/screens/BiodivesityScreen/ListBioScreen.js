@@ -151,7 +151,7 @@ const ListBioScreen = ({navigation}) => {
           key={index}
           onPress={() => {
             navigation.navigate(screen.bioDetail, {
-              data: {...item, link: VQGData.link},
+              data: {...item, link: item.link},
             });
           }}
           style={styles.card}>
@@ -162,7 +162,7 @@ const ListBioScreen = ({navigation}) => {
             }}>
             {item.hinh1 ? (
               <Image
-                src={VQGData.link + item.hinh1}
+                src={item.link + item.hinh1}
                 style={{
                   width: '100%',
                   height: width,
