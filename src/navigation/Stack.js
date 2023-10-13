@@ -33,6 +33,7 @@ import RegisterDevices from '../screens/Device/RegisterDevice';
 import RegisterItemOffice from '../screens/ItemOffice/RegisterItemOffice';
 import HistoryRegisterItem from '../screens/ItemOffice/HistoryRegisterItem';
 import HistoryRegisterDevice from '../screens/Device/HistoryRegisterDevice';
+import DVMTRMapScreen from '../screens/DVMTR/DVMTRMapScreen';
 import {screen} from '../screens/AllScreen/allScreen';
 
 const Stack = createStackNavigator();
@@ -73,6 +74,7 @@ const StactNavigator = () => {
     {name: screen.fireWarning, component: SelectProvinceFFWScreen},
     {name: screen.vp809, component: VP809Screen},
     {name: screen.contributorData, component: ContributionDataScreen},
+    {name: screen.dvmtrMap, component: DVMTRMapScreen},
   ];
 
   return (
