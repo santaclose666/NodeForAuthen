@@ -7,7 +7,7 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
+  ImageBackground,
   Platform,
   StatusBar,
   Linking,
@@ -38,7 +38,6 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL, newsURL, fontDefault} from '../../contants/Variable';
 import Modal from 'react-native-modal';
 import {ToastAlert, ToastSuccess, ToastWarning} from '../../components/Toast';
-import LinearGradientUI from '../../components/LinearGradientUI';
 import {requestPermissions} from '../../utils/permissionFunc';
 import {topicForAll} from '../../utils/AllTopic';
 import Loading from '../../components/LoadingUI';
@@ -49,9 +48,7 @@ import {
   rangersDepartment,
   utilities,
 } from './homeVariable';
-import {rowAlignCenter} from '../../contants/CssFE';
 import {screen} from '../AllScreen/allScreen';
-import Svg, {Path} from 'react-native-svg';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -225,16 +222,10 @@ const HomePageScreen = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={false}
         style={styles.container}>
-        <Svg
-          width={defaultW}
-          height={defaultH}
-          viewBox={`0 0 ${defaultW} ${defaultH}`}
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <Path
-            d="M0.5 0H430C430 0 430 88.6956 430 161.546C430 234.396 184.833 46.5914 26.4167 161.546C-132 276.5 0.5 0 0.5 0Z"
-            fill="#8EE297"
-          />
+        <ImageBackground
+          resizeMode="cover"
+          source={Images.svgWave}
+          style={{width: defaultW, height: defaultH}}>
           <View style={styles.userInforContainer}>
             <View style={styles.userNameContainer}>
               <Text style={styles.userNameText}>Welcome, {user?.hoten}</Text>
@@ -274,7 +265,7 @@ const HomePageScreen = ({navigation}) => {
               </TouchableOpacity>
             )}
           </View>
-        </Svg>
+        </ImageBackground>
 
         <View
           onLayout={async ({nativeEvent}) => {

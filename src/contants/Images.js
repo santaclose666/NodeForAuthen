@@ -200,6 +200,7 @@ const Images = {
   conservation: require('../assets/images/conservation.png'),
   vnForest: require('../assets/images/logo_vnforest.png'),
   mangroves: require('../assets/images/mangrove.png'),
+  svgWave: require('../assets/images/svgWave.png'),
 };
 
 export default Images;
