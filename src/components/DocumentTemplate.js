@@ -1033,11 +1033,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f1f1f1',
     width: '90%',
-    borderRadius: 9,
+    borderRadius: 16,
     height: Dimension.setHeight(5.5),
     justifyContent: 'flex-start',
     paddingHorizontal: Dimension.setWidth(3),
     marginTop: 10,
+    borderWidth: 0.2,
   },
 
   flatListItemContainer: {

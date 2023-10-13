@@ -16,7 +16,7 @@ export const EmptyList = () => {
         style={{
           fontSize: Dimension.fontSize(20),
           fontFamily: Fonts.SF_MEDIUM,
-          color: Colors.INACTIVE_GREY,
+          color: '#243b55',
         }}>
         Không có dữ liệu nào được tìm thấy
       </Text>
