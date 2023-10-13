@@ -42,5 +42,5 @@ export const screen = {
   forestry: 'Forestry',
   rungvenbien: 'CoastalForest',
   forestryDepartment: 'ForestryDepartment',
-  webview: 'WebViewDetail'
+  webview: 'WebViewDetail',
 };

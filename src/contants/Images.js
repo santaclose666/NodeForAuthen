@@ -217,6 +217,8 @@ const Images = {
   f14: require('../assets/images/forestryTemp/14.jpg'),
   f15: require('../assets/images/forestryTemp/15.jpg'),
   f16: require('../assets/images/forestryTemp/16.jpg'),
+  nmtb: require('../assets/images/nmtd.png'),
+  nmns: require('../assets/images/nmns.png'),
 };
 
 export default Images;
