@@ -55,7 +55,7 @@ import {
 } from 'react-native-responsive-screen';
 
 const defaultW = wp('100%');
-const defaultH = hp('22%');
+const defaultH = hp('23%');
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);

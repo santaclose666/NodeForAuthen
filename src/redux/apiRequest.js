@@ -693,7 +693,7 @@ export const sendFeedback = async data => {
 
 export const getAllManageData = async () => {
   try {
-    const res = await axios.get('https://forestry.ifee.edu.vn/api/service/all');
+    const res = await axios.get('https://forestry.ifee.edu.vn/api/service/getNationalPark');
 
     return res.data;
   } catch (error) {

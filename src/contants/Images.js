@@ -201,6 +201,22 @@ const Images = {
   vnForest: require('../assets/images/logo_vnforest.png'),
   mangroves: require('../assets/images/mangrove.png'),
   svgWave: require('../assets/images/svgWave.png'),
+  f1: require('../assets/images/forestryTemp/1.jpg'),
+  f2: require('../assets/images/forestryTemp/2.jpg'),
+  f3: require('../assets/images/forestryTemp/3.jpg'),
+  f4: require('../assets/images/forestryTemp/4.jpg'),
+  f5: require('../assets/images/forestryTemp/5.jpg'),
+  f6: require('../assets/images/forestryTemp/6.jpg'),
+  f7: require('../assets/images/forestryTemp/7.jpg'),
+  f8: require('../assets/images/forestryTemp/8.jpg'),
+  f9: require('../assets/images/forestryTemp/9.jpg'),
+  f10: require('../assets/images/forestryTemp/10.jpeg'),
+  f11: require('../assets/images/forestryTemp/11.jpg'),
+  f12: require('../assets/images/forestryTemp/12.jpg'),
+  f13: require('../assets/images/forestryTemp/13.jpg'),
+  f14: require('../assets/images/forestryTemp/14.jpg'),
+  f15: require('../assets/images/forestryTemp/15.jpg'),
+  f16: require('../assets/images/forestryTemp/16.jpg'),
 };
 
 export default Images;

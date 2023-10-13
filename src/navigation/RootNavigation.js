@@ -10,6 +10,7 @@ import MainMV from '../screens/MuaVu/MainMV';
 import DisplayPDF from '../screens/Document/DisplayPDFScreen';
 import {screen} from '../screens/AllScreen/allScreen';
 import MainVNFF from '../screens/Document/MainVNFF';
+import Webview from '../screens/ForestryDepartment/WebView';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const RootNavigator = () => {
     {name: screen.hpbdList, component: HappyBirthdayList},
     {name: screen.muavu, component: MainMV},
     {name: screen.vnff, component: MainVNFF},
+    {name: screen.webview, component: Webview},
   ];
 
   return (

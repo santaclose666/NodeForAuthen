@@ -34,6 +34,7 @@ import RegisterItemOffice from '../screens/ItemOffice/RegisterItemOffice';
 import HistoryRegisterItem from '../screens/ItemOffice/HistoryRegisterItem';
 import HistoryRegisterDevice from '../screens/Device/HistoryRegisterDevice';
 import {screen} from '../screens/AllScreen/allScreen';
+import NewsForestry from '../screens/ForestryDepartment/NewForestry';
 
 const Stack = createStackNavigator();
 
@@ -43,7 +44,6 @@ const StactNavigator = () => {
     {name: screen.staffList, component: StaffListScreen},
     {name: screen.staffDetail, component: DetailStaffScreen},
     {name: screen.notification, component: NotifiScreen},
-
     {name: screen.applyLeaveList, component: HistoryApplyLeaveScreen},
     {name: screen.registerApplyLeave, component: CreateApplyLeaveScreen},
     {name: screen.registerPlaneTicket, component: RegisterPlaneScreen},
@@ -73,6 +73,7 @@ const StactNavigator = () => {
     {name: screen.fireWarning, component: SelectProvinceFFWScreen},
     {name: screen.vp809, component: VP809Screen},
     {name: screen.contributorData, component: ContributionDataScreen},
+    {name: screen.forestryDepartment, component: NewsForestry},
   ];
 
   return (

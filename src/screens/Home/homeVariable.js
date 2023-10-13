@@ -27,7 +27,7 @@ export const utilities = [
 export const forestryDepartment = [
   {
     featureName: 'Cục LN',
-    component: null,
+    component: screen.forestryDepartment,
     icon: Images.vnForest,
   },
   {

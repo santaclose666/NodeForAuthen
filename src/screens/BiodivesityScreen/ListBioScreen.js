@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useCallback} from 'react';
+import React, {useState, useLayoutEffect, useCallback, memo} from 'react';
 import {
   View,
   Text,
@@ -43,6 +43,7 @@ const ListBioScreen = ({navigation}) => {
   const [heightBtn, setHeightBtn] = useState(0);
   const [nameVQG, setNameVQG] = useState('');
   const [logo, setLogo] = useState('');
+  const [link, setLink] = useState('');
 
   useLayoutEffect(() => {
     fetchAllBioData();
@@ -58,6 +59,7 @@ const ListBioScreen = ({navigation}) => {
       const res = await getAllManageData();
       setDataVQG(res);
       setVQGData(res[0]);
+      setLink(res[0].bodulieu[0].link);
       setNameVQG(res[0].tendonvi);
       setLogo(res[0].logo);
 
@@ -144,61 +146,58 @@ const ListBioScreen = ({navigation}) => {
     }
   };
 
-  const RenderItem = useCallback(
-    ({item, index}) => {
-      return (
-        <TouchableOpacity
-          key={index}
-          onPress={() => {
-            navigation.navigate(screen.bioDetail, {
-              data: {...item, link: item.link},
-            });
-          }}
-          style={styles.card}>
-          <View
-            style={{
-              height: width,
-              alignItems: 'center',
-            }}>
-            {item.hinh1 ? (
-              <Image
-                src={item.link + item.hinh1}
-                style={{
-                  width: '100%',
-                  height: width,
-                  resizeMode: 'cover',
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                }}
-              />
-            ) : (
-              <Image
-                source={Images.bio_bg}
-                style={{
-                  width: '100%',
-                  height: width,
-                  resizeMode: 'cover',
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                }}
-              />
-            )}
-          </View>
-          <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
-          <Text
-            style={{
-              paddingBottom: 6,
-              textAlign: 'center',
-              fontSize: Dimension.fontSize(14),
-              fontFamily: Fonts.SF_REGULAR,
-            }}>
-            {item.loaitv}
-          </Text>
-        </TouchableOpacity>
-      );
-    },
-    [logo],
-  );
+  const RenderItem = memo(({item, index}) => {
+    return (
+      <TouchableOpacity
+        key={index}
+        onPress={() => {
+          navigation.navigate(screen.bioDetail, {
+            data: {...item, link: link},
+          });
+        }}
+        style={styles.card}>
+        <View
+          style={{
+            height: width,
+            alignItems: 'center',
+          }}>
+          {item.hinh1 ? (
+            <Image
+              src={link + item.hinh1}
+              style={{
+                width: '100%',
+                height: width,
+                resizeMode: 'cover',
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+              }}
+            />
+          ) : (
+            <Image
+              source={Images.bio_bg}
+              style={{
+                width: '100%',
+                height: width,
+                resizeMode: 'cover',
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+              }}
+            />
+          )}
+        </View>
+        <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
+        <Text
+          style={{
+            paddingBottom: 6,
+            textAlign: 'center',
+            fontSize: Dimension.fontSize(14),
+            fontFamily: Fonts.SF_REGULAR,
+          }}>
+          {item.loaitv}
+        </Text>
+      </TouchableOpacity>
+    );
+  });
 
   return (
     <LinearGradientUI>
@@ -310,6 +309,7 @@ const ListBioScreen = ({navigation}) => {
                 valueField="api"
                 value={typeData}
                 onChange={item => {
+                  setLink(item.link);
                   setTypeData(item.api);
                 }}
               />

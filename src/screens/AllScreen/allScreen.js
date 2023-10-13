@@ -41,4 +41,6 @@ export const screen = {
   vp809: 'VP809',
   forestry: 'Forestry',
   rungvenbien: 'CoastalForest',
+  forestryDepartment: 'ForestryDepartment',
+  webview: 'WebViewDetail'
 };

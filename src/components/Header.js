@@ -61,7 +61,7 @@ const Header = ({
       ) : (
         <TouchableOpacity
           onPress={() => {
-            replace == true ? navigation.navigate('Home') : navigation.goBack();
+            navigation.goBack();
           }}>
           <Image
             source={Images.back}
