@@ -219,6 +219,9 @@ const Images = {
   f16: require('../assets/images/forestryTemp/16.jpg'),
   nmtb: require('../assets/images/nmtd.png'),
   nmns: require('../assets/images/nmns.png'),
+  animal: require('../assets/images/animal.png'),
+  plant: require('../assets/images/plant.png'),
+  mushroom: require('../assets/images/mushroom.png'),
 };
 
 export default Images;

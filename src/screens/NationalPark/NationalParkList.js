@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ImageBackground,
   Pressable,
+  Linking,
 } from 'react-native';
 import Fonts from '../../contants/Fonts';
 import {useDispatch, useSelector} from 'react-redux';
@@ -23,6 +24,9 @@ import {
 } from 'react-native-responsive-screen';
 import Colors from '../../contants/Colors';
 import Images from '../../contants/Images';
+import {ToastAlert} from '../../components/Toast';
+import {rowAlignCenter} from '../../contants/CssFE';
+import {NationalParkSkeleton} from '../../components/Skeleton';
 
 const NationalParkList = ({navigation}) => {
   const npData = useSelector(
@@ -42,6 +46,20 @@ const NationalParkList = ({navigation}) => {
     }
   };
 
+  const openUrl = async link => {
+    try {
+      const openSupport = await Linking.canOpenURL(link);
+
+      if (openSupport) {
+        await Linking.openURL(link);
+      } else {
+        ToastAlert('Không thể truy cập đường dẫn!');
+      }
+    } catch (error) {
+      ToastAlert('Không thể truy cập đường dẫn!');
+    }
+  };
+
   useLayoutEffect(() => {
     fetchNationalPark();
   }, []);
@@ -56,7 +74,7 @@ const NationalParkList = ({navigation}) => {
         style={{
           marginBottom: hp('2%'),
           marginHorizontal: wp('2%'),
-          elevation: 5,
+          elevation: 6,
           ...shadowIOS,
         }}>
         <ImageBackground
@@ -87,28 +105,111 @@ const NationalParkList = ({navigation}) => {
                 <Text style={[styles.bigText, {fontSize: wp('5.5%')}]}>
                   {item.tendonvi}
                 </Text>
-                <TouchableOpacity style={styles.detailBtn}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate(screen.detailNationPark, {data: item});
+                  }}
+                  style={styles.detailBtn}>
                   <Text
                     style={[
                       styles.smallText,
-                      {textShadowRadius: 0, textShadowColor: 'transparent'},
+                      {textDecorationLine: 'underline', color: '#2290b5'},
                     ]}>
                     Chi tiết
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <TouchableOpacity style={styles.containerIntro}>
-                  <Image
-                    source={Images.facebook}
-                    style={[styles.img, {tintColor: '#0866ff'}]}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Image />
-                </TouchableOpacity>
-              </View>
             </>
+          )}
+          {indexPicker === index && (
+            <View
+              style={{
+                position: 'absolute',
+                flexDirection: 'row',
+                alignItems: 'center',
+                left: 6,
+                bottom: 6,
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  openUrl(item.fb);
+                }}
+                style={[styles.containerIntro, {marginRight: wp('1%')}]}>
+                <Image
+                  source={Images.facebook}
+                  style={[styles.img, {tintColor: '#0866ff'}]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  openUrl(item.homepage);
+                }}
+                style={styles.containerIntro}>
+                <Image
+                  source={Images.homeActive}
+                  style={[styles.img, {tintColor: '#b8b646'}]}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+          {indexPicker === index && (
+            <View
+              style={{
+                position: 'absolute',
+                flexDirection: 'row',
+                alignItems: 'center',
+                right: 6,
+                bottom: 6,
+              }}>
+              {item.bodulieu.map((data, index) => {
+                const iconic =
+                  data.loaidulieu == 'Động vật'
+                    ? Images.animal
+                    : data.loaidulieu == 'Thực vật'
+                    ? Images.plant
+                    : Images.mushroom;
+                const colors =
+                  data.loaidulieu == 'Động vật'
+                    ? '#f0b263'
+                    : data.loaidulieu == 'Thực vật'
+                    ? '#57b85d'
+                    : '#ffffff';
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setIndexPicker(null);
+                      const allData = {
+                        ...data,
+                        name: item.tendonvi,
+                        logo: item.logo,
+                      };
+                      navigation.navigate(screen.bioList, {item: allData});
+                    }}
+                    key={index}
+                    style={[rowAlignCenter, {marginLeft: wp('2%')}]}>
+                    <Image
+                      source={iconic}
+                      style={{
+                        width: wp('3%'),
+                        height: wp('3%'),
+                        tintColor: colors,
+                        marginRight: wp('0.3%'),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: wp('3%'),
+                        fontFamily: Fonts.SF_MEDIUM,
+                        color: colors,
+                        textShadowRadius: 1,
+                        textShadowColor: colors,
+                      }}>
+                      {data.loaidulieu}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
           )}
         </ImageBackground>
       </TouchableOpacity>
@@ -120,15 +221,19 @@ const NationalParkList = ({navigation}) => {
       <SafeAreaView style={styles.container}>
         <Header title="Vườn Quốc Gia Việt Nam" navigation={navigation} />
 
-        <FlatList
-          style={{marginTop: hp('2%')}}
-          data={npData}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({item, index}) => (
-            <RenderStaffs item={item} index={index} />
-          )}
-          showsVerticalScrollIndicator={false}
-        />
+        {loading ? (
+          <NationalParkSkeleton />
+        ) : (
+          <FlatList
+            style={{marginTop: hp('2%')}}
+            data={npData}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <RenderStaffs item={item} index={index} />
+            )}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </SafeAreaView>
     </LinearGradientUI>
   );
@@ -157,23 +262,17 @@ const styles = StyleSheet.create({
     textShadowColor: 'black',
   },
 
-  detailBtn: {
-    backgroundColor: '#45bd8d',
-    paddingVertical: hp('0.2%'),
-    paddingHorizontal: wp('2%'),
-    borderRadius: 6,
-    marginTop: hp('1%'),
-    elevation: 6,
-    ...shadowIOS,
-  },
+  detailBtn: {},
 
   img: {
-    width: wp('5%'),
-    height: wp('5%'),
+    width: wp('4%'),
+    height: wp('4%'),
   },
 
   containerIntro: {
     backgroundColor: '#ffffff',
+    padding: 4,
+    borderRadius: 50,
   },
 });
 

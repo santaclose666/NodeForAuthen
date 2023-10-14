@@ -4,6 +4,10 @@ import {FlatList, StyleSheet, Dimensions, View} from 'react-native';
 import Dimension from '../contants/Dimension';
 import {shadowIOS} from '../contants/propsIOS';
 import Colors from '../contants/Colors';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const width = Dimensions.get('window').width / 2 - 22;
 const renderTemp = new Array(6);
@@ -217,6 +221,39 @@ export const StaffSkeleton = () => {
             <VStack width={'20%'} alignItems={'flex-end'}>
               <Skeleton.Text w="80%" lines={1} px="1" mb={3} />
               <Skeleton.Text w="100%" lines={1} px="1" _line={{h: 4}} />
+            </VStack>
+          </View>
+        );
+      }}
+    />
+  );
+};
+
+export const NationalParkSkeleton = () => {
+  return (
+    <FlatList
+      showsVerticalScrollIndicator={false}
+      style={{
+        marginTop: hp('2%'),
+      }}
+      data={renderTemp}
+      keyExtractor={(_, index) => index.toString()}
+      renderItem={({item}) => {
+        return (
+          <View
+            style={{
+              marginBottom: hp('2%'),
+              marginHorizontal: wp('2%'),
+              elevation: 6,
+              ...shadowIOS,
+            }}>
+            <VStack w="100%" rounded="16" alignItems="center">
+              <Skeleton
+                height={hp('21%')}
+                rounded="16"
+                startColor={'dark.600'}
+                endColor={'blueGray.400'}
+              />
             </VStack>
           </View>
         );

@@ -8,11 +8,6 @@ export const utilities = [
     icon: Images.map,
   },
   {
-    featureName: 'ĐDSH',
-    component: screen.bioList,
-    icon: Images.biodiversity,
-  },
-  {
     featureName: 'Định mức KTKT',
     component: screen.dmktkt,
     icon: Images.norms,
@@ -21,6 +16,11 @@ export const utilities = [
     featureName: 'Vườn QG',
     component: screen.nationalPark,
     icon: Images.nationalPark,
+  },
+  {
+    featureName: null,
+    component: null,
+    icon: null,
   },
 ];
 

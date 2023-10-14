@@ -11,6 +11,7 @@ import DisplayPDF from '../screens/Document/DisplayPDFScreen';
 import {screen} from '../screens/AllScreen/allScreen';
 import MainVNFF from '../screens/Document/MainVNFF';
 import Webview from '../screens/ForestryDepartment/WebView';
+import DetailNationPark from '../screens/NationalPark/DetailNationPark';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ const RootNavigator = () => {
     {name: screen.muavu, component: MainMV},
     {name: screen.vnff, component: MainVNFF},
     {name: screen.webview, component: Webview},
+    {name: screen.detailNationPark, component: DetailNationPark},
   ];
 
   return (

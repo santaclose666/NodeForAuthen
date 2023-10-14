@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useCallback, memo} from 'react';
+import React, {useState, useLayoutEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -22,70 +22,45 @@ import {FlatList} from 'native-base';
 import {Dropdown} from 'react-native-element-dropdown';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
-import {getAllEcosystem, getAllManageData} from '../../redux/apiRequest';
+import {getAllEcosystem} from '../../redux/apiRequest';
 import Images from '../../contants/Images';
 import {fontDefault} from '../../contants/Variable';
 import {ToastAlert} from '../../components/Toast';
 import {screen} from '../AllScreen/allScreen';
 import {BioSkeleton} from '../../components/Skeleton';
+import {useSelector} from 'react-redux';
 
 const width = Dimensions.get('window').width / 2 - 16;
 
-const ListBioScreen = ({navigation}) => {
-  const [dataVQG, setDataVQG] = useState([]);
-  const [VQGData, setVQGData] = useState([]);
-  const [typeData, setTypeData] = useState(null);
+const ListBioScreen = ({navigation, route}) => {
+  const item = route.params.item;
+  const dataVQG = useSelector(
+    state => state.nationalPark.nationalParkSlice?.data,
+  );
+  const [VQGValue, setVQGValue] = useState(dataVQG[0]);
   const [input, setInput] = useState('');
   const [speciesFilled, setSpeciesFilled] = useState(null);
   const [speciesArr, setSpeciesArr] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isSelectLocation, setIsSelectLocation] = useState(false);
   const [heightBtn, setHeightBtn] = useState(0);
-  const [nameVQG, setNameVQG] = useState('');
-  const [logo, setLogo] = useState('');
-  const [link, setLink] = useState('');
+  const [api, setApi] = useState(item.api);
+  const [link, setLink] = useState(item.link);
+  const [nameVQG, setNameVQG] = useState(item.name);
+  const [logo, setLogo] = useState(item.logo);
+  const [rerender, setRerender] = useState(false);
 
   useLayoutEffect(() => {
-    fetchAllBioData();
+    fetchAllData();
   }, []);
-
-  const fetchAllBioData = async () => {
-    await fetchAllManageData();
-    await fetchAllData();
-  };
-
-  const fetchAllManageData = async () => {
-    try {
-      const res = await getAllManageData();
-      setDataVQG(res);
-      setVQGData(res[0]);
-      setLink(res[0].bodulieu[0].link);
-      setNameVQG(res[0].tendonvi);
-      setLogo(res[0].logo);
-
-      return res[0].bodulieu[0].api;
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const fetchAllData = async () => {
     setLoading(true);
     try {
-      if (typeData) {
-        const data = await getAllEcosystem(typeData);
-        if (data) {
-          setSpeciesArr(data);
-          setLoading(false);
-        }
-      } else {
-        const api = await fetchAllManageData();
-
-        const data = await getAllEcosystem(api);
-        if (data) {
-          setSpeciesArr(data);
-          setLoading(false);
-        }
+      const data = await getAllEcosystem(api);
+      if (data) {
+        setSpeciesArr(data);
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -135,69 +110,78 @@ const ListBioScreen = ({navigation}) => {
     setIsSelectLocation(true);
   };
 
+  const handlePickType = item => {
+    setLink(item.link);
+    setApi(item.api);
+  };
+
   const handlePickOption = () => {
-    if (typeData == null) {
+    if (api == null) {
       ToastAlert('Chưa chọn loại dữ liệu!');
     } else {
       fetchAllData();
-      setLogo(VQGData.logo);
-      setNameVQG(VQGData.tendonvi);
+      setRerender(!rerender);
+      setLogo(VQGValue.logo);
+      setNameVQG(VQGValue.tendonvi);
       setIsSelectLocation(false);
     }
   };
 
-  const RenderItem = memo(({item, index}) => {
-    return (
-      <TouchableOpacity
-        key={index}
-        onPress={() => {
-          navigation.navigate(screen.bioDetail, {
-            data: {...item, link: link},
-          });
-        }}
-        style={styles.card}>
-        <View
-          style={{
-            height: width,
-            alignItems: 'center',
-          }}>
-          {item.hinh1 ? (
-            <Image
-              src={link + item.hinh1}
-              style={{
-                width: '100%',
-                height: width,
-                resizeMode: 'cover',
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-              }}
-            />
-          ) : (
-            <Image
-              source={Images.bio_bg}
-              style={{
-                width: '100%',
-                height: width,
-                resizeMode: 'cover',
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-              }}
-            />
-          )}
-        </View>
-        <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
-        <Text
-          style={{
-            paddingBottom: 6,
-            textAlign: 'center',
-            fontSize: Dimension.fontSize(14),
-            fontFamily: Fonts.SF_REGULAR,
-          }}>
-          {item.loaitv}
-        </Text>
-      </TouchableOpacity>
-    );
-  });
+  const RenderItem = useCallback(
+    ({item, index}) => {
+      return (
+        <TouchableOpacity
+          key={index}
+          onPress={() => {
+            navigation.navigate(screen.bioDetail, {
+              data: {...item, link: link},
+            });
+          }}
+          style={styles.card}>
+          <View
+            style={{
+              height: width,
+              alignItems: 'center',
+            }}>
+            {item.hinh1 ? (
+              <Image
+                src={link + item.hinh1}
+                style={{
+                  width: '100%',
+                  height: width,
+                  resizeMode: 'cover',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                }}
+              />
+            ) : (
+              <Image
+                source={Images.bio_bg}
+                style={{
+                  width: '100%',
+                  height: width,
+                  resizeMode: 'cover',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                }}
+              />
+            )}
+          </View>
+          <Text style={styles.nameLatin}>{fomatLatinName(item.loailatin)}</Text>
+          <Text
+            style={{
+              paddingBottom: 6,
+              textAlign: 'center',
+              fontSize: Dimension.fontSize(14),
+              fontFamily: Fonts.SF_REGULAR,
+            }}>
+            {item.loaitv}
+          </Text>
+        </TouchableOpacity>
+      );
+    },
+    [rerender],
+  );
 
   return (
     <LinearGradientUI>
@@ -284,13 +268,14 @@ const ListBioScreen = ({navigation}) => {
                 maxHeight={Dimension.setHeight(30)}
                 labelField="tendonvi"
                 valueField="tendonvi"
-                value={VQGData}
+                value={VQGValue}
                 onChange={item => {
-                  setTypeData(null);
-                  setVQGData(item);
+                  setApi(null);
+                  setVQGValue(item);
                 }}
               />
               <Text style={styles.labelModal}>Chọn loại dữ liệu:</Text>
+
               <Dropdown
                 style={styles.dropdown}
                 autoScroll={false}
@@ -303,16 +288,16 @@ const ListBioScreen = ({navigation}) => {
                 fontFamily={Fonts.SF_MEDIUM}
                 activeColor="#eef2feff"
                 placeholder="Chọn loại dữ liệu"
-                data={VQGData?.bodulieu}
+                data={VQGValue?.bodulieu}
                 maxHeight={Dimension.setHeight(30)}
                 labelField="loaidulieu"
                 valueField="api"
-                value={typeData}
+                value={api}
                 onChange={item => {
-                  setLink(item.link);
-                  setTypeData(item.api);
+                  handlePickType(item);
                 }}
               />
+
               <TouchableOpacity
                 onLayout={({nativeEvent}) => {
                   const {x, y, width, height} = nativeEvent.layout;

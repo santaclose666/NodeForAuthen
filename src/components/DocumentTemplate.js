@@ -36,7 +36,6 @@ import {ToastAlert, ToastSuccess} from './Toast';
 import {sendRequestUseDocument} from '../redux/apiRequest';
 import {IOSDownload, AndroidDownload} from '../utils/download';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useDispatch} from 'react-redux';
 import LinearGradientUI from './LinearGradientUI';
 import {screen} from '../screens/AllScreen/allScreen';
 import {CategorySkeleton, DocumentSkeleton} from './Skeleton';
@@ -532,6 +531,9 @@ const DocumentTemplate = ({
                               : Colors.DEFAULT_BLACK,
                         }}>
                         {item}
+                        {pickOptionIndex.index === index
+                          ? `(${handlePickOption().length})`
+                          : null}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -1038,7 +1040,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingHorizontal: Dimension.setWidth(3),
     marginTop: 10,
-    borderWidth: 0.17,
+    borderWidth: Platform.OS == 'ios' ? 0.2 : 0,
     elevation: 6,
     ...shadowIOS,
   },

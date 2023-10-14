@@ -54,7 +54,7 @@ import {
 } from 'react-native-responsive-screen';
 
 const defaultW = wp('100%');
-const defaultH = hp('25%');
+const defaultH = hp('22%');
 
 const HomePageScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -268,7 +268,10 @@ const HomePageScreen = ({navigation}) => {
             const {x, y, width, height} = nativeEvent.layout;
             await setWeatherHeight(height);
           }}
-          style={[styles.todayInforContainer, {marginTop: -weatherHeight}]}>
+          style={[
+            styles.todayInforContainer,
+            {marginTop: -weatherHeight / hp('0.2%')},
+          ]}>
           <View style={styles.calendarContainer}>
             <Image source={Images.calendar} style={styles.calendarImg} />
             <View
