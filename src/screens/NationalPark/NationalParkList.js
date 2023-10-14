@@ -97,9 +97,12 @@ const NationalParkList = ({navigation}) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View>
-                <TouchableOpacity>
-                  <Image source={Images.facebook} style={styles.img} />
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TouchableOpacity style={styles.containerIntro}>
+                  <Image
+                    source={Images.facebook}
+                    style={[styles.img, {tintColor: '#0866ff'}]}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
                   <Image />
@@ -156,8 +159,8 @@ const styles = StyleSheet.create({
 
   detailBtn: {
     backgroundColor: '#45bd8d',
-    paddingVertical: 6,
-    paddingHorizontal: 9,
+    paddingVertical: hp('0.2%'),
+    paddingHorizontal: wp('2%'),
     borderRadius: 6,
     marginTop: hp('1%'),
     elevation: 6,
@@ -165,8 +168,12 @@ const styles = StyleSheet.create({
   },
 
   img: {
-    width: 30,
-    height: 30,
+    width: wp('5%'),
+    height: wp('5%'),
+  },
+
+  containerIntro: {
+    backgroundColor: '#ffffff',
   },
 });
 
