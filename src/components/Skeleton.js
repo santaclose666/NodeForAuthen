@@ -182,6 +182,49 @@ export const DocumentSkeleton = () => {
   );
 };
 
+export const StaffSkeleton = () => {
+  return (
+    <FlatList
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{
+        flex: 1,
+        marginTop: Dimension.setHeight(1),
+        marginHorizontal: Dimension.setWidth(0.6),
+      }}
+      data={renderTemp.concat(renderTemp)}
+      keyExtractor={(_, index) => index.toString()}
+      renderItem={({item}) => {
+        return (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              borderRadius: 12,
+              borderColor: Colors.WHITE,
+              backgroundColor: Colors.WHITE,
+              paddingHorizontal: Dimension.setWidth(2),
+              paddingVertical: Dimension.setWidth(4),
+              marginVertical: Dimension.setWidth(1.2),
+              marginHorizontal: Dimension.setWidth(2),
+              ...shadowIOS,
+            }}>
+            <Skeleton size={12} rounded="full" mr={3} />
+            <VStack width={'66%'}>
+              <Skeleton.Text w="55%" lines={1} px="1" _line={{h: 4}} mb={3} />
+              <Skeleton.Text w="70%" lines={1} px="1" />
+            </VStack>
+            <VStack width={'20%'} alignItems={'flex-end'}>
+              <Skeleton.Text w="80%" lines={1} px="1" mb={3} />
+              <Skeleton.Text w="100%" lines={1} px="1" _line={{h: 4}} />
+            </VStack>
+          </View>
+        );
+      }}
+    />
+  );
+};
+
 const styles = StyleSheet.create({
   card: {
     flex: 1,

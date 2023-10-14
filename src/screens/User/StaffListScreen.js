@@ -18,8 +18,8 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
 import {XMGGroup, IFEEGroup} from '../../contants/Variable';
 import {getAllStaffs} from '../../redux/apiRequest';
-import Loading from '../../components/LoadingUI';
 import {screen} from '../AllScreen/allScreen';
+import {StaffSkeleton} from '../../components/Skeleton';
 
 const StaffListScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -27,7 +27,7 @@ const StaffListScreen = ({navigation}) => {
   const [selectId, setSelectId] = useState(0);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const XMGstaffs = useSelector(state => state.staffs?.staffs?.XMGStaff);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleFilter = () => {
     let data = user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs;
@@ -49,7 +49,6 @@ const StaffListScreen = ({navigation}) => {
   };
 
   const fetchAllStaffList = async () => {
-    setLoading(true);
     try {
       await getAllStaffs(dispatch);
 
@@ -205,19 +204,21 @@ const StaffListScreen = ({navigation}) => {
           />
         </View>
 
-        <FlatList
-          data={handleFilter()}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({item, index}) => (
-            <RenderStaffs item={item} index={index} />
-          )}
-          showsVerticalScrollIndicator={false}
-          initialNumToRender={10}
-          windowSize={10}
-          removeClippedSubviews={true}
-        />
-
-        {loading === true && <Loading bg={true} />}
+        {loading ? (
+          <StaffSkeleton />
+        ) : (
+          <FlatList
+            data={handleFilter()}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <RenderStaffs item={item} index={index} />
+            )}
+            showsVerticalScrollIndicator={false}
+            initialNumToRender={10}
+            windowSize={10}
+            removeClippedSubviews={true}
+          />
+        )}
       </SafeAreaView>
     </LinearGradientUI>
   );

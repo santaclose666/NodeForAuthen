@@ -19,7 +19,7 @@ export const utilities = [
   },
   {
     featureName: 'Vườn QG',
-    component: null,
+    component: screen.nationalPark,
     icon: Images.nationalPark,
   },
 ];

@@ -96,9 +96,9 @@ const DocumentTemplate = ({
       setInput(text);
       setpickFileIndex(null);
 
-      const filter = data.filter(item =>
-        unidecode(item.tenvanban.toLowerCase()).includes(
-          unidecode(text.toLowerCase()),
+      const filter = data?.filter(item =>
+        unidecode(item?.tenvanban.toLowerCase()).includes(
+          unidecode(text?.toLowerCase()),
         ),
       );
 
@@ -1038,7 +1038,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingHorizontal: Dimension.setWidth(3),
     marginTop: 10,
-    borderWidth: 0.2,
+    borderWidth: 0.17,
+    elevation: 6,
+    ...shadowIOS,
   },
 
   flatListItemContainer: {

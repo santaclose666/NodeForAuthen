@@ -43,4 +43,5 @@ export const screen = {
   rungvenbien: 'CoastalForest',
   forestryDepartment: 'ForestryDepartment',
   webview: 'WebViewDetail',
+  nationalPark: 'NationalPark',
 };

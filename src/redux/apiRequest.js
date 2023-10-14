@@ -72,6 +72,12 @@ import {
   getRegisterOfficeSuccess,
 } from './officeItemSlice';
 import {getDeviceFailed, getDeviceStart, getDeviceSuccess} from './deviceSlice';
+import {
+  getNationalParkFailed,
+  getNationalParkStart,
+  getNationalParkStartSuccess,
+  getNationalParkSuccess,
+} from './nationalPark';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -691,13 +697,16 @@ export const sendFeedback = async data => {
 
 /////////////////////  BIO DATA  ////////////////////
 
-export const getAllManageData = async () => {
+export const getAllManageData = async dispatch => {
+  dispatch(getNationalParkStart());
   try {
-    const res = await axios.get('https://forestry.ifee.edu.vn/api/service/getNationalPark');
+    const res = await axios.get(
+      'https://forestry.ifee.edu.vn/api/service/getNationalPark',
+    );
 
-    return res.data;
+    dispatch(getNationalParkSuccess(res.data));
   } catch (error) {
-    console.log(error);
+    dispatch(getNationalParkFailed());
   }
 };
 

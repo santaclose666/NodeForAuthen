@@ -40,7 +40,6 @@ import Modal from 'react-native-modal';
 import {ToastAlert, ToastSuccess, ToastWarning} from '../../components/Toast';
 import {requestPermissions} from '../../utils/permissionFunc';
 import {topicForAll} from '../../utils/AllTopic';
-import Loading from '../../components/LoadingUI';
 import {
   VNUF,
   forestryDepartment,
@@ -68,7 +67,6 @@ const HomePageScreen = ({navigation}) => {
   const [titleInput, setTitleInput] = useState('');
   const [contentInput, setContentInput] = useState('');
   const [gmailInput, setGmailInput] = useState('');
-  const [loading, setLoading] = useState(false);
   const [weatherHeight, setWeatherHeight] = useState(0);
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();
@@ -84,14 +82,12 @@ const HomePageScreen = ({navigation}) => {
   };
 
   const fetchAllNews = async () => {
-    setLoading(true);
     try {
       const res = await getallNews(dispatch);
 
       setNewArr(res);
 
       getAllDocumentMv(dispatch);
-      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -723,7 +719,6 @@ const HomePageScreen = ({navigation}) => {
           </View>
         </Modal>
       </ScrollView>
-      {loading && <Loading bg={true} />}
     </View>
   );
 };

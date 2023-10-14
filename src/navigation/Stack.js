@@ -36,6 +36,7 @@ import HistoryRegisterDevice from '../screens/Device/HistoryRegisterDevice';
 import DVMTRMapScreen from '../screens/Document/DVMTRMapScreen';
 import {screen} from '../screens/AllScreen/allScreen';
 import NewsForestry from '../screens/ForestryDepartment/NewForestry';
+import NationalParkList from '../screens/NationalPark/NationalParkList';
 
 const Stack = createStackNavigator();
 
@@ -75,6 +76,7 @@ const StactNavigator = () => {
     {name: screen.vp809, component: VP809Screen},
     {name: screen.contributorData, component: ContributionDataScreen},
     {name: screen.forestryDepartment, component: NewsForestry},
+    {name: screen.nationalPark, component: NationalParkList},
   ];
 
   return (
