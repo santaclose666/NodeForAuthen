@@ -131,7 +131,6 @@ const ListBioScreen = ({navigation, route}) => {
     ({item, index}) => {
       return (
         <TouchableOpacity
-          key={index}
           onPress={() => {
             navigation.navigate(screen.bioDetail, {
               data: {...item, link: link},
@@ -224,6 +223,7 @@ const ListBioScreen = ({navigation, route}) => {
             }}
             numColumns={2}
             data={speciesFilled ? speciesFilled : speciesArr}
+            keyExtractor={item => item.tendonvi}
             renderItem={({item, index}) => {
               return <RenderItem item={item} index={index} />;
             }}
