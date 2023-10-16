@@ -79,7 +79,7 @@ const NationalParkList = ({navigation}) => {
         }}>
         <FastImage
           resizeMode={FastImage.resizeMode.cover}
-          source={{uri: item.introImg}}
+          source={{uri: item.introImg, priority: 'high'}}
           style={{
             flex: 1,
             width: '100%',
@@ -135,8 +135,8 @@ const NationalParkList = ({navigation}) => {
               position: 'absolute',
               flexDirection: 'row',
               alignItems: 'center',
-              left: 7,
-              bottom: 7,
+              left: wp('1.6%'),
+              bottom: wp('1.6%'),
             }}>
             <TouchableOpacity
               onPress={() => {
@@ -166,8 +166,8 @@ const NationalParkList = ({navigation}) => {
               position: 'absolute',
               flexDirection: 'row',
               alignItems: 'center',
-              right: 7,
-              bottom: 7,
+              right: wp('1.6%'),
+              bottom: wp('1.6%'),
             }}>
             {item.bodulieu.map((data, idx) => {
               const iconic =
@@ -194,19 +194,29 @@ const NationalParkList = ({navigation}) => {
                     navigation.navigate(screen.bioList, {item: allData});
                   }}
                   key={idx}
-                  style={[rowAlignCenter, {marginLeft: wp('2%')}]}>
+                  style={[
+                    rowAlignCenter,
+                    {
+                      marginLeft: wp('2%'),
+                      borderWidth: 1,
+                      borderColor: '#ffffff',
+                      borderRadius: wp('6%'),
+                      paddingHorizontal: wp('1%'),
+                      marginRight: wp('0.2%'),
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    },
+                  ]}>
                   <Image
                     source={iconic}
                     style={{
                       width: wp('3%'),
                       height: wp('3%'),
                       tintColor: colors,
-                      marginRight: wp('0.3%'),
                     }}
                   />
                   <Text
                     style={{
-                      fontSize: wp('3.8%'),
+                      fontSize: wp('3.5%'),
                       fontFamily: Fonts.SF_MEDIUM,
                       color: colors,
                       textShadowRadius: 1,

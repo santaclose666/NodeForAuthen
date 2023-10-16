@@ -29,6 +29,7 @@ import {ToastAlert} from '../../components/Toast';
 import {screen} from '../AllScreen/allScreen';
 import {BioSkeleton} from '../../components/Skeleton';
 import {useSelector} from 'react-redux';
+import FastImage from 'react-native-fast-image';
 
 const width = Dimensions.get('window').width / 2 - 16;
 
@@ -143,8 +144,8 @@ const ListBioScreen = ({navigation, route}) => {
               alignItems: 'center',
             }}>
             {item.hinh1 ? (
-              <Image
-                src={link + item.hinh1}
+              <FastImage
+                source={{uri: link + item.hinh1, priority: 'high'}}
                 style={{
                   width: '100%',
                   height: width,
