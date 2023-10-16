@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Linking,
+  Platform,
 } from 'react-native';
 import Fonts from '../../contants/Fonts';
 import {useDispatch, useSelector} from 'react-redux';
@@ -202,7 +203,7 @@ const NationalParkList = ({navigation}) => {
                       borderColor: '#ffffff',
                       borderRadius: wp('6%'),
                       paddingHorizontal: wp('1%'),
-                      marginRight: wp('0.2%'),
+                      paddingVertical: Platform.OS == 'ios' ? hp('0.6%') : 0,
                       backgroundColor: 'rgba(255, 255, 255, 0.2)',
                     },
                   ]}>
