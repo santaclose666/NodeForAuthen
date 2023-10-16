@@ -552,7 +552,7 @@ const DocumentTemplate = ({
           ) : (
             <FlatList
               data={document ? document : handlePickOption()}
-              keyExtractor={item => item.id.toString()}
+              keyExtractor={(_, index) => index.toString()}
               showsVerticalScrollIndicator={false}
               renderItem={({item, index}) => (
                 <RenderDocument item={item} index={index} />

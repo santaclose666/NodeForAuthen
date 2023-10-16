@@ -17,6 +17,7 @@ import {
 } from 'react-native-responsive-screen';
 import Colors from '../../contants/Colors';
 
+
 const DetailNationPark = ({navigation, route}) => {
   const data = route.params.data;
 
@@ -28,8 +29,8 @@ const DetailNationPark = ({navigation, route}) => {
         }}
         style={{
           position: 'absolute',
-          top: hp('4%'),
-          left: wp('3%'),
+          top: hp('6%'),
+          left: wp('4%'),
           zIndex: 999,
           padding: hp('1%'),
           backgroundColor: Colors.DEFAULT_GREEN,

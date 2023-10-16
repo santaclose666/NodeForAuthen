@@ -7,8 +7,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  ImageBackground,
-  Pressable,
   Linking,
 } from 'react-native';
 import Fonts from '../../contants/Fonts';
@@ -27,6 +25,7 @@ import Images from '../../contants/Images';
 import {ToastAlert} from '../../components/Toast';
 import {rowAlignCenter} from '../../contants/CssFE';
 import {NationalParkSkeleton} from '../../components/Skeleton';
+import FastImage from 'react-native-fast-image';
 
 const NationalParkList = ({navigation}) => {
   const npData = useSelector(
@@ -64,154 +63,162 @@ const NationalParkList = ({navigation}) => {
     fetchNationalPark();
   }, []);
 
-  const RenderStaffs = memo(({item, index}) => {
+  const RenderNP = memo(({item, index}) => {
     return (
       <TouchableOpacity
         onPress={() => {
           indexPicker != index ? setIndexPicker(index) : setIndexPicker(null);
         }}
-        key={index}
         style={{
           marginBottom: hp('2%'),
           marginHorizontal: wp('2%'),
           elevation: 6,
           ...shadowIOS,
+          backgroundColor: 'black',
+          borderRadius: 16,
         }}>
-        <ImageBackground
-          resizeMode="cover"
+        <FastImage
+          resizeMode={FastImage.resizeMode.cover}
           source={{uri: item.introImg}}
           style={{
             flex: 1,
             width: '100%',
             height: hp('21%'),
-            justifyContent: indexPicker !== index ? 'flex-end' : 'center',
             backgroundColor: 'black',
             borderColor: Colors.INACTIVE_GREY,
             borderWidth: 0.8,
             borderRadius: 16,
-          }}
-          imageStyle={{
-            borderRadius: 16,
             opacity: indexPicker == index ? 0.4 : 0.8,
-          }}>
-          {indexPicker !== index ? (
-            <View style={{marginLeft: wp('2.5%'), marginBottom: hp('1%')}}>
-              <Text style={styles.bigText}>{item.tendonvi}</Text>
-              <Text style={styles.smallText}>{item.location}</Text>
-            </View>
-          ) : (
-            <>
-              <View style={{alignItems: 'center'}}>
-                <Text style={[styles.bigText, {fontSize: wp('5.5%')}]}>
-                  {item.tendonvi}
-                </Text>
+          }}
+        />
+        {indexPicker !== index ? (
+          <View
+            style={{
+              position: 'absolute',
+              left: wp('2.2%'),
+              bottom: hp('1.1%'),
+            }}>
+            <Text style={styles.bigText}>{item.tendonvi}</Text>
+            <Text style={styles.smallText}>{item.location}</Text>
+          </View>
+        ) : (
+          <View
+            style={{
+              position: 'absolute',
+              borderColor: '#ffffff',
+              height: '100%',
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={[styles.bigText, {fontSize: wp('5.5%')}]}>
+              {item.tendonvi}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate(screen.detailNationPark, {data: item});
+              }}
+              style={styles.detailBtn}>
+              <Text
+                style={[
+                  styles.smallText,
+                  {textDecorationLine: 'underline', color: '#2290b5'},
+                ]}>
+                Thông tin chi tiết
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {indexPicker === index && (
+          <View
+            style={{
+              position: 'absolute',
+              flexDirection: 'row',
+              alignItems: 'center',
+              left: 7,
+              bottom: 7,
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                openUrl(item.fb);
+              }}
+              style={[styles.containerIntro, {marginRight: wp('1%')}]}>
+              <Image
+                source={Images.facebook}
+                style={[styles.img, {tintColor: '#0866ff'}]}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                openUrl(item.homepage);
+              }}
+              style={styles.containerIntro}>
+              <Image
+                source={Images.homeActive}
+                style={[styles.img, {tintColor: '#b8b646'}]}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+        {indexPicker === index && (
+          <View
+            style={{
+              position: 'absolute',
+              flexDirection: 'row',
+              alignItems: 'center',
+              right: 7,
+              bottom: 7,
+            }}>
+            {item.bodulieu.map((data, idx) => {
+              const iconic =
+                data.loaidulieu == 'Động vật'
+                  ? Images.animal
+                  : data.loaidulieu == 'Thực vật'
+                  ? Images.plant
+                  : Images.mushroom;
+              const colors =
+                data.loaidulieu == 'Động vật'
+                  ? '#f0b263'
+                  : data.loaidulieu == 'Thực vật'
+                  ? '#57b85d'
+                  : '#ffffff';
+              return (
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate(screen.detailNationPark, {data: item});
+                    setIndexPicker(null);
+                    const allData = {
+                      ...data,
+                      name: item.tendonvi,
+                      logo: item.logo,
+                    };
+                    navigation.navigate(screen.bioList, {item: allData});
                   }}
-                  style={styles.detailBtn}>
+                  key={idx}
+                  style={[rowAlignCenter, {marginLeft: wp('2%')}]}>
+                  <Image
+                    source={iconic}
+                    style={{
+                      width: wp('3%'),
+                      height: wp('3%'),
+                      tintColor: colors,
+                      marginRight: wp('0.3%'),
+                    }}
+                  />
                   <Text
-                    style={[
-                      styles.smallText,
-                      {textDecorationLine: 'underline', color: '#2290b5'},
-                    ]}>
-                    Chi tiết
+                    style={{
+                      fontSize: wp('3.8%'),
+                      fontFamily: Fonts.SF_MEDIUM,
+                      color: colors,
+                      textShadowRadius: 1,
+                      textShadowColor: colors,
+                    }}>
+                    {data.loaidulieu}
                   </Text>
                 </TouchableOpacity>
-              </View>
-            </>
-          )}
-          {indexPicker === index && (
-            <View
-              style={{
-                position: 'absolute',
-                flexDirection: 'row',
-                alignItems: 'center',
-                left: 6,
-                bottom: 6,
-              }}>
-              <TouchableOpacity
-                onPress={() => {
-                  openUrl(item.fb);
-                }}
-                style={[styles.containerIntro, {marginRight: wp('1%')}]}>
-                <Image
-                  source={Images.facebook}
-                  style={[styles.img, {tintColor: '#0866ff'}]}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  openUrl(item.homepage);
-                }}
-                style={styles.containerIntro}>
-                <Image
-                  source={Images.homeActive}
-                  style={[styles.img, {tintColor: '#b8b646'}]}
-                />
-              </TouchableOpacity>
-            </View>
-          )}
-          {indexPicker === index && (
-            <View
-              style={{
-                position: 'absolute',
-                flexDirection: 'row',
-                alignItems: 'center',
-                right: 6,
-                bottom: 6,
-              }}>
-              {item.bodulieu.map((data, index) => {
-                const iconic =
-                  data.loaidulieu == 'Động vật'
-                    ? Images.animal
-                    : data.loaidulieu == 'Thực vật'
-                    ? Images.plant
-                    : Images.mushroom;
-                const colors =
-                  data.loaidulieu == 'Động vật'
-                    ? '#f0b263'
-                    : data.loaidulieu == 'Thực vật'
-                    ? '#57b85d'
-                    : '#ffffff';
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setIndexPicker(null);
-                      const allData = {
-                        ...data,
-                        name: item.tendonvi,
-                        logo: item.logo,
-                      };
-                      navigation.navigate(screen.bioList, {item: allData});
-                    }}
-                    key={index}
-                    style={[rowAlignCenter, {marginLeft: wp('2%')}]}>
-                    <Image
-                      source={iconic}
-                      style={{
-                        width: wp('3%'),
-                        height: wp('3%'),
-                        tintColor: colors,
-                        marginRight: wp('0.3%'),
-                      }}
-                    />
-                    <Text
-                      style={{
-                        fontSize: wp('3%'),
-                        fontFamily: Fonts.SF_MEDIUM,
-                        color: colors,
-                        textShadowRadius: 1,
-                        textShadowColor: colors,
-                      }}>
-                      {data.loaidulieu}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          )}
-        </ImageBackground>
+              );
+            })}
+          </View>
+        )}
       </TouchableOpacity>
     );
   });
@@ -229,7 +236,7 @@ const NationalParkList = ({navigation}) => {
             data={npData}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({item, index}) => (
-              <RenderStaffs item={item} index={index} />
+              <RenderNP item={item} index={index} />
             )}
             showsVerticalScrollIndicator={false}
           />
@@ -265,8 +272,8 @@ const styles = StyleSheet.create({
   detailBtn: {},
 
   img: {
-    width: wp('4%'),
-    height: wp('4%'),
+    width: wp('4.5%'),
+    height: wp('4.5%'),
   },
 
   containerIntro: {

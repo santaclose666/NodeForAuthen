@@ -223,7 +223,7 @@ const ListBioScreen = ({navigation, route}) => {
             }}
             numColumns={2}
             data={speciesFilled ? speciesFilled : speciesArr}
-            keyExtractor={item => item.tendonvi}
+            keyExtractor={(_, index) => index.toString()}
             renderItem={({item, index}) => {
               return <RenderItem item={item} index={index} />;
             }}
