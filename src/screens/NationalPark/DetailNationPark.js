@@ -59,12 +59,12 @@ const DetailNationPark = ({navigation, route}) => {
             ]}
             style={{
               width: wp('100%'),
-              height: hp('7%'),
+              height: hp('9%'),
               position: 'absolute',
               top: 0,
             }}
             start={{x: 0.5, y: 1}}
-            end={{x: 0.5, y: 0}}
+            end={{x: 0.5, y: -1}}
           />
           <LinearGradient
             colors={[

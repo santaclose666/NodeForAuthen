@@ -30,6 +30,10 @@ import {screen} from '../AllScreen/allScreen';
 import {BioSkeleton} from '../../components/Skeleton';
 import {useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const width = Dimensions.get('window').width / 2 - 16;
 
@@ -364,10 +368,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,
-    borderRadius: 12,
-    height:
-      Platform.OS == 'ios' ? Dimension.setHeight(4) : Dimension.setHeight(5),
-    marginRight: Dimension.setWidth(2),
+    borderRadius: 16,
+    height: hp('4.6%'),
     backgroundColor: 'white',
     elevation: 5,
     ...shadowIOS,

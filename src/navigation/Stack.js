@@ -16,7 +16,6 @@ import AllWorkScheduleScreen from '../screens/WorkShedule/AllWorkScheduleScreen'
 import SelectWMSLayerScreen from '../screens/MapService/SelectWMSLayerScreen1';
 import MapScreen from '../screens/MapService/MapScreen';
 import ListBioScreen from '../screens/BiodivesityScreen/ListBioScreen';
-import SpecieDetailScreen from '../screens/BiodivesityScreen/SpecieDetailScreen';
 import ContributorScreen from '../screens/Contributors/Contributors';
 import ForestPrice from '../screens/ForestPrice/ForestPrice';
 import QLRBVScreen from '../screens/QLRBV/QLRBV';
@@ -33,7 +32,6 @@ import RegisterDevices from '../screens/Device/RegisterDevice';
 import RegisterItemOffice from '../screens/ItemOffice/RegisterItemOffice';
 import HistoryRegisterItem from '../screens/ItemOffice/HistoryRegisterItem';
 import HistoryRegisterDevice from '../screens/Device/HistoryRegisterDevice';
-import DVMTRMapScreen from '../screens/Document/DVMTRMapScreen';
 import {screen} from '../screens/AllScreen/allScreen';
 import NewsForestry from '../screens/ForestryDepartment/NewForestry';
 import NationalParkList from '../screens/NationalPark/NationalParkList';
@@ -62,7 +60,7 @@ const StactNavigator = () => {
     {name: screen.mapService, component: SelectWMSLayerScreen},
     {name: screen.mapDetail, component: MapScreen},
     {name: screen.bioList, component: ListBioScreen},
-    {name: screen.bioDetail, component: SpecieDetailScreen},
+
     {name: screen.contributor, component: ContributorScreen},
     {name: screen.kgr, component: ForestPrice},
     {name: screen.qlrbv, component: QLRBVScreen},

@@ -12,6 +12,7 @@ import {screen} from '../screens/AllScreen/allScreen';
 import MainVNFF from '../screens/Document/MainVNFF';
 import Webview from '../screens/ForestryDepartment/WebView';
 import DetailNationPark from '../screens/NationalPark/DetailNationPark';
+import SpecieDetailScreen from '../screens/BiodivesityScreen/SpecieDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ const RootNavigator = () => {
     {name: screen.vnff, component: MainVNFF},
     {name: screen.webview, component: Webview},
     {name: screen.detailNationPark, component: DetailNationPark},
+    {name: screen.bioDetail, component: SpecieDetailScreen},
   ];
 
   return (

@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useRef, useEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  TextInput,
   ScrollView,
   FlatList,
+  Platform,
+  UIManager,
+  LayoutAnimation,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import Images from '../../contants/Images';
@@ -16,7 +18,7 @@ import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
 import Header from '../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
+import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import {
@@ -30,10 +32,8 @@ import {
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
 import {
-  getAllDevices,
   getAllListOfficeItem,
   getAllOfficeItem,
-  registerDevice,
   registerOfficeItem,
 } from '../../redux/apiRequest';
 import {shadowIOS} from '../../contants/propsIOS';
@@ -44,8 +44,16 @@ import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import Colors from '../../contants/Colors';
 import {Swipeable} from 'react-native-gesture-handler';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
-const RegisterItemOffice = ({navigation, route}) => {
+if (Platform.OS == 'android') {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+const RegisterItemOffice = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const dispatch = useDispatch();
   const [allItem, setAllItem] = useState([]);
@@ -75,6 +83,7 @@ const RegisterItemOffice = ({navigation, route}) => {
   };
 
   const handleAddDevice = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     const updatedArrRender = [...arrRender];
 
     updatedArrRender.push({
@@ -89,6 +98,7 @@ const RegisterItemOffice = ({navigation, route}) => {
   };
 
   const handleDelete = index => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     const updatedArrRender = [...arrRender];
 
     if (updatedArrRender.length == 1) {
@@ -234,6 +244,7 @@ const RegisterItemOffice = ({navigation, route}) => {
               styles.containerEachLine,
               {
                 width: '45%',
+                height: hp('9%'),
                 alignItems: 'center',
                 justifyContent: 'center',
               },
