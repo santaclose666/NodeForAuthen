@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -16,10 +17,11 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Colors from '../../contants/Colors';
-
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const DetailNationPark = ({navigation, route}) => {
   const data = route.params.data;
+  const safeDimension = useSafeAreaInsets();
 
   return (
     <ScrollView style={styles.container}>
@@ -45,7 +47,7 @@ const DetailNationPark = ({navigation, route}) => {
       <View>
         <Image
           src={data.introImg}
-          style={{width: wp('100%'), height: hp('26%')}}
+          style={{width: wp('100%'), height: hp('40%')}}
         />
         <LinearGradient
           colors={[
@@ -62,6 +64,18 @@ const DetailNationPark = ({navigation, route}) => {
           start={{x: 0.5, y: 0}}
           end={{x: 0.5, y: 1.2}}
         />
+        <View
+          style={{
+            position: 'absolute',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            top: safeDimension.top,
+          }}>
+          <Text style={[styles.bigText, {fontSize: wp('5%')}]}>
+            Thông tin chi tiết
+          </Text>
+        </View>
         <View
           style={{
             position: 'absolute',
