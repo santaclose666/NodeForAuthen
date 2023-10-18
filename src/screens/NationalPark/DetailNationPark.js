@@ -24,81 +24,98 @@ const DetailNationPark = ({navigation, route}) => {
   const safeDimension = useSafeAreaInsets();
 
   return (
-    <ScrollView style={styles.container}>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.goBack();
-        }}
-        style={{
-          position: 'absolute',
-          top: hp('6%'),
-          left: wp('4%'),
-          zIndex: 999,
-          padding: hp('1%'),
-          backgroundColor: Colors.DEFAULT_GREEN,
-          borderRadius: 50,
-          alignItems: 'center',
-        }}>
-        <Image
-          source={Images.back}
-          style={{width: wp('4%'), height: wp('4%'), tintColor: '#ffffff'}}
-        />
-      </TouchableOpacity>
-      <View>
-        <Image
-          src={data.introImg}
-          style={{width: wp('100%'), height: hp('40%')}}
-        />
-        <LinearGradient
-          colors={[
-            'transparent',
-            'rgba(23, 23, 23, 0.6)',
-            'rgba(23, 23, 23, 1)',
-          ]}
-          style={{
-            width: wp('100%'),
-            height: hp('18%'),
-            position: 'absolute',
-            bottom: 0,
+    <View style={{flex: 1}}>
+      <StatusBar barStyle={'light-content'} />
+      <ScrollView style={styles.container}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
           }}
-          start={{x: 0.5, y: 0}}
-          end={{x: 0.5, y: 1.2}}
-        />
-        <View
           style={{
             position: 'absolute',
-            width: '100%',
+            top: hp('6%'),
+            left: wp('4%'),
+            zIndex: 999,
+            padding: hp('1%'),
+            backgroundColor: Colors.DEFAULT_GREEN,
+            borderRadius: 50,
             alignItems: 'center',
-            justifyContent: 'center',
-            top: safeDimension.top,
           }}>
-          <Text style={[styles.bigText, {fontSize: wp('5%')}]}>
-            Thông tin chi tiết
-          </Text>
+          <Image
+            source={Images.back}
+            style={{width: wp('4%'), height: wp('4%'), tintColor: '#ffffff'}}
+          />
+        </TouchableOpacity>
+        <View>
+          <Image
+            src={data.introImg}
+            style={{width: wp('100%'), height: hp('40%')}}
+          />
+          <LinearGradient
+            colors={[
+              'transparent',
+              'rgba(23, 23, 23, 0.6)',
+              'rgba(23, 23, 23, 1)',
+            ]}
+            style={{
+              width: wp('100%'),
+              height: hp('7%'),
+              position: 'absolute',
+              top: 0,
+            }}
+            start={{x: 0.5, y: 1}}
+            end={{x: 0.5, y: 0}}
+          />
+          <LinearGradient
+            colors={[
+              'transparent',
+              'rgba(23, 23, 23, 0.6)',
+              'rgba(23, 23, 23, 1)',
+            ]}
+            style={{
+              width: wp('100%'),
+              height: hp('18%'),
+              position: 'absolute',
+              bottom: 0,
+            }}
+            start={{x: 0.5, y: 0}}
+            end={{x: 0.5, y: 1.2}}
+          />
+          <View
+            style={{
+              position: 'absolute',
+              width: '100%',
+              alignItems: 'center',
+              top: safeDimension.top,
+            }}>
+            <Text style={[styles.bigText, {fontSize: wp('5%')}]}>
+              Thông tin chi tiết
+            </Text>
+          </View>
+          <View
+            style={{
+              position: 'absolute',
+              left: wp('3%'),
+              bottom: hp('0.8%'),
+            }}>
+            <Text style={styles.bigText}>{data.tendonvi}</Text>
+            <Text style={styles.smallText}>{data.location}</Text>
+          </View>
         </View>
-        <View
-          style={{
-            position: 'absolute',
-            left: wp('3%'),
-            bottom: hp('0.8%'),
-          }}>
-          <Text style={styles.bigText}>{data.tendonvi}</Text>
-          <Text style={styles.smallText}>{data.location}</Text>
+        <View style={styles.containerText}>
+          <Text style={styles.title}>Giới thiệu</Text>
+          <Text style={styles.content}>{data.intro}</Text>
         </View>
-      </View>
-      <View style={styles.containerText}>
-        <Text style={styles.title}>Giới thiệu</Text>
-        <Text style={styles.content}>{data.intro}</Text>
-      </View>
-      <View style={styles.containerText}>
-        <Text style={styles.title}>Lịch sử, Địa lý</Text>
-        <Text style={styles.content}>{data.hisGeo}</Text>
-      </View>
-      <View style={styles.containerText}>
-        <Text style={styles.title}>Đa dạng sinh học</Text>
-        <Text style={styles.content}>{data.biodiversity}</Text>
-      </View>
-    </ScrollView>
+        <View style={styles.containerText}>
+          <Text style={styles.title}>Lịch sử, Địa lý</Text>
+          <Text style={styles.content}>{data.hisGeo}</Text>
+        </View>
+        <View style={styles.containerText}>
+          <Text style={styles.title}>Đa dạng sinh học</Text>
+          <Text style={styles.content}>{data.biodiversity}</Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
