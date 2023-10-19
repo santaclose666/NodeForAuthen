@@ -27,6 +27,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import ImageView from 'react-native-image-viewing';
 import Images from '../../contants/Images';
 import {OpenURL} from '../../utils/download';
+import {BackBtn} from '../../components/RegisterBtn';
 
 if (Platform.OS == 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -69,12 +70,16 @@ const SpecieDetailScreen = ({navigation, route}) => {
     outputRange: ['0deg', '180deg'],
   });
 
+  const handleBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={{
         flex: 1,
-        backgroundColor: '#e4e4e4',
+        backgroundColor: '#f8f8f8',
       }}>
       <StatusBar barStyle={'light-content'} />
       <View
@@ -213,6 +218,7 @@ const SpecieDetailScreen = ({navigation, route}) => {
             <Text style={styles.vnName}>{finder}</Text>
           </View>
         </View>
+        <BackBtn event={handleBack} />
       </View>
       <View
         onLayout={({nativeEvent}) => {
@@ -225,6 +231,7 @@ const SpecieDetailScreen = ({navigation, route}) => {
           justifyContent: 'center',
           alignItems: 'center',
           marginTop: -(1.6 * dotHeight),
+          marginBottom: 1.6 * dotHeight,
         }}>
         {imgData.map((item, index) => {
           return (
@@ -240,13 +247,7 @@ const SpecieDetailScreen = ({navigation, route}) => {
           );
         })}
       </View>
-      <View
-        style={[
-          styles.containerEachLine,
-          {
-            marginTop: dotHeight * 2,
-          },
-        ]}>
+      <View style={styles.containerEachLine}>
         <TouchableOpacity
           onPress={toggleItem}
           style={[rowAlignCenter, {justifyContent: 'space-between'}]}>
@@ -302,59 +303,34 @@ const SpecieDetailScreen = ({navigation, route}) => {
           </View>
         )}
       </View>
-      <View
-        style={[
-          styles.containerEachLine,
-          {
-            marginTop: dotHeight * 1.5,
-          },
-        ]}>
+      <View style={styles.containerEachLine}>
         <Text style={styles.title}>Đặc điểm</Text>
 
         {data.dacdiem && (
-          <View style={{marginLeft: wp('1.8%'), marginTop: hp('1%')}}>
+          <View style={styles.containerContent}>
             <Text style={styles.lable}>{data.dacdiem}</Text>
           </View>
         )}
       </View>
-      <View
-        style={[
-          styles.containerEachLine,
-          {
-            marginTop: dotHeight * 1.5,
-          },
-        ]}>
+      <View style={styles.containerEachLine}>
         <Text style={styles.title}>Giá trị</Text>
 
         {data.giatri && (
-          <View style={{marginLeft: wp('1.8%'), marginTop: hp('1%')}}>
+          <View style={styles.containerContent}>
             <Text style={styles.lable}>{data.giatri}</Text>
           </View>
         )}
       </View>
-      <View
-        style={[
-          styles.containerEachLine,
-          {
-            marginTop: dotHeight * 1.5,
-          },
-        ]}>
+      <View style={styles.containerEachLine}>
         <Text style={styles.title}>Phân bố</Text>
 
         {data.phanbo && (
-          <View style={{marginLeft: wp('1.8%'), marginTop: hp('1%')}}>
+          <View style={styles.containerContent}>
             <Text style={styles.lable}>{data.phanbo}</Text>
           </View>
         )}
       </View>
-      <View
-        style={[
-          styles.containerEachLine,
-          {
-            marginTop: dotHeight * 1.5,
-            marginBottom: safeDimension.bottom,
-          },
-        ]}>
+      <View style={styles.containerEachLine}>
         <Text style={styles.title}>Nguồn</Text>
 
         {data.nguon && (
@@ -362,7 +338,7 @@ const SpecieDetailScreen = ({navigation, route}) => {
             onPress={() => {
               OpenURL(data.nguon);
             }}
-            style={{marginLeft: wp('1.8%'), marginTop: hp('1%')}}>
+            style={styles.containerContent}>
             <Text
               style={[
                 styles.lable,
@@ -408,9 +384,12 @@ const styles = StyleSheet.create({
   containerEachLine: {
     backgroundColor: '#ffffff',
     marginHorizontal: wp('3%'),
+    marginVertical: hp('0.9%'),
     paddingVertical: hp('1.5%'),
     paddingHorizontal: wp('2%'),
     borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.INACTIVE_GREY,
   },
 
   title: {
@@ -433,6 +412,11 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_MEDIUM,
     fontSize: wp('3.5%'),
     color: '#469943',
+  },
+
+  containerContent: {
+    marginHorizontal: wp('1.8%'),
+    marginTop: hp('1%'),
   },
 });
 
