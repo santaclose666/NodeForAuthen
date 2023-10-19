@@ -2,14 +2,17 @@ import {
   View,
   Text,
   FlatList,
-  Dimensions,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
   StatusBar,
   Image,
+  Animated,
+  Platform,
+  UIManager,
+  LayoutAnimation,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import FastImage from 'react-native-fast-image';
 import {
   widthPercentageToDP as wp,
@@ -23,6 +26,11 @@ import {rowAlignCenter} from '../../contants/CssFE';
 import LinearGradient from 'react-native-linear-gradient';
 import ImageView from 'react-native-image-viewing';
 import Images from '../../contants/Images';
+import {OpenURL} from '../../utils/download';
+
+if (Platform.OS == 'android') {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const SpecieDetailScreen = ({navigation, route}) => {
   const data = route.params.data;
@@ -33,18 +41,41 @@ const SpecieDetailScreen = ({navigation, route}) => {
   ].filter(
     item => item.uri !== '' && item.uri !== null && item.uri !== undefined,
   );
-  const [toggleCommonInfo, setToggleCommonInfo] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showImg, setShowImg] = useState(true);
+  const [showImg, setShowImg] = useState(false);
   const [imgPicker, setImgPicker] = useState(0);
   const safeDimension = useSafeAreaInsets();
   const [dotHeight, setDotHeight] = useState(0);
   const filterName = data.loailatin.split(' ');
   const latinName = filterName.slice(0, 2).join(' ');
   const finder = filterName.slice(2).join(' ');
+  const animationController = useRef(new Animated.Value(0)).current;
+  const [toggleCommonInfo, setToggleCommonInfo] = useState(true);
+
+  const toggleItem = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    const config = {
+      duration: 222,
+      toValue: toggleCommonInfo ? 1 : 0,
+      useNativeDriver: true,
+    };
+
+    Animated.timing(animationController, config).start();
+    setToggleCommonInfo(!toggleCommonInfo);
+  };
+
+  const arrowTransform = animationController.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+  });
 
   return (
-    <ScrollView style={{flex: 1, backgroundColor: '#e4e4e4'}}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={{
+        flex: 1,
+        backgroundColor: '#e4e4e4',
+      }}>
       <StatusBar barStyle={'light-content'} />
       <View
         style={{
@@ -217,13 +248,13 @@ const SpecieDetailScreen = ({navigation, route}) => {
           },
         ]}>
         <TouchableOpacity
-          onPress={() => {
-            setToggleCommonInfo(!toggleCommonInfo);
-          }}
+          onPress={toggleItem}
           style={[rowAlignCenter, {justifyContent: 'space-between'}]}>
           <Text style={styles.title}>Thông tin chung</Text>
 
-          <Image source={Images.down} style={{width: 20, height: 20}} />
+          <Animated.View style={{transform: [{rotateZ: arrowTransform}]}}>
+            <Image source={Images.up} style={{width: 20, height: 20}} />
+          </Animated.View>
         </TouchableOpacity>
 
         {toggleCommonInfo && (
@@ -269,6 +300,77 @@ const SpecieDetailScreen = ({navigation, route}) => {
               <Text style={styles.content}>{`  ${data.chitv}`}</Text>
             </View>
           </View>
+        )}
+      </View>
+      <View
+        style={[
+          styles.containerEachLine,
+          {
+            marginTop: dotHeight * 1.5,
+          },
+        ]}>
+        <Text style={styles.title}>Đặc điểm</Text>
+
+        {data.dacdiem && (
+          <View style={{marginLeft: wp('1.8%'), marginTop: hp('1%')}}>
+            <Text style={styles.lable}>{data.dacdiem}</Text>
+          </View>
+        )}
+      </View>
+      <View
+        style={[
+          styles.containerEachLine,
+          {
+            marginTop: dotHeight * 1.5,
+          },
+        ]}>
+        <Text style={styles.title}>Giá trị</Text>
+
+        {data.giatri && (
+          <View style={{marginLeft: wp('1.8%'), marginTop: hp('1%')}}>
+            <Text style={styles.lable}>{data.giatri}</Text>
+          </View>
+        )}
+      </View>
+      <View
+        style={[
+          styles.containerEachLine,
+          {
+            marginTop: dotHeight * 1.5,
+          },
+        ]}>
+        <Text style={styles.title}>Phân bố</Text>
+
+        {data.phanbo && (
+          <View style={{marginLeft: wp('1.8%'), marginTop: hp('1%')}}>
+            <Text style={styles.lable}>{data.phanbo}</Text>
+          </View>
+        )}
+      </View>
+      <View
+        style={[
+          styles.containerEachLine,
+          {
+            marginTop: dotHeight * 1.5,
+            marginBottom: safeDimension.bottom,
+          },
+        ]}>
+        <Text style={styles.title}>Nguồn</Text>
+
+        {data.nguon && (
+          <TouchableOpacity
+            onPress={() => {
+              OpenURL(data.nguon);
+            }}
+            style={{marginLeft: wp('1.8%'), marginTop: hp('1%')}}>
+            <Text
+              style={[
+                styles.lable,
+                {textDecorationLine: 'underline', color: Colors.DEFAULT_GREEN},
+              ]}>
+              {data.nguon}
+            </Text>
+          </TouchableOpacity>
         )}
       </View>
       {imgData.length > 0 && (

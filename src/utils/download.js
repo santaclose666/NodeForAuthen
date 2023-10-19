@@ -1,5 +1,7 @@
 import RNFS from 'react-native-fs';
 import ReactNativeBlobUtil from 'react-native-blob-util';
+import {ToastAlert} from '../components/Toast';
+import {Linking} from 'react-native';
 
 export const AndroidDownload = url => {
   const split_url = url.split('/');
@@ -69,4 +71,12 @@ export const shareAndroid = async url => {
     } else if (result.action === Share.dismissedAction) {
     }
   } catch (error) {}
+};
+
+export const OpenURL = async link => {
+  try {
+    await Linking.openURL(link);
+  } catch (error) {
+    ToastAlert('Không thể mở đường dẫn!');
+  }
 };
