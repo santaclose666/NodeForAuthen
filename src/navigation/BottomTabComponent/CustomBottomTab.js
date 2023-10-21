@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     height: hp('6.8%'),
     position: 'absolute',
     alignSelf: 'center',
-    backgroundColor: 'rgba(142, 226, 151, 0.9)',
+    backgroundColor: 'rgba(142, 226, 151, 1)',
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'space-around',
