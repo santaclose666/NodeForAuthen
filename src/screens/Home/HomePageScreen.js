@@ -68,6 +68,7 @@ const HomePageScreen = ({navigation}) => {
   const [contentInput, setContentInput] = useState('');
   const [gmailInput, setGmailInput] = useState('');
   const [weatherHeight, setWeatherHeight] = useState(0);
+  const [currentOffset, setCurrentOffset] = useState(0);
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();
 
@@ -156,6 +157,11 @@ const HomePageScreen = ({navigation}) => {
     ToastAlert('Chức năng đang được phát triển');
   };
 
+  const handleScroll = event => {
+    // const offset = event.nativeEvent.contentOffset.y;
+    // navigation.setOptions({tabBarStyle: {display: 'none'}});
+  };
+
   useLayoutEffect(() => {
     fcmService.registerAppWithFCM();
     fcmService.register(onRegister, onNotification, onOpenNotification);
@@ -212,6 +218,8 @@ const HomePageScreen = ({navigation}) => {
         barStyle="light-content"
       />
       <ScrollView
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
         bounces={false}
