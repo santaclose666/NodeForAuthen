@@ -57,6 +57,10 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import {screen} from '../AllScreen/allScreen';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const approveArr = [
   {
@@ -896,7 +900,7 @@ const HistoryWorkShedule = ({navigation}) => {
             style={{
               flex: 1,
               position: 'absolute',
-              bottom: Dimension.setHeight(4.5),
+              bottom: hp('11%'),
               right: Dimension.setWidth(6),
             }}>
             <StaggerUI

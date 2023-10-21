@@ -430,7 +430,7 @@ const RegisterItemOffice = ({navigation}) => {
           onPress={handleAddDevice}
           style={{
             position: 'absolute',
-            bottom: Dimension.setHeight(4),
+            bottom: hp('11%'),
             right: Dimension.setWidth(7),
             padding: 10,
             backgroundColor: Colors.DEFAULT_GREEN,

@@ -42,6 +42,10 @@ import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import Colors from '../../contants/Colors';
 import {Swipeable} from 'react-native-gesture-handler';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 if (Platform.OS == 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -110,8 +114,6 @@ const RegisterDevices = ({navigation, route}) => {
         typeValue: [],
         nameValue: [],
       });
-
-      console.log(updatedArrRender);
 
       setArrRender(updatedArrRender);
     }
@@ -526,7 +528,7 @@ const RegisterDevices = ({navigation, route}) => {
           onPress={handleAddDevice}
           style={{
             position: 'absolute',
-            bottom: Dimension.setHeight(4),
+            bottom: hp('11%'),
             right: Dimension.setWidth(7),
             padding: 10,
             backgroundColor: Colors.DEFAULT_GREEN,
