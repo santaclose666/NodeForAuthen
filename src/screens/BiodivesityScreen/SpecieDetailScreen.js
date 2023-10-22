@@ -406,6 +406,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_THIN,
     fontSize: wp('3.3%'),
     color: '#4d4d4d',
+    textAlign: 'justify',
   },
 
   content: {

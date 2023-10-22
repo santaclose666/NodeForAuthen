@@ -40,13 +40,7 @@ import Modal from 'react-native-modal';
 import {ToastAlert, ToastSuccess, ToastWarning} from '../../components/Toast';
 import {requestPermissions} from '../../utils/permissionFunc';
 import {topicForAll} from '../../utils/AllTopic';
-import {
-  VNUF,
-  forestryDepartment,
-  internal,
-  rangersDepartment,
-  utilities,
-} from './homeVariable';
+import {VNUF, forestryDepartment, internal} from './homeVariable';
 import {screen} from '../AllScreen/allScreen';
 import {
   widthPercentageToDP as wp,
@@ -210,7 +204,6 @@ const HomePageScreen = ({navigation}) => {
       style={{
         flex: 1,
         backgroundColor: '#ffffff',
-        // marginTop: Platform.OS == 'android' ? 0 : -StatusBar.currentHeight,
       }}>
       <StatusBar
         translucent
@@ -315,37 +308,7 @@ const HomePageScreen = ({navigation}) => {
 
         <View style={styles.featureBtnContainer}>
           <View style={styles.featureContainer}>
-            <Text style={styles.label}>Công cụ tiện ích</Text>
-          </View>
-          <View style={styles.btnContainer}>
-            <FlatList
-              scrollEnabled={false}
-              data={utilities}
-              showsVerticalScrollIndicator={false}
-              renderItem={({item, index}) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    disabled={item.featureName ? false : true}
-                    style={styles.buttonFuc}
-                    onPress={() => {
-                      item.component
-                        ? handleNavigate(item.component)
-                        : handleAlert();
-                    }}>
-                    <Image source={item.icon} style={styles.featureBtn} />
-                    <Text style={styles.featureText}>{item.featureName}</Text>
-                  </TouchableOpacity>
-                );
-              }}
-              numColumns={4}
-            />
-          </View>
-        </View>
-
-        <View style={styles.featureBtnContainer}>
-          <View style={styles.featureContainer}>
-            <Text style={styles.label}>Cục Lâm nghiệp</Text>
+            <Text style={styles.label}>Lâm Nghiệp 4.0</Text>
           </View>
           <View style={styles.btnContainer}>
             <FlatList
@@ -364,36 +327,6 @@ const HomePageScreen = ({navigation}) => {
                             item.component,
                             item.data ? item.data : null,
                           )
-                        : handleAlert();
-                    }}>
-                    <Image source={item.icon} style={styles.featureBtn} />
-                    <Text style={styles.featureText}>{item.featureName}</Text>
-                  </TouchableOpacity>
-                );
-              }}
-              numColumns={4}
-            />
-          </View>
-        </View>
-
-        <View style={styles.featureBtnContainer}>
-          <View style={styles.featureContainer}>
-            <Text style={styles.label}>Cục Kiểm lâm</Text>
-          </View>
-          <View style={styles.btnContainer}>
-            <FlatList
-              scrollEnabled={false}
-              data={rangersDepartment}
-              showsVerticalScrollIndicator={false}
-              renderItem={({item, index}) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    disabled={item.featureName ? false : true}
-                    style={styles.buttonFuc}
-                    onPress={() => {
-                      item.component
-                        ? handleNavigate(item.component)
                         : handleAlert();
                     }}>
                     <Image source={item.icon} style={styles.featureBtn} />

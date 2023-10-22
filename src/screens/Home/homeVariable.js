@@ -1,29 +1,6 @@
 import Images from '../../contants/Images';
 import {screen} from '../AllScreen/allScreen';
 
-export const utilities = [
-  {
-    featureName: 'DV Bản đồ',
-    component: screen.mapService,
-    icon: Images.map,
-  },
-  {
-    featureName: 'Định mức KTKT',
-    component: screen.dmktkt,
-    icon: Images.norms,
-  },
-  {
-    featureName: 'Vườn QG',
-    component: screen.nationalPark,
-    icon: Images.nationalPark,
-  },
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
-];
-
 export const forestryDepartment = [
   {
     featureName: 'Cục LN',
@@ -45,6 +22,12 @@ export const forestryDepartment = [
     component: screen.muavu,
     icon: Images.muavu,
   },
+  {
+    featureName: 'Định mức KTKT',
+    component: screen.dmktkt,
+    icon: Images.norms,
+  },
+
   {
     featureName: 'Giống',
     component: screen.giongln,
@@ -71,35 +54,27 @@ export const forestryDepartment = [
     component: screen.tcvn,
     icon: Images.standard,
   },
-
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
-];
-
-export const rangersDepartment = [
   {
     featureName: 'Dự án KKR',
     component: screen.kkr,
     icon: Images.trees,
   },
   {
+    featureName: 'Vườn QG',
+    component: screen.nationalPark,
+    icon: Images.nationalPark,
+  },
+  {
     featureName: 'Cảnh báo cháy',
     component: screen.fireWarning,
     icon: Images.forestFire,
   },
+  {
+    featureName: 'DV Bản đồ',
+    component: screen.mapService,
+    icon: Images.map,
+  },
+
   {
     featureName: null,
     component: null,
