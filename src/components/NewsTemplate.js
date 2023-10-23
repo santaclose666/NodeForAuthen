@@ -93,7 +93,7 @@ const NewsTemplate = ({
           </View>
         )}
 
-        <View style={{flex: 1, marginTop: Dimension.setHeight(1.6)}}>
+        <View style={{flex: 1, marginTop: Dimension.setHeight(1)}}>
           <FlatList
             data={handleFilter()}
             renderItem={({item, index}) => {
@@ -108,43 +108,35 @@ const NewsTemplate = ({
                   }}
                   style={styles.hotNewsContainer}
                   key={index}>
+                  <Image
+                    style={styles.newsImg}
+                    src={checkURL + item.avatar}
+                    resizeMode="cover"
+                  />
                   <View
                     style={{
-                      marginTop: Dimension.setHeight(0.7),
-                      marginBottom: Dimension.setHeight(0.8),
+                      marginTop: Dimension.setHeight(0.6),
+                      marginHorizontal: Dimension.setWidth(2.2),
                     }}>
-                    <Image
-                      style={styles.newsImg}
-                      src={checkURL + item.avatar}
-                      resizeMode="cover"
-                    />
-                    <View
+                    <Text
+                      numberOfLines={2}
                       style={{
-                        marginTop: Dimension.setHeight(0.6),
-                        marginHorizontal: Dimension.setWidth(2.2),
+                        fontFamily: Fonts.SF_SEMIBOLD,
+                        fontSize: Dimension.fontSize(14),
+                        ...fontDefault,
+                        textAlign: 'justify',
                       }}>
-                      <Text
-                        numberOfLines={2}
-                        style={{
-                          fontFamily: Fonts.SF_SEMIBOLD,
-                          fontSize: Dimension.fontSize(14),
-                          ...fontDefault,
-                          paddingHorizontal: Dimension.setHeight(1),
-                          textAlign: 'justify',
-                        }}>
-                        {item.title}
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: Fonts.SF_REGULAR,
-                          color: Colors.DEFAULT_BLACK,
-                          opacity: 0.6,
-                          fontSize: Dimension.fontSize(12),
-                          paddingHorizontal: Dimension.setHeight(1),
-                        }}>
-                        {changeFormatDate(item.date_created)}
-                      </Text>
-                    </View>
+                      {item.title}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: Fonts.SF_REGULAR,
+                        color: Colors.DEFAULT_BLACK,
+                        opacity: 0.6,
+                        fontSize: Dimension.fontSize(12),
+                      }}>
+                      {changeFormatDate(item.date_created)}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -163,7 +155,6 @@ const NewsTemplate = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 3,
   },
 
   searchFilterContainer: {
@@ -235,12 +226,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: Dimension.setHeight(0.5),
     marginBottom: Dimension.setHeight(0.3),
-    marginHorizontal: Dimension.setWidth(4),
+    marginHorizontal: Dimension.setWidth(3),
   },
 
   hotNewsContainer: {
     marginHorizontal: Dimension.setWidth(3.5),
-    alignItems: 'center',
     borderWidth: 0.4,
     borderRadius: 10,
     borderColor: Colors.WHITE,
@@ -248,11 +238,12 @@ const styles = StyleSheet.create({
     marginBottom: Dimension.setHeight(1.8),
     elevation: 5,
     ...shadowIOS,
+    padding: 5,
   },
 
   newsImg: {
-    width: Dimension.setWidth(90),
-    height: Dimension.setHeight(21),
+    width: Dimension.setWidth(89),
+    height: Dimension.setHeight(22),
     borderRadius: 10,
     alignSelf: 'center',
   },

@@ -75,9 +75,9 @@ import {getDeviceFailed, getDeviceStart, getDeviceSuccess} from './deviceSlice';
 import {
   getNationalParkFailed,
   getNationalParkStart,
-  getNationalParkStartSuccess,
   getNationalParkSuccess,
 } from './nationalPark';
+import {CUC_LAM_NGHIEP_API} from '@env';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -998,6 +998,57 @@ export const cancelRegisterOfficeItem = async data => {
     await axios.get(
       `https://management.ifee.edu.vn/api/vpp/pheduyet/xoa/${data.id_user}`,
     );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  CUC LAM NGHIEP  ////////////////////
+const headers = {
+  apiKey: CUC_LAM_NGHIEP_API,
+  'Content-Type': 'application/json',
+};
+
+export const getCategoryForestry = async () => {
+  try {
+    const res = await axios.get(
+      `https://api.cuclamnghiep.gov.vn/news/1.0/news/categories/`,
+      {
+        headers: headers,
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getNewsList = async id_category => {
+  try {
+    const res = await axios.get(
+      `https://api.cuclamnghiep.gov.vn/news/1.0/news/categories/${id_category}`,
+      {
+        headers: headers,
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDetailNew = async id_tintuc => {
+  try {
+    const res = await axios.get(
+      `https://api.cuclamnghiep.gov.vn/news/1.0/news/detail/${id_tintuc}`,
+      {
+        headers: headers,
+      },
+    );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }

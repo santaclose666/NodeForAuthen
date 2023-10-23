@@ -9,7 +9,6 @@ import HappyBirthdayList from '../screens/Happybirthday/HappyBirthdayList';
 import MainMV from '../screens/MuaVu/MainMV';
 import DisplayPDF from '../screens/Document/DisplayPDFScreen';
 import MainVNFF from '../screens/Document/MainVNFF';
-import Webview from '../screens/ForestryDepartment/WebView';
 import DetailNationPark from '../screens/NationalPark/DetailNationPark';
 import SpecieDetailScreen from '../screens/BiodivesityScreen/SpecieDetailScreen';
 import StaffListScreen from '../screens/User/StaffListScreen';
@@ -59,7 +58,6 @@ const RootNavigator = () => {
     {name: screen.hpbdList, component: HappyBirthdayList},
     {name: screen.muavu, component: MainMV},
     {name: screen.vnff, component: MainVNFF},
-    {name: screen.webview, component: Webview},
     {name: screen.detailNationPark, component: DetailNationPark},
     {name: screen.bioDetail, component: SpecieDetailScreen},
     {name: screen.staffList, component: StaffListScreen},

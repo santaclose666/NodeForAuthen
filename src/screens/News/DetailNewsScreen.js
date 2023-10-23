@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -20,17 +20,28 @@ import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
 import RenderHtml from 'react-native-render-html';
 import WebView from 'react-native-webview';
 import {IOSDownload, shareAndroid} from '../../utils/download';
+import {getDetailNew} from '../../redux/apiRequest';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
   const {width} = useWindowDimensions();
+  const id = item.id;
+  const [html, setHtml] = useState(item.content);
+
+  const fetchDetailNew = async () => {
+    const data = await getDetailNew(id);
+    setHtml(data.content);
+  };
+
+  useLayoutEffect(() => {
+    if (!item.content) {
+      fetchDetailNew();
+    }
+  }, []);
 
   const checkURL =
     item.screenName === 'Chỉ đạo điều hành' ? newsMvURL : newsURL;
-
-  const source = {
-    html: `${item.content}`,
-  };
 
   const renderers = {
     iframe: IframeRenderer,
@@ -38,6 +49,10 @@ const DetailNewsScreen = ({navigation, route}) => {
 
   const customHTMLElementModels = {
     iframe: iframeModel,
+  };
+
+  const source = {
+    html: `${html}`,
   };
 
   return (
@@ -83,7 +98,7 @@ const DetailNewsScreen = ({navigation, route}) => {
               opacity: 0.6,
               marginTop: Dimension.setHeight(1),
             }}>
-            {item.date_created}
+            {item.date_created || item.createDate.replace(/\s+/g, ' - ')}
           </Text>
         </View>
 
@@ -184,6 +199,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: Dimension.setWidth(3),
     paddingBottom: Dimension.setHeight(28),
+    width: wp('100%'),
   },
 
   header: {

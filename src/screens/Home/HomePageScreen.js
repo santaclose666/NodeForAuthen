@@ -62,7 +62,6 @@ const HomePageScreen = ({navigation}) => {
   const [contentInput, setContentInput] = useState('');
   const [gmailInput, setGmailInput] = useState('');
   const [weatherHeight, setWeatherHeight] = useState(0);
-  const [currentOffset, setCurrentOffset] = useState(0);
   const weekdays = getVietnameseDayOfWeek();
   const date = getFormattedDate();
 

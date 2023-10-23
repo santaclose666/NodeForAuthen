@@ -208,9 +208,10 @@ const DVMTRMapScreen = ({navigation}) => {
 
       {expainBasemap && (
         <View style={styles.baseMapContainer}>
-          {listBaseMap.map(item => {
+          {listBaseMap.map((item, index) => {
             return (
               <TouchableOpacity
+                key={index}
                 style={styles.baseMapOption}
                 onPress={() => {
                   setMapType(item.type);
@@ -262,12 +263,13 @@ const DVMTRMapScreen = ({navigation}) => {
           tileSize={512}
         />
         {listOutPointFillter.length > 0 &&
-          listOutPointFillter.map(item => {
+          listOutPointFillter.map((item, index) => {
             return (
               <Marker
+                key={index}
                 coordinate={{
-                  latitude: item.latitude,
-                  longitude: item.longitude,
+                  latitude: parseFloat(item.latitude),
+                  longitude: parseFloat(item.longitude),
                 }}>
                 <Image
                   source={item.loaidonvi == 'NMNS' ? Images.nmns : Images.nmtb}
@@ -358,9 +360,10 @@ const DVMTRMapScreen = ({navigation}) => {
 
           <ScrollView style={styles.modalList}>
             {listOutPointFillter.length > 0 &&
-              listOutPointFillter.map(item => {
+              listOutPointFillter.map((item, index) => {
                 return (
                   <TouchableOpacity
+                    key={index}
                     style={{flexDirection: 'row'}}
                     onPress={() => selectUnit(item)}>
                     <View style={{flex: 1}}>

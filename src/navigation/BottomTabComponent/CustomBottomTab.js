@@ -21,7 +21,9 @@ const CustomBottomTab = ({state, descriptors, navigation}) => {
 
   const translateAnimation = useAnimatedStyle(() => {
     return {
-      transform: [{translateX: withTiming(TAB_WIDTH * state.index)}],
+      transform: [
+        {translateX: withTiming(TAB_WIDTH * state.index, {duration: 246})},
+      ],
     };
   });
 
