@@ -18,6 +18,8 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
 import {fontDefault} from '../../contants/Variable';
 import {screen} from '../../screens/AllScreen/allScreen';
+import {EmptyList} from '../../components/FlatlistComponent';
+import Images from '../../contants/Images';
 
 const NewsForestry = ({navigation}) => {
   const [featureIndex, setFeatureIndex] = useState(0);
@@ -38,7 +40,11 @@ const NewsForestry = ({navigation}) => {
     try {
       const data = await getCategoryForestry();
 
-      setFeatureArr(data);
+      setFeatureArr(
+        data.sort((a, b) => {
+          return a.id - b.id;
+        }),
+      );
       await fetchNewsList(data[0].id);
     } catch (error) {
       console.log(error);
@@ -106,11 +112,19 @@ const NewsForestry = ({navigation}) => {
                   }}
                   style={styles.hotNewsContainer}
                   key={index}>
-                  <Image
-                    style={styles.newsImg}
-                    src={item.thumbnail}
-                    resizeMode="cover"
-                  />
+                  {item.thumbnail.length != 0 ? (
+                    <Image
+                      style={styles.newsImg}
+                      src={item.thumbnail}
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <Image
+                      style={styles.newsImg}
+                      source={Images.cln}
+                      resizeMode="contain"
+                    />
+                  )}
                   <View
                     style={{
                       marginTop: Dimension.setHeight(0.6),
@@ -143,6 +157,9 @@ const NewsForestry = ({navigation}) => {
             windowSize={6}
             removeClippedSubviews={true}
             refreshing={true}
+            ListEmptyComponent={() => {
+              return <EmptyList />;
+            }}
           />
         </View>
       </SafeAreaView>

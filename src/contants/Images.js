@@ -222,6 +222,7 @@ const Images = {
   animal: require('../assets/images/animal.png'),
   plant: require('../assets/images/plant.png'),
   mushroom: require('../assets/images/mushroom.png'),
+  cln: require('../assets/images/cln.png'),
 };
 
 export default Images;

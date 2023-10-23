@@ -28,6 +28,7 @@ const DetailNewsScreen = ({navigation, route}) => {
   const {width} = useWindowDimensions();
   const id = item.id;
   const [html, setHtml] = useState(item.content);
+  console.log(item);
 
   const fetchDetailNew = async () => {
     const data = await getDetailNew(id);
@@ -41,7 +42,11 @@ const DetailNewsScreen = ({navigation, route}) => {
   }, []);
 
   const checkURL =
-    item.screenName === 'Chỉ đạo điều hành' ? newsMvURL : newsURL;
+    item.screenName === 'Chỉ đạo điều hành'
+      ? newsMvURL
+      : item.screenName === 'Tin tức F4'
+      ? newsURL
+      : null;
 
   const renderers = {
     iframe: IframeRenderer,
@@ -60,7 +65,10 @@ const DetailNewsScreen = ({navigation, route}) => {
       <View style={styles.mainImgContainer}>
         <Image
           resizeMode="cover"
-          src={checkURL + item.avatar}
+          src={
+            (checkURL ? checkURL + item.avatar : item.avatar) ||
+            'https://media.cntraveler.com/photos/5eb18e42fc043ed5d9779733/16:9/w_4288,h_2412,c_limit/BlackForest-Germany-GettyImages-147180370.jpg'
+          }
           style={{
             width: Dimension.setWidth(100),
             height: Dimension.setHeight(30),
