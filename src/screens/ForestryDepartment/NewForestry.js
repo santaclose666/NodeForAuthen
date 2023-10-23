@@ -56,7 +56,7 @@ const NewsForestry = ({navigation}) => {
         <Header title={'Tin tức Cục Lâm nghiệp'} navigation={navigation} />
         <View style={styles.featuresTitleContainer}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {featureArr.map((item, index) => {
+            {featureArr?.map((item, index) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
