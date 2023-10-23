@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import StactNavigator from './Stack';
+import HomePageScreen from '../screens/Home/HomePageScreen';
 import NotifiScreen from '../screens/Notification/NotifiScreens';
 import AllNewsScreen from '../screens/News/AllNewsScreen';
 import Images from '../contants/Images';
@@ -19,7 +19,7 @@ const TabNaviagtor = () => {
     },
     {
       name: 'Home',
-      component: StactNavigator,
+      component: HomePageScreen,
       iconInactive: Images.home,
       iconActive: Images.homeActive,
       activeColor: '#63c05f',
