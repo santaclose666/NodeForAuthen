@@ -41,5 +41,8 @@ export const screen = {
   vp809: 'VP809',
   forestry: 'Forestry',
   rungvenbien: 'CoastalForest',
-  dvmtrMap: 'DVMTRMap',
+  forestryDepartment: 'ForestryDepartment',
+  webview: 'WebViewDetail',
+  nationalPark: 'NationalPark',
+  detailNationPark: 'DetailNationPark'
 };

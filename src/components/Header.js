@@ -45,7 +45,7 @@ const Header = ({
         justifyContent: 'space-between',
         paddingVertical: Dimension.setHeight(1.6),
         paddingHorizontal: Dimension.setWidth(2),
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+        backgroundColor: 'rgba(152,200,251,0.2)',
         marginHorizontal: Dimension.setHeight(1.4),
         borderRadius: 25,
         marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
@@ -54,14 +54,14 @@ const Header = ({
       <StatusBar
         translucent
         backgroundColor="transparent"
-        barStyle="light-content"
+        barStyle="dark-content"
       />
       {title == 'Thông báo' ? (
         <View style={{width: 25, height: 25}}></View>
       ) : (
         <TouchableOpacity
           onPress={() => {
-            replace == true ? navigation.navigate('Home') : navigation.goBack();
+            navigation.goBack();
           }}>
           <Image
             source={Images.back}

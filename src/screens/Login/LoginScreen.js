@@ -77,7 +77,7 @@ const LoginScreen = ({navigation}) => {
             />
           </TouchableOpacity>
           <Image
-            source={Images.F4_Lunar}
+            source={Images.logo}
             resizeMode="cover"
             style={{
               width: Dimensions.get('screen').width / 1.8,

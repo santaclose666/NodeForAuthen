@@ -1,33 +1,10 @@
 import Images from '../../contants/Images';
 import {screen} from '../AllScreen/allScreen';
 
-export const utilities = [
-  {
-    featureName: 'DV Bản đồ',
-    component: screen.mapService,
-    icon: Images.map,
-  },
-  {
-    featureName: 'ĐDSH',
-    component: screen.bioList,
-    icon: Images.biodiversity,
-  },
-  {
-    featureName: 'Định mức KTKT',
-    component: screen.dmktkt,
-    icon: Images.norms,
-  },
-  {
-    featureName: 'Vườn QG',
-    component: null,
-    icon: Images.nationalPark,
-  },
-];
-
 export const forestryDepartment = [
   {
     featureName: 'Cục LN',
-    component: null,
+    component: screen.forestryDepartment,
     icon: Images.vnForest,
   },
   {
@@ -37,7 +14,7 @@ export const forestryDepartment = [
   },
   {
     featureName: 'VNFF',
-    component: screen.dvmtrMap,
+    component: screen.vnff,
     icon: Images.documentation,
   },
   {
@@ -45,6 +22,12 @@ export const forestryDepartment = [
     component: screen.muavu,
     icon: Images.muavu,
   },
+  {
+    featureName: 'Định mức KTKT',
+    component: screen.dmktkt,
+    icon: Images.norms,
+  },
+
   {
     featureName: 'Giống',
     component: screen.giongln,
@@ -71,35 +54,27 @@ export const forestryDepartment = [
     component: screen.tcvn,
     icon: Images.standard,
   },
-
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
-];
-
-export const rangersDepartment = [
   {
     featureName: 'Dự án KKR',
     component: screen.kkr,
     icon: Images.trees,
   },
   {
+    featureName: 'Vườn QG',
+    component: screen.nationalPark,
+    icon: Images.nationalPark,
+  },
+  {
     featureName: 'Cảnh báo cháy',
     component: screen.fireWarning,
     icon: Images.forestFire,
   },
+  {
+    featureName: 'DV Bản đồ',
+    component: screen.mapService,
+    icon: Images.map,
+  },
+
   {
     featureName: null,
     component: null,

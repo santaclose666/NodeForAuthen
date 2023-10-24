@@ -9,6 +9,9 @@ import {
   TextInput,
   ScrollView,
   FlatList,
+  Platform,
+  UIManager,
+  LayoutAnimation,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import Images from '../../contants/Images';
@@ -23,8 +26,6 @@ import {
   compareDate,
   formatDate,
   formatDateToPost,
-  formatTime,
-  formatTimeToPost,
   getCurrentDate,
 } from '../../utils/serviceFunction';
 import RegisterBtn from '../../components/RegisterBtn';
@@ -41,6 +42,14 @@ import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import Colors from '../../contants/Colors';
 import {Swipeable} from 'react-native-gesture-handler';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
+if (Platform.OS == 'android') {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const retunOption = [
   {label: 'Có trả', value: 0},
@@ -93,6 +102,7 @@ const RegisterDevices = ({navigation, route}) => {
   };
 
   const handleAddDevice = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     const updatedArrRender = [...arrRender];
 
     if (updatedArrRender.length == typeDeviceArr.length) {
@@ -105,13 +115,12 @@ const RegisterDevices = ({navigation, route}) => {
         nameValue: [],
       });
 
-      console.log(updatedArrRender);
-
       setArrRender(updatedArrRender);
     }
   };
 
   const handleDelete = index => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     const updatedArrRender = [...arrRender];
 
     if (updatedArrRender.length == 1) {
@@ -519,7 +528,7 @@ const RegisterDevices = ({navigation, route}) => {
           onPress={handleAddDevice}
           style={{
             position: 'absolute',
-            bottom: Dimension.setHeight(4),
+            bottom: hp('11%'),
             right: Dimension.setWidth(7),
             padding: 10,
             backgroundColor: Colors.DEFAULT_GREEN,

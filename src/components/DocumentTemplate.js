@@ -36,7 +36,6 @@ import {ToastAlert, ToastSuccess} from './Toast';
 import {sendRequestUseDocument} from '../redux/apiRequest';
 import {IOSDownload, AndroidDownload} from '../utils/download';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useDispatch} from 'react-redux';
 import LinearGradientUI from './LinearGradientUI';
 import {screen} from '../screens/AllScreen/allScreen';
 import {CategorySkeleton, DocumentSkeleton} from './Skeleton';
@@ -96,9 +95,9 @@ const DocumentTemplate = ({
       setInput(text);
       setpickFileIndex(null);
 
-      const filter = data.filter(item =>
-        unidecode(item.tenvanban.toLowerCase()).includes(
-          unidecode(text.toLowerCase()),
+      const filter = data?.filter(item =>
+        unidecode(item?.tenvanban.toLowerCase()).includes(
+          unidecode(text?.toLowerCase()),
         ),
       );
 
@@ -277,194 +276,197 @@ const DocumentTemplate = ({
     setResults(0);
   }, []);
 
-  const RenderDocument = ({item, index}) => {
-    const colorHieuluc =
-      item.hieuluc == 'Còn hiệu lực'
-        ? '#30a62c'
-        : item.hieuluc == 'Hết hiệu lực'
-        ? '#cc2333'
-        : item.hieuluc == 'Sắp có hiệu lực'
-        ? '#c7b841'
-        : fontDefault;
+  const RenderDocument = useCallback(
+    ({item, index}) => {
+      const colorHieuluc =
+        item.hieuluc == 'Còn hiệu lực'
+          ? '#30a62c'
+          : item.hieuluc == 'Hết hiệu lực'
+          ? '#cc2333'
+          : item.hieuluc == 'Sắp có hiệu lực'
+          ? '#c7b841'
+          : fontDefault;
 
-    return (
-      <View style={{flex: 1}}>
-        <TouchableOpacity
-          onPress={() => handlePress(item.path)}
-          style={styles.flatListItemContainer}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginHorizontal: Dimension.setWidth(3),
-            }}>
+      return (
+        <View style={{flex: 1}}>
+          <TouchableOpacity
+            onPress={() => handlePress(item.path)}
+            style={styles.flatListItemContainer}>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                width: '66%',
+                justifyContent: 'space-between',
+                marginHorizontal: Dimension.setWidth(3),
               }}>
-              <Image
-                source={Images.pdf}
+              <View
                 style={{
-                  width: 40,
-                  height: 40,
-                  marginRight: Dimension.setWidth(3),
-                }}
-              />
-              <View>
-                {item.id_donvi != 99 && item.donvi && (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image
-                      source={Images.certicate}
-                      style={{
-                        width: 16,
-                        height: 16,
-                        marginRight: 2,
-                      }}
-                    />
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={{
-                        fontFamily: Fonts.SF_SEMIBOLD,
-                        fontSize: Dimension.fontSize(12),
-                        ...fontDefault,
-                        color: '#63c8f5',
-                      }}>
-                      {item.donvi}
-                    </Text>
-                  </View>
-                )}
-                <Text
-                  numberOfLines={2}
-                  ellipsizeMode="tail"
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  width: '66%',
+                }}>
+                <Image
+                  source={Images.pdf}
                   style={{
-                    fontFamily: Fonts.SF_SEMIBOLD,
-                    fontSize: Dimension.fontSize(15),
-                    ...fontDefault,
-                  }}>
-                  {item.tenvanban}
-                </Text>
+                    width: 40,
+                    height: 40,
+                    marginRight: Dimension.setWidth(3),
+                  }}
+                />
+                <View>
+                  {item.id_donvi != 99 && item.donvi && (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <Image
+                        source={Images.certicate}
+                        style={{
+                          width: 16,
+                          height: 16,
+                          marginRight: 2,
+                        }}
+                      />
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={{
+                          fontFamily: Fonts.SF_SEMIBOLD,
+                          fontSize: Dimension.fontSize(12),
+                          ...fontDefault,
+                          color: '#63c8f5',
+                        }}>
+                        {item.donvi}
+                      </Text>
+                    </View>
+                  )}
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode="tail"
+                    style={{
+                      fontFamily: Fonts.SF_SEMIBOLD,
+                      fontSize: Dimension.fontSize(15),
+                      ...fontDefault,
+                    }}>
+                    {item.tenvanban}
+                  </Text>
+                </View>
               </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  handleCheckDownload(item.id, item.path);
+                }}
+                style={{width: 40, height: 40}}>
+                <Image
+                  source={Images.download}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    marginRight: Dimension.setWidth(3),
+                  }}
+                />
+              </TouchableOpacity>
             </View>
 
             <TouchableOpacity
               onPress={() => {
-                handleCheckDownload(item.id, item.path);
+                LayoutAnimation.configureNext(
+                  LayoutAnimation.Presets.easeInEaseOut,
+                );
+                pickFileIndex !== index
+                  ? setpickFileIndex(index)
+                  : setpickFileIndex(null);
               }}
-              style={{width: 40, height: 40}}>
-              <Image
-                source={Images.download}
-                style={{
-                  width: 30,
-                  height: 30,
-                  marginRight: Dimension.setWidth(3),
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => {
-              LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut,
-              );
-              pickFileIndex !== index
-                ? setpickFileIndex(index)
-                : setpickFileIndex(null);
-            }}
-            style={{
-              marginTop: Dimension.setHeight(1.8),
-              borderTopWidth: 0.5,
-              borderTopColor: Colors.INACTIVE_GREY,
-              marginHorizontal: Dimension.setWidth(7),
-            }}>
-            <View
               style={{
-                paddingTop: 5,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
+                marginTop: Dimension.setHeight(1.8),
+                borderTopWidth: 0.5,
+                borderTopColor: Colors.INACTIVE_GREY,
+                marginHorizontal: Dimension.setWidth(7),
               }}>
-              <Text
+              <View
                 style={{
-                  fontFamily: Fonts.SF_REGULAR,
-                  fontSize: Dimension.fontSize(14),
-                  color: Colors.INACTIVE_GREY,
+                  paddingTop: 5,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}>
-                {pickFileIndex === index ? 'Thu gọn' : 'Chi tiết'}
-              </Text>
-              <Image
-                source={pickFileIndex === index ? Images.up : Images.down}
-                style={{
-                  width: 16,
-                  height: 16,
-                  tintColor: Colors.INACTIVE_GREY,
-                }}
-              />
-            </View>
+                <Text
+                  style={{
+                    fontFamily: Fonts.SF_REGULAR,
+                    fontSize: Dimension.fontSize(14),
+                    color: Colors.INACTIVE_GREY,
+                  }}>
+                  {pickFileIndex === index ? 'Thu gọn' : 'Chi tiết'}
+                </Text>
+                <Image
+                  source={pickFileIndex === index ? Images.up : Images.down}
+                  style={{
+                    width: 16,
+                    height: 16,
+                    tintColor: Colors.INACTIVE_GREY,
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
           </TouchableOpacity>
-        </TouchableOpacity>
-        {pickFileIndex === index && (
-          <View style={styles.subMenuContainer}>
-            <View style={{padding: 10, marginLeft: Dimension.setWidth(3)}}>
-              <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
-                <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Tên VB: </Text>
-                <Text style={styles.content}>{item?.tenvanban}</Text>
-              </View>
-
-              {item?.loaivanban && (
-                <View style={styles.subItem}>
-                  <Image source={Images.dot} style={styles.dot} />
-                  <Text style={styles.title}>Loại văn bản: </Text>
-                  <Text style={styles.content}>{item?.loaivanban}</Text>
-                </View>
-              )}
-              {item?.id_loaivanban == 5 && (
-                <>
-                  <View style={styles.subItem}>
-                    <Image source={Images.dot} style={styles.dot} />
-                    <Text style={styles.title}>Số hiệu: </Text>
-                    <Text style={styles.content}>{item?.sohieu}</Text>
-                  </View>
-                  <View style={styles.subItem}>
-                    <Image source={Images.dot} style={styles.dot} />
-                    <Text style={styles.title}>Hiệu lực: </Text>
-                    <Text
-                      style={[
-                        styles.content,
-                        {color: colorHieuluc, fontFamily: Fonts.SF_BOLD},
-                      ]}>
-                      {item?.hieuluc}
-                    </Text>
-                  </View>
-                </>
-              )}
-              <View style={styles.subItem}>
-                <Image source={Images.dot} style={styles.dot} />
-                <Text style={styles.title}>Năm: </Text>
-                <Text style={styles.content}>{item?.nam}</Text>
-              </View>
-              {item?.id_donvi != 99 && (
+          {pickFileIndex === index && (
+            <View style={styles.subMenuContainer}>
+              <View style={{padding: 10, marginLeft: Dimension.setWidth(3)}}>
                 <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
                   <Image source={Images.dot} style={styles.dot} />
-                  <Text style={styles.title}>Nguồn: </Text>
-                  <Text style={styles.content}>{item?.donvi}</Text>
+                  <Text style={styles.title}>Tên VB: </Text>
+                  <Text style={styles.content}>{item?.tenvanban}</Text>
                 </View>
-              )}
+
+                {item?.loaivanban && (
+                  <View style={styles.subItem}>
+                    <Image source={Images.dot} style={styles.dot} />
+                    <Text style={styles.title}>Loại văn bản: </Text>
+                    <Text style={styles.content}>{item?.loaivanban}</Text>
+                  </View>
+                )}
+                {item?.id_loaivanban == 5 && (
+                  <>
+                    <View style={styles.subItem}>
+                      <Image source={Images.dot} style={styles.dot} />
+                      <Text style={styles.title}>Số hiệu: </Text>
+                      <Text style={styles.content}>{item?.sohieu}</Text>
+                    </View>
+                    <View style={styles.subItem}>
+                      <Image source={Images.dot} style={styles.dot} />
+                      <Text style={styles.title}>Hiệu lực: </Text>
+                      <Text
+                        style={[
+                          styles.content,
+                          {color: colorHieuluc, fontFamily: Fonts.SF_BOLD},
+                        ]}>
+                        {item?.hieuluc}
+                      </Text>
+                    </View>
+                  </>
+                )}
+                <View style={styles.subItem}>
+                  <Image source={Images.dot} style={styles.dot} />
+                  <Text style={styles.title}>Năm: </Text>
+                  <Text style={styles.content}>{item?.nam}</Text>
+                </View>
+                {item?.id_donvi != 99 && (
+                  <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
+                    <Image source={Images.dot} style={styles.dot} />
+                    <Text style={styles.title}>Nguồn: </Text>
+                    <Text style={styles.content}>{item?.donvi}</Text>
+                  </View>
+                )}
+              </View>
             </View>
-          </View>
-        )}
-      </View>
-    );
-  };
+          )}
+        </View>
+      );
+    },
+    [pickFileIndex],
+  );
 
   return (
     <LinearGradientUI>
@@ -532,6 +534,9 @@ const DocumentTemplate = ({
                               : Colors.DEFAULT_BLACK,
                         }}>
                         {item}
+                        {pickOptionIndex.index === index
+                          ? `(${handlePickOption().length})`
+                          : null}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -547,7 +552,7 @@ const DocumentTemplate = ({
           ) : (
             <FlatList
               data={document ? document : handlePickOption()}
-              keyExtractor={item => item.id.toString()}
+              keyExtractor={(_, index) => index.toString()}
               showsVerticalScrollIndicator={false}
               renderItem={({item, index}) => (
                 <RenderDocument item={item} index={index} />
@@ -1033,11 +1038,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f1f1f1',
     width: '90%',
-    borderRadius: 9,
+    borderRadius: 16,
     height: Dimension.setHeight(5.5),
     justifyContent: 'flex-start',
     paddingHorizontal: Dimension.setWidth(3),
     marginTop: 10,
+    borderWidth: Platform.OS == 'ios' ? 0.2 : 0,
+    elevation: 6,
+    ...shadowIOS,
   },
 
   flatListItemContainer: {

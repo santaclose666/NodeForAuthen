@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -20,17 +20,33 @@ import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
 import RenderHtml from 'react-native-render-html';
 import WebView from 'react-native-webview';
 import {IOSDownload, shareAndroid} from '../../utils/download';
+import {getDetailNew} from '../../redux/apiRequest';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
   const {width} = useWindowDimensions();
+  const id = item.id;
+  const [html, setHtml] = useState(item.content);
+  console.log(item);
+
+  const fetchDetailNew = async () => {
+    const data = await getDetailNew(id);
+    setHtml(data.content);
+  };
+
+  useLayoutEffect(() => {
+    if (!item.content) {
+      fetchDetailNew();
+    }
+  }, []);
 
   const checkURL =
-    item.screenName === 'Chỉ đạo điều hành' ? newsMvURL : newsURL;
-
-  const source = {
-    html: `${item.content}`,
-  };
+    item.screenName === 'Chỉ đạo điều hành'
+      ? newsMvURL
+      : item.screenName === 'Tin tức F4'
+      ? newsURL
+      : null;
 
   const renderers = {
     iframe: IframeRenderer,
@@ -40,12 +56,19 @@ const DetailNewsScreen = ({navigation, route}) => {
     iframe: iframeModel,
   };
 
+  const source = {
+    html: `${html}`,
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainImgContainer}>
         <Image
           resizeMode="cover"
-          src={checkURL + item.avatar}
+          src={
+            (checkURL ? checkURL + item.avatar : item.avatar) ||
+            'https://media.cntraveler.com/photos/5eb18e42fc043ed5d9779733/16:9/w_4288,h_2412,c_limit/BlackForest-Germany-GettyImages-147180370.jpg'
+          }
           style={{
             width: Dimension.setWidth(100),
             height: Dimension.setHeight(30),
@@ -83,7 +106,7 @@ const DetailNewsScreen = ({navigation, route}) => {
               opacity: 0.6,
               marginTop: Dimension.setHeight(1),
             }}>
-            {item.date_created}
+            {item.date_created || item.createDate.replace(/\s+/g, ' - ')}
           </Text>
         </View>
 
@@ -184,6 +207,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: Dimension.setWidth(3),
     paddingBottom: Dimension.setHeight(28),
+    width: wp('100%'),
   },
 
   header: {

@@ -1,660 +1,423 @@
-import React, {useState, useEffect} from 'react';
 import {
   View,
-  TouchableOpacity,
-  Image,
-  StatusBar,
-  SafeAreaView,
-  StyleSheet,
-  Dimensions,
   Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
   ScrollView,
+  StatusBar,
+  Image,
+  Animated,
   Platform,
+  UIManager,
+  LayoutAnimation,
 } from 'react-native';
-import {useRoute} from '@react-navigation/native';
-import Images from '../../contants/Images';
-import Dimension from '../../contants/Dimension';
+import React, {useRef, useState} from 'react';
+import FastImage from 'react-native-fast-image';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import Colors from '../../contants/Colors';
+import {shadowIOS} from '../../contants/propsIOS';
 import Fonts from '../../contants/Fonts';
-import {fontDefault} from '../../contants/Variable';
+import {rowAlignCenter} from '../../contants/CssFE';
+import LinearGradient from 'react-native-linear-gradient';
 import ImageView from 'react-native-image-viewing';
+import Images from '../../contants/Images';
+import {OpenURL} from '../../utils/download';
+import {BackBtn} from '../../components/RegisterBtn';
 
-const width = Dimensions.get('window').width;
+if (Platform.OS == 'android') {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
-const SpecieDetailScreen = ({navigation}) => {
-  const [images, setImages] = useState([]);
-  const [isImageViewVisible, setImageViewVisible] = useState(false);
-  const route = useRoute();
+const SpecieDetailScreen = ({navigation, route}) => {
   const data = route.params.data;
+  const imgData = [
+    {uri: data.hinh1 && data.link + data.hinh1},
+    {uri: data.hinh2 && data.link + data.hinh2},
+    {uri: data.hinh3 && data.link + data.hinh3},
+  ].filter(
+    item => item.uri !== '' && item.uri !== null && item.uri !== undefined,
+  );
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showImg, setShowImg] = useState(false);
+  const [imgPicker, setImgPicker] = useState(0);
+  const safeDimension = useSafeAreaInsets();
+  const [dotHeight, setDotHeight] = useState(0);
+  const filterName = data.loailatin.split(' ');
+  const latinName = filterName.slice(0, 2).join(' ');
+  const finder = filterName.slice(2).join(' ');
+  const animationController = useRef(new Animated.Value(0)).current;
+  const [toggleCommonInfo, setToggleCommonInfo] = useState(true);
 
-  console.log(data);
+  const toggleItem = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    const config = {
+      duration: 222,
+      toValue: toggleCommonInfo ? 1 : 0,
+      useNativeDriver: true,
+    };
 
-  const words = data.loailatin?.split(' ');
-  let formattedText;
-  if (words?.length > 1 && (words[1] === 'sp' || words[1] === 'sp.')) {
-    formattedText = (
-      <Text style={{fontWeight: '600'}}>
-        <Text>
-          <Text style={{fontStyle: 'italic'}}>{words[0]}</Text>{' '}
-          {words.slice(1).join(' ')}
-        </Text>
-      </Text>
-    );
-  } else {
-    formattedText = (
-      <Text style={{fontWeight: '600'}}>
-        <Text style={{fontStyle: 'italic'}}>
-          {words[0]} {words[1]}
-        </Text>{' '}
-        {words.slice(2).join(' ')}
-      </Text>
-    );
-  }
-
-  const getListImage = () => {
-    var listImg = [];
-    if (data.hinh1 != '') {
-      listImg.push({
-        uri: data.link + data.hinh1,
-      });
-    }
-    if (data.hinh2 != '') {
-      listImg.push({
-        uri: data.link + data.hinh2,
-      });
-    }
-    if (data.hinh3 != '') {
-      listImg.push({
-        uri: data.link + data.hinh3,
-      });
-    }
-
-    setImages(listImg);
+    Animated.timing(animationController, config).start();
+    setToggleCommonInfo(!toggleCommonInfo);
   };
 
-  useEffect(() => {
-    getListImage();
-  }, []);
+  const arrowTransform = animationController.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+  });
+
+  const handleBack = () => {
+    navigation.goBack();
+  };
 
   return (
-    <SafeAreaView showsVerticalScrollIndicator={false} style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
-      <View style={styles.searchFilterContainer}>
-        <TouchableOpacity
-          style={styles.headerContainer}
-          onPress={() => {
-            navigation.goBack();
-          }}>
-          <Image style={styles.backImg} source={Images.back} />
-        </TouchableOpacity>
-        <View style={{flex: 6, alignItems: 'center'}}>
-          <Text
-            style={{
-              fontFamily: Fonts.SF_BOLD,
-              fontSize: Dimension.fontSize(18),
-              alignItems: 'center',
-              ...fontDefault,
-            }}>
-            THÔNG TIN CHI TIẾT LOÀI
-          </Text>
-        </View>
-      </View>
-
-      {images.length > 0 && (
-        <ImageView
-          images={images}
-          imageIndex={0}
-          visible={isImageViewVisible}
-          onRequestClose={() => setImageViewVisible(false)}
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={{
+        flex: 1,
+        backgroundColor: '#f8f8f8',
+      }}>
+      <StatusBar barStyle={'light-content'} />
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <FlatList
+          data={imgData}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item.uri}
+          pagingEnabled
+          onScroll={e => {
+            const x = e.nativeEvent.contentOffset.x;
+            setCurrentIndex((x / wp('100%')).toFixed(0));
+          }}
+          horizontal
+          renderItem={({item, index}) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  setImgPicker(index);
+                  setShowImg(true);
+                }}
+                style={{
+                  width: wp('100%'),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    elevation: 6,
+                    ...shadowIOS,
+                  }}>
+                  <FastImage
+                    resizeMode={FastImage.resizeMode.cover}
+                    source={{
+                      uri: item.uri,
+                      priority: 'high',
+                    }}
+                    style={{
+                      width: wp('100%'),
+                      height: hp('45%'),
+                    }}
+                  />
+                </View>
+                <LinearGradient
+                  colors={[
+                    'transparent',
+                    'rgba(23, 23, 23, 0.6)',
+                    'rgba(23, 23, 23, 1)',
+                  ]}
+                  style={{
+                    width: wp('100%'),
+                    height: hp('20%'),
+                    position: 'absolute',
+                    top: 0,
+                  }}
+                  start={{x: 0, y: 1}}
+                  end={{x: 0, y: -1}}
+                />
+                <LinearGradient
+                  colors={[
+                    'transparent',
+                    'rgba(23, 23, 23, 0.6)',
+                    'rgba(23, 23, 23, 1)',
+                  ]}
+                  style={{
+                    width: wp('100%'),
+                    height: hp('3%'),
+                    position: 'absolute',
+                    bottom: 0,
+                  }}
+                  start={{x: 0, y: 0}}
+                  end={{x: 0, y: 4}}
+                />
+              </TouchableOpacity>
+            );
+          }}
+          ListEmptyComponent={() => {
+            return (
+              <View
+                onPress={() => {
+                  setImgPicker(index);
+                  setShowImg(true);
+                }}
+                style={{
+                  width: wp('100%'),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    elevation: 6,
+                    ...shadowIOS,
+                  }}>
+                  <Image
+                    source={Images.bio_bg}
+                    style={{
+                      width: wp('100%'),
+                      height: hp('45%'),
+                    }}
+                  />
+                </View>
+                <LinearGradient
+                  colors={[
+                    'transparent',
+                    'rgba(23, 23, 23, 0.6)',
+                    'rgba(23, 23, 23, 1)',
+                  ]}
+                  style={{
+                    width: wp('100%'),
+                    height: hp('20%'),
+                    position: 'absolute',
+                    top: 0,
+                  }}
+                  start={{x: 0, y: 1}}
+                  end={{x: 0, y: -1}}
+                />
+              </View>
+            );
+          }}
         />
-      )}
-
-      <ScrollView style={{flex: 1}}>
-        <View style={styles.container}>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: '#28a745',
-              fontWeight: '600',
-              fontSize: Dimension.fontSize(22),
-              marginHorizontal: 8,
-            }}>
+        <View
+          style={{
+            position: 'absolute',
+            top: safeDimension.top,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Text style={[styles.vnName, {fontSize: wp('5.3%')}]}>
             {data.loaitv}
           </Text>
+          <View style={rowAlignCenter}>
+            <Text style={styles.latinName}>{`${latinName} `}</Text>
+            <Text style={styles.vnName}>{finder}</Text>
+          </View>
+        </View>
+        <BackBtn event={handleBack} />
+      </View>
+      <View
+        onLayout={({nativeEvent}) => {
+          const {x, y, width, height} = nativeEvent.layout;
+          setDotHeight(height);
+        }}
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: -(1.6 * dotHeight),
+          marginBottom: 1.6 * dotHeight,
+        }}>
+        {imgData.map((item, index) => {
+          return (
+            <View
+              style={{
+                width: currentIndex == index ? 30 : 8,
+                height: currentIndex == index ? 10 : 8,
+                borderRadius: currentIndex == index ? 5 : 4,
+                backgroundColor:
+                  currentIndex == index ? Colors.DEFAULT_GREEN : '#ffffff',
+                marginLeft: 5,
+              }}></View>
+          );
+        })}
+      </View>
+      <View style={styles.containerEachLine}>
+        <TouchableOpacity
+          onPress={toggleItem}
+          style={[rowAlignCenter, {justifyContent: 'space-between'}]}>
+          <Text style={styles.title}>Thông tin chung</Text>
 
-          <Text
-            style={{
-              textAlign: 'center',
-              color: '#28a745',
-              fontWeight: '600',
-              fontSize: Dimension.fontSize(16),
-              marginHorizontal: 8,
-            }}>
-            {formattedText}
-          </Text>
+          <Animated.View style={{transform: [{rotateZ: arrowTransform}]}}>
+            <Image source={Images.up} style={{width: 20, height: 20}} />
+          </Animated.View>
+        </TouchableOpacity>
 
-          {(data.iucn != null) | (data.sachdo != null) | (data.nd != null) ? (
-            <>
-              <Text
-                style={{
-                  marginLeft: 14,
-                  marginTop: 14,
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(16),
-                  fontWeight: '700',
-                }}>
-                Cấp độ bảo tồn
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: 14,
-                  marginTop: 8,
-                  flex: 1,
-                }}>
-                <View style={{flex: 2}}>
-                  <Text
-                    style={{
-                      color: 'rgba(13, 15, 35, 0.8)',
-                      fontSize: Dimension.fontSize(14),
-                    }}>
-                    IUCN:
-                  </Text>
-                </View>
-                <View style={{flex: 3}}>
-                  <Text
-                    style={{
-                      color: '#dc3545',
-                      fontSize: Dimension.fontSize(14),
-                      fontWeight: 'bold',
-                    }}>
-                    {data.iucn}
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: 14,
-                  marginTop: 8,
-                  flex: 1,
-                }}>
-                <View style={{flex: 2}}>
-                  <Text
-                    style={{
-                      color: 'rgba(13, 15, 35, 0.8)',
-                      fontSize: Dimension.fontSize(14),
-                    }}>
-                    NĐ 84/2021:
-                  </Text>
-                </View>
-                <View style={{flex: 3}}>
-                  <Text
-                    style={{
-                      color: '#dc3545',
-                      fontSize: Dimension.fontSize(14),
-                      fontWeight: 'bold',
-                    }}>
-                    {data.nd}
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: 14,
-                  marginTop: 8,
-                  flex: 1,
-                }}>
-                <View style={{flex: 2}}>
-                  <Text
-                    style={{
-                      color: 'rgba(13, 15, 35, 0.8)',
-                      fontSize: Dimension.fontSize(14),
-                    }}>
-                    Sách đỏ:
-                  </Text>
-                </View>
-                <View style={{flex: 3}}>
-                  <Text
-                    style={{
-                      color: '#dc3545',
-                      fontSize: Dimension.fontSize(14),
-                      fontWeight: 'bold',
-                    }}>
-                    {data.sachdo}
-                  </Text>
-                </View>
-              </View>
-            </>
-          ) : null}
-          <Text style={styles.font2}>Thông tin chung</Text>
-          <View style={styles.font1}>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(14),
-                }}>
-                Tên Ngành La Tinh:
-              </Text>
+        {toggleCommonInfo && (
+          <View style={{marginLeft: wp('1.8%')}}>
+            <View style={styles.containerCommonInfo}>
+              <Text style={styles.lable}>Tên Ngành La Tinh:</Text>
+              <Text style={styles.content}>{`  ${data.nganhlatin}`}</Text>
             </View>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: Dimension.fontSize(14),
-                  fontWeight: 'bold',
-                  textTransform: 'uppercase',
-                }}>
-                {data.nganhlatin}
-              </Text>
+            <View style={styles.containerCommonInfo}>
+              <Text style={styles.lable}>Tên Ngành Việt Nam:</Text>
+              <Text style={styles.content}>{`  ${data.nganhtv}`}</Text>
+            </View>
+            <View style={styles.containerCommonInfo}>
+              <Text style={styles.lable}>Tên Lớp La Tinh:</Text>
+              <Text style={styles.content}>{`  ${data.loplatin}`}</Text>
+            </View>
+            <View style={styles.containerCommonInfo}>
+              <Text style={styles.lable}>Tên Lớp Việt Nam:</Text>
+              <Text style={styles.content}>{`  ${data.loptv}`}</Text>
+            </View>
+            <View style={styles.containerCommonInfo}>
+              <Text style={styles.lable}>Tên Bộ La Tinh:</Text>
+              <Text style={styles.content}>{`  ${data.bolatin}`}</Text>
+            </View>
+            <View style={styles.containerCommonInfo}>
+              <Text style={styles.lable}>Tên Bộ Việt Nam:</Text>
+              <Text style={styles.content}>{`  ${data.botv}`}</Text>
+            </View>
+            <View style={styles.containerCommonInfo}>
+              <Text style={styles.lable}>Tên Họ La Tinh:</Text>
+              <Text style={styles.content}>{`  ${data.holatin}`}</Text>
+            </View>
+            <View style={styles.containerCommonInfo}>
+              <Text style={styles.lable}>Tên Họ Việt Nam:</Text>
+              <Text style={styles.content}>{` ${data.hotv}`}</Text>
+            </View>
+            <View style={styles.containerCommonInfo}>
+              <Text style={styles.lable}>Tên Chi La Tinh:</Text>
+              <Text style={styles.content}>{`  ${data.chilatin}`}</Text>
+            </View>
+            <View style={styles.containerCommonInfo}>
+              <Text style={styles.lable}>Tên Chi Việt Nam:</Text>
+              <Text style={styles.content}>{`  ${data.chitv}`}</Text>
             </View>
           </View>
-          <View style={styles.font1}>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(14),
-                }}>
-                Tên Ngành Việt Nam:
-              </Text>
-            </View>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: Dimension.fontSize(14),
-                  fontWeight: 'bold',
-                  textTransform: 'uppercase',
-                }}>
-                {data.nganhtv}
-              </Text>
-            </View>
-          </View>
+        )}
+      </View>
+      <View style={styles.containerEachLine}>
+        <Text style={styles.title}>Đặc điểm</Text>
 
-          <View style={styles.font1}>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(14),
-                }}>
-                Tên Lớp La Tinh:
-              </Text>
-            </View>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: Dimension.fontSize(14),
-                  fontWeight: 'bold',
-                  textTransform: 'uppercase',
-                }}>
-                {data.loplatin}
-              </Text>
-            </View>
+        {data.dacdiem && (
+          <View style={styles.containerContent}>
+            <Text style={styles.lable}>{data.dacdiem}</Text>
           </View>
+        )}
+      </View>
+      <View style={styles.containerEachLine}>
+        <Text style={styles.title}>Giá trị</Text>
 
-          <View style={styles.font1}>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(14),
-                }}>
-                Tên Lớp Việt Nam:
-              </Text>
-            </View>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: Dimension.fontSize(14),
-                  fontWeight: 'bold',
-                  textTransform: 'uppercase',
-                }}>
-                {data.loptv}
-              </Text>
-            </View>
+        {data.giatri && (
+          <View style={styles.containerContent}>
+            <Text style={styles.lable}>{data.giatri}</Text>
           </View>
+        )}
+      </View>
+      <View style={styles.containerEachLine}>
+        <Text style={styles.title}>Phân bố</Text>
 
-          <View style={styles.font1}>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(14),
-                }}>
-                Tên Bộ La Tinh:
-              </Text>
-            </View>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: Dimension.fontSize(14),
-                  fontWeight: 'bold',
-                  textTransform: 'uppercase',
-                }}>
-                {data.bolatin}
-              </Text>
-            </View>
+        {data.phanbo && (
+          <View style={styles.containerContent}>
+            <Text style={styles.lable}>{data.phanbo}</Text>
           </View>
+        )}
+      </View>
+      <View style={styles.containerEachLine}>
+        <Text style={styles.title}>Nguồn</Text>
 
-          <View style={styles.font1}>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(14),
-                }}>
-                Tên Bộ Việt Nam:
-              </Text>
-            </View>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: Dimension.fontSize(14),
-                  fontWeight: 'bold',
-                  textTransform: 'uppercase',
-                }}>
-                {data.botv}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.font1}>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(14),
-                }}>
-                Tên Họ La Tinh:
-              </Text>
-            </View>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: Dimension.fontSize(14),
-                  fontWeight: 'bold',
-                  fontStyle: 'italic',
-                }}>
-                {data.holatin}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.font1}>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(14),
-                }}>
-                Tên Họ Việt Nam:
-              </Text>
-            </View>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: Dimension.fontSize(14),
-                  fontWeight: 'bold',
-                }}>
-                {data.hotv}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.font1}>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(14),
-                }}>
-                Tên Chi La Tinh:
-              </Text>
-            </View>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: Dimension.fontSize(14),
-                  fontWeight: 'bold',
-                  fontStyle: 'italic',
-                }}>
-                {data.chilatin}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.font1}>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.8)',
-                  fontSize: Dimension.fontSize(14),
-                }}>
-                Tên Chi Việt Nam:
-              </Text>
-            </View>
-            <View style={{flex: 1}}>
-              <Text
-                style={{
-                  color: 'rgba(13, 15, 35, 0.6)',
-                  fontSize: Dimension.fontSize(14),
-                  fontWeight: 'bold',
-                }}>
-                {data.chitv}
-              </Text>
-            </View>
-          </View>
-
-          <Text style={styles.font2}>Hình ảnh</Text>
+        {data.nguon && (
           <TouchableOpacity
             onPress={() => {
-              setImageViewVisible(true);
+              OpenURL(data.nguon);
             }}
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 8,
-              flex: 1,
-            }}>
-            {data.hinh1 != '' && (
-              <View
-                style={{
-                  flex: 1,
-                  width: width / 3 - 25,
-                  height: width / 3 - 25,
-                  paddingHorizontal: 5,
-                }}>
-                <Image
-                  source={{
-                    uri: data.link + data.hinh1,
-                  }}
-                  style={{height: width / 3 - 25, width: width / 3 - 25}}
-                />
-              </View>
-            )}
-            {data.hinh2 != '' && (
-              <View
-                style={{
-                  flex: 1,
-                  width: width / 3 - 25,
-                  height: width / 3 - 25,
-                }}>
-                <Image
-                  source={{
-                    uri: data.link + data.hinh2,
-                  }}
-                  style={{height: width / 3 - 25, width: width / 3 - 25}}
-                />
-              </View>
-            )}
-            {data.hinh3 != '' && (
-              <View
-                style={{
-                  flex: 1,
-                  width: width / 3 - 25,
-                  height: width / 3 - 25,
-                  paddingHorizontal: 5,
-                }}>
-                <Image
-                  source={{
-                    uri: data.link + data.hinh3,
-                  }}
-                  style={{height: width / 3 - 25, width: width / 3 - 25}}
-                />
-              </View>
-            )}
+            style={styles.containerContent}>
+            <Text
+              style={[
+                styles.lable,
+                {textDecorationLine: 'underline', color: Colors.DEFAULT_GREEN},
+              ]}>
+              {data.nguon}
+            </Text>
           </TouchableOpacity>
-
-          <Text style={styles.font2}>Đặc điểm</Text>
-          <Text
-            style={{
-              marginHorizontal: 14,
-              color: 'rgba(13, 15, 35, 0.6)',
-              fontSize: Dimension.fontSize(16),
-              marginTop: 8,
-              textAlign: 'justify',
-            }}>
-            {data.dacdiem}
-          </Text>
-
-          <Text style={styles.font2}>Giá trị</Text>
-          <Text
-            style={{
-              marginHorizontal: 14,
-              color: 'rgba(13, 15, 35, 0.6)',
-              fontSize: Dimension.fontSize(16),
-              marginTop: 8,
-              textAlign: 'justify',
-            }}>
-            {data.giatri}
-          </Text>
-
-          <Text style={styles.font2}>Phân bố</Text>
-          <Text
-            style={{
-              marginHorizontal: 14,
-              color: 'rgba(13, 15, 35, 0.6)',
-              fontSize: Dimension.fontSize(16),
-              marginTop: 8,
-              textAlign: 'justify',
-            }}>
-            {data.phanbo}
-          </Text>
-
-          <Text style={styles.font2}>Nguồn</Text>
-          <Text
-            style={{
-              marginHorizontal: 14,
-              color: 'rgba(13, 15, 35, 0.6)',
-              fontSize: Dimension.fontSize(16),
-              marginTop: 8,
-              textAlign: 'left',
-            }}>
-            {data.nguon}
-          </Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        )}
+      </View>
+      {imgData.length > 0 && (
+        <ImageView
+          images={imgData}
+          imageIndex={imgPicker}
+          visible={showImg}
+          onRequestClose={() => {
+            setShowImg(false);
+          }}
+        />
+      )}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f2f2f2',
-  },
-  searchFilterContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: Dimension.setWidth(3),
-    marginTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
+  vnName: {
+    color: '#71c96e',
+    fontSize: wp('4.5%'),
+    fontFamily: Fonts.SF_MEDIUM,
+    textShadowRadius: 6,
+    textShadowColor: 'grey',
   },
 
-  headerContainer: {
-    width: '8%',
-  },
-  backImg: {
-    width: 25,
-    height: 25,
-    tintColor: 'Black',
-  },
-  imageMain: {
-    width: 380,
-    height: 220,
-    borderRadius: 5,
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  header: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imageBackGroud: {
-    flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-  },
-  picker: {
-    margin: 3,
-  },
-  titleText: {
-    fontSize: Dimension.fontSize(28),
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: '#655',
-    paddingBottom: 10,
-  },
-  headingText: {
-    fontSize: Dimension.fontSize(18),
+  latinName: {
+    color: '#71c96e',
+    fontSize: wp('4.5%'),
+    textShadowRadius: 6,
+    textShadowColor: 'grey',
     fontStyle: 'italic',
-    fontWeight: 'bold',
-    color: '#655',
-    paddingBottom: 7,
-    paddingTop: 5,
+    fontWeight: '600',
   },
-  textContent: {
+
+  containerEachLine: {
+    backgroundColor: '#ffffff',
+    marginHorizontal: wp('3%'),
+    marginVertical: hp('0.9%'),
+    paddingVertical: hp('1.5%'),
+    paddingHorizontal: wp('2%'),
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.INACTIVE_GREY,
+  },
+
+  title: {
+    fontFamily: Fonts.SF_SEMIBOLD,
+    fontSize: wp('3.8%'),
+  },
+
+  containerCommonInfo: {
+    ...rowAlignCenter,
+    marginTop: hp('1.6%'),
+  },
+
+  lable: {
+    fontFamily: Fonts.SF_THIN,
+    fontSize: wp('3.3%'),
+    color: '#4d4d4d',
     textAlign: 'justify',
   },
-  font1: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 14,
-    marginTop: 8,
-    flex: 1,
+
+  content: {
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: wp('3.5%'),
+    color: '#469943',
   },
-  font2: {
-    marginLeft: 14,
-    marginTop: 14,
-    color: 'rgba(13, 15, 35, 0.8)',
-    fontSize: Dimension.fontSize(16),
-    fontWeight: '700',
+
+  containerContent: {
+    marginHorizontal: wp('1.8%'),
+    marginTop: hp('1%'),
   },
 });
 

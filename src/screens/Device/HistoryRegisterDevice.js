@@ -418,9 +418,9 @@ const HistoryRegisterDevice = ({navigation}) => {
             <InternalSkeleton />
           ) : (
             <FlatList
-              contentContainerStyle={{
+              style={{
                 flex: 1,
-                marginTop: Dimension.setHeight(1),
+                paddingTop: Dimension.setHeight(2),
               }}
               showsVerticalScrollIndicator={false}
               data={handleFilter(indexPicker)}

@@ -4,6 +4,10 @@ import {FlatList, StyleSheet, Dimensions, View} from 'react-native';
 import Dimension from '../contants/Dimension';
 import {shadowIOS} from '../contants/propsIOS';
 import Colors from '../contants/Colors';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const width = Dimensions.get('window').width / 2 - 22;
 const renderTemp = new Array(6);
@@ -35,7 +39,7 @@ export const BioSkeleton = () => {
               _light={{
                 borderColor: 'coolGray.200',
               }}>
-              <Skeleton h="40" startColor="success.100" />
+              <Skeleton h="40" />
               <Skeleton.Text lines={2} alignItems="center" px="4" mb={1} />
               <Skeleton.Text
                 w={'66%'}
@@ -175,6 +179,82 @@ export const DocumentSkeleton = () => {
               py="1"
               _line={{h: 3}}
             />
+          </View>
+        );
+      }}
+    />
+  );
+};
+
+export const StaffSkeleton = () => {
+  return (
+    <FlatList
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{
+        flex: 1,
+        marginTop: Dimension.setHeight(1),
+        marginHorizontal: Dimension.setWidth(0.6),
+      }}
+      data={renderTemp.concat(renderTemp)}
+      keyExtractor={(_, index) => index.toString()}
+      renderItem={({item}) => {
+        return (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              borderRadius: 12,
+              borderColor: Colors.WHITE,
+              backgroundColor: Colors.WHITE,
+              paddingHorizontal: Dimension.setWidth(2),
+              paddingVertical: Dimension.setWidth(4),
+              marginVertical: Dimension.setWidth(1.2),
+              marginHorizontal: Dimension.setWidth(2),
+              ...shadowIOS,
+            }}>
+            <Skeleton size={12} rounded="full" mr={3} />
+            <VStack width={'66%'}>
+              <Skeleton.Text w="55%" lines={1} px="1" _line={{h: 4}} mb={3} />
+              <Skeleton.Text w="70%" lines={1} px="1" />
+            </VStack>
+            <VStack width={'20%'} alignItems={'flex-end'}>
+              <Skeleton.Text w="80%" lines={1} px="1" mb={3} />
+              <Skeleton.Text w="100%" lines={1} px="1" _line={{h: 4}} />
+            </VStack>
+          </View>
+        );
+      }}
+    />
+  );
+};
+
+export const NationalParkSkeleton = () => {
+  return (
+    <FlatList
+      showsVerticalScrollIndicator={false}
+      style={{
+        marginTop: hp('2%'),
+      }}
+      data={renderTemp}
+      keyExtractor={(_, index) => index.toString()}
+      renderItem={({item}) => {
+        return (
+          <View
+            style={{
+              marginBottom: hp('2%'),
+              marginHorizontal: wp('2%'),
+              elevation: 6,
+              ...shadowIOS,
+            }}>
+            <VStack w="100%" rounded="16" alignItems="center">
+              <Skeleton
+                height={hp('21%')}
+                rounded="16"
+                startColor={'dark.600'}
+                endColor={'blueGray.400'}
+              />
+            </VStack>
           </View>
         );
       }}

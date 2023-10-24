@@ -13,6 +13,7 @@ import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
 import {shadowIOS} from '../contants/propsIOS';
 import {fontDefault} from '../contants/Variable';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const ListInfo = ({info, index}) => {
   const role =
@@ -36,7 +37,7 @@ const ListInfo = ({info, index}) => {
               top: 0,
               left: 0,
               right: 0,
-              bottom: Dimension.setHeight(4.4),
+              bottom: hp('4%'),
             }}>
             <View style={styles.avtContainer}>
               <Image style={styles.avatarIfee} src={info?.avatar} />
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     borderRadius: 10,
     backgroundColor: '#ffffff',
-    height: Dimension.boxHeight(148),
+    height: hp('16%'),
     marginHorizontal: Dimension.setWidth(10),
     marginTop: Dimension.setHeight(8),
     elevation: 5,
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
   img: {
     width: 30,
     height: 30,
-    tintColor: Colors.DEFAULT_GREEN,
+    tintColor: '#3a5072ff',
   },
 
   textContainer: {

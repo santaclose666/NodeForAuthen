@@ -5,13 +5,14 @@ import Dimension from '../../contants/Dimension';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import DocumentListScreen from './DocumentListScreen';
+import DVMTRMapScreen from './DVMTRMapScreen';
 
 const MainVNFF = ({navigation}) => {
   const menuArr = [
     {
       title: 'Bản đồ',
       icon: Images.documentmv,
-      component: null, //add map here
+      component: <DVMTRMapScreen navigation={navigation} />,
     },
     {
       title: 'Tài liệu',
@@ -19,8 +20,8 @@ const MainVNFF = ({navigation}) => {
       component: <DocumentListScreen navigation={navigation} />,
     },
   ];
-  const [menuId, setMenuId] = useState(1);
-  const [ComponentPicker, setComponentPicker] = useState(menuArr[1].component);
+  const [menuId, setMenuId] = useState(0);
+  const [ComponentPicker, setComponentPicker] = useState(menuArr[0].component);
 
   return (
     <View style={{flex: 1}}>
@@ -32,7 +33,6 @@ const MainVNFF = ({navigation}) => {
           flexDirection: 'row',
           alignItems: 'center',
           elevation: 5,
-          marginBottom: 5,
         }}>
         {menuArr.map((item, index) => {
           const borderTopColor =

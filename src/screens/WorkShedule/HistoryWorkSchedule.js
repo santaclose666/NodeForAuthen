@@ -57,6 +57,10 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import {screen} from '../AllScreen/allScreen';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const approveArr = [
   {
@@ -371,7 +375,7 @@ const HistoryWorkShedule = ({navigation}) => {
         ((item?.status == 0 || item?.kt_congtac == 1) &&
           item?.id_user != user?.id &&
           user?.vitri_ifee == 3 &&
-          filterUser?.vitri_ifee > 3) ||
+          item?.vitri_ifee > 3) ||
         (user?.vitri_ifee == 1 && (item?.status == 0 || item?.kt_congtac == 1))
       );
     };
@@ -595,9 +599,9 @@ const HistoryWorkShedule = ({navigation}) => {
           ) : (
             <FlatList
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
+              style={{
                 flex: 1,
-                paddingTop: Dimension.setHeight(3),
+                paddingTop: Dimension.setHeight(2),
               }}
               data={handleFilter(indexPicker)}
               keyExtractor={(_, index) => index.toString()}
@@ -896,7 +900,7 @@ const HistoryWorkShedule = ({navigation}) => {
             style={{
               flex: 1,
               position: 'absolute',
-              bottom: Dimension.setHeight(4.5),
+              bottom: hp('11%'),
               right: Dimension.setWidth(6),
             }}>
             <StaggerUI

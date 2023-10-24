@@ -72,6 +72,11 @@ import {
   getRegisterOfficeSuccess,
 } from './officeItemSlice';
 import {getDeviceFailed, getDeviceStart, getDeviceSuccess} from './deviceSlice';
+import {
+  getNationalParkFailed,
+  getNationalParkStart,
+  getNationalParkSuccess,
+} from './nationalPark';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -691,13 +696,16 @@ export const sendFeedback = async data => {
 
 /////////////////////  BIO DATA  ////////////////////
 
-export const getAllManageData = async () => {
+export const getAllManageData = async dispatch => {
+  dispatch(getNationalParkStart());
   try {
-    const res = await axios.get('https://forestry.ifee.edu.vn/api/service/all');
+    const res = await axios.get(
+      'https://forestry.ifee.edu.vn/api/service/getNationalPark',
+    );
 
-    return res.data;
+    dispatch(getNationalParkSuccess(res.data));
   } catch (error) {
-    console.log(error);
+    dispatch(getNationalParkFailed());
   }
 };
 
@@ -989,6 +997,57 @@ export const cancelRegisterOfficeItem = async data => {
     await axios.get(
       `https://management.ifee.edu.vn/api/vpp/pheduyet/xoa/${data.id_user}`,
     );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  CUC LAM NGHIEP  ////////////////////
+const headers = {
+  apiKey: `eyJ4NXQiOiJPREUzWTJaaE1UQmpNRE00WlRCbU1qQXlZemxpWVRJMllqUmhZVFpsT0dJeVptVXhOV0UzWVE9PSIsImtpZCI6ImdhdGV3YXlfY2VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6ImFkbWluIiwidGllclF1b3RhVHlwZSI6bnVsbCwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJEZWZhdWx0QXBwbGljYXRpb24iLCJpZCI6MSwidXVpZCI6IjNmMDYyM2E2LWFkYjctNDcwOC1hNTA0LWZhYWQxNjc1NmU2MyJ9LCJpc3MiOiJodHRwczpcL1wvYXBpLmN1Y2xhbW5naGllcC5nb3Yudm46OTQ0M1wvb2F1dGgyXC90b2tlbiIsInRpZXJJbmZvIjp7IkJyb256ZSI6eyJ0aWVyUXVvdGFUeXBlIjoicmVxdWVzdENvdW50IiwiZ3JhcGhRTE1heENvbXBsZXhpdHkiOjAsImdyYXBoUUxNYXhEZXB0aCI6MCwic3RvcE9uUXVvdGFSZWFjaCI6dHJ1ZSwic3Bpa2VBcnJlc3RMaW1pdCI6MCwic3Bpa2VBcnJlc3RVbml0IjpudWxsfX0sImtleXR5cGUiOiJQUk9EVUNUSU9OIiwicGVybWl0dGVkUmVmZXJlciI6IiIsInN1YnNjcmliZWRBUElzIjpbeyJzdWJzY3JpYmVyVGVuYW50RG9tYWluIjoiY2FyYm9uLnN1cGVyIiwibmFtZSI6Ik5ld3NTaGFyaW5nU2VydmljZSIsImNvbnRleHQiOiJcL25ld3NcLzEuMCIsInB1Ymxpc2hlciI6ImFkbWluIiwidmVyc2lvbiI6IjEuMCIsInN1YnNjcmlwdGlvblRpZXIiOiJCcm9uemUifV0sInRva2VuX3R5cGUiOiJhcGlLZXkiLCJwZXJtaXR0ZWRJUCI6IiIsImlhdCI6MTY5NzY2MTg1NCwianRpIjoiZmZhNjQ4OGUtZmNhYy00ZWIzLTgwOWQtZjQwMDRmMDE3OTE4In0=.PdujDWA0qQXY1Mnb3o5_tBaXbU38Ro3HqYFNg8ce3Tp3e_FQ1wD-VPJA9C5YnZ3vL9zuKvJNhY9K3HBjNx0GHu4328hARIAwWLDRIFSYZfihsyi8E6rl2tnQYq9p6BOU-M9jp-doqC7tGDaxRZNp0zWeN9lRuFG60eGwHviWisbXMGlvb6ShvWUPWAT4EFVOkQ9P1Bgv6_AI3DFGnUF2wxTwccIU-nTUH0Ncz3DAoKqDa0lg96Rgs9Y42Wd3luMSwi3QbaIRR-s8pvalDFUsofo0hezmKkY7uxEbCayPRrxfKmx1feV8XK4D_XWDQH76YmlOS6wsLCod4cPsDOM9dA==`,
+  'Content-Type': 'application/json',
+};
+
+export const getCategoryForestry = async () => {
+  try {
+    const res = await axios.get(
+      `https://api.cuclamnghiep.gov.vn/news/1.0/news/categories/`,
+      {
+        headers: headers,
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getNewsList = async id_category => {
+  try {
+    const res = await axios.get(
+      `https://api.cuclamnghiep.gov.vn/news/1.0/news/categories/${id_category}`,
+      {
+        headers: headers,
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDetailNew = async id_tintuc => {
+  try {
+    const res = await axios.get(
+      `https://api.cuclamnghiep.gov.vn/news/1.0/news/detail/${id_tintuc}`,
+      {
+        headers: headers,
+      },
+    );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }
