@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useLayoutEffect,
-  memo,
-  useRef,
-  useCallback,
-} from 'react';
+import React, {useState, useLayoutEffect, useRef, useCallback} from 'react';
 import {
   View,
   Text,
@@ -35,6 +29,7 @@ import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import {Swipeable} from 'react-native-gesture-handler';
 import {getRepairList, registerRepair} from '../../redux/apiRequest';
+import Colors from '../../contants/Colors';
 
 if (Platform.OS == 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -44,16 +39,10 @@ const RegisterRepair = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const subject = useSelector(state => state.subject.subject?.data);
   const [listDevice, setListDevice] = useState([]);
-  const [arrRender, setArrRender] = useState([
-    {
-      listValue: null,
-      status: '',
-    },
-  ]);
+  const [arrRender, setArrRender] = useState([]);
   const [loading, setLoading] = useState(false);
   const [registerPerson, setRegisterPerson] = useState(user.hoten);
-  const [subjectValue, setSubjectValue] = useState(0);
-  const [textTemp, setTextTemp] = useState('');
+  const [subjectValue, setSubjectValue] = useState(1);
 
   const handlePickType = (item, index) => {
     const updatedArrRender = [...arrRender];
@@ -70,9 +59,15 @@ const RegisterRepair = ({navigation}) => {
     }
   };
 
-  const handleChangeText = (text, index) => {
+  const handleDevice = (text, index) => {
     const updatedArrRender = [...arrRender];
-    console.log(text);
+
+    updatedArrRender[index].listValue = text;
+    setArrRender(updatedArrRender);
+  };
+
+  const handleStatus = (text, index) => {
+    const updatedArrRender = [...arrRender];
 
     updatedArrRender[index].status = text;
     setArrRender(updatedArrRender);
@@ -83,7 +78,8 @@ const RegisterRepair = ({navigation}) => {
     const updatedArrRender = [...arrRender];
 
     updatedArrRender.push({
-      listValue: null,
+      listDevice: listDevice,
+      listValue: '',
       status: '',
     });
     setArrRender(updatedArrRender);
@@ -125,7 +121,6 @@ const RegisterRepair = ({navigation}) => {
         arr_thietbi: devicePicker,
         arr_tinhtrang: status,
       };
-      console.log(data);
       try {
         const res = await registerRepair(data);
 
@@ -147,7 +142,15 @@ const RegisterRepair = ({navigation}) => {
       const data = await getRepairList();
 
       const listDevice = [...data, {id: data.length + 1, thietbi: 'Khác'}];
+      const tempArr = [
+        {
+          listDevice: listDevice,
+          listValue: '',
+          status: '',
+        },
+      ];
 
+      setArrRender(tempArr);
       setListDevice(listDevice);
     } catch (error) {
       console.log(error);
@@ -174,6 +177,24 @@ const RegisterRepair = ({navigation}) => {
 
   const RenderOptionData = useCallback(
     ({data, index}) => {
+      const [textDevice, setTextDevice] = useState('');
+      const [textStatus, setTextStatus] = useState('');
+      const timeout = useRef(null);
+
+      const onChange = (isDevice, text) => {
+        isDevice ? setTextDevice(text) : setTextStatus(text);
+
+        clearTimeout(timeout.current);
+
+        timeout.current = setTimeout(() => {
+          if (isDevice) {
+            handleDevice(text, index);
+          } else {
+            handleStatus(text, index);
+          }
+        });
+      };
+
       return (
         <Swipeable
           renderRightActions={() => {
@@ -190,40 +211,83 @@ const RegisterRepair = ({navigation}) => {
               <View style={rowAlignCenter}>
                 <Text style={styles.title}>Loại thiết bị</Text>
                 <RedPoint />
+                {data.listValue == 'Khác' && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      const updatedArrRender = [...arrRender];
+                      updatedArrRender[index].listValue = '';
+
+                      setArrRender(updatedArrRender);
+                    }}
+                    style={{marginLeft: '28%'}}>
+                    <Image
+                      source={Images.arrow}
+                      style={{
+                        width: 20,
+                        height: 20,
+                        tintColor: Colors.DEFAULT_GREEN,
+                      }}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
-              <Dropdown
-                style={styles.dropdown}
-                placeholder="Chọn loại thiết bị"
-                autoScroll={false}
-                showsVerticalScrollIndicator={false}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                containerStyle={styles.containerOptionStyle}
-                iconStyle={styles.iconStyle}
-                itemContainerStyle={styles.itemContainer}
-                itemTextStyle={styles.itemText}
-                fontFamily={Fonts.SF_MEDIUM}
-                activeColor="#eef2feff"
-                data={listDevice}
-                maxHeight={Dimension.setHeight(30)}
-                labelField="thietbi"
-                valueField="thietbi"
-                value={data.listValue}
-                onChange={item => {
-                  handlePickType(item, index);
-                }}
-              />
+              {data.listValue != 'Khác' ? (
+                <Dropdown
+                  style={styles.dropdown}
+                  placeholder="Chọn loại thiết bị"
+                  autoScroll={false}
+                  showsVerticalScrollIndicator={false}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  containerStyle={styles.containerOptionStyle}
+                  iconStyle={styles.iconStyle}
+                  itemContainerStyle={styles.itemContainer}
+                  itemTextStyle={styles.itemText}
+                  fontFamily={Fonts.SF_MEDIUM}
+                  activeColor="#eef2feff"
+                  data={data.listDevice}
+                  maxHeight={Dimension.setHeight(30)}
+                  labelField="thietbi"
+                  valueField="thietbi"
+                  value={data.listValue}
+                  onChange={item => {
+                    handlePickType(item, index);
+                  }}
+                />
+              ) : (
+                <TextInput
+                  style={styles.inputText}
+                  value={data.listValue || textDevice}
+                  onChangeText={e => {
+                    onChange(true, e);
+                  }}
+                  onEndEditing={e => {
+                    handleTimeout(true, e.nativeEvent.text);
+                  }}
+                  placeholder="Nhập thiết bị khác!"
+                />
+              )}
             </View>
             <View style={[styles.containerEachLine, {width: '48.6%'}]}>
               <View style={rowAlignCenter}>
-                <Text style={styles.title}>Tình trạng hoạt động</Text>
+                <Text
+                  style={[
+                    styles.title,
+                    {color: data.listValue ? '#8bc7bc' : Colors.INACTIVE_GREY},
+                  ]}>
+                  Tình trạng hoạt động
+                </Text>
                 <RedPoint />
               </View>
               <TextInput
+                editable={data.listValue ? true : false}
                 style={styles.inputText}
-                value={data.status}
+                value={data.status || textStatus}
                 onChangeText={e => {
-                  handleChangeText(e, index);
+                  onChange(false, e);
+                }}
+                onEndEditing={e => {
+                  handleTimeout(false, e.nativeEvent.text);
                 }}
               />
             </View>

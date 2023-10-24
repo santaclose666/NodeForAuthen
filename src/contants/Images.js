@@ -208,6 +208,7 @@ const Images = {
   mushroom: require('../assets/images/mushroom.png'),
   cln: require('../assets/images/cln.png'),
   repair: require('../assets/images/repair.png'),
+  arrow: require('../assets/images/arrow.png'),
 };
 
 export default Images;
