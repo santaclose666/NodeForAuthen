@@ -20,15 +20,19 @@ import {fontDefault} from '../../contants/Variable';
 import {screen} from '../../screens/AllScreen/allScreen';
 import {EmptyList} from '../../components/FlatlistComponent';
 import Images from '../../contants/Images';
+import {NewsSkeleton} from '../../components/Skeleton';
 
 const NewsForestry = ({navigation}) => {
   const [featureIndex, setFeatureIndex] = useState(0);
   const [newsArr, setNewsArr] = useState([]);
   const [featureArr, setFeatureArr] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchNewsList = async id => {
+    setLoading(true);
     const list = await getNewsList(id);
     setNewsArr(list);
+    setLoading(false);
   };
 
   const handlePickFeature = async (item, index) => {
@@ -98,69 +102,73 @@ const NewsForestry = ({navigation}) => {
         </View>
 
         <View style={{flex: 1, marginTop: Dimension.setHeight(1)}}>
-          <FlatList
-            data={newsArr}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    const data = {
-                      ...item,
-                      avatar: item.thumbnail,
-                    };
-                    navigation.navigate(screen.detailNews, {item: data});
-                  }}
-                  style={styles.hotNewsContainer}
-                  key={index}>
-                  {item.thumbnail.length != 0 ? (
-                    <Image
-                      style={styles.newsImg}
-                      src={item.thumbnail}
-                      resizeMode="cover"
-                    />
-                  ) : (
-                    <Image
-                      style={styles.newsImg}
-                      source={Images.cln}
-                      resizeMode="contain"
-                    />
-                  )}
-                  <View
-                    style={{
-                      marginTop: Dimension.setHeight(0.6),
-                      marginHorizontal: Dimension.setWidth(2.2),
-                    }}>
-                    <Text
-                      numberOfLines={2}
+          {loading ? (
+            <NewsSkeleton />
+          ) : (
+            <FlatList
+              data={newsArr}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      const data = {
+                        ...item,
+                        avatar: item.thumbnail,
+                      };
+                      navigation.navigate(screen.detailNews, {item: data});
+                    }}
+                    style={styles.hotNewsContainer}
+                    key={index}>
+                    {item.thumbnail.length != 0 ? (
+                      <Image
+                        style={styles.newsImg}
+                        src={item.thumbnail}
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <Image
+                        style={styles.newsImg}
+                        source={Images.cln}
+                        resizeMode="contain"
+                      />
+                    )}
+                    <View
                       style={{
-                        fontFamily: Fonts.SF_SEMIBOLD,
-                        fontSize: Dimension.fontSize(14),
-                        ...fontDefault,
-                        textAlign: 'justify',
+                        marginTop: Dimension.setHeight(0.6),
+                        marginHorizontal: Dimension.setWidth(2.2),
                       }}>
-                      {item.title}
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: Fonts.SF_REGULAR,
-                        color: Colors.DEFAULT_BLACK,
-                        opacity: 0.6,
-                        fontSize: Dimension.fontSize(12),
-                      }}>
-                      {item.createDate.replace(/\s+/g, ' - ')}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-            initialNumToRender={6}
-            windowSize={6}
-            removeClippedSubviews={true}
-            refreshing={true}
-            ListEmptyComponent={() => {
-              return <EmptyList />;
-            }}
-          />
+                      <Text
+                        numberOfLines={2}
+                        style={{
+                          fontFamily: Fonts.SF_SEMIBOLD,
+                          fontSize: Dimension.fontSize(14),
+                          ...fontDefault,
+                          textAlign: 'justify',
+                        }}>
+                        {item.title}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Fonts.SF_REGULAR,
+                          color: Colors.DEFAULT_BLACK,
+                          opacity: 0.6,
+                          fontSize: Dimension.fontSize(12),
+                        }}>
+                        {item.createDate.replace(/\s+/g, ' - ')}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              }}
+              initialNumToRender={6}
+              windowSize={6}
+              removeClippedSubviews={true}
+              refreshing={true}
+              ListEmptyComponent={() => {
+                return <EmptyList />;
+              }}
+            />
+          )}
         </View>
       </SafeAreaView>
     </LinearGradientUI>

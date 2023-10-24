@@ -32,7 +32,6 @@ export const BioSkeleton = () => {
               space={4}
               overflow="hidden"
               rounded="md"
-              alignItems="center"
               _dark={{
                 borderColor: 'coolGray.500',
               }}
@@ -40,14 +39,52 @@ export const BioSkeleton = () => {
                 borderColor: 'coolGray.200',
               }}>
               <Skeleton h="40" />
-              <Skeleton.Text lines={2} alignItems="center" px="4" mb={1} />
-              <Skeleton.Text
-                w={'66%'}
-                lines={1}
-                alignItems="center"
-                px="4"
-                mb={3}
-              />
+              <Skeleton.Text lines={2} px="4" mb={1} />
+              <Skeleton.Text w={'66%'} lines={1} px="4" mb={3} />
+            </VStack>
+          </View>
+        );
+      }}
+    />
+  );
+};
+
+export const NewsSkeleton = () => {
+  return (
+    <FlatList
+      showsVerticalScrollIndicator={false}
+      data={renderTemp}
+      renderItem={({item, index}) => {
+        return (
+          <View
+            style={{
+              marginHorizontal: Dimension.setWidth(3.5),
+              borderWidth: 0.4,
+              borderRadius: 10,
+              borderColor: Colors.WHITE,
+              backgroundColor: Colors.WHITE,
+              marginBottom: Dimension.setHeight(1.8),
+              elevation: 5,
+              ...shadowIOS,
+              padding: 5,
+            }}
+            key={index}>
+            <VStack
+              w="100%"
+              borderWidth="1"
+              space={4}
+              overflow="hidden"
+              rounded="md"
+              alignItems="flex-start"
+              _dark={{
+                borderColor: 'coolGray.500',
+              }}
+              _light={{
+                borderColor: 'coolGray.200',
+              }}>
+              <Skeleton h="40" />
+              <Skeleton.Text lines={2} px="4" mb={1} />
+              <Skeleton.Text w={'30%'} lines={1} px="4" mb={3} _line={{h: 2}} />
             </VStack>
           </View>
         );
@@ -259,6 +296,20 @@ export const NationalParkSkeleton = () => {
         );
       }}
     />
+  );
+};
+
+export const TextRenderSkeleton = () => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        marginTop: Dimension.setHeight(2),
+        width: wp('100%'),
+      }}>
+      <Skeleton h="40" w="95%" mb={4} />
+      <Skeleton.Text w="95%" lines={16} _line={{h: 4}} />
+    </View>
   );
 };
 
