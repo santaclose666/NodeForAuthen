@@ -45,6 +45,8 @@ import HistoryRegisterDevice from '../screens/Device/HistoryRegisterDevice';
 import NewsForestry from '../screens/ForestryDepartment/NewForestry';
 import NationalParkList from '../screens/NationalPark/NationalParkList';
 import {screen} from '../screens/AllScreen/allScreen';
+import RegisterRepair from '../screens/Repair/RegisterRepair';
+import HistoryRepair from '../screens/Repair/HistoryRepair';
 
 const Stack = createStackNavigator();
 
@@ -93,6 +95,8 @@ const RootNavigator = () => {
     {name: screen.contributorData, component: ContributionDataScreen},
     {name: screen.forestryDepartment, component: NewsForestry},
     {name: screen.nationalPark, component: NationalParkList},
+    {name: screen.registerRepair, component: RegisterRepair},
+    {name: screen.historyRepair, component: HistoryRepair},
   ];
 
   return (

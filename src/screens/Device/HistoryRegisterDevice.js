@@ -44,7 +44,6 @@ import {
   getCurrentDate,
 } from '../../utils/serviceFunction';
 import {fontDefault, mainURL} from '../../contants/Variable';
-import Loading from '../../components/LoadingUI';
 import Modal from 'react-native-modal';
 import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import RedPoint from '../../components/RedPoint';
@@ -55,7 +54,7 @@ import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
 
-const deviceState = [{state: 'Bình thường'}, {state: 'Hỏng'}, {state: 'Lỗi'}];
+const deviceState = [{state: 'BT'}, {state: 'Hỏng'}, {state: 'Lỗi'}];
 
 const HistoryRegisterDevice = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -771,7 +770,7 @@ const HistoryRegisterDevice = ({navigation}) => {
                     styles.titleModal,
                     {
                       color:
-                        deviceStateValue != 'Bình thường'
+                        deviceStateValue != 'BT'
                           ? Colors.DEFAULT_BLACK
                           : Colors.INACTIVE_GREY,
                     },
@@ -780,11 +779,9 @@ const HistoryRegisterDevice = ({navigation}) => {
                 </Text>
                 <View style={[styles.dateModalContainer, {width: '100%'}]}>
                   <TextInput
-                    editable={deviceStateValue != 'Bình thường' ? true : false}
+                    editable={deviceStateValue != 'BT' ? true : false}
                     placeholder={
-                      deviceStateValue != 'Bình thường'
-                        ? 'Nhập nguyên nhân'
-                        : ''
+                      deviceStateValue != 'BT' ? 'Nhập nguyên nhân' : ''
                     }
                     style={{
                       borderBottomWidth: 1,
@@ -805,7 +802,7 @@ const HistoryRegisterDevice = ({navigation}) => {
                       styles.imgModalContainer,
                       {
                         backgroundColor:
-                          deviceStateValue != 'Bình thường'
+                          deviceStateValue != 'BT'
                             ? '#d95656'
                             : Colors.INACTIVE_GREY,
                         padding: Dimension.setWidth(1.3),

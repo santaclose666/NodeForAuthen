@@ -156,6 +156,7 @@ const HomePageScreen = ({navigation}) => {
   };
 
   useLayoutEffect(() => {
+    console.log(user);
     fcmService.registerAppWithFCM();
     fcmService.register(onRegister, onNotification, onOpenNotification);
     localNotificationService.configure(onOpenNotification);

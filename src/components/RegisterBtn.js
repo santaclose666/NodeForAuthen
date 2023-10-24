@@ -10,6 +10,27 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+export const AddBtn = ({event}) => {
+  return (
+    <TouchableOpacity
+      onPress={event}
+      style={{
+        position: 'absolute',
+        bottom: hp('6%'),
+        right: Dimension.setWidth(7),
+        padding: 10,
+        backgroundColor: Colors.DEFAULT_GREEN,
+        borderRadius: 50,
+        opacity: 0.8,
+      }}>
+      <Image
+        source={Images.add}
+        style={{width: 22, height: 22, tintColor: '#ffffff'}}
+      />
+    </TouchableOpacity>
+  );
+};
+
 export const BackBtn = ({event, top, left}) => {
   const safeDimension = useSafeAreaInsets();
   const mt = top || safeDimension.top + hp('1.2%');

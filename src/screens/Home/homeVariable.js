@@ -152,16 +152,17 @@ export const internal = [
     icon: Images.happybd,
   },
   {
+    featureName: 'Sửa chữa',
+    component: screen.historyRepair,
+    icon: Images.repair,
+  },
+  {
     featureName: 'Gửi thông báo',
     component: screen.sendNotification,
     icon: Images.sendnotification,
     isAdmin: true,
   },
-  {
-    featureName: null,
-    component: null,
-    icon: null,
-  },
+
   {
     featureName: null,
     component: null,

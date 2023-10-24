@@ -2,9 +2,8 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import Dimension from '../contants/Dimension';
 import Fonts from '../contants/Fonts';
-import Colors from '../contants/Colors';
 
-export const EmptyList = () => {
+export const EmptyList = ({text}) => {
   return (
     <View
       style={{
@@ -18,7 +17,7 @@ export const EmptyList = () => {
           fontFamily: Fonts.SF_MEDIUM,
           color: '#243b55',
         }}>
-        Không có dữ liệu nào được tìm thấy
+        {text || 'Không có dữ liệu nào được tìm thấy'}
       </Text>
     </View>
   );
