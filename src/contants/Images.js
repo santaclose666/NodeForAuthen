@@ -209,6 +209,10 @@ const Images = {
   cln: require('../assets/images/cln.png'),
   repair: require('../assets/images/repair.png'),
   arrow: require('../assets/images/arrow.png'),
+  history: require('../assets/images/history.png'),
+  trackingRepair: require('../assets/images/trackingRepair.png'),
+  currStatus: require('../assets/images/currStatus.png'),
+  fixed: require('../assets/images/fixed.png'),
 };
 
 export default Images;

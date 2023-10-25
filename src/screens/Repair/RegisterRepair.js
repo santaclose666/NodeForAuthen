@@ -12,7 +12,6 @@ import {
   Platform,
   UIManager,
   LayoutAnimation,
-  Keyboard,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import Images from '../../contants/Images';
@@ -61,9 +60,17 @@ const RegisterRepair = ({navigation}) => {
     if (checkExist) {
       ToastAlert('Thiết bị đã tồn tại!');
     } else {
-      updatedArrRender[index].listValue = item.thietbi;
+      if (item.thietbi == 'Khác') {
+        updatedArrRender[index].isOrther = true;
+        updatedArrRender[index].listValue = '';
+        updatedArrRender[index].status = '';
 
-      setArrRender(updatedArrRender);
+        setArrRender(updatedArrRender);
+      } else {
+        updatedArrRender[index].listValue = item.thietbi;
+
+        setArrRender(updatedArrRender);
+      }
     }
   };
 
@@ -75,6 +82,7 @@ const RegisterRepair = ({navigation}) => {
       listDevice: listDevice,
       listValue: '',
       status: '',
+      isOrther: false,
     });
     setArrRender(updatedArrRender);
   };
@@ -124,7 +132,8 @@ const RegisterRepair = ({navigation}) => {
           navigation.goBack();
         }
       } catch (error) {
-        console.log(error);
+        setLoading(false);
+        ToastAlert('Có lỗi xảy ra!');
       }
     } else {
       ToastAlert('Chưa nhập đầy đủ thông tin!');
@@ -141,6 +150,7 @@ const RegisterRepair = ({navigation}) => {
           listDevice: listDevice,
           listValue: '',
           status: '',
+          isOrther: false,
         },
       ];
 
@@ -190,11 +200,13 @@ const RegisterRepair = ({navigation}) => {
               <View style={rowAlignCenter}>
                 <Text style={styles.title}>Loại thiết bị</Text>
                 <RedPoint />
-                {data?.listValue == 'Khác' && (
+                {data.isOrther && (
                   <TouchableOpacity
                     onPress={() => {
                       const updatedArrRender = [...arrRender];
                       updatedArrRender[index].listValue = '';
+                      updatedArrRender[index].status = '';
+                      updatedArrRender[index].isOrther = false;
 
                       setArrRender(updatedArrRender);
                     }}
@@ -210,7 +222,7 @@ const RegisterRepair = ({navigation}) => {
                   </TouchableOpacity>
                 )}
               </View>
-              {data.listValue != 'Khác' ? (
+              {!data.isOrther ? (
                 <Dropdown
                   style={styles.dropdown}
                   placeholder="Chọn loại thiết bị"
@@ -289,9 +301,9 @@ const RegisterRepair = ({navigation}) => {
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Đăng kí sửa chữa" navigation={navigation} />
-        <ScrollView keyboardShouldPersistTaps="handled" style={{flex: 1}}>
+        <ScrollView keyboardShouldPersistTaps="always" style={{flex: 1}}>
           <KeyboardAwareScrollView
-            keyboardShouldPersistTaps="handled"
+            keyboardShouldPersistTaps="always"
             contentContainerStyle={{
               backgroundColor: '#fbfbfd',
               borderRadius: 12,

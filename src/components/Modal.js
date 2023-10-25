@@ -275,7 +275,11 @@ export const ConfirmModal = ({
           flex: 1,
           position: 'absolute',
           alignSelf: 'center',
-          backgroundColor: status ? '#def8ed' : '#f9dfe0',
+          backgroundColor: status
+            ? status
+              ? '#def8ed'
+              : '#f9dfe0'
+            : '#def8ed',
           width: Dimension.setWidth(85),
           alignItems: 'center',
           justifyContent: 'center',
@@ -296,9 +300,9 @@ export const ConfirmModal = ({
             style={{
               fontFamily: Fonts.SF_BOLD,
               fontSize: Dimension.fontSize(20),
-              color: status ? '#57b85d' : '#f25157',
+              color: status ? (status ? '#57b85d' : '#f25157') : '#57b85d',
             }}>
-            {status ? 'Phê duyệt' : 'Từ chối'}
+            {status ? (status ? 'Phê duyệt' : 'Từ chối') : 'Xác nhận'}
           </Text>
         </View>
         {screenName == 'HistoryRegisterVehicle' && (
@@ -399,6 +403,28 @@ export const ConfirmModal = ({
           </View>
         )}
 
+        {screenName == 'TrackRepair' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image source={Images.item} style={{height: 55, width: 55}} />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: Dimension.fontSize(17),
+                fontFamily: Fonts.SF_MEDIUM,
+                textAlign: 'center',
+                ...fontDefault,
+              }}>
+              {`Xác nhận đã ${item?.noidung} của ${item?.nguoidenghi}?`}
+            </Text>
+          </View>
+        )}
         <View
           style={[
             styles.containerEachLine,
@@ -410,12 +436,18 @@ export const ConfirmModal = ({
             }}
             style={[
               styles.confirmBtn,
-              {borderColor: !status ? '#f25157' : '#57b85d'},
+              {
+                borderColor: status
+                  ? !status
+                    ? '#f25157'
+                    : '#57b85d'
+                  : '#57b85d',
+              },
             ]}>
             <Text
               style={[
                 styles.textConfirm,
-                {color: !status ? '#f25157' : '#57b85d'},
+                {color: status ? (!status ? '#f25157' : '#57b85d') : '#57b85d'},
               ]}>
               Xác nhận
             </Text>
@@ -708,7 +740,6 @@ export const DisplayNotificationModal = ({
 };
 
 export const CheckDownLoadModal = ({
-  navigation,
   toggleModal,
   setToggleModal,
   handlePresentModalPress,
