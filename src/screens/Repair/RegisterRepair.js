@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useRef, useCallback} from 'react';
+import React, {useState, useLayoutEffect, useCallback, useRef} from 'react';
 import {
   View,
   Text,
@@ -12,8 +12,9 @@ import {
   Platform,
   UIManager,
   LayoutAnimation,
+  Keyboard,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Dimension from '../../contants/Dimension';
@@ -28,7 +29,11 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import {Swipeable} from 'react-native-gesture-handler';
-import {getRepairList, registerRepair} from '../../redux/apiRequest';
+import {
+  getRepairList,
+  registerRepair,
+  getSubject,
+} from '../../redux/apiRequest';
 import Colors from '../../contants/Colors';
 
 if (Platform.OS == 'android') {
@@ -38,11 +43,14 @@ if (Platform.OS == 'android') {
 const RegisterRepair = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const subject = useSelector(state => state.subject.subject?.data);
+  const dispatch = useDispatch();
   const [listDevice, setListDevice] = useState([]);
   const [arrRender, setArrRender] = useState([]);
   const [loading, setLoading] = useState(false);
   const [registerPerson, setRegisterPerson] = useState(user.hoten);
   const [subjectValue, setSubjectValue] = useState(1);
+  const deviceInputRef = useRef([]);
+  const statusInputRef = useRef([]);
 
   const handlePickType = (item, index) => {
     const updatedArrRender = [...arrRender];
@@ -57,20 +65,6 @@ const RegisterRepair = ({navigation}) => {
 
       setArrRender(updatedArrRender);
     }
-  };
-
-  const handleDevice = (text, index) => {
-    const updatedArrRender = [...arrRender];
-
-    updatedArrRender[index].listValue = text;
-    setArrRender(updatedArrRender);
-  };
-
-  const handleStatus = (text, index) => {
-    const updatedArrRender = [...arrRender];
-
-    updatedArrRender[index].status = text;
-    setArrRender(updatedArrRender);
   };
 
   const handleAddRepairDevice = () => {
@@ -89,7 +83,7 @@ const RegisterRepair = ({navigation}) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     const updatedArrRender = [...arrRender];
 
-    if (updatedArrRender.length == 1) {
+    if (updatedArrRender?.length == 1) {
       return;
     } else {
       updatedArrRender.splice(index, 1);
@@ -108,10 +102,10 @@ const RegisterRepair = ({navigation}) => {
     });
 
     if (
-      subjectValue.length != 0 &&
-      registerPerson.length != 0 &&
-      devicePicker.length != 0 &&
-      status.length != 0
+      subjectValue?.length != 0 &&
+      registerPerson?.length != 0 &&
+      devicePicker?.length != 0 &&
+      status?.length != 0
     ) {
       setLoading(true);
       const data = {
@@ -158,6 +152,9 @@ const RegisterRepair = ({navigation}) => {
   };
 
   useLayoutEffect(() => {
+    if (!subject) {
+      getSubject(dispatch);
+    }
     fetchAllDevices();
   }, []);
 
@@ -177,24 +174,6 @@ const RegisterRepair = ({navigation}) => {
 
   const RenderOptionData = useCallback(
     ({data, index}) => {
-      const [textDevice, setTextDevice] = useState('');
-      const [textStatus, setTextStatus] = useState('');
-      const timeout = useRef(null);
-
-      const onChange = (isDevice, text) => {
-        isDevice ? setTextDevice(text) : setTextStatus(text);
-
-        clearTimeout(timeout.current);
-
-        timeout.current = setTimeout(() => {
-          if (isDevice) {
-            handleDevice(text, index);
-          } else {
-            handleStatus(text, index);
-          }
-        }, 1111);
-      };
-
       return (
         <Swipeable
           renderRightActions={() => {
@@ -211,7 +190,7 @@ const RegisterRepair = ({navigation}) => {
               <View style={rowAlignCenter}>
                 <Text style={styles.title}>Loại thiết bị</Text>
                 <RedPoint />
-                {data.listValue == 'Khác' && (
+                {data?.listValue == 'Khác' && (
                   <TouchableOpacity
                     onPress={() => {
                       const updatedArrRender = [...arrRender];
@@ -256,15 +235,19 @@ const RegisterRepair = ({navigation}) => {
                 />
               ) : (
                 <TextInput
+                  ref={el => (deviceInputRef.current[index] = el)}
                   style={styles.inputText}
-                  value={data.listValue || textDevice}
-                  onChangeText={e => {
-                    onChange(true, e);
-                  }}
-                  onEndEditing={e => {
-                    onChange(true, e.nativeEvent.text);
-                  }}
+                  value={data.listValue}
                   placeholder="Nhập thiết bị khác!"
+                  onChangeText={e => {
+                    const updatedArrRender = [...arrRender];
+
+                    updatedArrRender[index].listValue = e;
+                    setArrRender(updatedArrRender);
+                    setTimeout(() => {
+                      deviceInputRef.current[index].focus();
+                    });
+                  }}
                 />
               )}
             </View>
@@ -280,14 +263,18 @@ const RegisterRepair = ({navigation}) => {
                 <RedPoint />
               </View>
               <TextInput
+                ref={el => (statusInputRef.current[index] = el)}
                 editable={data.listValue ? true : false}
                 style={styles.inputText}
-                value={data.status || textStatus}
+                value={data.status}
                 onChangeText={e => {
-                  onChange(false, e);
-                }}
-                onEndEditing={e => {
-                  onChange(false, e.nativeEvent.text);
+                  const updatedArrRender = [...arrRender];
+
+                  updatedArrRender[index].status = e;
+                  setArrRender(updatedArrRender);
+                  setTimeout(() => {
+                    statusInputRef.current[index].focus();
+                  });
                 }}
               />
             </View>
@@ -302,7 +289,7 @@ const RegisterRepair = ({navigation}) => {
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
         <Header title="Đăng kí sửa chữa" navigation={navigation} />
-        <ScrollView style={{flex: 1}}>
+        <ScrollView keyboardShouldPersistTaps="handled" style={{flex: 1}}>
           <KeyboardAwareScrollView
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={{
@@ -357,6 +344,7 @@ const RegisterRepair = ({navigation}) => {
                 }}
               />
             </View>
+
             <FlatList
               scrollEnabled={false}
               showsVerticalScrollIndicator={false}
