@@ -78,6 +78,11 @@ import {
   getNationalParkSuccess,
 } from './nationalPark';
 import {getSubjectSuccess} from './subjectSlice';
+import {
+  getListRepairStart,
+  getListRepairSuccess,
+  getListRepairFailed,
+} from './repairSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -1046,25 +1051,27 @@ export const registerRepair = async data => {
   }
 };
 
-export const getRepairApproveList = async () => {
+export const getRepairApproveList = async dispatch => {
+  dispatch(getListRepairStart());
   try {
     const res = await axios.get(
       `https://management.ifee.edu.vn/api/suachua/pheduyet/danhsach`,
     );
 
-    return res.data;
+    dispatch(getListRepairSuccess(res.data));
+    return true;
   } catch (error) {
-    console.log(error);
+    dispatch(getListRepairFailed());
   }
 };
 
 export const approveRepair = async id_user => {
   try {
-    const res = await axios.get(
+    await axios.get(
       `https://management.ifee.edu.vn/api/suachua/pheduyet/duyet/${id_user} `,
     );
 
-    return res.data;
+    return true;
   } catch (error) {
     console.log(error);
   }
@@ -1072,11 +1079,9 @@ export const approveRepair = async id_user => {
 
 export const cancelRepair = async id_user => {
   try {
-    const res = await axios.get(
+    await axios.get(
       `https://management.ifee.edu.vn/api/suachua/pheduyet/tuchoi/${id_user} `,
     );
-
-    return res.data;
   } catch (error) {
     console.log(error);
   }

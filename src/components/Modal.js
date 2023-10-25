@@ -257,7 +257,10 @@ export const ConfirmModal = ({
   const cancelVehicleMess = 'Chắc chắn từ chối đăng kí xe';
 
   const approveItemMess = 'Chắc chắn phê duyệt yêu cầu đăng kí sử dụng của';
-  const cancelItemMess = 'Chắc chắn từ chối yêu cầu đăng sử dụng của';
+  const cancelItemMess = 'Chắc chắn từ chối yêu cầu đăng kí sử dụng của';
+
+  const approveRepairMess = 'Chắc chắn phê duyệt yêu cầu đăng kí sửa chữa của';
+  const cancelRepairMess = 'Chắc chắn từ chối yêu cầu đăng kí sửa chữa của';
 
   return (
     <Modal
@@ -366,6 +369,31 @@ export const ConfirmModal = ({
               }}>
               {`${status ? approveItemMess : cancelItemMess} ${
                 item?.nguoidangky
+              }?`}
+            </Text>
+          </View>
+        )}
+
+        {screenName == 'HistoryRegisterRepair' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image source={Images.item} style={{height: 55, width: 55}} />
+            <Text
+              style={{
+                marginLeft: Dimension.setWidth(3),
+                fontSize: Dimension.fontSize(17),
+                fontFamily: Fonts.SF_MEDIUM,
+                textAlign: 'center',
+                ...fontDefault,
+              }}>
+              {`${status ? approveRepairMess : cancelRepairMess} ${
+                item?.nguoidk
               }?`}
             </Text>
           </View>

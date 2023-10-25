@@ -141,7 +141,7 @@ const RegisterRepair = ({navigation}) => {
     try {
       const data = await getRepairList();
 
-      const listDevice = [...data, {id: data.length + 1, thietbi: 'Khác'}];
+      const listDevice = [...data, {id: data?.length + 1, thietbi: 'Khác'}];
       const tempArr = [
         {
           listDevice: listDevice,
@@ -192,7 +192,7 @@ const RegisterRepair = ({navigation}) => {
           } else {
             handleStatus(text, index);
           }
-        });
+        }, 1111);
       };
 
       return (
@@ -262,7 +262,7 @@ const RegisterRepair = ({navigation}) => {
                     onChange(true, e);
                   }}
                   onEndEditing={e => {
-                    handleTimeout(true, e.nativeEvent.text);
+                    onChange(true, e.nativeEvent.text);
                   }}
                   placeholder="Nhập thiết bị khác!"
                 />
@@ -287,7 +287,7 @@ const RegisterRepair = ({navigation}) => {
                   onChange(false, e);
                 }}
                 onEndEditing={e => {
-                  handleTimeout(false, e.nativeEvent.text);
+                  onChange(false, e.nativeEvent.text);
                 }}
               />
             </View>

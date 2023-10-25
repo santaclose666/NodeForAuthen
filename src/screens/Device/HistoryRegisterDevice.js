@@ -50,7 +50,7 @@ import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {compareDate, formatDate} from '../../utils/serviceFunction';
-import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import {ToastAlert} from '../../components/Toast';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
 
