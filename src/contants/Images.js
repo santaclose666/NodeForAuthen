@@ -213,6 +213,7 @@ const Images = {
   trackingRepair: require('../assets/images/trackingRepair.png'),
   currStatus: require('../assets/images/currStatus.png'),
   fixed: require('../assets/images/fixed.png'),
+  brokenItem: require('../assets/images/brokenItem.png'),
 };
 
 export default Images;

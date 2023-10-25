@@ -34,6 +34,12 @@ import {
   getSubject,
 } from '../../redux/apiRequest';
 import Colors from '../../contants/Colors';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import Modal from 'react-native-modal';
+import {fontDefault} from '../../contants/Variable';
 
 if (Platform.OS == 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -48,8 +54,11 @@ const RegisterRepair = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [registerPerson, setRegisterPerson] = useState(user.hoten);
   const [subjectValue, setSubjectValue] = useState(1);
-  const deviceInputRef = useRef([]);
-  const statusInputRef = useRef([]);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [textTemp, setTextTemp] = useState('');
+  const [isDevice, setIsDevice] = useState(null);
+  const inputModalRef = useRef(null);
 
   const handlePickType = (item, index) => {
     const updatedArrRender = [...arrRender];
@@ -138,6 +147,30 @@ const RegisterRepair = ({navigation}) => {
     } else {
       ToastAlert('Chưa nhập đầy đủ thông tin!');
     }
+  };
+
+  const handlePick = (status, data, index) => {
+    setSelectedItem({...data, index});
+    setToggleModal(true);
+    setIsDevice(status);
+
+    setTimeout(() => {
+      inputModalRef.current.focus();
+    });
+  };
+
+  const handleConfirmText = () => {
+    let updatedArrRender = [...arrRender];
+
+    if (isDevice) {
+      updatedArrRender[selectedItem.index].listValue = textTemp;
+    } else {
+      updatedArrRender[selectedItem.index].status = textTemp;
+    }
+
+    setArrRender(updatedArrRender);
+    setToggleModal(false);
+    setTextTemp('');
   };
 
   const fetchAllDevices = async () => {
@@ -246,50 +279,38 @@ const RegisterRepair = ({navigation}) => {
                   }}
                 />
               ) : (
-                <TextInput
-                  ref={el => (deviceInputRef.current[index] = el)}
-                  style={styles.inputText}
-                  value={data.listValue}
-                  placeholder="Nhập thiết bị khác!"
-                  onChangeText={e => {
-                    const updatedArrRender = [...arrRender];
-
-                    updatedArrRender[index].listValue = e;
-                    setArrRender(updatedArrRender);
-                    setTimeout(() => {
-                      deviceInputRef.current[index].focus();
-                    });
-                  }}
-                />
+                <TouchableOpacity
+                  onPress={() => {
+                    handlePick(true, data, index);
+                  }}>
+                  <Text style={styles.textPicker}>{data.listValue}</Text>
+                </TouchableOpacity>
               )}
             </View>
-            <View style={[styles.containerEachLine, {width: '48.6%'}]}>
+            <TouchableOpacity
+              disabled={data.listValue.length > 0 ? false : true}
+              onPress={() => {
+                handlePick(false, data, index);
+              }}
+              style={[styles.containerEachLine, {width: '48.6%'}]}>
               <View style={rowAlignCenter}>
                 <Text
                   style={[
                     styles.title,
-                    {color: data.listValue ? '#8bc7bc' : Colors.INACTIVE_GREY},
+                    {
+                      color:
+                        data.listValue.length > 0
+                          ? '#8bc7bc'
+                          : Colors.INACTIVE_GREY,
+                    },
                   ]}>
                   Tình trạng hoạt động
                 </Text>
                 <RedPoint />
               </View>
-              <TextInput
-                ref={el => (statusInputRef.current[index] = el)}
-                editable={data.listValue ? true : false}
-                style={styles.inputText}
-                value={data.status}
-                onChangeText={e => {
-                  const updatedArrRender = [...arrRender];
 
-                  updatedArrRender[index].status = e;
-                  setArrRender(updatedArrRender);
-                  setTimeout(() => {
-                    statusInputRef.current[index].focus();
-                  });
-                }}
-              />
-            </View>
+              <Text style={styles.textPicker}>{data.status}</Text>
+            </TouchableOpacity>
           </View>
         </Swipeable>
       );
@@ -372,6 +393,128 @@ const RegisterRepair = ({navigation}) => {
             <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
           </KeyboardAwareScrollView>
         </ScrollView>
+        <Modal
+          isVisible={toggleModal}
+          animationIn="fadeInUp"
+          animationInTiming={100}
+          animationOut="fadeOutDown"
+          animationOutTiming={100}
+          avoidKeyboard={true}>
+          <View
+            style={{
+              flex: 1,
+              position: 'absolute',
+              alignSelf: 'center',
+              width: Dimension.setWidth(85),
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 14,
+              paddingHorizontal: Dimension.setWidth(3),
+              backgroundColor: '#e6d2c0',
+            }}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: Dimension.setHeight(1),
+                borderBottomWidth: 0.8,
+                borderBlockColor: Colors.INACTIVE_GREY,
+                width: '100%',
+                height: Dimension.setHeight(4.5),
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: Dimension.fontSize(20),
+                  color: '#f0b263',
+                }}>
+                Tình trạng
+              </Text>
+            </View>
+
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: Dimension.setHeight(1.5),
+                paddingHorizontal: Dimension.setWidth(3),
+                width: '100%',
+              }}>
+              <Image
+                source={Images.brokenItem}
+                style={{height: 55, width: 55}}
+              />
+              <Text
+                style={{
+                  marginLeft: Dimension.setWidth(3),
+                  fontSize: Dimension.fontSize(17),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  textAlign: 'center',
+                  ...fontDefault,
+                }}>
+                {`Thiết bị lỗi: ${selectedItem?.listValue}`}
+              </Text>
+              <View
+                style={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: 12,
+                  width: '86%',
+                  paddingLeft: 6,
+                }}>
+                <TextInput
+                  ref={inputModalRef}
+                  style={{width: '100%'}}
+                  placeholder={
+                    isDevice ? 'Nhập thiết bị khác' : 'Mô tả tình trạng lỗi'
+                  }
+                  value={textTemp}
+                  onChangeText={e => {
+                    setTextTemp(e);
+                  }}
+                />
+              </View>
+            </View>
+
+            <View
+              style={[
+                styles.containerEachLineModal,
+                {
+                  width: Dimension.setWidth(56),
+                  justifyContent: 'space-between',
+                },
+              ]}>
+              <TouchableOpacity
+                onPress={handleConfirmText}
+                style={[
+                  styles.confirmBtn,
+                  {
+                    borderColor: '#57b85d',
+                  },
+                ]}>
+                <Text style={[styles.textConfirm, {color: '#57b85d'}]}>
+                  Xác nhận
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setToggleModal(false);
+                }}
+                style={[styles.confirmBtn, {borderColor: '#f0b263'}]}>
+                <Text style={[styles.textConfirm, {color: '#f0b263'}]}>
+                  Hủy bỏ
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => {
+                setToggleModal(false);
+              }}
+              style={{position: 'absolute', right: 8, top: 8}}>
+              <Image source={Images.minusclose} style={styles.btnModal} />
+            </TouchableOpacity>
+          </View>
+        </Modal>
         <AddBtn event={handleAddRepairDevice} />
         {loading === true && <Loading bg={true} />}
       </SafeAreaView>
@@ -482,6 +625,39 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 6,
     paddingBottom: Dimension.setHeight(1.6),
+  },
+
+  textPicker: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.INACTIVE_GREY,
+    fontFamily: Fonts.SF_MEDIUM,
+    fontSize: wp('3.8%'),
+    marginTop: hp('1%'),
+  },
+
+  btnModal: {
+    width: 28,
+    height: 28,
+  },
+  confirmBtn: {
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#f25157',
+    paddingVertical: Dimension.setHeight(0.5),
+    paddingHorizontal: Dimension.setWidth(2),
+    width: Dimension.setWidth(25),
+  },
+  textConfirm: {
+    fontSize: Dimension.fontSize(16),
+    fontFamily: Fonts.SF_MEDIUM,
+  },
+  containerEachLineModal: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Dimension.setHeight(1.3),
   },
 });
 

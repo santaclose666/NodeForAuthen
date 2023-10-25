@@ -28,7 +28,7 @@ import {
   formatDateToPost,
   getCurrentDate,
 } from '../../utils/serviceFunction';
-import RegisterBtn from '../../components/RegisterBtn';
+import RegisterBtn, {AddBtn} from '../../components/RegisterBtn';
 import {
   getAllDevices,
   getAllListDevice,
@@ -524,22 +524,7 @@ const RegisterDevices = ({navigation, route}) => {
             <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
           </KeyboardAwareScrollView>
         </ScrollView>
-        <TouchableOpacity
-          onPress={handleAddDevice}
-          style={{
-            position: 'absolute',
-            bottom: hp('11%'),
-            right: Dimension.setWidth(7),
-            padding: 10,
-            backgroundColor: Colors.DEFAULT_GREEN,
-            borderRadius: 50,
-            opacity: 0.75,
-          }}>
-          <Image
-            source={Images.add}
-            style={{width: 22, height: 22, tintColor: '#ffffff'}}
-          />
-        </TouchableOpacity>
+        <AddBtn event={handleAddDevice} />
         {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
