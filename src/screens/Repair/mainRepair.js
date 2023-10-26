@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Image, TouchableOpacity, Text} from 'react-native';
+import {View, Image, TouchableOpacity, Text, Pressable} from 'react-native';
 import Images from '../../contants/Images';
 import Dimension from '../../contants/Dimension';
 import Fonts from '../../contants/Fonts';
@@ -41,7 +41,7 @@ const MainRepair = ({navigation}) => {
             menuId == index ? Colors.DEFAULT_GREEN : 'transparent';
           const textColor = menuId == index ? Colors.DEFAULT_GREEN : '#041d3b';
           return (
-            <TouchableOpacity
+            <Pressable
               onPress={() => {
                 setComponentPicker(item.component);
                 setMenuId(index);
@@ -54,7 +54,7 @@ const MainRepair = ({navigation}) => {
                 justifyContent: 'center',
                 borderTopWidth: 2,
                 borderTopColor: borderTopColor,
-                backgroundColor: '#f4f8feff',
+                backgroundColor: '#ffffff',
                 marginBottom: safeDimension.bottom,
               }}>
               <Image source={item.icon} style={{width: 30, height: 30}} />
@@ -67,7 +67,7 @@ const MainRepair = ({navigation}) => {
                 }}>
                 {item.title}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </View>

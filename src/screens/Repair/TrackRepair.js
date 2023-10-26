@@ -26,6 +26,10 @@ import {InternalSkeleton} from '../../components/Skeleton';
 import Modal from 'react-native-modal';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Colors from '../../contants/Colors';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const approveArr = [
   {
@@ -193,7 +197,7 @@ const HistoryRepair = ({navigation}) => {
             alignItems: 'center',
             justifyContent: 'space-around',
             width: '100%',
-            height: Dimension.setHeight(10),
+            height: hp('8%'),
             flexDirection: 'row',
           }}>
           {approveArr.map((item, index) => {

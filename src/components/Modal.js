@@ -20,6 +20,13 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {
+  formatDate,
+  changeFormatDate,
+  compareDate,
+} from '../utils/serviceFunction';
+import {ToastAlert} from './Toast';
 
 export const ApproveCancelModal = ({
   screenName,
@@ -258,6 +265,7 @@ export const ConfirmModal = ({
   handleApprove,
   handleCancel,
   time,
+  setTime,
   togglePickTimeModal,
   setTogglePickTimeModal,
 }) => {
@@ -267,8 +275,15 @@ export const ConfirmModal = ({
   const approveItemMess = 'Chắc chắn phê duyệt yêu cầu đăng kí sử dụng của';
   const cancelItemMess = 'Chắc chắn từ chối yêu cầu đăng kí sử dụng của';
 
-  const approveRepairMess = 'Chắc chắn phê duyệt yêu cầu đăng kí sửa chữa của';
+  // const approveRepairMess = 'Chắc chắn phê duyệt yêu cầu đăng kí sửa chữa của';
   const cancelRepairMess = 'Chắc chắn từ chối yêu cầu đăng kí sửa chữa của';
+
+  const handlePickDate = date => {
+    setTogglePickTimeModal(false);
+    compareDate(time, changeFormatDate(date))
+      ? setTime(formatDate(date))
+      : ToastAlert('Ngày chọn không hợp lệ!');
+  };
 
   return (
     <Modal
@@ -419,6 +434,7 @@ export const ConfirmModal = ({
                     padding: 8,
                     borderRadius: 12,
                     width: '50%',
+                    marginTop: hp('0.6%'),
                   }}>
                   <Text style={styles.titleModal}>{time}</Text>
                   <Image
@@ -473,6 +489,15 @@ export const ConfirmModal = ({
           style={{position: 'absolute', right: '5%', top: '5%'}}>
           <Image source={Images.minusclose} style={styles.btnModal} />
         </TouchableOpacity>
+        <DateTimePickerModal
+          style={{zIndex: 999}}
+          isVisible={togglePickTimeModal}
+          mode="date"
+          onConfirm={handlePickDate}
+          onCancel={() => {
+            setToggleDatePicker(false);
+          }}
+        />
       </View>
     </Modal>
   );

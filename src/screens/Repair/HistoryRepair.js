@@ -39,15 +39,7 @@ import {fontDefault, mainURL} from '../../contants/Variable';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
 import StatusUI from '../../components/StatusUI';
-import {
-  changeFormatDate,
-  compareDate,
-  formatDateToPost,
-  getCurrentDate,
-} from '../../utils/serviceFunction';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {formatDate} from '../../utils/serviceFunction';
-import {ToastAlert} from '../../components/Toast';
+import {formatDateToPost, getCurrentDate} from '../../utils/serviceFunction';
 
 const HistoryRepair = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -86,13 +78,6 @@ const HistoryRepair = ({navigation}) => {
       setSelectedItem(null);
     }
   }, []);
-
-  const handlePickDate = date => {
-    setToggleDatePicker(false);
-    compareDate(intendTime, changeFormatDate(date))
-      ? setIntendTime(formatDate(date))
-      : ToastAlert('Ngày chọn không hợp lệ!');
-  };
 
   const handlePickItem = useCallback((item, status) => {
     bottomSheetModalRef.current?.dismiss();
@@ -411,14 +396,6 @@ const HistoryRepair = ({navigation}) => {
           setTime={setIntendTime}
           togglePickTimeModal={toggleDatePicker}
           setTogglePickTimeModal={setToggleDatePicker}
-        />
-        <DateTimePickerModal
-          isVisible={toggleDatePicker}
-          mode="date"
-          onConfirm={handlePickDate}
-          onCancel={() => {
-            setToggleDatePicker(false);
-          }}
         />
       </SafeAreaView>
     </LinearGradientUI>
