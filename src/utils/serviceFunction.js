@@ -110,8 +110,6 @@ export const compareDate = (date1, date2) => {
   const beforeDate = moment(date1, 'DD/MM/YYYY').startOf('day');
   const afterDate = moment(date2, 'DD/MM/YYYY').startOf('day');
 
-  console.log(beforeDate, afterDate);
-
   if (beforeDate <= afterDate) {
     return true;
   } else {
@@ -120,7 +118,6 @@ export const compareDate = (date1, date2) => {
 };
 
 export const compareDateFomated = (date1, date2) => {
-  console.log(date1, date2);
   if (date1 <= date2) {
     return true;
   } else {

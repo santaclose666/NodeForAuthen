@@ -32,6 +32,7 @@ import {
   getRepairList,
   registerRepair,
   getSubject,
+  getRepairApproveList,
 } from '../../redux/apiRequest';
 import Colors from '../../contants/Colors';
 import {
@@ -104,7 +105,7 @@ const RegisterRepair = ({navigation}) => {
       devicePicker?.length != 0 &&
       status?.length != 0
     ) {
-      // setLoading(true);
+      setLoading(true);
       const data = {
         id_user: user.id,
         id_phong: subjectValue,
@@ -112,19 +113,21 @@ const RegisterRepair = ({navigation}) => {
         arr_thietbi: devicePicker,
         arr_tinhtrang: status,
       };
-      console.log(data);
-      // try {
-      //   const res = await registerRepair(data);
+      try {
+        const res = await registerRepair(data);
 
-      //   if (res) {
-      //     ToastSuccess('Đăng kí thành công');
-      //     setLoading(false);
-      //     navigation.goBack();
-      //   }
-      // } catch (error) {
-      //   setLoading(false);
-      //   ToastAlert('Có lỗi xảy ra!');
-      // }
+        if (res) {
+          getRepairApproveList(dispatch);
+          ToastSuccess('Đăng kí thành công');
+          setLoading(false);
+
+          setTimeout(() => {
+            navigation.goBack();
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       ToastAlert('Chưa nhập đầy đủ thông tin!');
     }
@@ -477,7 +480,10 @@ const RegisterRepair = ({navigation}) => {
                 }}>
                 <TextInput
                   ref={inputModalRef}
-                  style={{width: '100%', height: hp('4%')}}
+                  style={{
+                    width: '100%',
+                    height: Platform.OS == 'ios' ? hp('4%') : 'auto',
+                  }}
                   placeholder={
                     isDevice ? 'Nhập thiết bị khác' : 'Mô tả tình trạng lỗi'
                   }

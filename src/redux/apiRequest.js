@@ -1065,13 +1065,17 @@ export const getRepairApproveList = async dispatch => {
   }
 };
 
-export const approveRepair = async id_user => {
+export const approveRepair = async data => {
   try {
     await axios.get(
-      `https://management.ifee.edu.vn/api/suachua/pheduyet/duyet/${id_user} `,
+      `https://management.ifee.edu.vn/api/suachua/pheduyet/duyet/${data.id_user}?`,
+      {
+        params: {
+          id_manager: data.id_manager,
+          tg_dukien: data.tg_dukien,
+        },
+      },
     );
-
-    return true;
   } catch (error) {
     console.log(error);
   }
@@ -1080,7 +1084,7 @@ export const approveRepair = async id_user => {
 export const cancelRepair = async id_user => {
   try {
     await axios.get(
-      `https://management.ifee.edu.vn/api/suachua/pheduyet/tuchoi/${id_user} `,
+      `https://management.ifee.edu.vn/api/suachua/pheduyet/tuchoi/${id_user}`,
     );
   } catch (error) {
     console.log(error);

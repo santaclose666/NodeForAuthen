@@ -23,8 +23,9 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import {fontDefault} from '../../contants/Variable';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
-import {ConfirmModal} from '../../components/Modal';
+import Modal from 'react-native-modal';
 import {changeFormatDate} from '../../utils/serviceFunction';
+import Colors from '../../contants/Colors';
 
 const approveArr = [
   {
@@ -55,12 +56,13 @@ const HistoryRepair = ({navigation}) => {
     setToggleModal(true);
   }, []);
 
-  const handleUpdateProcessed = async item => {
+  const handleUpdateProcessed = async () => {
     try {
-      const res = await updateProcessed(item.id);
+      const res = await updateProcessed(selectedItem.id);
 
       if (res) {
         fetchListRepair();
+        setToggleModal(false);
       }
     } catch (error) {
       console.log(error);
@@ -257,14 +259,100 @@ const HistoryRepair = ({navigation}) => {
           />
         )}
 
-        <ConfirmModal
-          screenName={'TrackRepair'}
-          toggleModal={toggleModal}
-          setToggleModal={setToggleModal}
-          item={selectedItem}
-          handleApprove={handleUpdateProcessed}
-          handleCancel={handleUpdateProcessed}
-        />
+        <Modal
+          isVisible={toggleModal}
+          animationIn="fadeInUp"
+          animationInTiming={100}
+          animationOut="fadeOutDown"
+          animationOutTiming={100}
+          avoidKeyboard={true}>
+          <View
+            style={{
+              flex: 1,
+              position: 'absolute',
+              alignSelf: 'center',
+              backgroundColor: '#def8ed',
+              width: Dimension.setWidth(85),
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 14,
+              paddingHorizontal: Dimension.setWidth(3),
+            }}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: Dimension.setHeight(1),
+                borderBottomWidth: 0.8,
+                borderBlockColor: Colors.INACTIVE_GREY,
+                width: '100%',
+                height: Dimension.setHeight(4.5),
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: Dimension.fontSize(20),
+                  color: '#57b85d',
+                }}>
+                Xác nhận
+              </Text>
+            </View>
+
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: Dimension.setHeight(1.5),
+                paddingHorizontal: Dimension.setWidth(3),
+                width: '100%',
+              }}>
+              <Image source={Images.item} style={{height: 55, width: 55}} />
+              <Text
+                style={{
+                  marginLeft: Dimension.setWidth(3),
+                  fontSize: Dimension.fontSize(17),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  textAlign: 'center',
+                  ...fontDefault,
+                }}>
+                {`Xác nhận đã ${selectedItem?.noidung} của ${selectedItem?.nguoidenghi}?`}
+              </Text>
+            </View>
+
+            <View
+              style={[
+                styles.containerEachLine,
+                {
+                  width: Dimension.setWidth(56),
+                  justifyContent: 'space-between',
+                },
+              ]}>
+              <TouchableOpacity
+                onPress={handleUpdateProcessed}
+                style={[styles.confirmBtn, {borderColor: '#57b85d'}]}>
+                <Text style={[styles.textConfirm, {color: '#57b85d'}]}>
+                  Xác nhận
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setToggleModal(false);
+                }}
+                style={[styles.confirmBtn, {borderColor: '#f0b263'}]}>
+                <Text style={[styles.textConfirm, {color: '#f0b263'}]}>
+                  Hủy bỏ
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                setToggleModal(false);
+              }}
+              style={{position: 'absolute', right: '5%', top: '5%'}}>
+              <Image source={Images.minusclose} style={styles.btnModal} />
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </SafeAreaView>
     </LinearGradientUI>
   );
@@ -455,6 +543,21 @@ const styles = StyleSheet.create({
     elevation: 5,
     ...shadowIOS,
     width: Dimension.setWidth(35),
+  },
+  confirmBtn: {
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#f25157',
+    paddingVertical: Dimension.setHeight(0.5),
+    paddingHorizontal: Dimension.setWidth(2),
+    width: Dimension.setWidth(25),
+  },
+  textConfirm: {
+    fontSize: Dimension.fontSize(16),
+    fontFamily: Fonts.SF_MEDIUM,
   },
 });
 

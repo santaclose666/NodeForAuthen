@@ -6,8 +6,10 @@ import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import HistoryRepair from './HistoryRepair';
 import TrackRepair from './TrackRepair';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const MainRepair = ({navigation}) => {
+  const safeDimension = useSafeAreaInsets();
   const menuArr = [
     {
       title: 'Lịch sử yêu cầu',
@@ -53,6 +55,7 @@ const MainRepair = ({navigation}) => {
                 borderTopWidth: 2,
                 borderTopColor: borderTopColor,
                 backgroundColor: '#f4f8feff',
+                marginBottom: safeDimension.bottom,
               }}>
               <Image source={item.icon} style={{width: 30, height: 30}} />
               <Text

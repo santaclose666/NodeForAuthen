@@ -39,6 +39,15 @@ import {fontDefault, mainURL} from '../../contants/Variable';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
 import StatusUI from '../../components/StatusUI';
+import {
+  changeFormatDate,
+  compareDate,
+  formatDateToPost,
+  getCurrentDate,
+} from '../../utils/serviceFunction';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {formatDate} from '../../utils/serviceFunction';
+import {ToastAlert} from '../../components/Toast';
 
 const HistoryRepair = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -49,6 +58,8 @@ const HistoryRepair = ({navigation}) => {
   const [toggleModal, setToggleModal] = useState(false);
   const [checkInput, setCheckInput] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [intendTime, setIntendTime] = useState(getCurrentDate());
+  const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
@@ -76,6 +87,13 @@ const HistoryRepair = ({navigation}) => {
     }
   }, []);
 
+  const handlePickDate = date => {
+    setToggleDatePicker(false);
+    compareDate(intendTime, changeFormatDate(date))
+      ? setIntendTime(formatDate(date))
+      : ToastAlert('Ngày chọn không hợp lệ!');
+  };
+
   const handlePickItem = useCallback((item, status) => {
     bottomSheetModalRef.current?.dismiss();
     setSelectedItem(item);
@@ -83,13 +101,18 @@ const HistoryRepair = ({navigation}) => {
     setToggleModal(true);
   }, []);
 
-  const handleApprove = useCallback(item => {
-    approveRepair(item?.id_nguoidk);
+  const handleApprove = item => {
+    const data = {
+      id_user: item?.id_nguoidk,
+      id_manager: user?.id,
+      tg_dukien: formatDateToPost(intendTime),
+    };
+    approveRepair(data);
     setToggleModal(false);
     setTimeout(() => {
       fetchListRepair();
     });
-  }, []);
+  };
 
   const handleCancel = useCallback(item => {
     cancelRepair(item?.id_nguoidk);
@@ -113,6 +136,7 @@ const HistoryRepair = ({navigation}) => {
 
   useLayoutEffect(() => {
     fetchListRepair();
+    console.log('rerender');
   }, []);
 
   const RenderTicketData = memo(({item, index}) => {
@@ -383,6 +407,18 @@ const HistoryRepair = ({navigation}) => {
           status={checkInput}
           handleApprove={handleApprove}
           handleCancel={handleCancel}
+          time={intendTime}
+          setTime={setIntendTime}
+          togglePickTimeModal={toggleDatePicker}
+          setTogglePickTimeModal={setToggleDatePicker}
+        />
+        <DateTimePickerModal
+          isVisible={toggleDatePicker}
+          mode="date"
+          onConfirm={handlePickDate}
+          onCancel={() => {
+            setToggleDatePicker(false);
+          }}
         />
       </SafeAreaView>
     </LinearGradientUI>
