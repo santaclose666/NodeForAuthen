@@ -1,7 +1,6 @@
 import React from 'react';
 import {approveArr} from '../contants/Variable';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-import Colors from '../contants/Colors';
 import Dimension from '../contants/Dimension';
 import Fonts from '../contants/Fonts';
 
@@ -9,8 +8,6 @@ const FilterStatusUI = ({handlePickOption, indexPicker}) => {
   return (
     <View
       style={{
-        // borderBottomWidth: 0.6,
-        // borderBlockColor: Colors.INACTIVE_GREY,
         alignItems: 'center',
         justifyContent: 'space-around',
         width: '100%',

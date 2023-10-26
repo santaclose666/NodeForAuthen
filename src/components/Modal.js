@@ -15,6 +15,18 @@ import Colors from '../contants/Colors';
 import {useSelector} from 'react-redux';
 import {fontDefault, mainURL} from '../contants/Variable';
 import {shadowIOS} from '../contants/propsIOS';
+import {rowAlignCenter} from '../contants/CssFE';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {
+  formatDate,
+  changeFormatDate,
+  compareDate,
+} from '../utils/serviceFunction';
+import {ToastAlert} from './Toast';
 
 export const ApproveCancelModal = ({
   screenName,
@@ -252,12 +264,26 @@ export const ConfirmModal = ({
   status,
   handleApprove,
   handleCancel,
+  time,
+  setTime,
+  togglePickTimeModal,
+  setTogglePickTimeModal,
 }) => {
   const approveVehicleMess = 'Chắc chắn phê duyệt đăng kí xe';
   const cancelVehicleMess = 'Chắc chắn từ chối đăng kí xe';
 
   const approveItemMess = 'Chắc chắn phê duyệt yêu cầu đăng kí sử dụng của';
-  const cancelItemMess = 'Chắc chắn từ chối yêu cầu đăng sử dụng của';
+  const cancelItemMess = 'Chắc chắn từ chối yêu cầu đăng kí sử dụng của';
+
+  // const approveRepairMess = 'Chắc chắn phê duyệt yêu cầu đăng kí sửa chữa của';
+  const cancelRepairMess = 'Chắc chắn từ chối yêu cầu đăng kí sửa chữa của';
+
+  const handlePickDate = date => {
+    setTogglePickTimeModal(false);
+    compareDate(time, changeFormatDate(date))
+      ? setTime(formatDate(date))
+      : ToastAlert('Ngày chọn không hợp lệ!');
+  };
 
   return (
     <Modal
@@ -371,6 +397,60 @@ export const ConfirmModal = ({
           </View>
         )}
 
+        {screenName == 'HistoryRegisterRepair' && (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1.5),
+              paddingHorizontal: Dimension.setWidth(3),
+              width: '100%',
+            }}>
+            <Image source={Images.brokenItem} style={{height: 55, width: 55}} />
+            {!status ? (
+              <Text
+                style={{
+                  marginLeft: Dimension.setWidth(3),
+                  fontSize: Dimension.fontSize(17),
+                  fontFamily: Fonts.SF_MEDIUM,
+                  textAlign: 'center',
+                  ...fontDefault,
+                }}>
+                {`${cancelRepairMess} ${item?.nguoidk}?`}
+              </Text>
+            ) : (
+              <>
+                <Text style={styles.textConfirm}>
+                  Thời gian sửa chữa dự kiến
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setTogglePickTimeModal(true);
+                  }}
+                  style={{
+                    ...rowAlignCenter,
+                    backgroundColor: '#ffffff',
+                    justifyContent: 'space-between',
+                    padding: 8,
+                    borderRadius: 12,
+                    width: '50%',
+                    marginTop: hp('0.6%'),
+                  }}>
+                  <Text style={styles.titleModal}>{time}</Text>
+                  <Image
+                    source={Images.calendarBlack}
+                    style={{
+                      height: 20,
+                      width: 20,
+                      tintColor: Colors.DEFAULT_GREEN,
+                    }}
+                  />
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        )}
+
         <View
           style={[
             styles.containerEachLine,
@@ -382,7 +462,9 @@ export const ConfirmModal = ({
             }}
             style={[
               styles.confirmBtn,
-              {borderColor: !status ? '#f25157' : '#57b85d'},
+              {
+                borderColor: !status ? '#f25157' : '#57b85d',
+              },
             ]}>
             <Text
               style={[
@@ -407,6 +489,15 @@ export const ConfirmModal = ({
           style={{position: 'absolute', right: '5%', top: '5%'}}>
           <Image source={Images.minusclose} style={styles.btnModal} />
         </TouchableOpacity>
+        <DateTimePickerModal
+          style={{zIndex: 999}}
+          isVisible={togglePickTimeModal}
+          mode="date"
+          onConfirm={handlePickDate}
+          onCancel={() => {
+            setToggleDatePicker(false);
+          }}
+        />
       </View>
     </Modal>
   );
@@ -680,7 +771,6 @@ export const DisplayNotificationModal = ({
 };
 
 export const CheckDownLoadModal = ({
-  navigation,
   toggleModal,
   setToggleModal,
   handlePresentModalPress,

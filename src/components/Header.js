@@ -15,15 +15,9 @@ import Colors from '../contants/Colors';
 import {fontDefault, imgDefault} from '../contants/Variable';
 import {screen} from '../screens/AllScreen/allScreen';
 
-const Header = ({
-  title,
-  navigation,
-  refreshData,
-  logo,
-  replace = false,
-  handleFilter,
-}) => {
-  const showCreateButton = title.includes('Lịch sử');
+const Header = ({title, navigation, refreshData, logo, handleFilter}) => {
+  const showCreateButton =
+    title.includes('Lịch sử') || title.includes('Theo dõi');
 
   const showFitlerButon =
     title === 'Định mức Kinh tế Kĩ thuật' ||
@@ -127,6 +121,11 @@ const Header = ({
               navigation.navigate(screen.registerOfficeItem);
             } else if (title == 'Lịch sử đăng kí thiết bị') {
               navigation.navigate(screen.registerDevice);
+            } else if (
+              title == 'Lịch sử đăng kí sửa chữa' ||
+              title == 'Theo dõi sửa chữa'
+            ) {
+              navigation.navigate(screen.registerRepair);
             }
           }}>
           <Image source={Images.adjust} style={styles.rightIcon} />

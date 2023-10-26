@@ -22,22 +22,26 @@ import WebView from 'react-native-webview';
 import {IOSDownload, shareAndroid} from '../../utils/download';
 import {getDetailNew} from '../../redux/apiRequest';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {TextRenderSkeleton} from '../../components/Skeleton';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
   const {width} = useWindowDimensions();
   const id = item.id;
   const [html, setHtml] = useState(item.content);
-  console.log(item);
+  const [loading, setLoading] = useState(true);
 
   const fetchDetailNew = async () => {
     const data = await getDetailNew(id);
     setHtml(data.content);
+    setLoading(false);
   };
 
   useLayoutEffect(() => {
     if (!item.content) {
       fetchDetailNew();
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -111,19 +115,23 @@ const DetailNewsScreen = ({navigation, route}) => {
         </View>
 
         <View style={styles.descriptionContainer}>
-          <RenderHtml
-            contentWidth={width}
-            renderers={renderers}
-            WebView={WebView}
-            source={source}
-            customHTMLElementModels={customHTMLElementModels}
-            renderersProps={{
-              iframe: {
-                scalesPageToFit: true,
-                webViewProps: {},
-              },
-            }}
-          />
+          {loading ? (
+            <TextRenderSkeleton />
+          ) : (
+            <RenderHtml
+              contentWidth={width}
+              renderers={renderers}
+              WebView={WebView}
+              source={source}
+              customHTMLElementModels={customHTMLElementModels}
+              renderersProps={{
+                iframe: {
+                  scalesPageToFit: true,
+                  webViewProps: {},
+                },
+              }}
+            />
+          )}
           {item?.files && (
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text
@@ -188,7 +196,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'absolute',
     height: Dimension.setHeight(100),
-    top: Dimension.setHeight(25),
+    top: Dimension.setHeight(26),
     backgroundColor: '#fff',
     borderRadius: 36,
     borderWidth: 0.5,
@@ -200,7 +208,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     justifyContent: 'center',
     marginTop: Dimension.setHeight(2.2),
-    marginHorizontal: Dimension.setWidth(6),
+    marginHorizontal: Dimension.setWidth(5),
   },
 
   descriptionContainer: {
@@ -215,7 +223,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_SEMIBOLD,
     marginTop: Dimension.setHeight(1),
     padding: 5,
-    textAlign: 'justify',
   },
 
   content: {

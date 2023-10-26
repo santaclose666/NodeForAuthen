@@ -44,5 +44,7 @@ export const screen = {
   forestryDepartment: 'ForestryDepartment',
   webview: 'WebViewDetail',
   nationalPark: 'NationalPark',
-  detailNationPark: 'DetailNationPark'
+  detailNationPark: 'DetailNationPark',
+  registerRepair: 'RegisterRepair',
+  historyRepair: 'HistoryRepair',
 };

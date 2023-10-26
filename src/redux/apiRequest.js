@@ -77,6 +77,12 @@ import {
   getNationalParkStart,
   getNationalParkSuccess,
 } from './nationalPark';
+import {getSubjectSuccess} from './subjectSlice';
+import {
+  getListRepairStart,
+  getListRepairSuccess,
+  getListRepairFailed,
+} from './repairSlice';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -108,6 +114,7 @@ export const loginUser = async (user, dispatch, navigation, save) => {
 
       if (data.tendonvi == 'IFEE' || data.tendonvi == 'XMG') {
         getAllStaffs(dispatch);
+        getSubject(dispatch);
       }
 
       if (save) {
@@ -136,6 +143,17 @@ export const logoutUser = async (dispatch, navigation, user) => {
 
     navigation.dispatch(resetAction);
     navigation.navigate('BottomTab');
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  SUBJECT DATA  ////////////////////
+export const getSubject = async dispatch => {
+  try {
+    const res = await axios.get('https://management.ifee.edu.vn/api/bomon/all');
+
+    dispatch(getSubjectSuccess(res.data));
   } catch (error) {
     console.log(error);
   }
@@ -997,6 +1015,113 @@ export const cancelRegisterOfficeItem = async data => {
     await axios.get(
       `https://management.ifee.edu.vn/api/vpp/pheduyet/xoa/${data.id_user}`,
     );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  REPAIR  ////////////////////
+export const getRepairList = async () => {
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/suachua/danhmuc`,
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const registerRepair = async data => {
+  try {
+    await axios.post(
+      `https://management.ifee.edu.vn/api/suachua/regSC/${data.id_user}`,
+      {
+        id_phong: data.id_phong,
+        hoten: data.hoten,
+        arr_thietbi: data.arr_thietbi,
+        arr_tinhtrang: data.arr_tinhtrang,
+      },
+    );
+
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getRepairApproveList = async dispatch => {
+  dispatch(getListRepairStart());
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/suachua/pheduyet/danhsach`,
+    );
+
+    dispatch(getListRepairSuccess(res.data));
+    return true;
+  } catch (error) {
+    dispatch(getListRepairFailed());
+  }
+};
+
+export const approveRepair = async data => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/suachua/pheduyet/duyet/${data.id_user}?`,
+      {
+        params: {
+          id_manager: data.id_manager,
+          tg_dukien: data.tg_dukien,
+        },
+      },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const cancelRepair = async id_user => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/suachua/pheduyet/tuchoi/${id_user}`,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getNotProcessedYetList = async () => {
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/suachua/chuaxuly/danhsach`,
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getProcessedList = async () => {
+  try {
+    const res = await axios.get(
+      `https://management.ifee.edu.vn/api/suachua/daxuly/danhsach`,
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateProcessed = async id => {
+  try {
+    await axios.get(
+      `https://management.ifee.edu.vn/api/suachua/update_xuly/${id}`,
+    );
+
+    return true;
   } catch (error) {
     console.log(error);
   }

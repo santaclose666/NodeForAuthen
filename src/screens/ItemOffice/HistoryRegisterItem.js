@@ -142,6 +142,10 @@ const HistoryRegisterItem = ({navigation}) => {
     fetchOfficeItemList();
   }, []);
 
+  const checkRole = () => {
+    return user?.quyentruycap <= 2;
+  };
+
   const RenderTicketData = memo(({item, index}) => {
     const colorStatus = '#f9a86a';
     const bgColorStatus = '#fef4eb';
@@ -149,10 +153,6 @@ const HistoryRegisterItem = ({navigation}) => {
     const icon = Images.pending;
 
     const filterUser = IFEEstaffs.filter(user => user.id == item.id_user)[0];
-
-    const checkRole = () => {
-      return user?.quyentruycap <= 2;
-    };
 
     return (
       <TouchableOpacity
@@ -175,7 +175,7 @@ const HistoryRegisterItem = ({navigation}) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            width: '66%',
+            width: '65%',
             marginBottom: Dimension.setHeight(0.8),
           }}>
           <Text
@@ -190,15 +190,7 @@ const HistoryRegisterItem = ({navigation}) => {
         </View>
         <View
           style={{position: 'absolute', right: '5%', top: '7%', zIndex: 9999}}>
-          {user?.quyentruycap > 2 && (
-            <StatusUI
-              status={status}
-              colorStatus={colorStatus}
-              bgColorStatus={bgColorStatus}
-              icon={icon}
-            />
-          )}
-          {checkRole() && (
+          {checkRole() ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -226,6 +218,13 @@ const HistoryRegisterItem = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
+          ) : (
+            <StatusUI
+              status={status}
+              colorStatus={colorStatus}
+              bgColorStatus={bgColorStatus}
+              icon={icon}
+            />
           )}
         </View>
         <View style={styles.containerEachLine}>
@@ -252,11 +251,6 @@ const HistoryRegisterItem = ({navigation}) => {
       <SafeAreaView style={styles.container}>
         <Header title="Lịch sử đăng kí VPP" navigation={navigation} />
         <BottomSheetModalProvider>
-          {/* <FilterStatusUI
-            handlePickOption={handlePickOption}
-            indexPicker={indexPicker}
-          /> */}
-
           {loading ? (
             <InternalSkeleton />
           ) : (
