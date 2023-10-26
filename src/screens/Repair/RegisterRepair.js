@@ -46,16 +46,44 @@ if (Platform.OS == 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
+const temp = [
+  {
+    id: 2,
+    bomon: 'Phòng TH',
+  },
+  {
+    id: 3,
+    bomon: 'BM CNMT',
+  },
+  {
+    id: 4,
+    bomon: 'BM ST&PTR',
+  },
+  {
+    id: 5,
+    bomon: 'BM UDVT',
+  },
+  {
+    id: 6,
+    bomon: 'TT CHĐTVR',
+  },
+  {
+    id: 7,
+    bomon: 'Phòng R&D',
+  },
+];
+
 const RegisterRepair = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const subject = useSelector(state => state.subject.subject?.data);
+  const subject = useSelector(state => state.subject?.subject?.data);
   const dispatch = useDispatch();
   const [listDevice, setListDevice] = useState([]);
   const [arrRender, setArrRender] = useState([]);
   const [loading, setLoading] = useState(false);
   const [registerPerson, setRegisterPerson] = useState(user.hoten);
   const [subjectValue, setSubjectValue] = useState(
-    subject.filter(item => item.id === parseInt(user?.id_phong))[0].id,
+    (subject || temp)?.filter(item => item.id === parseInt(user?.id_phong))[0]
+      .id,
   );
   const [toggleModal, setToggleModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -170,7 +198,7 @@ const RegisterRepair = ({navigation}) => {
   };
 
   const handleConfirmText = () => {
-    if (textTemp.length != 0) {
+    if (textTemp?.length != 0) {
       let updatedArrRender = [...arrRender];
 
       if (isDevice) {
@@ -303,7 +331,7 @@ const RegisterRepair = ({navigation}) => {
               )}
             </View>
             <TouchableOpacity
-              disabled={data.listValue.length > 0 ? false : true}
+              disabled={data.listValue?.length > 0 ? false : true}
               onPress={() => {
                 handlePick(false, data, index);
               }}
@@ -314,7 +342,7 @@ const RegisterRepair = ({navigation}) => {
                     styles.title,
                     {
                       color:
-                        data.listValue.length > 0
+                        data.listValue?.length > 0
                           ? '#8bc7bc'
                           : Colors.INACTIVE_GREY,
                     },
@@ -382,13 +410,13 @@ const RegisterRepair = ({navigation}) => {
                 itemTextStyle={styles.itemText}
                 fontFamily={Fonts.SF_MEDIUM}
                 activeColor="#eef2feff"
-                data={subject}
+                data={subject || temp}
                 maxHeight={Dimension.setHeight(30)}
                 labelField="bomon"
                 valueField="id"
                 value={subjectValue}
                 onChange={item => {
-                  setSubjectValue(item.id);
+                  setSubjectValue(item?.id);
                 }}
               />
             </View>
