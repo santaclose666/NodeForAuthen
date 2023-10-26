@@ -53,35 +53,15 @@ const RegisterRepair = ({navigation}) => {
   const [arrRender, setArrRender] = useState([]);
   const [loading, setLoading] = useState(false);
   const [registerPerson, setRegisterPerson] = useState(user.hoten);
-  const [subjectValue, setSubjectValue] = useState(1);
+  const [subjectValue, setSubjectValue] = useState(
+    subject.filter(item => item.id === parseInt(user?.id_phong))[0].id,
+  );
   const [toggleModal, setToggleModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [textTemp, setTextTemp] = useState('');
   const [isDevice, setIsDevice] = useState(null);
+  const [errInputModal, setErrInputModal] = useState(false);
   const inputModalRef = useRef(null);
-
-  const handlePickType = (item, index) => {
-    const updatedArrRender = [...arrRender];
-
-    const checkExist = updatedArrRender.some(
-      filter => filter.listValue == item.thietbi,
-    );
-    if (checkExist) {
-      ToastAlert('Thiết bị đã tồn tại!');
-    } else {
-      if (item.thietbi == 'Khác') {
-        updatedArrRender[index].isOrther = true;
-        updatedArrRender[index].listValue = '';
-        updatedArrRender[index].status = '';
-
-        setArrRender(updatedArrRender);
-      } else {
-        updatedArrRender[index].listValue = item.thietbi;
-
-        setArrRender(updatedArrRender);
-      }
-    }
-  };
 
   const handleAddRepairDevice = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -124,7 +104,7 @@ const RegisterRepair = ({navigation}) => {
       devicePicker?.length != 0 &&
       status?.length != 0
     ) {
-      setLoading(true);
+      // setLoading(true);
       const data = {
         id_user: user.id,
         id_phong: subjectValue,
@@ -132,18 +112,19 @@ const RegisterRepair = ({navigation}) => {
         arr_thietbi: devicePicker,
         arr_tinhtrang: status,
       };
-      try {
-        const res = await registerRepair(data);
+      console.log(data);
+      // try {
+      //   const res = await registerRepair(data);
 
-        if (res) {
-          ToastSuccess('Đăng kí thành công');
-          setLoading(false);
-          navigation.goBack();
-        }
-      } catch (error) {
-        setLoading(false);
-        ToastAlert('Có lỗi xảy ra!');
-      }
+      //   if (res) {
+      //     ToastSuccess('Đăng kí thành công');
+      //     setLoading(false);
+      //     navigation.goBack();
+      //   }
+      // } catch (error) {
+      //   setLoading(false);
+      //   ToastAlert('Có lỗi xảy ra!');
+      // }
     } else {
       ToastAlert('Chưa nhập đầy đủ thông tin!');
     }
@@ -159,18 +140,49 @@ const RegisterRepair = ({navigation}) => {
     });
   };
 
-  const handleConfirmText = () => {
-    let updatedArrRender = [...arrRender];
+  const handlePickType = (item, index) => {
+    const updatedArrRender = [...arrRender];
 
-    if (isDevice) {
-      updatedArrRender[selectedItem.index].listValue = textTemp;
+    const checkExist = updatedArrRender.some(
+      filter => filter.listValue == item.thietbi,
+    );
+    if (checkExist) {
+      ToastAlert('Thiết bị đã tồn tại!');
     } else {
-      updatedArrRender[selectedItem.index].status = textTemp;
-    }
+      if (item.thietbi == 'Khác') {
+        updatedArrRender[index].isOrther = true;
+        updatedArrRender[index].listValue = '';
+        updatedArrRender[index].status = '';
 
-    setArrRender(updatedArrRender);
-    setToggleModal(false);
-    setTextTemp('');
+        setArrRender(updatedArrRender);
+        setTimeout(() => {
+          handlePick(true, item, index);
+        });
+      } else {
+        updatedArrRender[index].listValue = item.thietbi;
+
+        setArrRender(updatedArrRender);
+      }
+    }
+  };
+
+  const handleConfirmText = () => {
+    if (textTemp.length != 0) {
+      let updatedArrRender = [...arrRender];
+
+      if (isDevice) {
+        updatedArrRender[selectedItem.index].listValue = textTemp;
+      } else {
+        updatedArrRender[selectedItem.index].status = textTemp;
+      }
+
+      setArrRender(updatedArrRender);
+      setToggleModal(false);
+      setErrInputModal(false);
+      setTextTemp('');
+    } else {
+      setErrInputModal(true);
+    }
   };
 
   const fetchAllDevices = async () => {
@@ -460,10 +472,12 @@ const RegisterRepair = ({navigation}) => {
                   borderRadius: 12,
                   width: '86%',
                   paddingLeft: 6,
+                  borderWidth: 1,
+                  borderColor: !errInputModal ? Colors.INACTIVE_GREY : 'red',
                 }}>
                 <TextInput
                   ref={inputModalRef}
-                  style={{width: '100%'}}
+                  style={{width: '100%', height: hp('4%')}}
                   placeholder={
                     isDevice ? 'Nhập thiết bị khác' : 'Mô tả tình trạng lỗi'
                   }
@@ -498,6 +512,7 @@ const RegisterRepair = ({navigation}) => {
               <TouchableOpacity
                 onPress={() => {
                   setToggleModal(false);
+                  setErrInputModal(false);
                 }}
                 style={[styles.confirmBtn, {borderColor: '#f0b263'}]}>
                 <Text style={[styles.textConfirm, {color: '#f0b263'}]}>
@@ -509,6 +524,7 @@ const RegisterRepair = ({navigation}) => {
             <TouchableOpacity
               onPress={() => {
                 setToggleModal(false);
+                setErrInputModal(false);
               }}
               style={{position: 'absolute', right: 8, top: 8}}>
               <Image source={Images.minusclose} style={styles.btnModal} />
