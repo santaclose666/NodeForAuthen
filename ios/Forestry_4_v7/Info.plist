@@ -6,6 +6,8 @@
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>Forestry 4.0</string>
+	<key>CodePushDeploymentKey</key>
+	<string>Lb3N6lBd4t2jPgG19iIAwbakMqU5Rhfv2jYfq</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

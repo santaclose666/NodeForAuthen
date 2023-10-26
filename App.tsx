@@ -6,6 +6,7 @@ import {store, persistor} from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import 'react-native-gesture-handler';
 import BootSplash from 'react-native-bootsplash';
+import codePush from 'react-native-code-push';
 
 const App = () => {
   useEffect(() => {
@@ -25,4 +26,9 @@ const App = () => {
   );
 };
 
-export default App;
+const codePushOptions = {
+  checkFrequency: codePush.CheckFrequency.ON_APP_START,
+  installMode: codePush.InstallMode.IMMEDIATE,
+};
+
+export default codePush(codePushOptions)(App);
