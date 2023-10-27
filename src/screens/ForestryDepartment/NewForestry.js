@@ -21,6 +21,7 @@ import {screen} from '../../screens/AllScreen/allScreen';
 import {EmptyList} from '../../components/FlatlistComponent';
 import Images from '../../contants/Images';
 import {NewsSkeleton} from '../../components/Skeleton';
+import {shareUrl} from '../../utils/download';
 
 const NewsForestry = ({navigation}) => {
   const [featureIndex, setFeatureIndex] = useState(0);
@@ -132,9 +133,10 @@ const NewsForestry = ({navigation}) => {
                         resizeMode="contain"
                       />
                     )}
+
                     <View
                       style={{
-                        marginTop: Dimension.setHeight(0.6),
+                        marginVertical: Dimension.setHeight(0.1),
                         marginHorizontal: Dimension.setWidth(2.2),
                       }}>
                       <Text
@@ -147,15 +149,32 @@ const NewsForestry = ({navigation}) => {
                         }}>
                         {item.title}
                       </Text>
-                      <Text
+                      <View
                         style={{
-                          fontFamily: Fonts.SF_REGULAR,
-                          color: Colors.DEFAULT_BLACK,
-                          opacity: 0.6,
-                          fontSize: Dimension.fontSize(12),
+                          width: '100%',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}>
-                        {item.createDate.replace(/\s+/g, ' - ')}
-                      </Text>
+                        <Text
+                          style={{
+                            fontFamily: Fonts.SF_REGULAR,
+                            color: Colors.DEFAULT_BLACK,
+                            opacity: 0.6,
+                            fontSize: Dimension.fontSize(12),
+                          }}>
+                          {item.createDate.replace(/\s+/g, ' - ')}
+                        </Text>
+                        <TouchableOpacity
+                          onPress={() => {
+                            shareUrl(item.url);
+                          }}>
+                          <Image
+                            source={Images.share}
+                            style={{width: 22, height: 22}}
+                          />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </TouchableOpacity>
                 );
@@ -269,6 +288,7 @@ const styles = StyleSheet.create({
     height: Dimension.setHeight(22),
     borderRadius: 10,
     alignSelf: 'center',
+    marginBottom: Dimension.setHeight(0.6),
   },
 });
 

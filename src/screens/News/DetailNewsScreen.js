@@ -19,10 +19,11 @@ import {fontDefault, newsMvURL, newsURL} from '../../contants/Variable';
 import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
 import RenderHtml from 'react-native-render-html';
 import WebView from 'react-native-webview';
-import {IOSDownload, shareAndroid} from '../../utils/download';
+import {IOSDownload, shareUrl} from '../../utils/download';
 import {getDetailNew} from '../../redux/apiRequest';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {TextRenderSkeleton} from '../../components/Skeleton';
+import {rowAlignCenter} from '../../contants/CssFE';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
@@ -102,16 +103,33 @@ const DetailNewsScreen = ({navigation, route}) => {
             }}>
             {item.title}
           </Text>
-          <Text
+
+          <View
             style={{
-              fontSize: Dimension.fontSize(14),
-              fontFamily: Fonts.SF_REGULAR,
-              color: Colors.DEFAULT_BLACK,
-              opacity: 0.6,
-              marginTop: Dimension.setHeight(1),
+              width: '100%',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}>
-            {item.date_created || item.createDate.replace(/\s+/g, ' - ')}
-          </Text>
+            <Text
+              style={{
+                fontSize: Dimension.fontSize(14),
+                fontFamily: Fonts.SF_REGULAR,
+                color: Colors.DEFAULT_BLACK,
+                opacity: 0.6,
+                marginTop: Dimension.setHeight(1),
+              }}>
+              {item.date_created || item.createDate.replace(/\s+/g, ' - ')}
+            </Text>
+            {item.url && (
+              <TouchableOpacity
+                onPress={() => {
+                  shareUrl(item.url);
+                }}>
+                <Image source={Images.share} style={{width: 22, height: 22}} />
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
 
         <View style={styles.descriptionContainer}>
@@ -133,7 +151,7 @@ const DetailNewsScreen = ({navigation, route}) => {
             />
           )}
           {item?.files && (
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={rowAlignCenter}>
               <Text
                 style={{
                   fontSize: Dimension.fontSize(15),
@@ -152,7 +170,7 @@ const DetailNewsScreen = ({navigation, route}) => {
                 onPress={() => {
                   Platform.OS == 'ios'
                     ? IOSDownload(newsMvURL + item.files.filename)
-                    : shareAndroid(newsMvURL + item.files.filename);
+                    : shareUrl(newsMvURL + item.files.filename);
                 }}>
                 {item.files.hyperlink}
               </Text>

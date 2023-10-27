@@ -214,6 +214,7 @@ const Images = {
   currStatus: require('../assets/images/currStatus.png'),
   fixed: require('../assets/images/fixed.png'),
   brokenItem: require('../assets/images/brokenItem.png'),
+  share: require('../assets/images/share.png'),
 };
 
 export default Images;

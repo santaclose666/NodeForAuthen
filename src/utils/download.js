@@ -1,7 +1,7 @@
 import RNFS from 'react-native-fs';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import {ToastAlert} from '../components/Toast';
-import {Linking} from 'react-native';
+import {Linking, Share} from 'react-native';
 
 export const AndroidDownload = url => {
   const split_url = url.split('/');
@@ -58,10 +58,10 @@ export const IOSDownload = async url => {
     });
 };
 
-export const shareAndroid = async url => {
+export const shareUrl = async link => {
   try {
     const result = await Share.share({
-      message: url,
+      url: link,
     });
 
     if (result.action === Share.sharedAction) {
@@ -70,7 +70,9 @@ export const shareAndroid = async url => {
       }
     } else if (result.action === Share.dismissedAction) {
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const OpenURL = async link => {
