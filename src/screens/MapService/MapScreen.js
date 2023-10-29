@@ -86,6 +86,8 @@ const listOptionPoint = [
 const listRootURL = [
   {maTinh: 2, link: 'https://giamsatrunghagiang.ifee.edu.vn'},
   {maTinh: 40, link: 'https://giamsatrungnghean.ifee.edu.vn'},
+  {maTinh: 1, link: 'https://giamsatrunghanoi.ifee.edu.vn'},
+  {maTinh: 37, link: 'https://giamsatrungninhbinh.ifee.edu.vn'},
 ];
 
 const MapScreen = ({navigation}) => {
@@ -248,50 +250,54 @@ const MapScreen = ({navigation}) => {
       item => item.maTinh == data.provinceCode,
     );
     setListFirePoint([]);
-    if (dateStart != null) {
-      switch (data.mapLevel) {
-        case 'province':
-          url =
-            foundItem.link +
-            '/api/getHotSpotInfo?from=' +
-            dateStart +
-            '&to=' +
-            dateEnd;
-          break;
-        case 'district':
-          url =
-            foundItem.link +
-            '/api/getHotSpotInDistrict?mahuyen=' +
-            data.mapCode +
-            '&from=' +
-            dateStart +
-            '&to=' +
-            dateEnd;
-          break;
-        case 'commune':
-          url =
-            foundItem.link +
-            '/api/getHotSpotInCommune?maxa=' +
-            data.mapCode +
-            '&from=' +
-            dateStart +
-            '&to=' +
-            dateEnd;
-          break;
+    try {
+      if (dateStart != null) {
+        switch (data.mapLevel) {
+          case 'province':
+            url =
+              foundItem.link +
+              '/api/getHotSpotInfo?from=' +
+              dateStart +
+              '&to=' +
+              dateEnd;
+            break;
+          case 'district':
+            url =
+              foundItem.link +
+              '/api/getHotSpotInDistrict?mahuyen=' +
+              data.mapCode +
+              '&from=' +
+              dateStart +
+              '&to=' +
+              dateEnd;
+            break;
+          case 'commune':
+            url =
+              foundItem.link +
+              '/api/getHotSpotInCommune?maxa=' +
+              data.mapCode +
+              '&from=' +
+              dateStart +
+              '&to=' +
+              dateEnd;
+            break;
+        }
+        console.log(url);
+        await fetch(url)
+          .then(res => res.json())
+          .then(resJSON => {
+            if (resJSON.length > 0) {
+              setListFirePoint(resJSON);
+              setModalFirePoint(false);
+            } else {
+              ToastAlert('Không có điểm cháy ghi nhận!');
+            }
+          });
+      } else {
+        ToastAlert('Thiếu thông tin đầu vào!');
       }
-      console.log(url);
-      await fetch(url)
-        .then(res => res.json())
-        .then(resJSON => {
-          if (resJSON.length > 0) {
-            setListFirePoint(resJSON);
-            setModalFirePoint(false);
-          } else {
-            ToastAlert('Không có điểm cháy ghi nhận!');
-          }
-        });
-    } else {
-      ToastAlert('Thiếu thông tin đầu vào!');
+    } catch (err) {
+      ToastAlert('Không tìm thấy thông tin!');
     }
   };
 
