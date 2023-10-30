@@ -1,0 +1,3 @@
+import {CUC_LAM_NGHIEP_TOKEN, WEATHER_TOKEN} from '@env';
+
+export default {CUC_LAM_NGHIEP_TOKEN, WEATHER_TOKEN};
