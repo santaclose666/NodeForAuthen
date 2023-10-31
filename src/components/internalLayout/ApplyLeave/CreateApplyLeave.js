@@ -9,28 +9,28 @@ import {
   TextInput,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import Images from '../../contants/Images';
-import Fonts from '../../contants/Fonts';
-import Colors from '../../contants/Colors';
-import Dimension from '../../contants/Dimension';
-import Header from '../../components/Header';
+import Images from '../../../contants/Images';
+import Fonts from '../../../contants/Fonts';
+import Colors from '../../../contants/Colors';
+import Dimension from '../../../contants/Dimension';
+import Header from '../../../components/Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import {ToastAlert, ToastSuccess} from '../../../components/Toast';
 import {
   compareDate,
   formatDate,
   formatDateToPost,
-} from '../../utils/serviceFunction';
-import RegisterBtn from '../../components/RegisterBtn';
-import {registerOnLeave} from '../../redux/apiRequest';
-import {shadowIOS} from '../../contants/propsIOS';
-import {mainURL} from '../../contants/Variable';
-import Loading from '../../components/LoadingUI';
-import LinearGradientUI from '../../components/LinearGradientUI';
-import RedPoint from '../../components/RedPoint';
-import {rowAlignCenter} from '../../contants/CssFE';
+} from '../../../utils/serviceFunction';
+import RegisterBtn from '../../../components/RegisterBtn';
+import {registerOnLeave} from '../../../redux/apiRequest';
+import {shadowIOS} from '../../../contants/propsIOS';
+import {mainURL} from '../../../contants/Variable';
+import Loading from '../../../components/LoadingUI';
+import LinearGradientUI from '../../../components/LinearGradientUI';
+import RedPoint from '../../../components/RedPoint';
+import {rowAlignCenter} from '../../../contants/CssFE';
 
 const numberOfDayOff = [
   {label: 'Buổi sáng', value: 0.5},
@@ -63,9 +63,11 @@ const CreateApplyLeaveScreen = ({navigation, route}) => {
     } else {
       const data = {
         id_user: user?.id,
+        tendonvi: user?.tendonvi,
         lydo: inputDecription,
         tungay: formatDateToPost(startDay),
         tong: valueNumberOfDay === 'Nhiều ngày' ? offNumber : valueNumberOfDay,
+        tendonvi: user?.tendonvi,
       };
 
       setLoading(true);

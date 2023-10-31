@@ -10,15 +10,15 @@ import {
   ScrollView,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import Images from '../../contants/Images';
-import Fonts from '../../contants/Fonts';
-import Dimension from '../../contants/Dimension';
-import Header from '../../components/Header';
+import Images from '../../../contants/Images';
+import Fonts from '../../../contants/Fonts';
+import Dimension from '../../../contants/Dimension';
+import Header from '../../Header';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import {ToastAlert, ToastSuccess} from '../../Toast';
 import {
   compareDate,
   formatDate,
@@ -26,16 +26,16 @@ import {
   formatTime,
   formatTimeToPost,
   getCurrentTime,
-} from '../../utils/serviceFunction';
-import RegisterBtn from '../../components/RegisterBtn';
+} from '../../../utils/serviceFunction';
+import RegisterBtn from '../../RegisterBtn';
 import {registerPlaneTicket} from '../../redux/apiRequest';
-import {shadowIOS} from '../../contants/propsIOS';
-import {mainURL} from '../../contants/Variable';
-import {planeCompany, ticketType, airplane} from '../../contants/Variable';
-import Loading from '../../components/LoadingUI';
-import LinearGradientUI from '../../components/LinearGradientUI';
-import RedPoint from '../../components/RedPoint';
-import {rowAlignCenter} from '../../contants/CssFE';
+import {shadowIOS} from '../../../contants/propsIOS';
+import {mainURL} from '../../../contants/Variable';
+import {planeCompany, ticketType, airplane} from '../../../contants/Variable';
+import Loading from '../../LoadingUI';
+import LinearGradientUI from '../../LinearGradientUI';
+import RedPoint from '../../RedPoint';
+import {rowAlignCenter} from '../../../contants/CssFE';
 
 const workData = [
   {
@@ -99,6 +99,7 @@ const RegisterPlaneScreen = ({navigation, route}) => {
         ngaydi: `${formatDateToPost(dateValue)} ${formatTimeToPost(timeValue)}`,
         hangve: ticketTypeValue,
         kygui: kgNumber,
+        tendonvi: user?.tendonvi,
       };
       setLoading(true);
       try {

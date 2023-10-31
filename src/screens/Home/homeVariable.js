@@ -110,7 +110,7 @@ export const VNUF = [
   },
 ];
 
-export const internal = [
+export const IFEEInternal = [
   {
     featureName: 'Nhân sự',
     component: screen.staffList,
@@ -162,7 +162,6 @@ export const internal = [
     icon: Images.sendnotification,
     isAdmin: true,
   },
-
   {
     featureName: null,
     component: null,
@@ -172,5 +171,48 @@ export const internal = [
     featureName: null,
     component: null,
     icon: null,
+  },
+];
+
+export const XMGInternal = [
+  {
+    featureName: 'Nhân sự',
+    component: screen.staffList,
+    icon: Images.staff,
+  },
+  {
+    featureName: 'Lịch công tác',
+    component: screen.workScheduleList,
+    icon: Images.calendar2,
+  },
+  {
+    featureName: 'Đăng kí xe',
+    component: screen.vehicleList,
+    icon: Images.registervehicle,
+  },
+  {
+    featureName: 'VP phẩm',
+    component: screen.officeItemList,
+    icon: Images.office,
+  },
+  {
+    featureName: 'Thiết bị',
+    component: screen.deviceList,
+    icon: Images.device,
+  },
+  {
+    featureName: 'Đăng kí vé',
+    component: screen.planeTicketList,
+    icon: Images.registerticket,
+  },
+  {
+    featureName: 'Nghỉ phép',
+    component: screen.applyLeaveList,
+    icon: Images.busy,
+  },
+  {
+    featureName: 'Sửa chữa',
+    component: screen.historyRepair,
+    icon: Images.repair,
   },
 ];

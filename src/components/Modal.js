@@ -40,9 +40,9 @@ export const ApproveCancelModal = ({
   reasonCancel,
   setReasonCancel,
   eventFunc,
+  staffs,
 }) => {
-  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
-  const avatar = IFEEstaffs.filter(item => item.id === selectedItem?.id_nhansu);
+  const avatar = staffs?.filter(item => item.id === selectedItem?.id_nhansu);
 
   return (
     <Modal

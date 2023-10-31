@@ -40,7 +40,12 @@ import Modal from 'react-native-modal';
 import {ToastAlert, ToastSuccess, ToastWarning} from '../../components/Toast';
 import {requestPermissions} from '../../utils/permissionFunc';
 import {topicForAll} from '../../utils/AllTopic';
-import {VNUF, forestryDepartment, internal} from './homeVariable';
+import {
+  VNUF,
+  forestryDepartment,
+  IFEEInternal,
+  XMGInternal,
+} from './homeVariable';
 import {screen} from '../AllScreen/allScreen';
 import {
   widthPercentageToDP as wp,
@@ -372,7 +377,7 @@ const HomePageScreen = ({navigation}) => {
           </View>
         </View>
 
-        {user?.tendonvi === 'IFEE' && (
+        {(user?.tendonvi === 'IFEE' || user?.tendonvi === 'XMG') && (
           <View style={styles.featureBtnContainer}>
             <View style={styles.featureContainer}>
               <Text
@@ -382,13 +387,13 @@ const HomePageScreen = ({navigation}) => {
                   color: Colors.DEFAULT_BLACK,
                   opacity: 0.9,
                 }}>
-                IFEE Management
+                {user?.tendonvi} Management
               </Text>
             </View>
             <View style={styles.btnContainer}>
               <FlatList
                 scrollEnabled={false}
-                data={internal}
+                data={user?.tendonvi === 'IFEE' ? IFEEInternal : XMGInternal}
                 showsVerticalScrollIndicator={false}
                 renderItem={({item, index}) => {
                   return (

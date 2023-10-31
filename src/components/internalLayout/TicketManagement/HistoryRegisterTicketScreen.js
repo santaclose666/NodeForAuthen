@@ -15,38 +15,37 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import Images from '../../contants/Images';
-import Fonts from '../../contants/Fonts';
-import Dimension from '../../contants/Dimension';
-import Header from '../../components/Header';
+import Images from '../../../contants/Images';
+import Fonts from '../../../contants/Fonts';
+import Dimension from '../../../contants/Dimension';
+import Header from '../../Header';
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
-import Colors from '../../contants/Colors';
+import Colors from '../../../contants/Colors';
 import {
   approvePlaneTicket,
   cancelPlaneTicket,
   getAllPlaneData,
-} from '../../redux/apiRequest';
+} from '../../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import StatusUI from '../../components/StatusUI';
-import {ApproveCancelModal} from '../../components/Modal';
-import {ToastWarning} from '../../components/Toast';
-import {shadowIOS} from '../../contants/propsIOS';
-import FilterStatusUI from '../../components/FilterStatusUI';
-import LinearGradientUI from '../../components/LinearGradientUI';
-import {EmptyList} from '../../components/FlatlistComponent';
-import {InternalSkeleton} from '../../components/Skeleton';
+import StatusUI from '../../StatusUI';
+import {ApproveCancelModal} from '../../Modal';
+import {ToastWarning} from '../../Toast';
+import {shadowIOS} from '../../../contants/propsIOS';
+import FilterStatusUI from '../../FilterStatusUI';
+import LinearGradientUI from '../../LinearGradientUI';
+import {EmptyList} from '../../FlatlistComponent';
+import {InternalSkeleton} from '../../Skeleton';
 
 const HistoryRegisterTicketScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const ticketPlaneData = useSelector(
     state => state.ticketPlane.ticketPlane?.data,
   );
-
   const dispatch = useDispatch();
   const [selectedItem, setSelectedItem] = useState(null);
   const [toggleModal, setToggleModal] = useState(false);
@@ -116,6 +115,7 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
     const data = {
       id_dulieu: selectedItem.id,
       noidung: checkInput ? commentInput : reasonCancel,
+      tendonvi: user?.tendonvi,
     };
     if (
       (commentInput.length !== 0 || reasonCancel.length !== 0) &&
@@ -158,7 +158,10 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
 
   const fetchPlaneData = async () => {
     try {
-      await getAllPlaneData(dispatch);
+      const data = {
+        tendonvi: user?.tendonvi,
+      };
+      await getAllPlaneData(dispatch, data);
 
       setLoading(false);
     } catch (error) {
@@ -299,21 +302,37 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
           <Image source={Images.insideperson} style={styles.Iconic} />
           <Text style={[styles.title, {width: '90%'}]}>
             Trong viện:{' '}
-            <Text style={styles.content}>
-              {item.trongvien.map((item, index) => {
-                return <Text key={index}>{item.hoten}, </Text>;
-              })}
-            </Text>
+            {item.trongvien ? (
+              <Text style={styles.content}>
+                {item.trongvien.map((item, index) => {
+                  return <Text key={index}>{item.hoten}, </Text>;
+                })}
+              </Text>
+            ) : (
+              <Text style={styles.content}>
+                {item.ns_trong.map((item, index) => {
+                  return <Text key={index}>{item.hoten}, </Text>;
+                })}
+              </Text>
+            )}
           </Text>
         </View>
         <View style={styles.containerEachLine}>
           <Image source={Images.outsideperson} style={styles.Iconic} />
           <Text style={styles.title}>Ngoài viện: </Text>
-          <Text style={styles.content}>
-            {item.ngoaivien.map((item, index) => {
-              return <Text key={index}>{item}</Text>;
-            })}
-          </Text>
+          {item.ngoaivien ? (
+            <Text style={styles.content}>
+              {item.ngoaivien.map((item, index) => {
+                return <Text key={index}>{item}</Text>;
+              })}
+            </Text>
+          ) : (
+            <Text style={styles.content}>
+              {item.ns_ngoai.map((item, index) => {
+                return <Text key={index}>{item}</Text>;
+              })}
+            </Text>
+          )}
         </View>
 
         <View style={styles.containerEachLine}>
@@ -444,11 +463,19 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                     <Image source={Images.insideperson} style={styles.Iconic} />
                     <Text style={[styles.title, {width: '90%'}]}>
                       Người trong viện:{' '}
-                      <Text style={styles.content}>
-                        {selectedItem.trongvien?.map((item, index) => {
-                          return <Text key={index}>{item.hoten}, </Text>;
-                        })}
-                      </Text>
+                      {selectedItem.trongvien ? (
+                        <Text style={styles.content}>
+                          {selectedItem.trongvien?.map((item, index) => {
+                            return <Text key={index}>{item.hoten}, </Text>;
+                          })}
+                        </Text>
+                      ) : (
+                        <Text style={styles.content}>
+                          {selectedItem.ns_trong?.map((item, index) => {
+                            return <Text key={index}>{item.hoten}, </Text>;
+                          })}
+                        </Text>
+                      )}
                     </Text>
                   </View>
                   <View style={styles.containerEachLine}>
@@ -458,14 +485,25 @@ const HistoryRegisterTicketScreen = ({navigation}) => {
                     />
                     <View style={styles.containerLine}>
                       <Text style={styles.title}>Người ngoài viện:{'  '}</Text>
-                      <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={styles.content}>
-                        {selectedItem.ngoaivien?.map((item, index) => {
-                          return <Text key={index}>{item}</Text>;
-                        })}
-                      </Text>
+                      {selectedItem.ngoaivien ? (
+                        <Text
+                          numberOfLines={2}
+                          ellipsizeMode="tail"
+                          style={styles.content}>
+                          {selectedItem.ngoaivien?.map((item, index) => {
+                            return <Text key={index}>{item}</Text>;
+                          })}
+                        </Text>
+                      ) : (
+                        <Text
+                          numberOfLines={2}
+                          ellipsizeMode="tail"
+                          style={styles.content}>
+                          {selectedItem.ns_ngoai?.map((item, index) => {
+                            return <Text key={index}>{item}</Text>;
+                          })}
+                        </Text>
+                      )}
                     </View>
                   </View>
                 </View>

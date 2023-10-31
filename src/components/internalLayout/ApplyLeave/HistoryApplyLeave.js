@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import Images from '../../contants/Images';
-import Fonts from '../../contants/Fonts';
-import Dimension from '../../contants/Dimension';
-import Header from '../../components/Header';
+import Images from '../../../contants/Images';
+import Fonts from '../../../contants/Fonts';
+import Dimension from '../../../contants/Dimension';
+import Header from '../../Header';
 import {
   adjustOnLeave,
   approveAdjustOnLeave,
@@ -22,27 +22,27 @@ import {
   getAllOnLeaveData,
   rejectLeaveRequest,
   resolveLeaveRequest,
-} from '../../redux/apiRequest';
+} from '../../../redux/apiRequest';
 import {
   changeFormatDate,
   formatDate,
   compareDate,
   formatDateToPost,
-} from '../../utils/serviceFunction';
-import Separation from '../../components/Separation';
+} from '../../../utils/serviceFunction';
+import Separation from '../../Separation';
 import Modal from 'react-native-modal';
-import Colors from '../../contants/Colors';
-import {ToastWarning, ToastAlert} from '../../components/Toast';
+import Colors from '../../../contants/Colors';
+import {ToastWarning, ToastAlert} from '../../Toast';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {ApproveCancelModal} from '../../components/Modal';
-import {shadowIOS} from '../../contants/propsIOS';
-import {defaultIFEE, mainURL} from '../../contants/Variable';
-import FilterStatusUI from '../../components/FilterStatusUI';
-import LinearGradientUI from '../../components/LinearGradientUI';
-import {EmptyList} from '../../components/FlatlistComponent';
-import {InternalSkeleton} from '../../components/Skeleton';
+import {ApproveCancelModal} from '../../Modal';
+import {shadowIOS} from '../../../contants/propsIOS';
+import {defaultIFEE, mainURL} from '../../../contants/Variable';
+import FilterStatusUI from '../../FilterStatusUI';
+import LinearGradientUI from '../../LinearGradientUI';
+import {EmptyList} from '../../FlatlistComponent';
+import {InternalSkeleton} from '../../Skeleton';
 
-const HistoryApplyLeaveScreen = ({navigation}) => {
+const HistoryApplyLeaveTemplate = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -59,7 +59,10 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
   const [indexPicker, setIndexPicker] = useState(0);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const staffs =
+    user?.tendonvi === 'IFEE'
+      ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
+      : useSelector(state => state.staffs?.staffs?.XMGStaff);
 
   useEffect(() => {
     handleGetAllLeaveData();
@@ -67,7 +70,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
 
   const handleGetAllLeaveData = async () => {
     try {
-      await getAllOnLeaveData(user?.id, dispatch);
+      await getAllOnLeaveData(user?.id, dispatch, user?.tendonvi);
 
       setLoading(false);
     } catch (error) {
@@ -89,6 +92,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
     const importantData = {
       id_nghiphep: selectedItem.id,
       id_user: user?.id,
+      tendonvi: user?.tendonvi,
     };
 
     if (!checkInput && reasonCancel !== null && selectedItem !== null) {
@@ -135,6 +139,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
     const data = {
       id_nghiphep: selectedItem.id,
       ngay_dc: formatDateToPost(datePicker),
+      tendonvi: user?.tendonvi,
     };
 
     adjustOnLeave(data);
@@ -145,7 +150,11 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
   };
 
   const handleApproveAdjust = id_nghiphep => {
-    approveAdjustOnLeave(id_nghiphep);
+    const data = {
+      id_nghiphep,
+      tendonvi: user?.tendonvi,
+    };
+    approveAdjustOnLeave(data);
     setRefreshComponent(!refreshComponent);
   };
 
@@ -159,6 +168,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
       const data = {
         id_nghiphep: selectedItem.id,
         lydo: reasonCancelAdjust,
+        tendonvi: user?.tendonvi,
       };
 
       cancelAdjustOnLeave(data);
@@ -202,6 +212,9 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
   );
 
   const RenderLeaveList = memo(({item}) => {
+    const checkOverDate = () => {
+      return compareDate(new Date(), changeFormatDate(item.denngay));
+    };
     const colorStatus =
       item.status === 0 ? '#f9a86a' : item.status === 1 ? '#57b85d' : '#f25157';
     const bgColorStatus =
@@ -246,11 +259,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
 
     const checkRole = () => {
       return (
-        ((item.status == 0 || item.yc_update == 1) &&
-          user?.id != item.id_nhansu &&
-          user?.vitri_ifee == 3 &&
-          item.vitri_ifee > 3) ||
-        (user?.vitri_ifee == 1 && (item.status == 0 || item.yc_update == 1))
+        (item.status == 0 || item.yc_update == 1) && user?.quyentruycap <= 2
       );
     };
 
@@ -263,13 +272,11 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
       );
     };
 
-    const filterUser = IFEEstaffs.filter(user => user.id == item.id_nhansu)[0];
+    const filterUser = staffs.filter(user => user.id == item.id_nhansu)[0];
 
     const avtUser = filterUser?.path ? filterUser?.path : defaultIFEE;
 
-    const approver = IFEEstaffs.filter(
-      user => user.hoten == item.nguoiduyet,
-    )[0];
+    const approver = staffs.filter(user => user.hoten == item.nguoiduyet)[0];
 
     return (
       <View
@@ -384,7 +391,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
           <View style={styles.containerEachLine}>
             <Image
               src={mainURL + (approver?.path ? approver?.path : defaultIFEE)}
-              style={styles.iconic}
+              style={[styles.iconic, {borderRadius: 50}]}
             />
             <Text style={styles.title}>
               {item.status !== 2 ? 'Người duyệt:' : 'Từ chối bởi:'}{' '}
@@ -408,7 +415,8 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
             <Text style={styles.content}>{changeFormatDate(item.denngay)}</Text>
             {item.yc_update === 0 &&
               item.status === 1 &&
-              item.id_nhansu === user?.id && (
+              item.id_nhansu === user?.id &&
+              checkOverDate() && (
                 <TouchableOpacity
                   onPress={() => {
                     handleToggleAdjust(item);
@@ -487,6 +495,7 @@ const HistoryApplyLeaveScreen = ({navigation}) => {
           reasonCancel={reasonCancel}
           setReasonCancel={setReasonCancel}
           eventFunc={handleSendNonAdjust}
+          staffs={staffs}
         />
 
         <Modal
@@ -803,4 +812,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HistoryApplyLeaveScreen;
+export default HistoryApplyLeaveTemplate;

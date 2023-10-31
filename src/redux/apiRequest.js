@@ -203,14 +203,15 @@ export const getWeatherData = async dispatch => {
 /////////////////////  ON LEAVE DATA  ////////////////////
 export const registerOnLeave = async data => {
   try {
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/nghiphep/reg/${data.id_user}`,
-      {
-        tungay: data.tungay,
-        tong: data.tong,
-        lydo: data.lydo,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/nghiphep/reg/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/nghiphep/reg/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.post(api, {
+      tungay: data.tungay,
+      tong: data.tong,
+      lydo: data.lydo,
+    });
 
     return res.data;
   } catch (error) {
@@ -218,18 +219,16 @@ export const registerOnLeave = async data => {
   }
 };
 
-export const getAllOnLeaveData = async (id, dispatch) => {
+export const getAllOnLeaveData = async (id, dispatch, tendonvi) => {
   dispatch(getOnLeaveStart());
   try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/nghiphep/danhsach/${id}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/nghiphep/danhsach/${id}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/nghiphep/danhsach/${id}`;
+    const api = tendonvi === 'IFEE' ? apiIFEE : apiXMG;
 
-    const data = res.data.sort((a, b) => {
-      return b.id - a.id;
-    });
+    const res = await axios.get(api);
 
-    dispatch(getOnLeaveSuccess(data));
+    dispatch(getOnLeaveSuccess(res.data));
   } catch (error) {
     dispatch(getOnLeaveFailed());
   }
@@ -237,10 +236,14 @@ export const getAllOnLeaveData = async (id, dispatch) => {
 
 export const resolveLeaveRequest = async data => {
   try {
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/nghiphep/duyet/${data.id_nghiphep}`,
-      {id_user: data.id_user, nhanxet: data.nhanxet},
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/nghiphep/duyet/${data.id_nghiphep}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/nghiphep/duyet/${data.id_nghiphep}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.post(api, {
+      id_user: data.id_user,
+      nhanxet: data.nhanxet,
+    });
 
     return res.data;
   } catch (error) {
@@ -250,10 +253,11 @@ export const resolveLeaveRequest = async data => {
 
 export const rejectLeaveRequest = async data => {
   try {
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/nghiphep/tuchoi/${data.id_nghiphep}`,
-      {id_user: data.id_user, lydo: data.lydo},
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/nghiphep/tuchoi/${data.id_nghiphep}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/nghiphep/tuchoi/${data.id_nghiphep}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.post(api, {id_user: data.id_user, lydo: data.lydo});
 
     return res.data;
   } catch (error) {
@@ -263,19 +267,23 @@ export const rejectLeaveRequest = async data => {
 
 export const adjustOnLeave = async data => {
   try {
-    await axios.post(
-      `https://management.ifee.edu.vn/api/nghiphep/ycdieuchinh/${data.id_nghiphep}`,
-      {ngay_dc: data.ngay_dc},
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/nghiphep/ycdieuchinh/${data.id_nghiphep}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/nghiphep/ycdieuchinh/${data.id_nghiphep}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.post(api, {ngay_dc: data.ngay_dc});
   } catch (error) {
     console.log(error);
   }
 };
 
-export const approveAdjustOnLeave = async id_nghiphep => {
+export const approveAdjustOnLeave = async data => {
   try {
-    await axios.get(`https://management.ifee.edu.vn/api/nghiphep/duyetdc/${id_nghiphep}
-    `);
+    const apiIFEE = `https://management.ifee.edu.vn/api/nghiphep/duyetdc/${data.id_nghiphep}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/nghiphep/duyetdc/${data.id_nghiphep}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.get(api);
   } catch (error) {
     console.log(error);
   }
@@ -283,12 +291,13 @@ export const approveAdjustOnLeave = async id_nghiphep => {
 
 export const cancelAdjustOnLeave = async data => {
   try {
-    await axios.post(
-      `https://management.ifee.edu.vn/api/nghiphep/tuchoidc/${data.id_nghiphep}`,
-      {
-        lydo: data.lydo,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/nghiphep/tuchoidc/${data.id_nghiphep}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/nghiphep/tuchoidc/${data.id_nghiphep}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.post(api, {
+      lydo: data.lydo,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -530,20 +539,21 @@ export const returnVehicle = async data => {
 
 export const registerPlaneTicket = async data => {
   try {
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/vemaybay/reg/${data.id_user}`,
-      {
-        ds_ns: data.ds_ns,
-        ngoaivien: data.ngoaivien,
-        chuongtrinh: data.chuongtrinh,
-        hangbay: data.hangbay,
-        sanbaydi: data.sanbaydi,
-        sanbayden: data.sanbayden,
-        ngaydi: data.ngaydi,
-        hangve: data.hangve,
-        kygui: data.kygui,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/vemaybay/reg/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/vemaybay/reg/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.post(api, {
+      ds_ns: data.ds_ns,
+      ngoaivien: data.ngoaivien,
+      chuongtrinh: data.chuongtrinh,
+      hangbay: data.hangbay,
+      sanbaydi: data.sanbaydi,
+      sanbayden: data.sanbayden,
+      ngaydi: data.ngaydi,
+      hangve: data.hangve,
+      kygui: data.kygui,
+    });
 
     return res.data;
   } catch (error) {
@@ -551,28 +561,32 @@ export const registerPlaneTicket = async data => {
   }
 };
 
-export const getAllPlaneData = async dispatch => {
+export const getAllPlaneData = async (dispatch, data) => {
   dispatch(getTicketPlaneStart());
+  console.log(data);
   try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/vemaybay/danhsach`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/vemaybay/danhsach`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/vemaybay/danhsach`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
 
-    const data = res.data.data;
-    dispatch(getTicketPlaneSuccess(data));
+    const res = await axios.get(api);
+
+    dispatch(getTicketPlaneSuccess(res.data.data));
   } catch (error) {
+    console.log(error);
     dispatch(getTicketPlaneFailed());
   }
 };
 
 export const approvePlaneTicket = async data => {
   try {
-    await axios.post(
-      `https://management.ifee.edu.vn/api/vemaybay/pheduyet/${data.id_dulieu}`,
-      {
-        noidung: data.noidung,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/vemaybay/pheduyet/${data.id_dulieu}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/vemaybay/pheduyet/${data.id_dulieu}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.post(api, {
+      noidung: data.noidung,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -580,12 +594,13 @@ export const approvePlaneTicket = async data => {
 
 export const cancelPlaneTicket = async data => {
   try {
-    await axios.post(
-      `https://management.ifee.edu.vn/api/vemaybay/tuchoi/${data.id_dulieu}`,
-      {
-        noidung: data.noidung,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/vemaybay/tuchoi/${data.id_dulieu}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/vemaybay/tuchoi/${data.id_dulieu}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.post(api, {
+      noidung: data.noidung,
+    });
   } catch (error) {
     console.log(error);
   }

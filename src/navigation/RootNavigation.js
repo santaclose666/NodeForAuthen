@@ -14,14 +14,12 @@ import SpecieDetailScreen from '../screens/BiodivesityScreen/SpecieDetailScreen'
 import StaffListScreen from '../screens/User/StaffListScreen';
 import NotifiScreen from '../screens/Notification/NotifiScreens';
 import DetailStaffScreen from '../screens/User/DetailStaffScreen';
-import HistoryApplyLeaveScreen from '../screens/ApplyLeave/HistoryApplyLeaveScreen';
-import CreateApplyLeaveScreen from '../screens/ApplyLeave/CreateApplyLeaveScreen';
-import RegisterPlaneScreen from '../screens/TicketManagement/RegisterPlaneScreen';
+import RegisterPlaneScreen from '../components/internalLayout/TicketManagement/RegisterPlaneScreen';
 import RegisterVehicleScreen from '../screens/VehicleManagement/RegisterVehicleScreen';
 import HistoryRegisterVehicleScreen from '../screens/VehicleManagement/HistoryRegisterVehicleScreen';
 import CreateWorkSchedule from '../screens/WorkShedule/CreateWorkShedule';
 import HistoryWorkShedule from '../screens/WorkShedule/HistoryWorkSchedule';
-import HistoryRegisterTicketScreen from '../screens/TicketManagement/HistoryRegisterTicketScreen';
+import HistoryRegisterTicketScreen from '../components/internalLayout/TicketManagement/HistoryRegisterTicketScreen';
 import AllWorkScheduleScreen from '../screens/WorkShedule/AllWorkScheduleScreen';
 import SelectWMSLayerScreen from '../screens/MapService/SelectWMSLayerScreen1';
 import MapScreen from '../screens/MapService/MapScreen';
@@ -47,6 +45,8 @@ import NationalParkList from '../screens/NationalPark/NationalParkList';
 import {screen} from '../screens/AllScreen/allScreen';
 import RegisterRepair from '../screens/Repair/RegisterRepair';
 import MainRepair from '../screens/Repair/mainRepair';
+import CreateApplyLeaveScreen from '../components/internalLayout/ApplyLeave/CreateApplyLeave';
+import HistoryApplyLeaveTemplate from '../components/internalLayout/ApplyLeave/HistoryApplyLeave';
 
 const Stack = createStackNavigator();
 
@@ -65,8 +65,11 @@ const RootNavigator = () => {
     {name: screen.staffList, component: StaffListScreen},
     {name: screen.staffDetail, component: DetailStaffScreen},
     {name: screen.notification, component: NotifiScreen},
-    {name: screen.applyLeaveList, component: HistoryApplyLeaveScreen},
-    {name: screen.registerApplyLeave, component: CreateApplyLeaveScreen},
+    {name: screen.applyLeaveList, component: HistoryApplyLeaveTemplate},
+    {
+      name: screen.registerApplyLeave,
+      component: CreateApplyLeaveScreen,
+    },
     {name: screen.registerPlaneTicket, component: RegisterPlaneScreen},
     {name: screen.planeTicketList, component: HistoryRegisterTicketScreen},
     {name: screen.registerVehicle, component: RegisterVehicleScreen},
