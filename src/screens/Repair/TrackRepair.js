@@ -47,6 +47,7 @@ const approveArr = [
 ];
 
 const HistoryRepair = ({navigation}) => {
+  const user = useSelector(state => state.auth.login?.currentUser);
   const repairData = useSelector(state => state.repair.repair?.data);
   const [loading, setLoading] = useState(true);
   const [indexPicker, setIndexPicker] = useState(0);
@@ -79,9 +80,11 @@ const HistoryRepair = ({navigation}) => {
 
   const fetchListRepair = async () => {
     try {
+      console.log('fetch');
       const data = {
         tendonvi: user?.tendonvi,
       };
+
       const res1 = await getNotProcessedYetList(data);
       const res2 = await getProcessedList(data);
 
@@ -105,6 +108,7 @@ const HistoryRepair = ({navigation}) => {
   };
 
   useLayoutEffect(() => {
+    console.log('render');
     fetchListRepair();
   }, []);
 

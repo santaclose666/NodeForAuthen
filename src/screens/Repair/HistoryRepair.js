@@ -96,7 +96,7 @@ const HistoryRepair = ({navigation}) => {
     approveRepair(data);
     setToggleModal(false);
     setTimeout(() => {
-      fetchListRepair();
+      fetchListApproved();
     });
   };
 
@@ -108,11 +108,11 @@ const HistoryRepair = ({navigation}) => {
     cancelRepair(data);
     setToggleModal(false);
     setTimeout(() => {
-      fetchListRepair();
+      fetchListApproved();
     });
   }, []);
 
-  const fetchListRepair = async () => {
+  const fetchListApproved = async () => {
     try {
       const data = {
         tendonvi: user?.tendonvi,
@@ -128,8 +128,7 @@ const HistoryRepair = ({navigation}) => {
   };
 
   useLayoutEffect(() => {
-    fetchListRepair();
-    console.log('rerender');
+    fetchListApproved();
   }, []);
 
   const RenderTicketData = memo(({item, index}) => {

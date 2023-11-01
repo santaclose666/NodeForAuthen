@@ -88,7 +88,10 @@ export const approveArr = [
 
 const HistoryRegisterVehicleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const staffs =
+    user?.tendonvi === 'IFEE'
+      ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
+      : useSelector(state => state.staffs?.staffs?.XMGStaff);
   const allVehicleData = useSelector(
     state => state.vehicle?.vehicle?.statusData,
   );
@@ -107,7 +110,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const [zoomImg, setZoomImg] = useState(false);
   const [loading, setLoading] = useState(true);
   const [propose, setPropose] = useState('');
-  const allStaffs = IFEEstaffs.map(item => {
+  const allStaffs = staffs.map(item => {
     return {name: item.hoten};
   });
   const [staffValue, setStaffValue] = useState(null);
@@ -339,7 +342,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
       );
     };
 
-    const userFilter = IFEEstaffs.filter(user => item.id_user === user.id)[0];
+    const userFilter = staffs.filter(user => item.id_user === user.id)[0];
     return (
       <TouchableOpacity
         onPress={() => {
@@ -370,15 +373,15 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
         </View>
         <View
           style={{position: 'absolute', right: '5%', top: '7%', zIndex: 9999}}>
-          {checktStatus() && (
+          {/* {checktStatus() && (
             <StatusUI
               status={status}
               colorStatus={colorStatus}
               bgColorStatus={bgColorStatus}
               icon={icon}
             />
-          )}
-          {checkRole() && (
+          )} */}
+          {checkRole() ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -406,6 +409,13 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
+          ) : (
+            <StatusUI
+              status={status}
+              colorStatus={colorStatus}
+              bgColorStatus={bgColorStatus}
+              icon={icon}
+            />
           )}
           {checkReturnCar() && (
             <TouchableOpacity

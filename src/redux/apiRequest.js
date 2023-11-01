@@ -1139,6 +1139,8 @@ export const getRepairApproveList = async (dispatch, data) => {
     const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/pheduyet/danhsach`;
     const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
 
+    console.log(api);
+
     const res = await axios.get(api);
 
     dispatch(getListRepairSuccess(res.data));
@@ -1182,6 +1184,7 @@ export const getNotProcessedYetList = async data => {
     const apiIFEE = `https://management.ifee.edu.vn/api/suachua/chuaxuly/danhsach`;
     const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/chuaxuly/danhsach`;
     const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+    console.log(api);
 
     const res = await axios.get(api);
 
@@ -1196,6 +1199,7 @@ export const getProcessedList = async data => {
     const apiIFEE = `https://management.ifee.edu.vn/api/suachua/daxuly/danhsach`;
     const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/daxuly/danhsach`;
     const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+    console.log(api);
 
     const res = await axios.get(api);
 

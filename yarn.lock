@@ -772,7 +772,7 @@
 
 "@babel/plugin-transform-object-assign@^7.16.7":
   version "7.22.5"
-  resolved "https://registry.npmjs.org/@babel/plugin-transform-object-assign/-/plugin-transform-object-assign-7.22.5.tgz"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-object-assign/-/plugin-transform-object-assign-7.22.5.tgz#290c1b9555dcea48bb2c29ad94237777600d04f9"
   integrity sha512-iDhx9ARkXq4vhZ2CYOSnQXkmxkDgosLi3J8Z17mKz7LyzthtkdVchLD7WZ3aXeCuvJDOW3+1I5TpJmwIbF9MKQ==
   dependencies:
     "@babel/helper-plugin-utils" "^7.22.5"
@@ -8521,9 +8521,9 @@ react-native-push-notification@^8.1.1:
   resolved "https://registry.npmjs.org/react-native-push-notification/-/react-native-push-notification-8.1.1.tgz"
   integrity sha512-XpBtG/w+a6WXTxu6l1dNYyTiHnbgnvjoc3KxPTxYkaIABRmvuJZkFxqruyGvfCw7ELAlZEAJO+dthdTabCe1XA==
 
-react-native-reanimated@^3.4.2:
+react-native-reanimated@^3.5.4:
   version "3.5.4"
-  resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.5.4.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.5.4.tgz#a6c2b0c43b6dad246f5d276213974afedb8e3fc7"
   integrity sha512-8we9LLDO1o4Oj9/DICeEJ2K1tjfqkJagqQUglxeUAkol/HcEJ6PGxIrpBcNryLqCDYEcu6FZWld/FzizBIw6bg==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
