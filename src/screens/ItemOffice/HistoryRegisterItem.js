@@ -108,27 +108,9 @@ const HistoryRegisterItem = ({navigation}) => {
     });
   }, []);
 
-  const handlePickOption = useCallback(
-    index => {
-      setIndexPicker(index);
-    },
-    [indexPicker],
-  );
-
-  const handleFilter = useCallback(
-    index => {
-      //   switch (index) {
-      //     case 0:
-      //       return officeItemData?.filter(item => item.status === 0);
-      //     case 1:
-      //       return officeItemData?.filter(item => item.status === 1);
-      //     case 2:
-      //       return officeItemData?.filter(item => item.status === 2);
-      //   }
-      return officeItemData;
-    },
-    [officeItemData],
-  );
+  const handleFilter = useCallback(() => {
+    return officeItemData;
+  }, [officeItemData]);
 
   const fetchOfficeItemList = async () => {
     try {
@@ -148,7 +130,7 @@ const HistoryRegisterItem = ({navigation}) => {
   }, []);
 
   const checkRole = () => {
-    return user?.quyentruycap <= 2;
+    return user?.quyentruycap <= 2 || user?.id_ht == 46;
   };
 
   const RenderTicketData = memo(({item, index}) => {

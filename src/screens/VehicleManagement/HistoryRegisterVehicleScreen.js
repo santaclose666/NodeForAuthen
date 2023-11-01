@@ -324,7 +324,13 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     };
 
     const checkRole = () => {
-      return (user?.id === 2 || user?.id === 8) && item.pheduyet === null;
+      return (
+        (user?.id_ht === 1 ||
+          user?.id_ht === 6 ||
+          user?.id_ht === 39 ||
+          user?.id_ht === 51) &&
+        item.pheduyet === null
+      );
     };
 
     const checkReturnCar = () => {

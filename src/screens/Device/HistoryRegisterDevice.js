@@ -79,7 +79,7 @@ const HistoryRegisterDevice = ({navigation}) => {
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
   const checkRoleUser = () => {
-    return user?.quyentruycap == 1 || user?.id_ht == 6;
+    return user?.quyentruycap == 1 || user?.id_ht == 6 || user?.id_ht == 46;
   };
 
   const handlePickDate = date => {
