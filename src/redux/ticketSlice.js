@@ -5,6 +5,7 @@ const ticketSlice = createSlice({
   initialState: {
     ticketPlane: {
       data: null,
+      users: null,
       isFetching: false,
       err: false,
     },
@@ -16,7 +17,8 @@ const ticketSlice = createSlice({
     },
     getTicketPlaneSuccess: (state, action) => {
       state.ticketPlane.isFetching = false;
-      state.ticketPlane.data = action.payload;
+      state.ticketPlane.data = action.payload.data;
+      state.ticketPlane.users = action.payload.users;
     },
     getTicketPlaneFailed: state => {
       state.ticketPlane.isFetching = false;

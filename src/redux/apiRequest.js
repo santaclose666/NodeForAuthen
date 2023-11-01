@@ -304,18 +304,20 @@ export const cancelAdjustOnLeave = async data => {
 };
 
 /////////////////////  WORK SCHEDULE DATA  ////////////////////
-export const getAllWorkName = async dispatch => {
+export const getAllWorkName = async (dispatch, data) => {
   dispatch(getWorkStart());
   try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/lichcongtac/reg`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/reg`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/reg`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
 
-    const data = res.data.sort((a, b) => {
+    const res = await axios.get(api);
+
+    const result = res.data.sort((a, b) => {
       return b.id - a.id;
     });
 
-    dispatch(getWorkSuccess(data));
+    dispatch(getWorkSuccess(result));
   } catch (error) {
     dispatch(getWorkFailed());
   }
@@ -571,7 +573,7 @@ export const getAllPlaneData = async (dispatch, data) => {
 
     const res = await axios.get(api);
 
-    dispatch(getTicketPlaneSuccess(res.data.data));
+    dispatch(getTicketPlaneSuccess(res.data));
   } catch (error) {
     console.log(error);
     dispatch(getTicketPlaneFailed());

@@ -47,6 +47,10 @@ import RegisterRepair from '../screens/Repair/RegisterRepair';
 import MainRepair from '../screens/Repair/mainRepair';
 import CreateApplyLeaveScreen from '../components/internalLayout/ApplyLeave/CreateApplyLeave';
 import HistoryApplyLeaveTemplate from '../components/internalLayout/ApplyLeave/HistoryApplyLeave';
+import HistoryApplyLeave from '../screens/ApplyLeave/HistoryRegisterApplyLeave';
+import CreateApplyLeave from '../screens/ApplyLeave/RegisterApplyLeave';
+import HistoryRegisterTicket from '../screens/TicketManagement/HistoryRegisterTicket';
+import RegisterPlane from '../screens/TicketManagement/RegisterPlanTicket';
 
 const Stack = createStackNavigator();
 
@@ -65,13 +69,13 @@ const RootNavigator = () => {
     {name: screen.staffList, component: StaffListScreen},
     {name: screen.staffDetail, component: DetailStaffScreen},
     {name: screen.notification, component: NotifiScreen},
-    {name: screen.applyLeaveList, component: HistoryApplyLeaveTemplate},
+    {name: screen.applyLeaveList, component: HistoryApplyLeave},
     {
       name: screen.registerApplyLeave,
-      component: CreateApplyLeaveScreen,
+      component: CreateApplyLeave,
     },
-    {name: screen.registerPlaneTicket, component: RegisterPlaneScreen},
-    {name: screen.planeTicketList, component: HistoryRegisterTicketScreen},
+    {name: screen.registerPlaneTicket, component: RegisterPlane},
+    {name: screen.planeTicketList, component: HistoryRegisterTicket},
     {name: screen.registerVehicle, component: RegisterVehicleScreen},
     {name: screen.vehicleList, component: HistoryRegisterVehicleScreen},
     {name: screen.registerWorkSchedule, component: CreateWorkSchedule},

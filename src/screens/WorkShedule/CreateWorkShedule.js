@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -72,21 +72,14 @@ const CreateWorkSchedule = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   const fetchWorkNameData = async () => {
-    await getAllWorkName(dispatch);
+    const data ={
+      tendonvi: user?.tendonvi
+    }
+    await getAllWorkName(dispatch, data);
   };
 
-  useEffect(() => {
-    if (workNameData === null) {
-      fetchWorkNameData();
-    } else {
-      setApiCall(
-        setInterval(() => {
-          fetchWorkNameData();
-        }, 3000000),
-      );
-    }
-
-    return () => clearInterval(apiCall);
+  useLayoutEffect(() => {
+    fetchWorkNameData();
   }, []);
 
   const handlePickDate = date => {
