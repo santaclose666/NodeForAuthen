@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Image, TouchableOpacity, Text, Pressable} from 'react-native';
+import {View, Image, Text, Pressable} from 'react-native';
 import Images from '../../contants/Images';
 import Dimension from '../../contants/Dimension';
 import Fonts from '../../contants/Fonts';

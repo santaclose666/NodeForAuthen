@@ -138,6 +138,7 @@ const RegisterItemOffice = ({navigation}) => {
         soluong: quantityItem,
         ngaynhan: formatDateToPost(receiveDate),
         gionhan: formatTimeToPost(receiveTime),
+        tendonvi: user?.tendonvi,
       };
 
       setLoading(true);
@@ -157,12 +158,16 @@ const RegisterItemOffice = ({navigation}) => {
   };
 
   const fetchOfficeItemList = async () => {
-    await getAllListOfficeItem(dispatch);
+    const data = {
+      tendonvi: user?.tendonvi,
+    };
+    await getAllListOfficeItem(dispatch, data);
   };
 
   const fetchAllIOfficeItem = async () => {
     try {
-      const data = await getAllOfficeItem();
+      const donvi = {tendonvi: user?.tendonvi};
+      const data = await getAllOfficeItem(donvi);
 
       const tempArr = [...arrRender];
       tempArr.push({

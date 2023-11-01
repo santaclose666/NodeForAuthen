@@ -140,12 +140,16 @@ const RegisterRepair = ({navigation}) => {
         hoten: registerPerson,
         arr_thietbi: devicePicker,
         arr_tinhtrang: status,
+        tendonvi: user?.tendonvi,
       };
       try {
         const res = await registerRepair(data);
 
         if (res) {
-          getRepairApproveList(dispatch);
+          const donvi = {
+            tendonvi: user?.tendonvi,
+          };
+          getRepairApproveList(dispatch, donvi);
           ToastSuccess('Đăng kí thành công');
           setLoading(false);
 
@@ -218,7 +222,10 @@ const RegisterRepair = ({navigation}) => {
 
   const fetchAllDevices = async () => {
     try {
-      const data = await getRepairList();
+      const donvi = {
+        tendonvi: user?.tendonvi,
+      };
+      const data = await getRepairList(donvi);
 
       const listDevice = [...data, {id: data?.length + 1, thietbi: 'Khác'}];
       const tempArr = [

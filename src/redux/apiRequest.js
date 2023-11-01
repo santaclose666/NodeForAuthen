@@ -325,12 +325,14 @@ export const getAllWorkName = async (dispatch, data) => {
 
 export const registerWorkSchedule = async data => {
   try {
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/lichcongtac/reg`,
-      {
-        ...data,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/reg`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/reg`;
+    const {tendonvi, ...params} = data;
+    const api = tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.post(api, {
+      ...params,
+    });
 
     return res.data;
   } catch (error) {
@@ -338,12 +340,18 @@ export const registerWorkSchedule = async data => {
   }
 };
 
-export const getAllWorkSchedule = async (dispatch, id) => {
+export const getAllWorkSchedule = async (dispatch, user) => {
   dispatch(getWorkScheduleStart());
   try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/lichcongtac/danhsach?id_user=${id}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/danhsach`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/danhsach`;
+    const api = user.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.get(api, {
+      params: {
+        id_user: user.id,
+      },
+    });
 
     const pendingArr = res.data.pheduyet;
     const approvedArr = res.data.dapheduyet;
@@ -365,10 +373,13 @@ export const getAllWorkSchedule = async (dispatch, id) => {
 
 export const approveWorkSchedule = async data => {
   try {
-    await axios.post(
-      `https://management.ifee.edu.vn/api/lichcongtac/dongy/${data.id_lichcongtac}`,
-      {nhanxet: data.nhanxet},
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/dongy/${data.id_lichcongtac}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/dongy/${data.id_lichcongtac}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.post(api, {
+      nhanxet: data.nhanxet,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -376,10 +387,13 @@ export const approveWorkSchedule = async data => {
 
 export const cancelWorkSchedule = async data => {
   try {
-    await axios.post(
-      `https://management.ifee.edu.vn/api/lichcongtac/tuchoi/${data.id_lichcongtac}`,
-      {lydo: data.lydo},
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/tuchoi/${data.id_lichcongtac}`;
+    const apiXMG = `-	https://management.xuanmaijsc.vn/api/lichcongtac/tuchoi/${data.id_lichcongtac}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.post(api, {
+      lydo: data.lydo,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -388,12 +402,13 @@ export const cancelWorkSchedule = async data => {
 export const totalWorkSchedule = async dispatch => {
   dispatch(getTotalWorkStart());
   try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/lichcongtac/tonghop`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/tonghop`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/tonghop`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
 
-    const data = res.data;
-    dispatch(getTotalWorkSuccess(data));
+    const res = await axios.get(api);
+
+    dispatch(getTotalWorkSuccess(res.data));
 
     return data;
   } catch (error) {
@@ -403,9 +418,13 @@ export const totalWorkSchedule = async dispatch => {
 
 export const warningWorkSchedule = async data => {
   try {
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/lichcongtac/canhbao/${data.id_lichchitiet}?lydo=${data.lydo}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/canhbao/${data.id_lichchitiet}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/canhbao/${data.id_lichchitiet}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.post(api, {
+      lydo: data.lydo,
+    });
 
     return res.data;
   } catch (error) {
@@ -415,9 +434,14 @@ export const warningWorkSchedule = async data => {
 
 export const requestFinishWorkSchedule = async data => {
   try {
-    await axios.post(
-      `https://management.ifee.edu.vn/api/lichcongtac/yc_ketthuc/${data.id_lichcongtac}?giove=${data.giove}&ngayve=${data.ngayve}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/yc_ketthuc/${data.id_lichcongtac}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/yc_ketthuc/${data.id_lichcongtac}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.post(api, {
+      ngayve: data.ngayve,
+      giove: data.giove,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -425,13 +449,13 @@ export const requestFinishWorkSchedule = async data => {
 
 export const approveFinishRequest = async data => {
   try {
-    console.log(data);
-    await axios.post(
-      `https://management.ifee.edu.vn/api/lichcongtac/pd_ketthuc/${data.id_lichcongtac}`,
-      {
-        nhanxet: data.nhanxet,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/pd_ketthuc/${data.id_lichcongtac}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/pd_ketthuc/${data.id_lichcongtac}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.post(api, {
+      nhanxet: data.nhanxet,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -439,26 +463,28 @@ export const approveFinishRequest = async data => {
 
 export const cancelFinishRequest = async data => {
   try {
-    console.log(data);
-    await axios.post(
-      `https://management.ifee.edu.vn/api/lichcongtac/tc_ketthuc/${data.id_lichcongtac}`,
-      {
-        lydo: data.lydo,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/tc_ketthuc/${data.id_lichcongtac}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/tc_ketthuc/${data.id_lichcongtac}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.post(api, {
+      lydo: data.lydo,
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-/////////////////////  VEHIOCLE SCHEDULE DATA  ////////////////////
+/////////////////////  VEHICLE SCHEDULE DATA  ////////////////////
 
-export const getVehicleData = async (dispatch, id) => {
+export const getVehicleData = async (dispatch, data) => {
   dispatch(getVehicleStart());
   try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/xe/danhsach/${id}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/xe/danhsach/${data.id}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/xe/danhsach/${data.id}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.get(api);
 
     dispatch(getVehicleSuccess(res.data));
 
@@ -470,17 +496,18 @@ export const getVehicleData = async (dispatch, id) => {
 
 export const registerVehicle = async data => {
   try {
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/xe/reg/${data.id_user}`,
-      {
-        loaixe: data.loaixe,
-        ngaydi: data.ngaydi,
-        noiden: data.noiden,
-        noidung: data.noidung,
-        gionhan: data.gionhan,
-        ngaynhan: data.ngaynhan,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/xe/reg/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/xe/reg/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.post(api, {
+      loaixe: data.loaixe,
+      ngaydi: data.ngaydi,
+      noiden: data.noiden,
+      noidung: data.noidung,
+      gionhan: data.gionhan,
+      ngaynhan: data.ngaynhan,
+    });
 
     return res.data;
   } catch (error) {
@@ -490,9 +517,15 @@ export const registerVehicle = async data => {
 
 export const approveVehicle = async data => {
   try {
-    await axios.get(
-      `https://management.ifee.edu.vn/api/xe/pheduyet/${data.id_dulieu}?id_user=${data.id_user}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/xe/pheduyet/${data.id_dulieu}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/xe/pheduyet/${data.id_dulieu}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.get(api, {
+      params: {
+        id_user: data.id_user,
+      },
+    });
   } catch (error) {
     console.log(error);
   }
@@ -500,9 +533,15 @@ export const approveVehicle = async data => {
 
 export const cancelVehicle = async data => {
   try {
-    await axios.get(
-      `https://management.ifee.edu.vn/api/xe/tuchoi/${data.id_dulieu}?id_user=${data.id_user}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/xe/tuchoi/${data.id_dulieu}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/xe/tuchoi/${data.id_dulieu}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.get(api, {
+      params: {
+        id_user: data.id_user,
+      },
+    });
   } catch (error) {
     console.log(error);
   }
@@ -510,7 +549,10 @@ export const cancelVehicle = async data => {
 
 export const returnVehicle = async data => {
   try {
-    console.log(data);
+    const apiIFEE = `https://management.ifee.edu.vn/api/xe/traXe/${data.id}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/xe/traXe/${data.id}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
     const formData = new FormData();
 
     formData.append('file', data.file);
@@ -521,15 +563,11 @@ export const returnVehicle = async data => {
     formData.append('phibaoduong', data.phibaoduong);
     formData.append('nguoibaoduong', data.nguoibaoduong);
 
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/xe/traXe/${data.id}`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+    const res = await axios.post(api, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
       },
-    );
+    });
 
     return res.data;
   } catch (error) {
@@ -881,11 +919,13 @@ export const getBirthdayList = async () => {
 };
 
 /////////////////////  DEVICES LIST  ////////////////////
-export const getAllDevices = async () => {
+export const getAllDevices = async data => {
   try {
-    const res = await axios.get(
-      'https://management.ifee.edu.vn/api/thietbi/danhsach',
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/thietbi/danhsach`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/thietbi/danhsach`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.get(api);
 
     return res.data;
   } catch (error) {
@@ -895,16 +935,17 @@ export const getAllDevices = async () => {
 
 export const registerDevice = async data => {
   try {
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/thietbi/regTB/${data.id_user}`,
-      {
-        thietbi: data.thietbi,
-        ngaymuon: data.ngaymuon,
-        ngaytra: data.ngaytra,
-        noidung: data.noidung,
-        active: data.active,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/thietbi/regTB/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/thietbi/regTB/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.post(api, {
+      thietbi: data.thietbi,
+      ngaymuon: data.ngaymuon,
+      ngaytra: data.ngaytra,
+      noidung: data.noidung,
+      active: data.active,
+    });
 
     return res.data;
   } catch (error) {
@@ -915,20 +956,22 @@ export const registerDevice = async data => {
 export const getAllListDevice = async (dispatch, data, isAdmin) => {
   dispatch(getDeviceStart());
   try {
-    const res = isAdmin
-      ? await axios.get(
-          `https://management.ifee.edu.vn/api/thietbi/pheduyet/list`,
-        )
-      : await axios.get(
-          `https://management.ifee.edu.vn/api/thietbi/historyTB/${data.id_user}`,
-        );
+    const adminIFEE = `https://management.ifee.edu.vn/api/thietbi/pheduyet/list`;
+    const adminXMG = `https://management.xuanmaijsc.vn/api/thietbi/pheduyet/list`;
+    const adminApi = data.tendonvi === 'IFEE' ? adminIFEE : adminXMG;
+
+    const userIFEE = `https://management.ifee.edu.vn/api/thietbi/historyTB/${data.id_user}`;
+    const userXMG = `https://management.xuanmaijsc.vn/api/thietbi/historyTB/${data.id_user}`;
+    const userApi = data.tendonvi === 'IFEE' ? userIFEE : userXMG;
+
+    const apiResult = isAdmin ? adminApi : userApi;
+
+    const res = await axios.get(apiResult);
 
     const allData = {
       pending: isAdmin ? res.data.data : res.data.choduyet,
       approved: isAdmin ? res.data.data_dapheduyet : res.data.lichsu,
     };
-
-    console.log(allData);
 
     dispatch(getDeviceSuccess(allData));
 
@@ -940,9 +983,11 @@ export const getAllListDevice = async (dispatch, data, isAdmin) => {
 
 export const approveRegisterDevice = async data => {
   try {
-    await axios.get(
-      `https://management.ifee.edu.vn/api/thietbi/pheduyet/duyet/${data.id_user}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/thietbi/pheduyet/duyet/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/thietbi/pheduyet/duyet/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.get(api);
   } catch (error) {
     console.log(error);
   }
@@ -950,9 +995,11 @@ export const approveRegisterDevice = async data => {
 
 export const cancelRegisterDevice = async data => {
   try {
-    await axios.get(
-      `https://management.ifee.edu.vn/api/thietbi/pheduyet/xoa/${data.id_user}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/thietbi/pheduyet/xoa/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/thietbi/pheduyet/xoa/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.get(api);
   } catch (error) {
     console.log(error);
   }
@@ -960,17 +1007,16 @@ export const cancelRegisterDevice = async data => {
 
 export const returnDevice = async data => {
   try {
-    const res = await axios.post(
-      `https://management.ifee.edu.vn/api/thietbi/traTB/tra/${data.id_user}`,
-      {
-        id_thietbi: data.id_thietbi,
-        ngaytra_thucte: data.ngaytra_thucte,
-        tinhtrangTB: data.tinhtrangTB,
-        nguyennhan: data.nguyennhan,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/thietbi/traTB/tra/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/thietbi/traTB/tra/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
 
-    console.log(res);
+    await axios.post(api, {
+      id_thietbi: data.id_thietbi,
+      ngaytra_thucte: data.ngaytra_thucte,
+      tinhtrangTB: data.tinhtrangTB,
+      nguyennhan: data.nguyennhan,
+    });
 
     return true;
   } catch (error) {
@@ -979,9 +1025,13 @@ export const returnDevice = async data => {
 };
 
 /////////////////////  OFFICE ITEM LIST  ////////////////////
-export const getAllOfficeItem = async () => {
+export const getAllOfficeItem = async data => {
   try {
-    const res = await axios.get('https://management.ifee.edu.vn/api/vpp/list');
+    const apiIFEE = `https://management.ifee.edu.vn/api/vpp/list`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/vpp/list`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.get(api);
 
     return res.data;
   } catch (error) {
@@ -991,7 +1041,11 @@ export const getAllOfficeItem = async () => {
 
 export const registerOfficeItem = async data => {
   try {
-    const res = await axios.post('https://management.ifee.edu.vn/api/vpp/reg', {
+    const apiIFEE = `https://management.ifee.edu.vn/api/vpp/reg`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/vpp/reg`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.post(api, {
       id_user: data.id_user,
       loaivpp: data.loaivpp,
       soluong: data.soluong,
@@ -1005,12 +1059,14 @@ export const registerOfficeItem = async data => {
   }
 };
 
-export const getAllListOfficeItem = async dispatch => {
+export const getAllListOfficeItem = async (dispatch, data) => {
   dispatch(getRegisterOfficeStart());
   try {
-    const res = await axios.get(
-      'https://management.ifee.edu.vn/api/vpp/pheduyet/danhsach',
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/vpp/pheduyet/danhsach`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/vpp/pheduyet/danhsach`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.get(api);
 
     dispatch(getRegisterOfficeSuccess(res.data));
   } catch (error) {
@@ -1020,9 +1076,11 @@ export const getAllListOfficeItem = async dispatch => {
 
 export const approveRegisterOfficeItem = async data => {
   try {
-    await axios.get(
-      `https://management.ifee.edu.vn/api/vpp/pheduyet/duyet/${data.id_user}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/vpp/pheduyet/duyet/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/vpp/pheduyet/duyet/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.get(api);
   } catch (error) {
     console.log(error);
   }
@@ -1030,20 +1088,24 @@ export const approveRegisterOfficeItem = async data => {
 
 export const cancelRegisterOfficeItem = async data => {
   try {
-    await axios.get(
-      `https://management.ifee.edu.vn/api/vpp/pheduyet/xoa/${data.id_user}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/vpp/pheduyet/xoa/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/vpp/pheduyet/xoa/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.get(api);
   } catch (error) {
     console.log(error);
   }
 };
 
 /////////////////////  REPAIR  ////////////////////
-export const getRepairList = async () => {
+export const getRepairList = async data => {
   try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/suachua/danhmuc`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/suachua/danhmuc`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/danhmuc`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.get(api);
 
     return res.data;
   } catch (error) {
@@ -1053,15 +1115,16 @@ export const getRepairList = async () => {
 
 export const registerRepair = async data => {
   try {
-    await axios.post(
-      `https://management.ifee.edu.vn/api/suachua/regSC/${data.id_user}`,
-      {
-        id_phong: data.id_phong,
-        hoten: data.hoten,
-        arr_thietbi: data.arr_thietbi,
-        arr_tinhtrang: data.arr_tinhtrang,
-      },
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/suachua/regSC/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/regSC/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.post(api, {
+      id_phong: data.id_phong,
+      hoten: data.hoten,
+      arr_thietbi: data.arr_thietbi,
+      arr_tinhtrang: data.arr_tinhtrang,
+    });
 
     return true;
   } catch (error) {
@@ -1069,12 +1132,14 @@ export const registerRepair = async data => {
   }
 };
 
-export const getRepairApproveList = async dispatch => {
+export const getRepairApproveList = async (dispatch, data) => {
   dispatch(getListRepairStart());
   try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/suachua/pheduyet/danhsach`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/suachua/pheduyet/danhsach`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/pheduyet/danhsach`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.get(api);
 
     dispatch(getListRepairSuccess(res.data));
     return true;
@@ -1085,35 +1150,40 @@ export const getRepairApproveList = async dispatch => {
 
 export const approveRepair = async data => {
   try {
-    await axios.get(
-      `https://management.ifee.edu.vn/api/suachua/pheduyet/duyet/${data.id_user}?`,
-      {
-        params: {
-          id_manager: data.id_manager,
-          tg_dukien: data.tg_dukien,
-        },
+    const apiIFEE = `https://management.ifee.edu.vn/api/suachua/pheduyet/duyet/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/pheduyet/duyet/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.get(api, {
+      params: {
+        id_manager: data.id_manager,
+        tg_dukien: data.tg_dukien,
       },
-    );
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-export const cancelRepair = async id_user => {
+export const cancelRepair = async data => {
   try {
-    await axios.get(
-      `https://management.ifee.edu.vn/api/suachua/pheduyet/tuchoi/${id_user}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/suachua/pheduyet/tuchoi/${data.id_user}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/pheduyet/tuchoi/${data.id_user}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.get(api);
   } catch (error) {
     console.log(error);
   }
 };
 
-export const getNotProcessedYetList = async () => {
+export const getNotProcessedYetList = async data => {
   try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/suachua/chuaxuly/danhsach`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/suachua/chuaxuly/danhsach`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/chuaxuly/danhsach`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.get(api);
 
     return res.data;
   } catch (error) {
@@ -1121,11 +1191,13 @@ export const getNotProcessedYetList = async () => {
   }
 };
 
-export const getProcessedList = async () => {
+export const getProcessedList = async data => {
   try {
-    const res = await axios.get(
-      `https://management.ifee.edu.vn/api/suachua/daxuly/danhsach`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/suachua/daxuly/danhsach`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/daxuly/danhsach`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    const res = await axios.get(api);
 
     return res.data;
   } catch (error) {
@@ -1133,11 +1205,13 @@ export const getProcessedList = async () => {
   }
 };
 
-export const updateProcessed = async id => {
+export const updateProcessed = async data => {
   try {
-    await axios.get(
-      `https://management.ifee.edu.vn/api/suachua/update_xuly/${id}`,
-    );
+    const apiIFEE = `https://management.ifee.edu.vn/api/suachua/update_xuly/${data.id}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/suachua/update_xuly/${data.id}`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+
+    await axios.get(api);
 
     return true;
   } catch (error) {

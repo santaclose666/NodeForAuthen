@@ -91,6 +91,7 @@ const HistoryRepair = ({navigation}) => {
       id_user: item?.id_nguoidk,
       id_manager: user?.id,
       tg_dukien: formatDateToPost(intendTime),
+      tendonvi: user?.tendonvi,
     };
     approveRepair(data);
     setToggleModal(false);
@@ -100,7 +101,11 @@ const HistoryRepair = ({navigation}) => {
   };
 
   const handleCancel = useCallback(item => {
-    cancelRepair(item?.id_nguoidk);
+    const data = {
+      tendonvi: user?.tendonvi,
+      id_nguoidk: item?.id_nguoidk,
+    };
+    cancelRepair(data);
     setToggleModal(false);
     setTimeout(() => {
       fetchListRepair();
@@ -109,7 +114,10 @@ const HistoryRepair = ({navigation}) => {
 
   const fetchListRepair = async () => {
     try {
-      const res = await getRepairApproveList(dispatch);
+      const data = {
+        tendonvi: user?.tendonvi,
+      };
+      const res = await getRepairApproveList(dispatch, data);
 
       if (res) {
         setLoading(false);

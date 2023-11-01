@@ -93,7 +93,10 @@ const approveArr = [
 const HistoryWorkShedule = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const dispatch = useDispatch();
-  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const staffs =
+    user?.tendonvi === 'IFEE'
+      ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
+      : useSelector(state => state.staffs?.staffs?.XMGStaff);
   const workSheduleData = useSelector(
     state => state.workSchedule?.worksSchedule?.data,
   );
@@ -158,6 +161,7 @@ const HistoryWorkShedule = ({navigation}) => {
       id_lichcongtac: selectedItem.id,
       ngayve: formatDateToPost(date),
       giove: formatTimeToPost(time),
+      tendonvi: user?.tendonvi,
     };
 
     requestFinishWorkSchedule(data);
@@ -196,6 +200,7 @@ const HistoryWorkShedule = ({navigation}) => {
       const data = {
         id_lichcongtac: selectedItem.id,
         nhanxet: commentInput,
+        tendonvi: user?.tendonvi,
       };
 
       approveFinishRequest(data);
@@ -208,6 +213,7 @@ const HistoryWorkShedule = ({navigation}) => {
       const data = {
         id_lichcongtac: selectedItem.id,
         lydo: reasonCancel,
+        tendonvi: user?.tendonvi,
       };
 
       cancelFinishRequest(data);
@@ -226,6 +232,7 @@ const HistoryWorkShedule = ({navigation}) => {
       const data = {
         id_lichcongtac: selectedItem.id,
         nhanxet: commentInput,
+        tendonvi: user?.tendonvi,
       };
 
       approveWorkSchedule(data);
@@ -238,6 +245,7 @@ const HistoryWorkShedule = ({navigation}) => {
       const data = {
         id_lichcongtac: selectedItem.id,
         lydo: reasonCancel,
+        tendonvi: user?.tendonvi,
       };
 
       cancelWorkSchedule(data);
@@ -295,7 +303,11 @@ const HistoryWorkShedule = ({navigation}) => {
 
   const fetchWorkSchedule = useCallback(async () => {
     try {
-      await getAllWorkSchedule(dispatch, user?.id);
+      const data = {
+        tendonvi: user?.tendonvi,
+        id: user?.id,
+      };
+      await getAllWorkSchedule(dispatch, data);
 
       setLoading(false);
     } catch (error) {
@@ -358,7 +370,7 @@ const HistoryWorkShedule = ({navigation}) => {
         ? '#f9dfe0'
         : bgColorStatus;
 
-    const filterUser = IFEEstaffs.filter(staff => staff.id === item.id_user)[0];
+    const filterUser = staffs.filter(staff => staff.id === item.id_user)[0];
     const subject =
       filterUser?.tenphong === undefined
         ? 'Không xác định'
@@ -747,6 +759,7 @@ const HistoryWorkShedule = ({navigation}) => {
             reasonCancel={reasonCancel}
             setReasonCancel={setReasonCancel}
             eventFunc={handleSendNonAdjust}
+            staffs={staffs}
           />
 
           <ApproveCancelModal

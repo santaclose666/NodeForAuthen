@@ -42,10 +42,6 @@ import RedPoint from '../../components/RedPoint';
 import {rowAlignCenter} from '../../contants/CssFE';
 import Colors from '../../contants/Colors';
 import {Swipeable} from 'react-native-gesture-handler';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
 
 if (Platform.OS == 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -163,6 +159,7 @@ const RegisterDevices = ({navigation, route}) => {
         ngaytra: returnDate ? formatDateToPost(returnDate) : returnDate,
         noidung: content,
         active: returnValue,
+        tendonvi: user?.tendonvi,
       };
 
       setLoading(true);
@@ -187,13 +184,17 @@ const RegisterDevices = ({navigation, route}) => {
   const fetchAllListDevice = async () => {
     const data = {
       id_user: user?.id,
+      tendonvi: user?.tendonvi,
     };
     await getAllListDevice(dispatch, data, checkRoleUser());
   };
 
   const fetchAllDevices = async () => {
     try {
-      const data = await getAllDevices();
+      const donvi = {
+        tendonvi: user?.tendonvi,
+      };
+      const data = await getAllDevices(donvi);
 
       let filterType = [];
       data.forEach(item => {

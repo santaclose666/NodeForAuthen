@@ -52,6 +52,7 @@ const AllWorkScheduleScreen = ({navigation}) => {
       const data = {
         id_lichchitiet: id,
         lydo: reason,
+        tendonvi: user?.tendonvi,
       };
 
       const res = await warningWorkSchedule(data);
@@ -68,7 +69,10 @@ const AllWorkScheduleScreen = ({navigation}) => {
   }, []);
 
   const fetTotalWorkSchedule = async () => {
-    await totalWorkSchedule(dispatch);
+    const data = {
+      tendonvi: user?.tendonvi,
+    };
+    await totalWorkSchedule(dispatch, data);
   };
 
   const handleRefresh = async () => {

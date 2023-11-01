@@ -40,6 +40,8 @@ import FilterStatusUI from '../../components/FilterStatusUI';
 import LinearGradientUI from '../../components/LinearGradientUI';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
+import {changeFormatDate} from '../../utils/serviceFunction';
+import Separation from '../../components/Separation';
 
 const HistoryRegisterTicket = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -196,6 +198,9 @@ const HistoryRegisterTicket = ({navigation}) => {
     const filterStartPlace = item.sanbaydi.slice(indexStartPlace);
     const indexEndPlace = item.sanbayden.indexOf('Sân');
     const filterEndPlace = item.sanbayden.slice(indexEndPlace);
+    const filterDateTime = item.ngaydi.split(' ');
+    const date = changeFormatDate(filterDateTime[0]);
+    const time = filterDateTime[1];
 
     const checktStatus = () => {
       return (
@@ -208,7 +213,11 @@ const HistoryRegisterTicket = ({navigation}) => {
     const checkRole = () => {
       return (
         item.status === 0 &&
-        (user?.id_ht === 1 || user?.id_ht === 20 || user?.id_ht === 28)
+        (user?.id_ht === 1 ||
+          user?.id_ht === 20 ||
+          user?.id_ht === 28 ||
+          user?.id_ht === 39 ||
+          user?.id_ht === 40)
       );
     };
 
@@ -251,15 +260,14 @@ const HistoryRegisterTicket = ({navigation}) => {
         </View>
         <View
           style={{position: 'absolute', right: '5%', top: '7%', zIndex: 9999}}>
-          {checktStatus() && (
+          {!checkRole() ? (
             <StatusUI
               status={status}
               colorStatus={colorStatus}
               bgColorStatus={bgColorStatus}
               icon={icon}
             />
-          )}
-          {checkRole() && (
+          ) : (
             <View
               style={{
                 flexDirection: 'row',
@@ -338,7 +346,9 @@ const HistoryRegisterTicket = ({navigation}) => {
         <View style={styles.containerEachLine}>
           <Image source={Images.datetime} style={styles.Iconic} />
           <Text style={styles.title}>Thời gian:{'  '}</Text>
-          <Text style={styles.content}>{item.ngaydi}</Text>
+          <Text style={styles.content}>{date}</Text>
+          <Separation />
+          <Text style={styles.content}>{time}</Text>
         </View>
       </TouchableOpacity>
     );

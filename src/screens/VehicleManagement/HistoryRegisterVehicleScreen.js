@@ -51,7 +51,7 @@ import {TextInput} from 'react-native-gesture-handler';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert} from '../../components/Toast';
 import {launchImageLibrary} from 'react-native-image-picker';
-import Loading, {TransparentFullScreen} from '../../components/LoadingUI';
+import {TransparentFullScreen} from '../../components/LoadingUI';
 import ImageView from 'react-native-image-viewing';
 import {Dropdown} from 'react-native-element-dropdown';
 import RedPoint from '../../components/RedPoint';
@@ -151,6 +151,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     const data = {
       id_dulieu: item.id,
       id_user: user?.id,
+      tendonvi: user?.tendonvi,
     };
 
     approveVehicle(data);
@@ -164,6 +165,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
     const data = {
       id_dulieu: item.id,
       id_user: user?.id,
+      tendonvi: user?.tendonvi,
     };
 
     cancelVehicle(data);
@@ -218,6 +220,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
           type: filePicker.type,
           name: filePicker.fileName,
         },
+        tendonvi: user?.tendonvi,
       };
       try {
         const res = await returnVehicle(data);
@@ -267,13 +270,19 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
 
   const fetchVehicleData = async () => {
     try {
-      const res = await getVehicleData(dispatch, user?.id);
+      const data = {
+        id: user?.id,
+        tendonvi: user?.tendonvi,
+      };
+
+      const res = await getVehicleData(dispatch, data);
 
       if (res) {
         setLoading(false);
       }
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 

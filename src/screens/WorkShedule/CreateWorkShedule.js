@@ -72,9 +72,9 @@ const CreateWorkSchedule = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   const fetchWorkNameData = async () => {
-    const data ={
-      tendonvi: user?.tendonvi
-    }
+    const data = {
+      tendonvi: user?.tendonvi,
+    };
     await getAllWorkName(dispatch, data);
   };
 
@@ -120,6 +120,7 @@ const CreateWorkSchedule = ({navigation, route}) => {
       ghichu: noteInput,
       op_tenchuongtrinh: workValue,
       ...checkOp,
+      tendonvi: user?.tendonvi,
     };
 
     if (

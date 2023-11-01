@@ -86,6 +86,7 @@ const HistoryRegisterItem = ({navigation}) => {
   const handleApprove = useCallback(item => {
     const data = {
       id_user: item?.id_user,
+      tendonvi: user?.tendonvi,
     };
     approveRegisterOfficeItem(data);
     setToggleModal(false);
@@ -97,6 +98,7 @@ const HistoryRegisterItem = ({navigation}) => {
   const handleCancel = useCallback(item => {
     const data = {
       id_user: item?.id_user,
+      tendonvi: user?.tendonvi,
     };
 
     cancelRegisterOfficeItem(data);
@@ -130,7 +132,10 @@ const HistoryRegisterItem = ({navigation}) => {
 
   const fetchOfficeItemList = async () => {
     try {
-      await getAllListOfficeItem(dispatch);
+      const data = {
+        tendonvi: user?.tendonvi,
+      };
+      await getAllListOfficeItem(dispatch, data);
 
       setLoading(false);
     } catch (error) {

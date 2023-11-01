@@ -120,6 +120,7 @@ const HistoryRegisterDevice = ({navigation}) => {
   const handleApprove = useCallback(item => {
     const data = {
       id_user: item?.id_user,
+      tendonvi: user?.tendonvi,
     };
 
     approveRegisterDevice(data);
@@ -132,6 +133,7 @@ const HistoryRegisterDevice = ({navigation}) => {
   const handleCancel = useCallback(item => {
     const data = {
       id_user: item?.id_user,
+      tendonvi: user?.tendonvi,
     };
 
     cancelRegisterDevice(data);
@@ -151,6 +153,7 @@ const HistoryRegisterDevice = ({navigation}) => {
         ngaytra_thucte: formatDateToPost(returnDate),
         tinhtrangTB: deviceStateValue,
         nguyennhan: reason,
+        tendonvi: user?.tendonvi,
       };
 
       const res = await returnDevice(data);
@@ -192,6 +195,7 @@ const HistoryRegisterDevice = ({navigation}) => {
     try {
       const data = {
         id_user: user?.id,
+        tendonvi: user?.tendonvi,
       };
 
       const res = await getAllListDevice(dispatch, data, checkRoleUser());

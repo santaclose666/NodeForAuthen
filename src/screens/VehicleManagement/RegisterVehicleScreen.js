@@ -97,6 +97,7 @@ const RegisterVehicleScreen = ({navigation, route}) => {
         noidung: contentInput,
         gionhan: formatTimeToPost(receiveTime),
         ngaynhan: formatDateToPost(receiveDate),
+        tendonvi: user?.tendonvi,
       };
       setLoading(true);
       try {

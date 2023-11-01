@@ -62,7 +62,11 @@ const HistoryRepair = ({navigation}) => {
 
   const handleUpdateProcessed = async () => {
     try {
-      const res = await updateProcessed(selectedItem.id);
+      const data = {
+        tendonvi: user?.tendonvi,
+        id: selectedItem.id,
+      };
+      const res = await updateProcessed(data);
 
       if (res) {
         fetchListRepair();
@@ -75,8 +79,11 @@ const HistoryRepair = ({navigation}) => {
 
   const fetchListRepair = async () => {
     try {
-      const res1 = await getNotProcessedYetList();
-      const res2 = await getProcessedList();
+      const data = {
+        tendonvi: user?.tendonvi,
+      };
+      const res1 = await getNotProcessedYetList(data);
+      const res2 = await getProcessedList(data);
 
       if (res1) {
         setNotYetProcessedData(res1);
