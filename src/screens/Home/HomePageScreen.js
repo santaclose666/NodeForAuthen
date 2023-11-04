@@ -155,11 +155,6 @@ const HomePageScreen = ({navigation}) => {
     ToastAlert('Chức năng đang được phát triển');
   };
 
-  const handleScroll = event => {
-    // const offset = event.nativeEvent.contentOffset.y;
-    // navigation.setOptions({tabBarStyle: {display: 'none'}});
-  };
-
   useLayoutEffect(() => {
     console.log(user);
     fcmService.registerAppWithFCM();
@@ -216,7 +211,6 @@ const HomePageScreen = ({navigation}) => {
         barStyle="light-content"
       />
       <ScrollView
-        onScroll={handleScroll}
         scrollEventThrottle={16}
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
@@ -377,7 +371,7 @@ const HomePageScreen = ({navigation}) => {
           </View>
         </View>
 
-        {(user?.tendonvi === 'IFEE' || user?.tendonvi === 'XMG') && (
+        {(user?.tendonvi === 'IFEE' || user?.ifee_xmg === 1) && (
           <View style={styles.featureBtnContainer}>
             <View style={styles.featureContainer}>
               <Text
@@ -387,13 +381,13 @@ const HomePageScreen = ({navigation}) => {
                   color: Colors.DEFAULT_BLACK,
                   opacity: 0.9,
                 }}>
-                {user?.tendonvi} Management
+                IFEE Management
               </Text>
             </View>
             <View style={styles.btnContainer}>
               <FlatList
                 scrollEnabled={false}
-                data={user?.tendonvi === 'IFEE' ? IFEEInternal : XMGInternal}
+                data={IFEEInternal}
                 showsVerticalScrollIndicator={false}
                 renderItem={({item, index}) => {
                   return (
@@ -402,15 +396,65 @@ const HomePageScreen = ({navigation}) => {
                       disabled={item.featureName ? false : true}
                       style={styles.buttonFuc}
                       onPress={() => {
+                        const unit = 'IFEE';
                         if (item.isAdmin && user?.quyentruycap == 1) {
                           item.component
-                            ? handleNavigate(item.component)
+                            ? handleNavigate(item.component, unit)
                             : handleAlert();
                         } else if (item.isAdmin && user?.quyentruycap != 1) {
                           ToastWarning('Tính năng chỉ dành cho quản trị viên!');
                         } else {
                           item.component
-                            ? handleNavigate(item.component)
+                            ? handleNavigate(item.component, unit)
+                            : handleAlert();
+                        }
+                      }}>
+                      <Image source={item.icon} style={styles.featureBtn} />
+                      <Text style={styles.featureText}>{item.featureName}</Text>
+                    </TouchableOpacity>
+                  );
+                }}
+                numColumns={4}
+              />
+            </View>
+          </View>
+        )}
+
+        {(user?.tendonvi === 'XMG' || user?.ifee_xmg === 1) && (
+          <View style={styles.featureBtnContainer}>
+            <View style={styles.featureContainer}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_BOLD,
+                  fontSize: Dimension.fontSize(16),
+                  color: Colors.DEFAULT_BLACK,
+                  opacity: 0.9,
+                }}>
+                XMG Management
+              </Text>
+            </View>
+            <View style={styles.btnContainer}>
+              <FlatList
+                scrollEnabled={false}
+                data={XMGInternal}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      disabled={item.featureName ? false : true}
+                      style={styles.buttonFuc}
+                      onPress={() => {
+                        const unit = 'XMG';
+                        if (item.isAdmin && user?.quyentruycap == 1) {
+                          item.component
+                            ? handleNavigate(item.component, unit)
+                            : handleAlert();
+                        } else if (item.isAdmin && user?.quyentruycap != 1) {
+                          ToastWarning('Tính năng chỉ dành cho quản trị viên!');
+                        } else {
+                          item.component
+                            ? handleNavigate(item.component, unit)
                             : handleAlert();
                         }
                       }}>

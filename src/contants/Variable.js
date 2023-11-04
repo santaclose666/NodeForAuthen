@@ -26,6 +26,7 @@ export const XMGGroup = [
   'RnD',
   'Kinh doanh',
   'Đào tạo',
+  'Cộng tác viên',
 ];
 
 export const IFEEGroup = [
@@ -37,28 +38,7 @@ export const IFEEGroup = [
   'STPTR',
   'UDVT',
   'TTDV',
-];
-
-export const XMGorder = [
-  'Giám đốc',
-  'Phó Giám đốc',
-  'Chuyên gia',
-  'Trưởng phòng',
-  'Phó Trưởng phòng',
-  'Nhân viên',
   'Cộng tác viên',
-];
-
-export const IFEEorder = [
-  'Viện trưởng',
-  'Phó Viện trưởng',
-  'Giám đốc',
-  'Phó giám đốc',
-  'Trưởng phòng',
-  'Phó trưởng phòng',
-  'Phụ trách kế toán',
-  'Văn thư',
-  'Ngiên cứu viên',
 ];
 
 export const approveArr = [

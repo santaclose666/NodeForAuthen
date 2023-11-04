@@ -50,28 +50,6 @@ const StaggerUI = ({eventFunc1, eventFunc2}) => {
           }}>
           <IconButton
             onPress={() => {
-              eventFunc2();
-              onClose();
-            }}
-            mb="4"
-            variant="solid"
-            bg="indigo.400"
-            colorScheme="indigo"
-            borderRadius="full"
-            icon={
-              <Image
-                size="7"
-                _dark={{
-                  color: 'warmGray.50',
-                }}
-                color="warmGray.50"
-                source={Images.addFile}
-                alt="add"
-              />
-            }
-          />
-          <IconButton
-            onPress={() => {
               eventFunc1();
               onClose();
             }}

@@ -53,6 +53,8 @@ const workData = [
 
 const CreateWorkSchedule = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params.unit;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const workNameData = useSelector(state => state.work.works?.data);
   const [optionValue, setOptionValue] = useState(optionData[0].value);
   const [workValue, setWorkValue] = useState(workData[0].value);
@@ -67,13 +69,12 @@ const CreateWorkSchedule = ({navigation, route}) => {
   const [checkPick, setCheckPick] = useState(null);
   const [startDay, setStartDay] = useState(formatDate(new Date()));
   const [endDay, setEndDay] = useState(null);
-  const [apiCall, setApiCall] = useState(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const fetchWorkNameData = async () => {
     const data = {
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
     await getAllWorkName(dispatch, data);
   };
@@ -110,7 +111,7 @@ const CreateWorkSchedule = ({navigation, route}) => {
         : {op2_tenchuongtrinh: ortherWorkInput};
 
     const data = {
-      id_user: user?.id,
+      id_user: idByUnit,
       tungay: formatDateToPost(startDay),
       denngay: formatDateToPost(endDay),
       diadiem: placeInput,
@@ -120,7 +121,7 @@ const CreateWorkSchedule = ({navigation, route}) => {
       ghichu: noteInput,
       op_tenchuongtrinh: workValue,
       ...checkOp,
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
 
     if (

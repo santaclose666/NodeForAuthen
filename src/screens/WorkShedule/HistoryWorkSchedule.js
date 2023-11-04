@@ -90,11 +90,13 @@ const approveArr = [
   },
 ];
 
-const HistoryWorkShedule = ({navigation}) => {
+const HistoryWorkShedule = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const dispatch = useDispatch();
   const staffs =
-    user?.tendonvi === 'IFEE'
+    unit === 'IFEE'
       ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
       : useSelector(state => state.staffs?.staffs?.XMGStaff);
   const workSheduleData = useSelector(
@@ -161,7 +163,7 @@ const HistoryWorkShedule = ({navigation}) => {
       id_lichcongtac: selectedItem.id,
       ngayve: formatDateToPost(date),
       giove: formatTimeToPost(time),
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
 
     requestFinishWorkSchedule(data);
@@ -200,7 +202,7 @@ const HistoryWorkShedule = ({navigation}) => {
       const data = {
         id_lichcongtac: selectedItem.id,
         nhanxet: commentInput,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       approveFinishRequest(data);
@@ -213,7 +215,7 @@ const HistoryWorkShedule = ({navigation}) => {
       const data = {
         id_lichcongtac: selectedItem.id,
         lydo: reasonCancel,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       cancelFinishRequest(data);
@@ -232,7 +234,7 @@ const HistoryWorkShedule = ({navigation}) => {
       const data = {
         id_lichcongtac: selectedItem.id,
         nhanxet: commentInput,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       approveWorkSchedule(data);
@@ -245,7 +247,7 @@ const HistoryWorkShedule = ({navigation}) => {
       const data = {
         id_lichcongtac: selectedItem.id,
         lydo: reasonCancel,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       cancelWorkSchedule(data);
@@ -293,19 +295,15 @@ const HistoryWorkShedule = ({navigation}) => {
     [workSheduleData],
   );
 
-  const handleRedirectCreate = () => {
-    navigation.navigate(screen.registerWorkSchedule);
-  };
-
   const handleRedirectMyWorkSchedule = useCallback(() => {
-    navigation.navigate(screen.allWorkSchedule);
+    navigation.navigate(screen.allWorkSchedule, {unit: unit});
   }, []);
 
   const fetchWorkSchedule = useCallback(async () => {
     try {
       const data = {
-        tendonvi: user?.tendonvi,
-        id: user?.id,
+        tendonvi: unit,
+        id: idByUnit,
       };
       await getAllWorkSchedule(dispatch, data);
 
@@ -377,7 +375,7 @@ const HistoryWorkShedule = ({navigation}) => {
         : filterUser?.tenphong;
     const avatar =
       filterUser?.path === undefined
-        ? user?.tendonvi === 'IFEE'
+        ? unit === 'IFEE'
           ? defaultIFEE
           : defaultXMG
         : filterUser?.path;
@@ -388,18 +386,18 @@ const HistoryWorkShedule = ({navigation}) => {
       );
     };
 
-    const checkStatus = () => {
-      return (
-        (item.status != 0 && item.kt_congtac != 1) ||
-        user?.vitri_ifee > 3 ||
-        item.id_user == user?.id ||
-        (user?.vitri_ifee == 1 && item.status != 0)
-      );
-    };
+    // const checkStatus = () => {
+    //   return (
+    //     (item.status != 0 && item.kt_congtac != 1) ||
+    //     user?.vitri_ifee > 3 ||
+    //     item.id_user == idByUnit ||
+    //     (user?.vitri_ifee == 1 && item.status != 0)
+    //   );
+    // };
 
     const checkFinished = () => {
       return (
-        item.status == 1 && item.id_user == user?.id && item.kt_congtac !== 1
+        item.status == 1 && item.id_user == idByUnit && item.kt_congtac !== 1
       );
     };
 
@@ -443,15 +441,7 @@ const HistoryWorkShedule = ({navigation}) => {
             top: '7%',
             zIndex: 9999,
           }}>
-          {checkStatus() && (
-            <StatusUI
-              status={finishStatus}
-              colorStatus={finishColorStatus}
-              bgColorStatus={finishBgColorStatus}
-              icon={finishIcon}
-            />
-          )}
-          {checkRole() && (
+          {checkRole() ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -479,6 +469,13 @@ const HistoryWorkShedule = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
+          ) : (
+            <StatusUI
+              status={finishStatus}
+              colorStatus={finishColorStatus}
+              bgColorStatus={finishBgColorStatus}
+              icon={finishIcon}
+            />
           )}
           {checkFinished() && (
             <>
@@ -555,6 +552,7 @@ const HistoryWorkShedule = ({navigation}) => {
           title="Lịch sử công tác"
           navigation={navigation}
           refreshData={fetchWorkSchedule}
+          unit={unit}
         />
         <View
           style={{
@@ -912,10 +910,7 @@ const HistoryWorkShedule = ({navigation}) => {
               bottom: hp('11%'),
               right: Dimension.setWidth(6),
             }}>
-            <StaggerUI
-              eventFunc1={handleRedirectMyWorkSchedule}
-              eventFunc2={handleRedirectCreate}
-            />
+            <StaggerUI eventFunc1={handleRedirectMyWorkSchedule} />
           </View>
         </BottomSheetModalProvider>
       </SafeAreaView>

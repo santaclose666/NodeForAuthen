@@ -46,8 +46,9 @@ const approveArr = [
   },
 ];
 
-const HistoryRepair = ({navigation}) => {
+const HistoryRepair = ({navigation, unit}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const repairData = useSelector(state => state.repair.repair?.data);
   const [loading, setLoading] = useState(true);
   const [indexPicker, setIndexPicker] = useState(0);
@@ -64,7 +65,7 @@ const HistoryRepair = ({navigation}) => {
   const handleUpdateProcessed = async () => {
     try {
       const data = {
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
         id: selectedItem.id,
       };
       const res = await updateProcessed(data);
@@ -82,7 +83,7 @@ const HistoryRepair = ({navigation}) => {
     try {
       console.log('fetch');
       const data = {
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       const res1 = await getNotProcessedYetList(data);

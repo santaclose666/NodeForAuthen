@@ -86,10 +86,12 @@ export const approveArr = [
   },
 ];
 
-const HistoryRegisterVehicleScreen = ({navigation}) => {
+const HistoryRegisterVehicleScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const staffs =
-    user?.tendonvi === 'IFEE'
+    unit === 'IFEE'
       ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
       : useSelector(state => state.staffs?.staffs?.XMGStaff);
   const allVehicleData = useSelector(
@@ -153,8 +155,8 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const handleApprove = useCallback(item => {
     const data = {
       id_dulieu: item.id,
-      id_user: user?.id,
-      tendonvi: user?.tendonvi,
+      id_user: idByUnit,
+      tendonvi: unit,
     };
 
     approveVehicle(data);
@@ -167,8 +169,8 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const handleCancel = useCallback(item => {
     const data = {
       id_dulieu: item.id,
-      id_user: user?.id,
-      tendonvi: user?.tendonvi,
+      id_user: idByUnit,
+      tendonvi: unit,
     };
 
     cancelVehicle(data);
@@ -223,7 +225,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
           type: filePicker.type,
           name: filePicker.fileName,
         },
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
       try {
         const res = await returnVehicle(data);
@@ -274,8 +276,8 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
   const fetchVehicleData = async () => {
     try {
       const data = {
-        id: user?.id,
-        tendonvi: user?.tendonvi,
+        id: idByUnit,
+        tendonvi: unit,
       };
 
       const res = await getVehicleData(dispatch, data);
@@ -319,12 +321,12 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
         ? Images.approve
         : Images.cancel;
 
-    const checktStatus = () => {
-      return (
-        ((user?.id === 2 || user?.id === 8) && item.pheduyet !== null) ||
-        (user?.id !== 2 && user?.id !== 8)
-      );
-    };
+    // const checktStatus = () => {
+    //   return (
+    //     ((idByUnit === 2 || idByUnit === 8) && item.pheduyet !== null) ||
+    //     (idByUnit !== 2 && idByUnit !== 8)
+    //   );
+    // };
 
     const checkRole = () => {
       return (
@@ -338,7 +340,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
 
     const checkReturnCar = () => {
       return (
-        item.km_nhan === 0 && item.pheduyet === '1' && user?.id === item.id_user
+        item.km_nhan === 0 && item.pheduyet === '1' && idByUnit === item.id_user
       );
     };
 
@@ -478,6 +480,7 @@ const HistoryRegisterVehicleScreen = ({navigation}) => {
           title="Lịch sử đăng kí xe"
           navigation={navigation}
           refreshData={fetchVehicleData}
+          unit={unit}
         />
         <View
           style={{

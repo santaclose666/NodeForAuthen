@@ -51,10 +51,8 @@ const workData = [
 
 const RegisterPlane = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const staffs =
-    user.tendonvi === 'IFEE'
-      ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
-      : useSelector(state => state.staffs?.staffs?.XMGStaff);
+  const unit = route.params.unit;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const workNameData = useSelector(state => state.work.works?.data);
   const allStaffs = useSelector(state => state.ticketPlane.ticketPlane?.users);
   console.log(allStaffs);
@@ -86,7 +84,7 @@ const RegisterPlane = ({navigation, route}) => {
 
   const fetchWorkNameData = async () => {
     const data = {
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
     await getAllWorkName(dispatch, data);
   };
@@ -106,7 +104,7 @@ const RegisterPlane = ({navigation, route}) => {
   const handleRegister = async () => {
     if (multiStaff.length !== 0 && workName.length !== 0) {
       const data = {
-        id_user: user?.id,
+        id_user: idByUnit,
         ds_ns: multiStaff,
         ngoaivien: outSidePerson,
         chuongtrinh: workName,
@@ -116,7 +114,7 @@ const RegisterPlane = ({navigation, route}) => {
         ngaydi: `${formatDateToPost(dateValue)} ${formatTimeToPost(timeValue)}`,
         hangve: ticketTypeValue,
         kygui: kgNumber,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
       setLoading(true);
       try {

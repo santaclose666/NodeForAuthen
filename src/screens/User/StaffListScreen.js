@@ -21,30 +21,49 @@ import {getAllStaffs} from '../../redux/apiRequest';
 import {screen} from '../AllScreen/allScreen';
 import {StaffSkeleton} from '../../components/Skeleton';
 
-const StaffListScreen = ({navigation}) => {
-  const user = useSelector(state => state.auth.login?.currentUser);
+const StaffListScreen = ({navigation, route}) => {
+  const unit = route.params;
   const dispatch = useDispatch();
   const [selectId, setSelectId] = useState(0);
-  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
-  const XMGstaffs = useSelector(state => state.staffs?.staffs?.XMGStaff);
+  const staffs =
+    unit === 'IFEE'
+      ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
+      : useSelector(state => state.staffs?.staffs?.XMGStaff);
   const [loading, setLoading] = useState(true);
 
-  const handleFilter = () => {
-    let data = user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs;
+  const handleFilterIFEE = () => {
     if (selectId == 0) {
-      return data;
-    } else if (selectId == 1 && user?.tendonvi == 'IFEE') {
-      return data?.filter(item => item.vitri_ifee == 1 || item.vitri_ifee == 2);
+      return staffs;
+    } else if (selectId == 1) {
+      return staffs?.filter(
+        item => item.vitri_ifee == 1 || item.vitri_ifee == 2,
+      );
+    } else if (selectId == 8) {
+      return staffs?.filter(item => item.chucdanh == IFEEGroup[selectId]);
     } else {
-      if (user?.tendonvi == 'IFEE') {
-        return data?.filter(item => item.tenphong == IFEEGroup[selectId]);
-      } else {
-        return data?.filter(item => {
-          return item.info_phong?.some(
-            group => group.tenphong == XMGGroup[selectId],
-          );
-        });
-      }
+      return staffs?.filter(item => item.tenphong == IFEEGroup[selectId]);
+    }
+  };
+
+  const handleFilterXMG = () => {
+    if (selectId == 0) {
+      return staffs;
+    } else if (selectId == 1) {
+      return staffs?.filter(
+        item => item.vitri_ifee == 1 || item.vitri_ifee == 2,
+      );
+    } else if (selectId == 7) {
+      return staffs?.filter(item => {
+        return item.info_phong?.some(
+          group => group.chucdanh == XMGGroup[selectId],
+        );
+      });
+    } else {
+      return staffs?.filter(item => {
+        return item.info_phong?.some(
+          group => group.tenphong == XMGGroup[selectId],
+        );
+      });
     }
   };
 
@@ -63,8 +82,7 @@ const StaffListScreen = ({navigation}) => {
   }, []);
 
   const RenderStaffs = memo(({item, index}) => {
-    const role =
-      user?.tendonvi === 'XMG' ? item.info_phong[0].chucdanh : item.chucdanh;
+    const role = unit === 'XMG' ? item.info_phong[0].chucdanh : item.chucdanh;
 
     return (
       <TouchableOpacity
@@ -166,11 +184,11 @@ const StaffListScreen = ({navigation}) => {
             marginBottom: Dimension.setHeight(1.5),
           }}>
           <FlatList
-            data={user?.tendonvi === 'XMG' ? XMGGroup : IFEEGroup}
+            data={unit === 'XMG' ? XMGGroup : IFEEGroup}
             keyExtractor={(_, index) => index}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            extraData={user?.tendonvi === 'XMG' ? XMGstaffs : IFEEstaffs}
+            extraData={staffs}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
@@ -208,7 +226,7 @@ const StaffListScreen = ({navigation}) => {
           <StaffSkeleton />
         ) : (
           <FlatList
-            data={handleFilter()}
+            data={unit === 'IFEE' ? handleFilterIFEE() : handleFilterXMG()}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({item, index}) => (
               <RenderStaffs item={item} index={index} />

@@ -42,8 +42,9 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
 
-const HistoryApplyLeave = ({navigation}) => {
+const HistoryApplyLeave = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params;
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
   const [selectedItem, setSelectedItem] = useState(null);
   const [commnetInput, setCommentInput] = useState(null);
@@ -60,9 +61,10 @@ const HistoryApplyLeave = ({navigation}) => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const staffs =
-    user?.tendonvi === 'IFEE'
+    unit === 'IFEE'
       ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
       : useSelector(state => state.staffs?.staffs?.XMGStaff);
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
 
   useEffect(() => {
     handleGetAllLeaveData();
@@ -70,7 +72,7 @@ const HistoryApplyLeave = ({navigation}) => {
 
   const handleGetAllLeaveData = async () => {
     try {
-      await getAllOnLeaveData(user?.id, dispatch, user?.tendonvi);
+      await getAllOnLeaveData(idByUnit, dispatch, user?.tendonvi);
 
       setLoading(false);
     } catch (error) {
@@ -91,7 +93,7 @@ const HistoryApplyLeave = ({navigation}) => {
   const handleSendNonAdjust = () => {
     const importantData = {
       id_nghiphep: selectedItem.id,
-      id_user: user?.id,
+      id_user: idByUnit,
       tendonvi: user?.tendonvi,
     };
 
@@ -263,14 +265,14 @@ const HistoryApplyLeave = ({navigation}) => {
       );
     };
 
-    const checkStatus = () => {
-      return (
-        (item.status != 0 && item.yc_update != 1) ||
-        user?.vitri_ifee > 3 ||
-        item.id_nhansu == user?.id ||
-        (user?.id == 1 && item.status != 0 && item.yc_update != 1)
-      );
-    };
+    // const checkStatus = () => {
+    //   return (
+    //     (item.status != 0 && item.yc_update != 1) ||
+    //     user?.vitri_ifee > 3 ||
+    //     item.id_nhansu == idByUnit ||
+    //     (idByUnit == 1 && item.status != 0 && item.yc_update != 1)
+    //   );
+    // };
 
     const filterUser = staffs.filter(user => user.id == item.id_nhansu)[0];
 
@@ -302,40 +304,7 @@ const HistoryApplyLeave = ({navigation}) => {
         </Text>
         <View
           style={{position: 'absolute', right: '5%', top: '7%', zIndex: 999}}>
-          {checkStatus() && (
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                alignSelf: 'flex-start',
-                paddingVertical: Dimension.setHeight(0.5),
-                paddingHorizontal: Dimension.setWidth(1.4),
-                borderRadius: 8,
-                backgroundColor:
-                  item.yc_update === 0 ? bgColorStatus : bgColorAdjustStatus,
-                marginBottom: Dimension.setHeight(0.6),
-              }}>
-              <Image
-                source={item.yc_update === 0 ? icon : iconAdjust}
-                style={{
-                  height: 16,
-                  width: 16,
-                  marginRight: Dimension.setWidth(1),
-                  tintColor:
-                    item.yc_update === 0 ? colorStatus : colorAdjustStatus,
-                }}
-              />
-              <Text
-                style={{
-                  color: item.yc_update === 0 ? colorStatus : colorAdjustStatus,
-                  fontSize: Dimension.fontSize(14),
-                  fontFamily: Fonts.SF_MEDIUM,
-                }}>
-                {item.yc_update === 0 ? status : adjustStatus}
-              </Text>
-            </View>
-          )}
-          {checkRole() && (
+          {checkRole() ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -367,6 +336,38 @@ const HistoryApplyLeave = ({navigation}) => {
                   style={[styles.approvedIcon, {tintColor: '#f25157'}]}
                 />
               </TouchableOpacity>
+            </View>
+          ) : (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                alignSelf: 'flex-start',
+                paddingVertical: Dimension.setHeight(0.5),
+                paddingHorizontal: Dimension.setWidth(1.4),
+                borderRadius: 8,
+                backgroundColor:
+                  item.yc_update === 0 ? bgColorStatus : bgColorAdjustStatus,
+                marginBottom: Dimension.setHeight(0.6),
+              }}>
+              <Image
+                source={item.yc_update === 0 ? icon : iconAdjust}
+                style={{
+                  height: 16,
+                  width: 16,
+                  marginRight: Dimension.setWidth(1),
+                  tintColor:
+                    item.yc_update === 0 ? colorStatus : colorAdjustStatus,
+                }}
+              />
+              <Text
+                style={{
+                  color: item.yc_update === 0 ? colorStatus : colorAdjustStatus,
+                  fontSize: Dimension.fontSize(14),
+                  fontFamily: Fonts.SF_MEDIUM,
+                }}>
+                {item.yc_update === 0 ? status : adjustStatus}
+              </Text>
             </View>
           )}
         </View>
@@ -415,7 +416,7 @@ const HistoryApplyLeave = ({navigation}) => {
             <Text style={styles.content}>{changeFormatDate(item.denngay)}</Text>
             {item.yc_update === 0 &&
               item.status === 1 &&
-              item.id_nhansu === user?.id &&
+              item.id_nhansu === idByUnit &&
               checkOverDate() && (
                 <TouchableOpacity
                   onPress={() => {
@@ -453,6 +454,7 @@ const HistoryApplyLeave = ({navigation}) => {
           title="Lịch sử nghỉ phép"
           navigation={navigation}
           refreshData={handleGetAllLeaveData}
+          unit={unit}
         />
 
         <FilterStatusUI

@@ -41,8 +41,9 @@ import {InternalSkeleton} from '../../components/Skeleton';
 import StatusUI from '../../components/StatusUI';
 import {formatDateToPost, getCurrentDate} from '../../utils/serviceFunction';
 
-const HistoryRepair = ({navigation}) => {
+const HistoryRepair = ({navigation, unit}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const repairData = useSelector(state => state.repair.repair?.data);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const dispatch = useDispatch();
@@ -89,9 +90,9 @@ const HistoryRepair = ({navigation}) => {
   const handleApprove = item => {
     const data = {
       id_user: item?.id_nguoidk,
-      id_manager: user?.id,
+      id_manager: idByUnit,
       tg_dukien: formatDateToPost(intendTime),
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
     approveRepair(data);
     setToggleModal(false);
@@ -102,7 +103,7 @@ const HistoryRepair = ({navigation}) => {
 
   const handleCancel = useCallback(item => {
     const data = {
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
       id_nguoidk: item?.id_nguoidk,
     };
     cancelRepair(data);
@@ -115,7 +116,7 @@ const HistoryRepair = ({navigation}) => {
   const fetchListApproved = async () => {
     try {
       const data = {
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
       const res = await getRepairApproveList(dispatch, data);
 
@@ -250,7 +251,11 @@ const HistoryRepair = ({navigation}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title={`Lịch sử đăng kí sửa chữa`} navigation={navigation} />
+        <Header
+          title={`Lịch sử đăng kí sửa chữa`}
+          navigation={navigation}
+          unit={unit}
+        />
         <BottomSheetModalProvider>
           {loading ? (
             <InternalSkeleton />

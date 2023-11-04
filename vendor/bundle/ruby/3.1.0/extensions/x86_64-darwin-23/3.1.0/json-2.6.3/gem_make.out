@@ -1,0 +1,13 @@
+current directory: /Users/xmg/Desktop/F4/Forestry4.0_v7/vendor/bundle/ruby/3.1.0/gems/json-2.6.3/ext/json
+/Users/xmg/.rvm/rubies/ruby-3.1.2/bin/ruby -I /Users/xmg/.rvm/rubies/ruby-3.1.2/lib/ruby/3.1.0 -r ./siteconf20231101-28945-p8n1fj.rb extconf.rb
+creating Makefile
+
+current directory: /Users/xmg/Desktop/F4/Forestry4.0_v7/vendor/bundle/ruby/3.1.0/gems/json-2.6.3/ext/json
+make DESTDIR\= clean
+
+current directory: /Users/xmg/Desktop/F4/Forestry4.0_v7/vendor/bundle/ruby/3.1.0/gems/json-2.6.3/ext/json
+make DESTDIR\=
+make: Nothing to be done for `all'.
+
+current directory: /Users/xmg/Desktop/F4/Forestry4.0_v7/vendor/bundle/ruby/3.1.0/gems/json-2.6.3/ext/json
+make DESTDIR\= install

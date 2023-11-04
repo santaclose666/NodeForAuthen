@@ -41,12 +41,14 @@ const numberOfDayOff = [
 
 const CreateApplyLeave = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params.unit;
   const [valueNumberOfDay, setValueNumberOfDay] = useState(null);
   const [offNumber, setOffNumber] = useState(2);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [startDay, setStartDay] = useState(formatDate(new Date()));
   const [inputDecription, setInputDecription] = useState('');
   const [loading, setLoading] = useState(false);
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
 
   const handlePickDate = date => {
     setToggleDatePicker(false);
@@ -62,12 +64,11 @@ const CreateApplyLeave = ({navigation, route}) => {
       ToastAlert(message);
     } else {
       const data = {
-        id_user: user?.id,
-        tendonvi: user?.tendonvi,
+        id_user: idByUnit,
         lydo: inputDecription,
         tungay: formatDateToPost(startDay),
         tong: valueNumberOfDay === 'Nhiều ngày' ? offNumber : valueNumberOfDay,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       setLoading(true);

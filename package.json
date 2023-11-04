@@ -7,7 +7,8 @@
     "ios": "react-native run-ios --simulator=\"iPhone 14 Plus\"",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "react-native setup-ios-permissions && cd ios && pod install && cd .. && patch-package"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.7",

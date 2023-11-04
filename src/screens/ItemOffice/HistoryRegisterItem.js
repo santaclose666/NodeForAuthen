@@ -41,8 +41,10 @@ import {fontDefault, mainURL} from '../../contants/Variable';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
 
-const HistoryRegisterItem = ({navigation}) => {
+const HistoryRegisterItem = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const officeItemData = useSelector(
     state => state.officeItem.officeItemSlice?.data,
   );
@@ -86,7 +88,7 @@ const HistoryRegisterItem = ({navigation}) => {
   const handleApprove = useCallback(item => {
     const data = {
       id_user: item?.id_user,
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
     approveRegisterOfficeItem(data);
     setToggleModal(false);
@@ -98,7 +100,7 @@ const HistoryRegisterItem = ({navigation}) => {
   const handleCancel = useCallback(item => {
     const data = {
       id_user: item?.id_user,
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
 
     cancelRegisterOfficeItem(data);
@@ -115,7 +117,7 @@ const HistoryRegisterItem = ({navigation}) => {
   const fetchOfficeItemList = async () => {
     try {
       const data = {
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
       await getAllListOfficeItem(dispatch, data);
 
@@ -236,7 +238,11 @@ const HistoryRegisterItem = ({navigation}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title="Lịch sử đăng kí VPP" navigation={navigation} />
+        <Header
+          title="Lịch sử đăng kí VPP"
+          navigation={navigation}
+          unit={unit}
+        />
         <BottomSheetModalProvider>
           {loading ? (
             <InternalSkeleton />

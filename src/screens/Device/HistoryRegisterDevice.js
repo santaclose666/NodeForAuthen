@@ -56,8 +56,10 @@ import {InternalSkeleton} from '../../components/Skeleton';
 
 const deviceState = [{state: 'BT'}, {state: 'Hỏng'}, {state: 'Lỗi'}];
 
-const HistoryRegisterDevice = ({navigation}) => {
+const HistoryRegisterDevice = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const deviceData = useSelector(state => state.device.deviceSlice?.data);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const dispatch = useDispatch();
@@ -120,7 +122,7 @@ const HistoryRegisterDevice = ({navigation}) => {
   const handleApprove = useCallback(item => {
     const data = {
       id_user: item?.id_user,
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
 
     approveRegisterDevice(data);
@@ -133,7 +135,7 @@ const HistoryRegisterDevice = ({navigation}) => {
   const handleCancel = useCallback(item => {
     const data = {
       id_user: item?.id_user,
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
 
     cancelRegisterDevice(data);
@@ -148,12 +150,12 @@ const HistoryRegisterDevice = ({navigation}) => {
       setLoading(true);
       setToggleReturnModal(false);
       const data = {
-        id_user: user?.id,
+        id_user: idByUnit,
         id_thietbi: notReturnDataValue,
         ngaytra_thucte: formatDateToPost(returnDate),
         tinhtrangTB: deviceStateValue,
         nguyennhan: reason,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       const res = await returnDevice(data);
@@ -194,8 +196,8 @@ const HistoryRegisterDevice = ({navigation}) => {
   const fetchAllListDevice = async () => {
     try {
       const data = {
-        id_user: user?.id,
-        tendonvi: user?.tendonvi,
+        id_user: idByUnit,
+        tendonvi: unit,
       };
 
       const res = await getAllListDevice(dispatch, data, checkRoleUser());
@@ -410,7 +412,11 @@ const HistoryRegisterDevice = ({navigation}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title={`Lịch sử đăng kí thiết bị`} navigation={navigation} />
+        <Header
+          title={`Lịch sử đăng kí thiết bị`}
+          navigation={navigation}
+          unit={unit}
+        />
         <BottomSheetModalProvider>
           <FilterStatusUI
             handlePickOption={handlePickOption}

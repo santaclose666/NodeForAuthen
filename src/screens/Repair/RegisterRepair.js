@@ -73,8 +73,10 @@ const temp = [
   },
 ];
 
-const RegisterRepair = ({navigation}) => {
+const RegisterRepair = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params.unit;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const subject = useSelector(state => state.subject?.subject?.data);
   const dispatch = useDispatch();
   const [listDevice, setListDevice] = useState([]);
@@ -135,19 +137,19 @@ const RegisterRepair = ({navigation}) => {
     ) {
       setLoading(true);
       const data = {
-        id_user: user.id,
+        id_user: idByUnit,
         id_phong: subjectValue,
         hoten: registerPerson,
         arr_thietbi: devicePicker,
         arr_tinhtrang: status,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
       try {
         const res = await registerRepair(data);
 
         if (res) {
           const donvi = {
-            tendonvi: user?.tendonvi,
+            tendonvi: unit,
           };
           getRepairApproveList(dispatch, donvi);
           ToastSuccess('Đăng kí thành công');
@@ -223,7 +225,7 @@ const RegisterRepair = ({navigation}) => {
   const fetchAllDevices = async () => {
     try {
       const donvi = {
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
       const data = await getRepairList(donvi);
 

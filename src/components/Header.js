@@ -15,7 +15,7 @@ import Colors from '../contants/Colors';
 import {fontDefault, imgDefault} from '../contants/Variable';
 import {screen} from '../screens/AllScreen/allScreen';
 
-const Header = ({title, navigation, refreshData, logo, handleFilter}) => {
+const Header = ({title, navigation, refreshData, logo, handleFilter, unit}) => {
   const showCreateButton =
     title.includes('Lịch sử') || title.includes('Theo dõi');
 
@@ -104,28 +104,41 @@ const Header = ({title, navigation, refreshData, logo, handleFilter}) => {
             if (title === 'Lịch sử nghỉ phép') {
               navigation.navigate(screen.registerApplyLeave, {
                 refreshData: refreshData,
+                unit: unit,
               });
             } else if (title === 'Lịch sử đặt vé') {
               navigation.navigate(screen.registerPlaneTicket, {
                 refreshData: refreshData,
+                unit: unit,
               });
             } else if (title === 'Lịch sử công tác') {
               navigation.navigate(screen.registerWorkSchedule, {
                 refreshData: refreshData,
+                unit: unit,
               });
             } else if (title === 'Lịch sử đăng kí xe') {
               navigation.navigate(screen.registerVehicle, {
                 refreshData: refreshData,
+                unit: unit,
               });
             } else if (title === 'Lịch sử đăng kí VPP') {
               navigation.navigate(screen.registerOfficeItem);
-            } else if (title == 'Lịch sử đăng kí thiết bị') {
-              navigation.navigate(screen.registerDevice);
+            } else if (
+              (title == 'Lịch sử đăng kí thiết bị',
+              {
+                unit: unit,
+              })
+            ) {
+              navigation.navigate(screen.registerDevice, {
+                unit: unit,
+              });
             } else if (
               title == 'Lịch sử đăng kí sửa chữa' ||
               title == 'Theo dõi sửa chữa'
             ) {
-              navigation.navigate(screen.registerRepair);
+              navigation.navigate(screen.registerRepair, {
+                unit: unit,
+              });
             }
           }}>
           <Image source={Images.adjust} style={styles.rightIcon} />

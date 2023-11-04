@@ -52,8 +52,10 @@ if (Platform.OS == 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const RegisterItemOffice = ({navigation}) => {
+const RegisterItemOffice = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params.unit;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const dispatch = useDispatch();
   const [allItem, setAllItem] = useState([]);
   const [arrRender, setArrRender] = useState([]);
@@ -133,12 +135,12 @@ const RegisterItemOffice = ({navigation}) => {
 
     if (idItem.length != 0 && quantityItem.length != 0) {
       const data = {
-        id_user: user?.id,
+        id_user: idByUnit,
         loaivpp: idItem,
         soluong: quantityItem,
         ngaynhan: formatDateToPost(receiveDate),
         gionhan: formatTimeToPost(receiveTime),
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       setLoading(true);
@@ -159,14 +161,14 @@ const RegisterItemOffice = ({navigation}) => {
 
   const fetchOfficeItemList = async () => {
     const data = {
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
     await getAllListOfficeItem(dispatch, data);
   };
 
   const fetchAllIOfficeItem = async () => {
     try {
-      const donvi = {tendonvi: user?.tendonvi};
+      const donvi = {tendonvi: unit};
       const data = await getAllOfficeItem(donvi);
 
       const tempArr = [...arrRender];

@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useLayoutEffect, useRef} from 'react';
+import React, {useState, useCallback, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -25,15 +25,19 @@ import Loading from '../../components/LoadingUI';
 import {defaultIFEE, fontDefault, mainURL} from '../../contants/Variable';
 import LinearGradientUI from '../../components/LinearGradientUI';
 
-const AllWorkScheduleScreen = ({navigation}) => {
+const AllWorkScheduleScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params.unit;
   const dispatch = useDispatch();
   const totalWorkData = useSelector(
     state => state.totalWork.totalWorkSchedule?.data,
   );
   const dayOfWeek = getFirstDateOfWeek();
   const currentDate = formatDateToPost(new Date());
-  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const staffs =
+    unit === 'IFEE'
+      ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
+      : useSelector(state => state.staffs?.staffs?.XMGStaff);
   const [toggleWarningModal, setToggleWarningModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [reasonInput, setReasonInput] = useState('');
@@ -52,7 +56,7 @@ const AllWorkScheduleScreen = ({navigation}) => {
       const data = {
         id_lichchitiet: id,
         lydo: reason,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       const res = await warningWorkSchedule(data);
@@ -70,7 +74,7 @@ const AllWorkScheduleScreen = ({navigation}) => {
 
   const fetTotalWorkSchedule = async () => {
     const data = {
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
     await totalWorkSchedule(dispatch, data);
   };
@@ -98,7 +102,10 @@ const AllWorkScheduleScreen = ({navigation}) => {
         ? '#f25157'
         : '#57b85d';
 
-    const filterUser = IFEEstaffs.filter(staff => staff.id == item.id_user)[0];
+    const filterUser =
+      unit === 'IFEE'
+        ? staffs.filter(staff => staff.id_ifee == item.id_user)[0]
+        : staffs.filter(staff => staff.id_xmg == item.id_user)[0];
     const bgColor = item.warning === 0 ? '#f2f2f2' : 'rgba(249, 223, 224, 1)';
 
     const checkRole = () => {

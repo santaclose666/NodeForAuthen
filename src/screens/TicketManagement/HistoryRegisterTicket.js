@@ -43,8 +43,10 @@ import {InternalSkeleton} from '../../components/Skeleton';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
 
-const HistoryRegisterTicket = ({navigation}) => {
+const HistoryRegisterTicket = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const ticketPlaneData = useSelector(
     state => state.ticketPlane.ticketPlane?.data,
   );
@@ -117,7 +119,7 @@ const HistoryRegisterTicket = ({navigation}) => {
     const data = {
       id_dulieu: selectedItem.id,
       noidung: checkInput ? commentInput : reasonCancel,
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
     if (
       (commentInput.length !== 0 || reasonCancel.length !== 0) &&
@@ -161,7 +163,7 @@ const HistoryRegisterTicket = ({navigation}) => {
   const fetchPlaneData = async () => {
     try {
       const data = {
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
       await getAllPlaneData(dispatch, data);
 
@@ -361,6 +363,7 @@ const HistoryRegisterTicket = ({navigation}) => {
           title="Lịch sử đặt vé"
           navigation={navigation}
           refreshData={fetchPlaneData}
+          unit={unit}
         />
         <BottomSheetModalProvider>
           <FilterStatusUI

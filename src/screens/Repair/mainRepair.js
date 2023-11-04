@@ -8,18 +8,19 @@ import HistoryRepair from './HistoryRepair';
 import TrackRepair from './TrackRepair';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const MainRepair = ({navigation}) => {
+const MainRepair = ({navigation, route}) => {
+  const unit = route.params;
   const safeDimension = useSafeAreaInsets();
   const menuArr = [
     {
       title: 'Lịch sử yêu cầu',
       icon: Images.history,
-      component: <HistoryRepair navigation={navigation} />,
+      component: <HistoryRepair navigation={navigation} unit={unit} />,
     },
     {
       title: 'Theo dõi sửa chữa',
       icon: Images.trackingRepair,
-      component: <TrackRepair navigation={navigation} />,
+      component: <TrackRepair navigation={navigation} unit={unit} />,
     },
   ];
   const [menuId, setMenuId] = useState(0);

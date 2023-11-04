@@ -101,6 +101,7 @@ export const loginUser = async (user, dispatch, navigation, save) => {
 
     const data = res.data;
     dispatch(loginSuccess(data));
+    console.log(data);
 
     if (data === 0) {
       const mess = 'Thông tin đăng nhập chưa chính xác!';
@@ -399,7 +400,7 @@ export const cancelWorkSchedule = async data => {
   }
 };
 
-export const totalWorkSchedule = async dispatch => {
+export const totalWorkSchedule = async (dispatch, data) => {
   dispatch(getTotalWorkStart());
   try {
     const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/tonghop`;

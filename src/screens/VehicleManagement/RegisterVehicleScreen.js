@@ -37,6 +37,8 @@ import {rowAlignCenter} from '../../contants/CssFE';
 
 const RegisterVehicleScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params.unit;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const typeVehicle = useSelector(
     state => state.vehicle?.vehicle?.availableCarData,
   );
@@ -90,14 +92,14 @@ const RegisterVehicleScreen = ({navigation, route}) => {
   const handleRegister = async () => {
     if (vehicleValue !== null && placeInput !== '' && contentInput !== '') {
       const data = {
-        id_user: user.id,
+        id_user: idByUnit,
         loaixe: vehicleValue,
         ngaydi: formatDateToPost(dateStart),
         noiden: placeInput,
         noidung: contentInput,
         gionhan: formatTimeToPost(receiveTime),
         ngaynhan: formatDateToPost(receiveDate),
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
       setLoading(true);
       try {

@@ -54,6 +54,8 @@ const retunOption = [
 
 const RegisterDevices = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
+  const unit = route.params.unit;
+  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const [allDevice, setAllDevice] = useState([]);
   const [arrRender, setArrRender] = useState([]);
   const [typeDeviceArr, setTypeDeviceArr] = useState([]);
@@ -153,13 +155,13 @@ const RegisterDevices = ({navigation, route}) => {
 
     if (idDevice.length != 0 && borrowDate.length != 0 && content.length != 0) {
       const data = {
-        id_user: user.id,
+        id_user: idByUnit,
         thietbi: idDevice,
         ngaymuon: formatDateToPost(borrowDate),
         ngaytra: returnDate ? formatDateToPost(returnDate) : returnDate,
         noidung: content,
         active: returnValue,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       setLoading(true);
@@ -183,8 +185,8 @@ const RegisterDevices = ({navigation, route}) => {
 
   const fetchAllListDevice = async () => {
     const data = {
-      id_user: user?.id,
-      tendonvi: user?.tendonvi,
+      id_user: idByUnit,
+      tendonvi: unit,
     };
     await getAllListDevice(dispatch, data, checkRoleUser());
   };
@@ -192,7 +194,7 @@ const RegisterDevices = ({navigation, route}) => {
   const fetchAllDevices = async () => {
     try {
       const donvi = {
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
       const data = await getAllDevices(donvi);
 
