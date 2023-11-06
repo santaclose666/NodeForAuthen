@@ -215,6 +215,8 @@ const Images = {
   fixed: require('../assets/images/fixed.png'),
   brokenItem: require('../assets/images/brokenItem.png'),
   share: require('../assets/images/share.png'),
+  co2: require('../assets/images/co2.png'),
+  call: require('../assets/images/call.png'),
 };
 
 export default Images;

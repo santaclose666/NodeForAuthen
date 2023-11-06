@@ -227,6 +227,8 @@ export const getAllOnLeaveData = async (id, dispatch, tendonvi) => {
     const apiXMG = `https://management.xuanmaijsc.vn/api/nghiphep/danhsach/${id}`;
     const api = tendonvi === 'IFEE' ? apiIFEE : apiXMG;
 
+    console.log(api);
+
     const res = await axios.get(api);
 
     dispatch(getOnLeaveSuccess(res.data));

@@ -28,6 +28,7 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 const AllWorkScheduleScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const unit = route.params.unit;
+  console.log(user);
   const dispatch = useDispatch();
   const totalWorkData = useSelector(
     state => state.totalWork.totalWorkSchedule?.data,
@@ -110,13 +111,25 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
       const bgColor = item.warning === 0 ? '#f2f2f2' : 'rgba(249, 223, 224, 1)';
 
       const checkRole = () => {
-        return (
-          item.warning == 0 &&
-          (user?.vitri_ifee == 1 ||
-            (user?.vitri_ifee == 3 &&
-              filterUser?.vitri_ifee > 3 &&
-              user?.tenphong == filterUser?.tenphong))
-        );
+        if (unit === 'IFEE') {
+          return (
+            item.warning == 0 &&
+            (user?.quyentruycap === 1 ||
+              user?.vitri_ifee == 1 ||
+              (user?.vitri_ifee == 3 &&
+                filterUser?.vitri_ifee > 3 &&
+                user?.tenphong == filterUser?.tenphong))
+          );
+        } else {
+          return (
+            item.warning == 0 &&
+            (user?.quyentruycap === 1 ||
+              user?.vitri_ifee == 1 ||
+              (user?.vitri_ifee == 3 &&
+                filterUser.info_phong[0]?.vitri_ifee > 3 &&
+                user?.tenphong == filterUser.info_phong[0]?.tenphong))
+          );
+        }
       };
 
       const avt = filterUser?.path ? filterUser?.path : defaultIFEE;
@@ -142,7 +155,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
           }}>
           <View
             style={{
-              width: '66%',
+              width: '70%',
               marginRight: Dimension.setWidth(5),
             }}>
             <View style={styles.containerEachLine}>
@@ -150,8 +163,9 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
               <Text style={styles.content}>{item.name}</Text>
             </View>
             <View style={styles.containerEachLine}>
-              <Text style={styles.title}>Địa điểm: </Text>
-              <Text style={styles.content}>{item.location}</Text>
+              <Text style={styles.title}>
+                Địa điểm: <Text style={styles.content}>{item.location}</Text>
+              </Text>
             </View>
             <View style={styles.containerEachLine}>
               <Text numberOfLines={3} ellipsizeMode="tail" style={styles.title}>
@@ -165,7 +179,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
               src={mainURL + avt}
             />
           </View>
-          {checkRole() && (
+          {user?.tendonvi === unit && checkRole() && (
             <TouchableOpacity
               onPress={() => {
                 const data = {

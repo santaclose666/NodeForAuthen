@@ -17,22 +17,7 @@ const documentSlice = createSlice({
     getDocumentSuccess: (state, action) => {
       state.documentSlice.isFetching = false;
 
-      // const getField = () => {
-      //   const key = Object.keys(action.payload);
-
-      //   return key[0];
-      // };
-
-      // const checkExist = () => {
-      //   if (state.documentSlice.data.hasOwnProperty(getField())) {
-      //     return true;
-      //   } else {
-      //     false;
-      //   }
-      // };
-
       const tempData = {...state.documentSlice.data, ...action.payload};
-      console.log('document', tempData);
 
       state.documentSlice.data = tempData;
     },

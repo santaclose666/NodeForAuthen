@@ -18,6 +18,11 @@ export const forestryDepartment = [
     icon: Images.documentation,
   },
   {
+    featureName: 'CPFES',
+    component: null,
+    icon: Images.co2,
+  },
+  {
     featureName: 'Mùa vụ',
     component: screen.muavu,
     icon: Images.muavu,
@@ -73,12 +78,6 @@ export const forestryDepartment = [
     featureName: 'DV Bản đồ',
     component: screen.mapService,
     icon: Images.map,
-  },
-
-  {
-    featureName: null,
-    component: null,
-    icon: null,
   },
   {
     featureName: null,

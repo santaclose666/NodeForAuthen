@@ -235,8 +235,7 @@ const RegisterDevices = ({navigation, route}) => {
           <TouchableOpacity
             onPress={() => {
               handleDelete(index);
-            }}
-            style={styles.btnRightSwipe}>
+            }}>
             <Image source={Images.delete} style={{width: 40, height: 40}} />
           </TouchableOpacity>
         </View>

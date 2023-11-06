@@ -317,6 +317,18 @@ const HistoryWorkShedule = ({navigation, route}) => {
     fetchWorkSchedule();
   }, []);
 
+  const unitRole = item => {
+    if (unit === 'IFEE') {
+      return (
+        idByUnit != item.id_nhansu &&
+        user?.vitri_ifee == 3 &&
+        item.vitri_ifee > 3
+      );
+    } else {
+      return idByUnit != item.id_nhansu && user?.vitri == 3 && item.vitri > 3;
+    }
+  };
+
   const RenderWorkScheduleData = memo(({item, index}) => {
     const colorStatus =
       item.status === 0 ? '#f9a86a' : item.status === 1 ? '#57b85d' : '#f25157';
@@ -382,7 +394,8 @@ const HistoryWorkShedule = ({navigation, route}) => {
 
     const checkRole = () => {
       return (
-        (item?.status == 0 || item?.kt_congtac == 1) && user?.quyentruycap <= 2
+        (item?.status == 0 || item?.kt_congtac == 1) &&
+        (user?.quyentruycap <= 2 || unitRole(item))
       );
     };
 

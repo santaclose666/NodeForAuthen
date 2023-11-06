@@ -98,7 +98,7 @@ const ListInfo = ({info, index}) => {
           <Image style={[styles.img]} source={Images.phone} />
           <View style={styles.textContainer}>
             <Text style={[styles.titleText]}>Số điện thoại</Text>
-            <Text style={styles.contentText}>0{info?.phone}</Text>
+            <Text style={styles.contentText}>{info?.phone}</Text>
           </View>
         </View>
       </ScrollView>

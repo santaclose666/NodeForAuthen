@@ -7,6 +7,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  Linking,
+  Platform,
 } from 'react-native';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
@@ -20,6 +22,9 @@ import {XMGGroup, IFEEGroup} from '../../contants/Variable';
 import {getAllStaffs} from '../../redux/apiRequest';
 import {screen} from '../AllScreen/allScreen';
 import {StaffSkeleton} from '../../components/Skeleton';
+import {Swipeable} from 'react-native-gesture-handler';
+import Images from '../../contants/Images';
+import {ToastAlert} from '../../components/Toast';
 
 const StaffListScreen = ({navigation, route}) => {
   const unit = route.params;
@@ -49,9 +54,12 @@ const StaffListScreen = ({navigation, route}) => {
     if (selectId == 0) {
       return staffs;
     } else if (selectId == 1) {
-      return staffs?.filter(
-        item => item.vitri_ifee == 1 || item.vitri_ifee == 2,
+      const leader = staffs?.filter(
+        item =>
+          item.info_phong[0].vitri_ifee === '1' ||
+          item.info_phong[0].vitri_ifee === '2',
       );
+      return leader;
     } else if (selectId == 7) {
       return staffs?.filter(item => {
         return item.info_phong?.some(
@@ -64,6 +72,22 @@ const StaffListScreen = ({navigation, route}) => {
           group => group.tenphong == XMGGroup[selectId],
         );
       });
+    }
+  };
+
+  const handleCall = async phoneNumber => {
+    let phone =
+      Platform.OS === 'ios' ? `telprompt:${phoneNumber}` : `tel:${phoneNumber}`;
+
+    try {
+      const isSupported = await Linking.canOpenURL(phone);
+      if (isSupported) {
+        return Linking.openURL(phone);
+      } else {
+        ToastAlert('Invalid Phone Number!');
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -81,91 +105,110 @@ const StaffListScreen = ({navigation, route}) => {
     fetchAllStaffList();
   }, []);
 
+  const rightSwipe = phoneNumber => {
+    return (
+      <View style={styles.rightSwipeContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            handleCall(phoneNumber);
+          }}
+          style={styles.btnRightSwipe}>
+          <Image source={Images.call} style={{width: 45, height: 45}} />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   const RenderStaffs = memo(({item, index}) => {
     const role = unit === 'XMG' ? item.info_phong[0].chucdanh : item.chucdanh;
 
     return (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate(screen.staffDetail, {item: item});
-        }}
-        key={index}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderRadius: 12,
-          borderColor: Colors.WHITE,
-          backgroundColor: Colors.WHITE,
-          paddingHorizontal: Dimension.setWidth(1),
-          paddingVertical: Dimension.setWidth(2),
-          marginVertical: Dimension.setWidth(1),
-          marginHorizontal: Dimension.setWidth(2),
-          ...shadowIOS,
+      <Swipeable
+        renderRightActions={() => {
+          return rightSwipe(item.sdt);
         }}>
-        <View
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate(screen.staffDetail, {item: item});
+          }}
+          key={index}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center',
-            paddingVertical: Dimension.setHeight(1),
-            marginLeft: Dimension.setWidth(2),
-            maxWidth: Dimension.setWidth(60),
+            justifyContent: 'space-between',
+            borderRadius: 12,
+            borderColor: Colors.WHITE,
+            backgroundColor: Colors.WHITE,
+            paddingHorizontal: Dimension.setWidth(1),
+            paddingVertical: Dimension.setWidth(2),
+            marginVertical: Dimension.setWidth(1),
+            marginHorizontal: Dimension.setWidth(2),
+            ...shadowIOS,
           }}>
-          <Image
-            src={`${mainURL + item.path}`}
+          <View
             style={{
-              width: 50,
-              height: 50,
-              borderRadius: 50,
-              marginRight: Dimension.setWidth(3),
-            }}
-          />
-          <View style={{justifyContent: 'center'}}>
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: Dimension.setHeight(1),
+              marginLeft: Dimension.setWidth(2),
+              maxWidth: Dimension.setWidth(60),
+            }}>
+            <Image
+              src={`${mainURL + item.path}`}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 50,
+                marginRight: Dimension.setWidth(3),
+              }}
+            />
+            <View style={{justifyContent: 'center'}}>
+              <Text
+                style={{
+                  fontFamily: Fonts.SF_SEMIBOLD,
+                  fontSize: Dimension.fontSize(19),
+                  ...fontDefault,
+                }}>
+                {item.hoten}
+              </Text>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={{
+                  color: Colors.INACTIVE_GREY,
+                  fontFamily: Fonts.SF_REGULAR,
+                  fontSize: Dimension.fontSize(15),
+                  width: Dimension.setWidth(45),
+                }}>
+                {item.email}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: 'flex-end',
+              marginRight: Dimension.setWidth(3.6),
+            }}>
+            <Text
+              style={{
+                fontFamily: Fonts.SF_REGULAR,
+                fontSize: Dimension.fontSize(16),
+                color: Colors.INACTIVE_GREY,
+              }}>
+              Chức vụ
+            </Text>
             <Text
               style={{
                 fontFamily: Fonts.SF_SEMIBOLD,
-                fontSize: Dimension.fontSize(19),
+                fontSize: Dimension.fontSize(15),
                 ...fontDefault,
               }}>
-              {item.hoten}
-            </Text>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={{
-                color: Colors.INACTIVE_GREY,
-                fontFamily: Fonts.SF_REGULAR,
-                fontSize: Dimension.fontSize(15),
-                width: Dimension.setWidth(45),
-              }}>
-              {item.email}
+              {role}
             </Text>
           </View>
-        </View>
-        <View
-          style={{
-            alignItems: 'flex-end',
-            marginRight: Dimension.setWidth(3.6),
-          }}>
-          <Text
-            style={{
-              fontFamily: Fonts.SF_REGULAR,
-              fontSize: Dimension.fontSize(16),
-              color: Colors.INACTIVE_GREY,
-            }}>
-            Chức vụ
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.SF_SEMIBOLD,
-              fontSize: Dimension.fontSize(15),
-              ...fontDefault,
-            }}>
-            {role}
-          </Text>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Swipeable>
     );
   });
 
@@ -303,6 +346,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#f6f6f8ff',
     width: Dimension.setWidth(30),
     alignSelf: 'center',
+  },
+  rightSwipeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 6,
   },
 });
 

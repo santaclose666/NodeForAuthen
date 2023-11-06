@@ -41,8 +41,12 @@ export const ApproveCancelModal = ({
   setReasonCancel,
   eventFunc,
   staffs,
+  unit,
 }) => {
-  const avatar = staffs?.filter(item => item.id === selectedItem?.id_nhansu);
+  const avatar =
+    unit === 'IFEE'
+      ? staffs?.filter(item => item.id_ifee === selectedItem?.id_nhansu)
+      : staffs?.filter(item => item.id_xmg === selectedItem?.id_nhansu);
 
   return (
     <Modal
@@ -582,32 +586,26 @@ export const WarningModal = ({
           </Text>
         </View>
 
-        <View style={styles.containerEachLine}>
-          <Image source={Images.comment} style={styles.iconic} />
-          <TextInput
-            multiline={true}
-            style={{
+        <View
+          style={[
+            styles.containerEachLine,
+            {
               backgroundColor: '#ffffff',
               paddingHorizontal: Dimension.setWidth(2),
               borderRadius: 10,
               fontFamily: Fonts.SF_REGULAR,
-              width: '70%',
-              height: Dimension.setHeight(6),
-            }}
+              width: '90%',
+              height: Dimension.setHeight(5),
+              justifyContent: 'space-between',
+            },
+          ]}>
+          <TextInput
             onChangeText={e => setReasonInput(e)}
             value={reasonInput}
           />
           <TouchableOpacity
             onPress={() => {
               handleWarning(item.id, reasonInput);
-            }}
-            style={{
-              backgroundColor: '#d9eafa',
-              padding: 6,
-              marginLeft: Dimension.setWidth(1.6),
-              borderRadius: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
             }}>
             <Image
               source={Images.send}

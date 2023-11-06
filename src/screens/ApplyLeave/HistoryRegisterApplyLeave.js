@@ -72,7 +72,7 @@ const HistoryApplyLeave = ({navigation, route}) => {
 
   const handleGetAllLeaveData = async () => {
     try {
-      await getAllOnLeaveData(idByUnit, dispatch, user?.tendonvi);
+      await getAllOnLeaveData(idByUnit, dispatch, unit);
 
       setLoading(false);
     } catch (error) {
@@ -94,7 +94,7 @@ const HistoryApplyLeave = ({navigation, route}) => {
     const importantData = {
       id_nghiphep: selectedItem.id,
       id_user: idByUnit,
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
 
     if (!checkInput && reasonCancel !== null && selectedItem !== null) {
@@ -141,7 +141,7 @@ const HistoryApplyLeave = ({navigation, route}) => {
     const data = {
       id_nghiphep: selectedItem.id,
       ngay_dc: formatDateToPost(datePicker),
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
 
     adjustOnLeave(data);
@@ -154,7 +154,7 @@ const HistoryApplyLeave = ({navigation, route}) => {
   const handleApproveAdjust = id_nghiphep => {
     const data = {
       id_nghiphep,
-      tendonvi: user?.tendonvi,
+      tendonvi: unit,
     };
     approveAdjustOnLeave(data);
     setRefreshComponent(!refreshComponent);
@@ -170,7 +170,7 @@ const HistoryApplyLeave = ({navigation, route}) => {
       const data = {
         id_nghiphep: selectedItem.id,
         lydo: reasonCancelAdjust,
-        tendonvi: user?.tendonvi,
+        tendonvi: unit,
       };
 
       cancelAdjustOnLeave(data);
@@ -213,6 +213,18 @@ const HistoryApplyLeave = ({navigation, route}) => {
     [leaveData],
   );
 
+  const unitRole = item => {
+    if (unit === 'IFEE') {
+      return (
+        idByUnit != item.id_nhansu &&
+        user?.vitri_ifee == 3 &&
+        item.vitri_ifee > 3
+      );
+    } else {
+      return idByUnit != item.id_nhansu && user?.vitri == 3 && item.vitri > 3;
+    }
+  };
+
   const RenderLeaveList = memo(({item}) => {
     const checkOverDate = () => {
       return compareDate(new Date(), changeFormatDate(item.denngay));
@@ -233,7 +245,6 @@ const HistoryApplyLeave = ({navigation, route}) => {
         : item.status === 1
         ? Images.approve
         : Images.cancel;
-
     const colorAdjustStatus =
       item.yc_update === 1
         ? '#f9a86a'
@@ -261,7 +272,8 @@ const HistoryApplyLeave = ({navigation, route}) => {
 
     const checkRole = () => {
       return (
-        (item.status == 0 || item.yc_update == 1) && user?.quyentruycap <= 2
+        (item.status == 0 || item.yc_update == 1) &&
+        (user?.quyentruycap <= 2 || unitRole(item))
       );
     };
 
@@ -498,6 +510,7 @@ const HistoryApplyLeave = ({navigation, route}) => {
           setReasonCancel={setReasonCancel}
           eventFunc={handleSendNonAdjust}
           staffs={staffs}
+          unit={unit}
         />
 
         <Modal
