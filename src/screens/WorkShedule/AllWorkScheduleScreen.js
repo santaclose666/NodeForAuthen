@@ -94,96 +94,99 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
     handleRefresh();
   }, []);
 
-  const RenderTaskOfDay = useCallback(item => {
-    const borderColorStatus =
-      item.ct == 1
-        ? '#f0b263'
-        : item.content === 'Nghỉ phép'
-        ? '#f25157'
-        : '#57b85d';
+  const RenderTaskOfDay = useCallback(
+    item => {
+      const borderColorStatus =
+        item.ct == 1
+          ? '#f0b263'
+          : item.content === 'Nghỉ phép'
+          ? '#f25157'
+          : '#57b85d';
 
-    const filterUser =
-      unit === 'IFEE'
-        ? staffs.filter(staff => staff.id_ifee == item.id_user)[0]
-        : staffs.filter(staff => staff.id_xmg == item.id_user)[0];
-    const bgColor = item.warning === 0 ? '#f2f2f2' : 'rgba(249, 223, 224, 1)';
+      const filterUser =
+        unit === 'IFEE'
+          ? staffs.filter(staff => staff.id_ifee == item.id_user)[0]
+          : staffs.filter(staff => staff.id_xmg == item.id_user)[0];
+      const bgColor = item.warning === 0 ? '#f2f2f2' : 'rgba(249, 223, 224, 1)';
 
-    const checkRole = () => {
+      const checkRole = () => {
+        return (
+          item.warning == 0 &&
+          (user?.vitri_ifee == 1 ||
+            (user?.vitri_ifee == 3 &&
+              filterUser?.vitri_ifee > 3 &&
+              user?.tenphong == filterUser?.tenphong))
+        );
+      };
+
+      const avt = filterUser?.path ? filterUser?.path : defaultIFEE;
+
       return (
-        item.warning == 0 &&
-        (user?.vitri_ifee == 1 ||
-          (user?.vitri_ifee == 3 &&
-            filterUser?.vitri_ifee > 3 &&
-            user?.tenphong == filterUser?.tenphong))
-      );
-    };
-
-    const avt = filterUser?.path ? filterUser?.path : defaultIFEE;
-
-    return (
-      <View
-        key={item.id}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          alignSelf: 'flex-end',
-          paddingHorizontal: Dimension.setWidth(4),
-          paddingVertical: Dimension.setHeight(2),
-          marginVertical: Dimension.setHeight(1.2),
-          marginRight: Dimension.setWidth(4),
-          borderRadius: 12,
-          elevation: 5,
-          ...shadowIOS,
-          borderTopWidth: 7,
-          borderTopColor: borderColorStatus,
-          backgroundColor: bgColor,
-          width: '96%',
-        }}>
         <View
+          key={item.id}
           style={{
-            width: '66%',
-            marginRight: Dimension.setWidth(5),
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignSelf: 'flex-end',
+            paddingHorizontal: Dimension.setWidth(4),
+            paddingVertical: Dimension.setHeight(2),
+            marginVertical: Dimension.setHeight(1.2),
+            marginRight: Dimension.setWidth(4),
+            borderRadius: 12,
+            elevation: 5,
+            ...shadowIOS,
+            borderTopWidth: 7,
+            borderTopColor: borderColorStatus,
+            backgroundColor: bgColor,
+            width: '96%',
           }}>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Họ tên: </Text>
-            <Text style={styles.content}>{item.name}</Text>
-          </View>
-          <View style={styles.containerEachLine}>
-            <Text style={styles.title}>Địa điểm: </Text>
-            <Text style={styles.content}>{item.location}</Text>
-          </View>
-          <View style={styles.containerEachLine}>
-            <Text numberOfLines={3} ellipsizeMode="tail" style={styles.title}>
-              Nội dung: <Text style={styles.content}>{item.content}</Text>
-            </Text>
-          </View>
-        </View>
-        <View style={styles.avatarUserContainer}>
-          <Image
-            style={{width: 66, height: 66, borderRadius: 50}}
-            src={mainURL + avt}
-          />
-        </View>
-        {checkRole() && (
-          <TouchableOpacity
-            onPress={() => {
-              const data = {
-                ...item,
-                path: filterUser?.path,
-              };
-              handlePickItem(data);
-            }}
+          <View
             style={{
-              position: 'absolute',
-              top: Dimension.setHeight(0.8),
-              right: Dimension.setWidth(2.2),
+              width: '66%',
+              marginRight: Dimension.setWidth(5),
             }}>
-            <Image source={Images.warning} style={styles.iconic} />
-          </TouchableOpacity>
-        )}
-      </View>
-    );
-  }, []);
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Họ tên: </Text>
+              <Text style={styles.content}>{item.name}</Text>
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text style={styles.title}>Địa điểm: </Text>
+              <Text style={styles.content}>{item.location}</Text>
+            </View>
+            <View style={styles.containerEachLine}>
+              <Text numberOfLines={3} ellipsizeMode="tail" style={styles.title}>
+                Nội dung: <Text style={styles.content}>{item.content}</Text>
+              </Text>
+            </View>
+          </View>
+          <View style={styles.avatarUserContainer}>
+            <Image
+              style={{width: 66, height: 66, borderRadius: 50}}
+              src={mainURL + avt}
+            />
+          </View>
+          {checkRole() && (
+            <TouchableOpacity
+              onPress={() => {
+                const data = {
+                  ...item,
+                  path: filterUser?.path,
+                };
+                handlePickItem(data);
+              }}
+              style={{
+                position: 'absolute',
+                top: Dimension.setHeight(0.8),
+                right: Dimension.setWidth(2.2),
+              }}>
+              <Image source={Images.warning} style={styles.iconic} />
+            </TouchableOpacity>
+          )}
+        </View>
+      );
+    },
+    [totalWorkData],
+  );
 
   return (
     <LinearGradientUI>
