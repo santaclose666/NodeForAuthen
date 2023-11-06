@@ -27,6 +27,7 @@ import {rowAlignCenter} from '../../contants/CssFE';
 
 const DetailNewsScreen = ({navigation, route}) => {
   const {item} = route.params;
+  console.log(item);
   const {width} = useWindowDimensions();
   const id = item.id;
   const [html, setHtml] = useState(item.content);

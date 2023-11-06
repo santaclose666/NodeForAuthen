@@ -565,7 +565,11 @@ const HomePageScreen = ({navigation}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate(screen.detailNews, {item: item});
+                  const data = {
+                    ...item,
+                    screenName: 'Tin tức F4',
+                  };
+                  navigation.navigate(screen.detailNews, {item: data});
                 }}
                 key={index}
                 style={styles.newsContainer}>
