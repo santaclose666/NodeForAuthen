@@ -88,6 +88,7 @@ const listRootURL = [
   {maTinh: 40, link: 'https://giamsatrungnghean.ifee.edu.vn'},
   {maTinh: 1, link: 'https://giamsatrunghanoi.ifee.edu.vn'},
   {maTinh: 37, link: 'https://giamsatrungninhbinh.ifee.edu.vn'},
+  {maTinh: 64, link: 'https://giamsatrunggialai.ifee.edu.vn'},
 ];
 
 const MapScreen = ({navigation}) => {

@@ -42,7 +42,7 @@ const SelectProvinceFFWScreen = ({navigation}) => {
   const selectTypeMapCode = '5';
 
   // Tỉnh có bản đồ cấp cháy
-  const availableProvinces = ['1', '2', '37', '40'];
+  const availableProvinces = ['1', '2', '37', '40', '64'];
 
   useEffect(() => {
     getListProvince();

@@ -4710,5 +4710,24 @@
     "nameProvinCodeCol": "matinh",
     "nameDistrictCodeCol": "mahuyen",
     "nameCommuneCodeCol": "maxa"
+  },
+  {
+    "TT": "251",
+    "codeMapGroup": "5",
+    "nameMapGroup": "Bản đồ cấp cháy",
+    "nameRegionCol": "DBR_2019",
+    "year": "2023",
+    "multiProvince": "0",
+    "provinceCode": "64",
+    "linkRoot": "https://bando.ifee.edu.vn:8453/geoserver/ws_giamsatNinhBinh/wms?service=WMS",
+    "layers": "ws_giamsatNinhBinh:gialai_dbr_2020",
+    "version": "1.1.1",
+    "cql_filter": "",
+    "styles": "capchay_ninhbinh",
+    "src": "EPSG:900913",
+    "format": "image/png",
+    "nameProvinCodeCol": "matinh",
+    "nameDistrictCodeCol": "mahuyen",
+    "nameCommuneCodeCol": "maxa"
   }
 ]
