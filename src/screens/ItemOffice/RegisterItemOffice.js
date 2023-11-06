@@ -54,7 +54,7 @@ if (Platform.OS == 'android') {
 
 const RegisterItemOffice = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params.unit;
+  const unit = route.params?.unit;
   const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const dispatch = useDispatch();
   const [allItem, setAllItem] = useState([]);

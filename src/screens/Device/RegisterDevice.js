@@ -55,6 +55,7 @@ const retunOption = [
 const RegisterDevices = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const unit = route.params.unit;
+  console.log(unit);
   const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const [allDevice, setAllDevice] = useState([]);
   const [arrRender, setArrRender] = useState([]);
