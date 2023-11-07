@@ -2,9 +2,10 @@ import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 
 const LinearGradientUI = ({children}) => {
+  const defaultColor = ['rgba(166,222,255,0.3)', 'rgba(234,234,234,1)'];
   return (
     <LinearGradient
-      colors={['rgba(255,255,255,1)', 'rgba(153,202,251,0.6)']}
+      colors={defaultColor}
       style={{flex: 1}}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}>

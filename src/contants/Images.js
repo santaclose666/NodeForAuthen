@@ -217,6 +217,8 @@ const Images = {
   share: require('../assets/images/share.png'),
   co2: require('../assets/images/co2.png'),
   call: require('../assets/images/call.png'),
+  working: require('../assets/images/working.png'),
+  leaveNoColor: require('../assets/images/leaveNoColor.png'),
 };
 
 export default Images;

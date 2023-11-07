@@ -24,4 +24,5 @@ export default {
   DARK_FIVE: '#B3B3B3',
   FABEBOOK_BLUE: '#4A61A8',
   GOOGLE_BLUE: '#53A0F4',
+  DEFAULT_BLUE: '#11183c',
 };

@@ -378,7 +378,7 @@ const HomePageScreen = ({navigation}) => {
                 style={{
                   fontFamily: Fonts.SF_BOLD,
                   fontSize: Dimension.fontSize(16),
-                  color: Colors.DEFAULT_BLACK,
+                  color: '#427dc9',
                   opacity: 0.9,
                 }}>
                 IFEE Management
@@ -427,7 +427,7 @@ const HomePageScreen = ({navigation}) => {
                 style={{
                   fontFamily: Fonts.SF_BOLD,
                   fontSize: Dimension.fontSize(16),
-                  color: Colors.DEFAULT_BLACK,
+                  color: Colors.DEFAULT_GREEN,
                   opacity: 0.9,
                 }}>
                 XMG Management

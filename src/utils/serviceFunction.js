@@ -61,12 +61,12 @@ export const getCurrentTime = () => {
 
 export const getDayOfWeek = () => {
   const dayOfWeek = [
-    {weekdays: 'T2', day: moment().weekday(1).format('DD')},
-    {weekdays: 'T3', day: moment().weekday(2).format('DD')},
-    {weekdays: 'T4', day: moment().weekday(3).format('DD')},
-    {weekdays: 'T5', day: moment().weekday(4).format('DD')},
-    {weekdays: 'T6', day: moment().weekday(5).format('DD')},
-    {weekdays: 'T7', day: moment().weekday(6).format('DD')},
+    {weekdays: 'Thứ 2', day: moment().weekday(1).format('DD')},
+    {weekdays: 'Thứ 3', day: moment().weekday(2).format('DD')},
+    {weekdays: 'Thứ 4', day: moment().weekday(3).format('DD')},
+    {weekdays: 'Thứ 5', day: moment().weekday(4).format('DD')},
+    {weekdays: 'Thứ 6', day: moment().weekday(5).format('DD')},
+    {weekdays: 'Thứ 7', day: moment().weekday(6).format('DD')},
     {weekdays: 'CN', day: moment().weekday(7).format('DD')},
   ];
 
