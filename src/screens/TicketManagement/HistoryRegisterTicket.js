@@ -46,7 +46,6 @@ import Separation from '../../components/Separation';
 const HistoryRegisterTicket = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const unit = route.params;
-  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const ticketPlaneData = useSelector(
     state => state.ticketPlane.ticketPlane?.data,
   );
@@ -58,6 +57,7 @@ const HistoryRegisterTicket = ({navigation, route}) => {
   const [reasonCancel, setReasonCancel] = useState('');
   const [indexPicker, setIndexPicker] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
 
@@ -159,6 +159,17 @@ const HistoryRegisterTicket = ({navigation, route}) => {
     },
     [ticketPlaneData],
   );
+
+  const handlePullToRefresh = async () => {
+    setRefresh(true);
+    try {
+      await fetchPlaneData();
+
+      setRefresh(false);
+    } catch (error) {
+      setRefresh(false);
+    }
+  };
 
   const fetchPlaneData = async () => {
     try {
@@ -388,11 +399,12 @@ const HistoryRegisterTicket = ({navigation, route}) => {
               initialNumToRender={6}
               windowSize={6}
               removeClippedSubviews={true}
-              refreshing={true}
+              refreshing={refresh}
               extraData={ticketPlaneData}
               ListEmptyComponent={() => {
                 return <EmptyList />;
               }}
+              onRefresh={handlePullToRefresh}
             />
           )}
 

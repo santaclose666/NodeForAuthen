@@ -15,12 +15,8 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {totalWorkSchedule, warningWorkSchedule} from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import {
-  formatDateToPost,
-  getFirstDateOfWeek,
-} from '../../utils/serviceFunction';
+import {getDayOfWeek} from '../../utils/serviceFunction';
 import {WarningModal} from '../../components/Modal';
-import {Agenda} from 'react-native-calendars';
 import Loading from '../../components/LoadingUI';
 import {defaultIFEE, fontDefault, mainURL} from '../../contants/Variable';
 import LinearGradientUI from '../../components/LinearGradientUI';
@@ -28,13 +24,10 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 const AllWorkScheduleScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const unit = route.params.unit;
-  console.log(user);
   const dispatch = useDispatch();
   const totalWorkData = useSelector(
     state => state.totalWork.totalWorkSchedule?.data,
   );
-  const dayOfWeek = getFirstDateOfWeek();
-  const currentDate = formatDateToPost(new Date());
   const staffs =
     unit === 'IFEE'
       ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
@@ -44,6 +37,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
   const [reasonInput, setReasonInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const currentDate = getDayOfWeek();
 
   const handlePickItem = useCallback(item => {
     setSelectedItem(item);
@@ -92,6 +86,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
   };
 
   useLayoutEffect(() => {
+    console.log(currentDate);
     handleRefresh();
   }, []);
 
@@ -206,26 +201,6 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
     <LinearGradientUI>
       <SafeAreaView style={{flex: 1}}>
         <Header title={'Tổng hợp lịch công tác'} navigation={navigation} />
-        <Agenda
-          items={totalWorkData}
-          selected={currentDate}
-          minDate={dayOfWeek.firstDay}
-          maxDate={dayOfWeek.lastDay}
-          renderItem={RenderTaskOfDay}
-          rowHasChanged={(r1, r2) => {
-            return r1.id !== r2.id;
-          }}
-          showClosingKnob={true}
-          pastScrollRange={1}
-          futureScrollRange={1}
-          initialNumToRender={6}
-          windowSize={6}
-          removeClippedSubviews={true}
-          style={{backgroundColor: 'transparent'}}
-          theme={{reservationsBackgroundColor: 'transparent'}}
-          onRefresh={handleRefresh}
-          refreshing={refresh}
-        />
 
         <WarningModal
           toggleModal={toggleWarningModal}

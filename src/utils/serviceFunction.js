@@ -59,6 +59,22 @@ export const getCurrentTime = () => {
   return `${hour}:${minute}${' ' + halfDay}`;
 };
 
+export const getDayOfWeek = () => {
+  const dayOfWeek = [
+    {weekdays: 'T2', day: moment().weekday(1).format('DD')},
+    {weekdays: 'T3', day: moment().weekday(2).format('DD')},
+    {weekdays: 'T4', day: moment().weekday(3).format('DD')},
+    {weekdays: 'T5', day: moment().weekday(4).format('DD')},
+    {weekdays: 'T6', day: moment().weekday(5).format('DD')},
+    {weekdays: 'T7', day: moment().weekday(6).format('DD')},
+    {weekdays: 'CN', day: moment().weekday(7).format('DD')},
+  ];
+
+  const currMonth = moment(new Date()).format('MM');
+
+  return {currMonth, dayOfWeek};
+};
+
 export const getCoords = () => {
   return new Promise((resolve, reject) => {
     Geolocation.getCurrentPosition(
@@ -100,8 +116,8 @@ export const formatDateToPost = date => {
 };
 
 export const formatTimeToPost = time => {
-  const parseTime = moment(time, 'HH:mm a');
-  const formatTime = parseTime.format('HH:mm:ss');
+  const parseTime = moment(time, 'HH:MM a');
+  const formatTime = parseTime.format('HH:MM:ss');
 
   return formatTime;
 };
@@ -109,8 +125,6 @@ export const formatTimeToPost = time => {
 export const compareDate = (date1, date2) => {
   const beforeDate = moment(date1, 'DD/MM/YYYY').startOf('day');
   const afterDate = moment(date2, 'DD/MM/YYYY').startOf('day');
-  console.log(beforeDate);
-  console.log(afterDate);
 
   if (beforeDate <= afterDate) {
     return true;

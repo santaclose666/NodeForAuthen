@@ -7,6 +7,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import 'react-native-gesture-handler';
 import BootSplash from 'react-native-bootsplash';
 import codePush from 'react-native-code-push';
+import Test from './src/screens/test/test';
 
 const App = () => {
   useEffect(() => {
@@ -23,6 +24,7 @@ const App = () => {
         </NativeBaseProvider>
       </PersistGate>
     </Provider>
+    // <Test />
   );
 };
 

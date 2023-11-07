@@ -59,6 +59,7 @@ const HistoryApplyLeave = ({navigation, route}) => {
   const [refreshComponent, setRefreshComponent] = useState(false);
   const [indexPicker, setIndexPicker] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
   const staffs =
     unit === 'IFEE'
@@ -77,6 +78,17 @@ const HistoryApplyLeave = ({navigation, route}) => {
       setLoading(false);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handlePullToRefresh = async () => {
+    setRefresh(true);
+    try {
+      await handleGetAllLeaveData();
+
+      setRefresh(false);
+    } catch (error) {
+      setRefresh(false);
     }
   };
 
@@ -492,11 +504,12 @@ const HistoryApplyLeave = ({navigation, route}) => {
             initialNumToRender={6}
             windowSize={6}
             removeClippedSubviews={true}
-            refreshing={true}
+            refreshing={refresh}
             extraData={leaveData}
             ListEmptyComponent={() => {
               return <EmptyList />;
             }}
+            onRefresh={handlePullToRefresh}
           />
         )}
 

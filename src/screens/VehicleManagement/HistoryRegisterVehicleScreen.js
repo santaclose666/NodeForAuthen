@@ -116,6 +116,7 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
     return {name: item.hoten};
   });
   const [staffValue, setStaffValue] = useState(null);
+  const [refresh, setRefresh] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const dispatch = useDispatch();
   const snapPoints = useMemo(() => ['45%', '80%'], []);
@@ -272,6 +273,17 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
     },
     [allVehicleData],
   );
+
+  const handlePullToRefresh = async () => {
+    setRefresh(true);
+    try {
+      await fetchVehicleData();
+
+      setRefresh(false);
+    } catch (error) {
+      setRefresh(false);
+    }
+  };
 
   const fetchVehicleData = async () => {
     try {
@@ -546,11 +558,12 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
             initialNumToRender={6}
             windowSize={6}
             removeClippedSubviews={true}
-            refreshing={true}
+            refreshing={refresh}
             extraData={allVehicleData}
             ListEmptyComponent={() => {
               return <EmptyList />;
             }}
+            onRefresh={handlePullToRefresh}
           />
         )}
         <BottomSheetModalProvider>

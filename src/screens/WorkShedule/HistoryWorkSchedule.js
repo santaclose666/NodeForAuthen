@@ -117,6 +117,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
   const [loading, setLoading] = useState(true);
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['45%', '80%'], []);
+  const [refresh, setRefresh] = useState(false);
 
   const handleBottomSheet = useCallback(
     (item, subject, avatar, bgColorStatus, colorStatus) => {
@@ -298,6 +299,17 @@ const HistoryWorkShedule = ({navigation, route}) => {
   const handleRedirectMyWorkSchedule = useCallback(() => {
     navigation.navigate(screen.allWorkSchedule, {unit: unit});
   }, []);
+
+  const handlePullToRefresh = async () => {
+    setRefresh(true);
+    try {
+      await fetchWorkSchedule();
+
+      setRefresh(false);
+    } catch (error) {
+      setRefresh(false);
+    }
+  };
 
   const fetchWorkSchedule = useCallback(async () => {
     try {
@@ -633,11 +645,12 @@ const HistoryWorkShedule = ({navigation, route}) => {
               initialNumToRender={6}
               windowSize={6}
               removeClippedSubviews={true}
-              refreshing={true}
+              refreshing={refresh}
               extraData={workSheduleData}
               ListEmptyComponent={() => {
                 return <EmptyList />;
               }}
+              onRefresh={handlePullToRefresh}
             />
           )}
 
