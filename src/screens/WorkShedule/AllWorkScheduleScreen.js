@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useLayoutEffect} from 'react';
+import React, {useState, useCallback, useLayoutEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  Platform,
 } from 'react-native';
 import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
@@ -17,7 +18,7 @@ import {shadowIOS} from '../../contants/propsIOS';
 import {totalWorkSchedule, warningWorkSchedule} from '../../redux/apiRequest';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import {getDayOfWeek} from '../../utils/serviceFunction';
+import {getCurrentDayOfWeek, getDayOfWeek} from '../../utils/serviceFunction';
 import {WarningModal} from '../../components/Modal';
 import Loading from '../../components/LoadingUI';
 import {defaultIFEE, fontDefault, mainURL} from '../../contants/Variable';
@@ -48,6 +49,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
   const [refresh, setRefresh] = useState(false);
   const [indexPicker, setIndexPicker] = useState(0);
   const currentDate = getDayOfWeek();
+  const workRef = useRef(null);
 
   const handlePickItem = useCallback(item => {
     setSelectedItem(item);
@@ -73,7 +75,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
         });
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
     }
   }, []);
 
@@ -103,6 +105,15 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
     }
   };
 
+  const handleSetDayOfWeek = () => {
+    const dow = getCurrentDayOfWeek();
+    if (dow === 0) {
+      setIndexPicker(6);
+    } else {
+      setIndexPicker(dow - 1);
+    }
+  };
+
   const handlePullToRefresh = async () => {
     setRefresh(true);
     try {
@@ -115,6 +126,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
   };
 
   useLayoutEffect(() => {
+    handleSetDayOfWeek();
     fetTotalWorkSchedule();
   }, []);
 
@@ -143,7 +155,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
         unit === 'IFEE'
           ? staffs.filter(staff => staff.id_ifee == item.id_user)[0]
           : staffs.filter(staff => staff.id_xmg == item.id_user)[0];
-      const bgColor = item.canhbao === 0 ? '#f2f2f2' : 'rgba(244, 222, 222, 1)';
+      const bgColor = item.canhbao === 0 ? '#ffffff' : 'rgba(244, 222, 222, 1)';
 
       const checkRole = () => {
         if (unit === 'IFEE') {
@@ -177,7 +189,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
             paddingHorizontal: Dimension.setWidth(4),
             paddingVertical: Dimension.setHeight(2),
             marginVertical: Dimension.setHeight(1.2),
-            borderRadius: 9,
+            borderRadius: 12,
             elevation: 5,
             ...shadowIOS,
             backgroundColor: bgColor,
@@ -210,6 +222,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
                 backgroundColor: bgStatus,
                 borderRadius: 6,
                 paddingHorizontal: 4,
+                paddingVertical: Platform.OS === 'ios' ? 4 : 0,
               }}>
               <Image
                 source={icon}
@@ -231,7 +244,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
               <Text style={styles.nameText}>{item.ten}</Text>
               <Image
                 src={mainURL + avt}
-                style={{width: 28, height: 28, borderRadius: 50, marginLeft: 4}}
+                style={{width: 32, height: 32, borderRadius: 50, marginLeft: 4}}
               />
             </View>
           </View>
@@ -252,6 +265,16 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
               <Image source={Images.warning} style={styles.iconic} />
             </TouchableOpacity>
           )}
+          {item.canhbao === 1 && (
+            <View
+              style={{
+                position: 'absolute',
+                top: hp('1.8%'),
+                right: wp('2.8%'),
+              }}>
+              <Image source={Images.gotWarning} style={styles.iconic} />
+            </View>
+          )}
         </View>
       );
     },
@@ -263,7 +286,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
       <SafeAreaView style={{flex: 1}}>
         <Header title={'Tổng hợp lịch công tác'} navigation={navigation} />
         <View style={{marginVertical: hp('1.6%'), paddingLeft: wp('3%')}}>
-          <View style={[rowAlignCenter, {marginBottom: hp('0.6%')}]}>
+          <View style={[rowAlignCenter, {marginBottom: hp('1%')}]}>
             <Text
               style={styles.headerText}>{`Tuần ${totalWorkData?.tuan}`}</Text>
             <Separation />
@@ -279,20 +302,24 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
                 <TouchableOpacity
                   onPress={() => {
                     setIndexPicker(index);
+                    setTimeout(() => {
+                      workRef?.current?.scrollToIndex({
+                        index: 0,
+                        animated: true,
+                      });
+                    });
                   }}
                   style={{
                     marginRight: wp('4%'),
                     alignItems: 'center',
                     justifyContent: 'center',
-                    borderWidth: isEqual ? 0 : 0.8,
+                    borderWidth: isEqual ? 0 : 1,
                     borderColor: isEqual ? 'transparent' : '#696969',
                     paddingVertical: hp('0.6%'),
                     paddingHorizontal: wp('1%'),
                     borderRadius: 8,
                     width: wp('13%'),
                     backgroundColor: isEqual ? '#ffffff' : 'transparent',
-                    elevation: isEqual ? 1 : 0,
-                    ...shadowIOS,
                   }}
                   key={index}>
                   <Text
@@ -300,6 +327,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
                       fontFamily: Fonts.SF_SEMIBOLD,
                       fontSize: wp('4.5%'),
                       color: isEqual ? '#11183c' : '#696969',
+                      marginBottom: Platform.OS === 'ios' ? hp('1.5%') : 0,
                     }}>
                     {item.day}
                   </Text>
@@ -318,6 +346,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
         </View>
 
         <FlatList
+          ref={workRef}
           data={handleFilter(indexPicker)}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
@@ -365,7 +394,7 @@ const styles = StyleSheet.create({
 
   nameText: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: wp('3%'),
+    fontSize: wp('3.3%'),
     color: Colors.DEFAULT_BLUE,
   },
 

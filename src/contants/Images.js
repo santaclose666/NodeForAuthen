@@ -219,6 +219,7 @@ const Images = {
   call: require('../assets/images/call.png'),
   working: require('../assets/images/working.png'),
   leaveNoColor: require('../assets/images/leaveNoColor.png'),
+  gotWarning: require('../assets/images/gotWarning.png'),
 };
 
 export default Images;

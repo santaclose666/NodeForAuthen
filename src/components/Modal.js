@@ -574,7 +574,7 @@ export const WarningModal = ({
               ...fontDefault,
               marginBottom: Dimension.setHeight(0.6),
             }}>
-            {item?.name}
+            {item?.ten}
           </Text>
           <Text
             style={{
@@ -582,7 +582,7 @@ export const WarningModal = ({
               fontFamily: Fonts.SF_MEDIUM,
               ...fontDefault,
             }}>
-            {item?.content}
+            {item?.noidung}
           </Text>
         </View>
 
@@ -600,6 +600,7 @@ export const WarningModal = ({
             },
           ]}>
           <TextInput
+            style={{width: '90%'}}
             onChangeText={e => setReasonInput(e)}
             value={reasonInput}
           />

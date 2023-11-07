@@ -98,9 +98,9 @@ export const VNUF = [
     icon: Images.logo_KTQTKD,
   },
   {
-    featureName: null,
+    featureName: 'IFEE',
     component: null,
-    icon: null,
+    icon: Images.IFEELogo,
   },
   {
     featureName: null,
