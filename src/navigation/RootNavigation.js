@@ -47,6 +47,7 @@ import HistoryApplyLeave from '../screens/ApplyLeave/HistoryRegisterApplyLeave';
 import CreateApplyLeave from '../screens/ApplyLeave/RegisterApplyLeave';
 import HistoryRegisterTicket from '../screens/TicketManagement/HistoryRegisterTicket';
 import RegisterPlane from '../screens/TicketManagement/RegisterPlanTicket';
+import CPFESScreen from '../screens/CPFES/CPFES';
 
 const Stack = createStackNavigator();
 
@@ -100,6 +101,7 @@ const RootNavigator = () => {
     {name: screen.nationalPark, component: NationalParkList},
     {name: screen.registerRepair, component: RegisterRepair},
     {name: screen.historyRepair, component: MainRepair},
+    {name: screen.cpfes, component: CPFESScreen},
   ];
 
   return (

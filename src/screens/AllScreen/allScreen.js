@@ -47,4 +47,5 @@ export const screen = {
   detailNationPark: 'DetailNationPark',
   registerRepair: 'RegisterRepair',
   historyRepair: 'HistoryRepair',
+  cpfes: 'CPFES',
 };

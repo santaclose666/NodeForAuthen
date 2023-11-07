@@ -19,7 +19,7 @@ export const forestryDepartment = [
   },
   {
     featureName: 'CPFES',
-    component: null,
+    component: screen.cpfes,
     icon: Images.co2,
   },
   {

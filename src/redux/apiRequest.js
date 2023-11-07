@@ -391,7 +391,7 @@ export const approveWorkSchedule = async data => {
 export const cancelWorkSchedule = async data => {
   try {
     const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/tuchoi/${data.id_lichcongtac}`;
-    const apiXMG = `-	https://management.xuanmaijsc.vn/api/lichcongtac/tuchoi/${data.id_lichcongtac}`;
+    const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/tuchoi/${data.id_lichcongtac}`;
     const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
 
     await axios.post(api, {

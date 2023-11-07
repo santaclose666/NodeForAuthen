@@ -380,7 +380,10 @@ const HistoryWorkShedule = ({navigation, route}) => {
         ? '#f9dfe0'
         : bgColorStatus;
 
-    const filterUser = staffs.filter(staff => staff.id === item.id_user)[0];
+    const filterUser =
+      unit === 'IFEE'
+        ? staffs.filter(staff => staff.id_ifee === item.id_user)[0]
+        : staffs.filter(staff => staff.id_xmg === item.id_user)[0];
     const subject =
       filterUser?.tenphong === undefined
         ? 'Không xác định'

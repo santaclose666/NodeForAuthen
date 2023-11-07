@@ -344,7 +344,10 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
       );
     };
 
-    const userFilter = staffs.filter(user => item.id_user === user.id)[0];
+    const userFilter =
+      unit === 'IFEE'
+        ? staffs.filter(user => user.id_ifee === item.id_user)[0]
+        : staffs.filter(user => user.id_xmg === item.id_user)[0];
     return (
       <TouchableOpacity
         onPress={() => {

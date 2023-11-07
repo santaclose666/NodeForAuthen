@@ -286,7 +286,10 @@ const HistoryApplyLeave = ({navigation, route}) => {
     //   );
     // };
 
-    const filterUser = staffs.filter(user => user.id == item.id_nhansu)[0];
+    const filterUser =
+      unit === 'IFEE'
+        ? staffs.filter(user => user.id_ifee == item.id_nhansu)[0]
+        : staffs.filter(user => user.id_xmg == item.id_nhansu)[0];
 
     const avtUser = filterUser?.path ? filterUser?.path : defaultIFEE;
 

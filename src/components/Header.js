@@ -29,6 +29,7 @@ const Header = ({title, navigation, refreshData, logo, handleFilter, unit}) => {
     title === 'Tiêu chuẩn Việt Nam' ||
     title === 'Giống Lâm nghiệp' ||
     title === 'Văn phòng 809' ||
+    title === 'CPFES' ||
     title.includes('VQG');
 
   return (
