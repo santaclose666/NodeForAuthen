@@ -78,8 +78,9 @@ export const getDayOfWeek = () => {
   ];
 
   const currMonth = moment(new Date()).format('MM');
+  const currentYear = moment(new Date()).format('YYYY');
 
-  return {currMonth, dayOfWeek};
+  return {currMonth, currentYear, dayOfWeek};
 };
 
 export const getCoords = () => {

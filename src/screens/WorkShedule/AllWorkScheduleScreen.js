@@ -165,7 +165,8 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
               user?.vitri_ifee == 1 ||
               (user?.vitri_ifee == 3 &&
                 filterUser?.vitri_ifee > 3 &&
-                user?.tenphong == filterUser?.tenphong))
+                user?.tenphong == filterUser?.tenphong &&
+                user.tendonvi === unit))
           );
         } else {
           return (
@@ -174,7 +175,8 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
               user?.vitri_ifee == 1 ||
               (user?.vitri_ifee == 3 &&
                 filterUser.info_phong[0]?.vitri_ifee > 3 &&
-                user?.tenphong == filterUser.info_phong[0]?.tenphong))
+                user?.tenphong == filterUser.info_phong[0]?.tenphong &&
+                user.tendonvi === unit))
           );
         }
       };
@@ -248,7 +250,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
               />
             </View>
           </View>
-          {user?.tendonvi === unit && checkRole() && (
+          {checkRole() && (
             <TouchableOpacity
               onPress={() => {
                 const data = {
@@ -269,8 +271,8 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
             <View
               style={{
                 position: 'absolute',
-                top: hp('1.8%'),
-                right: wp('2.8%'),
+                top: hp('1.6%'),
+                right: wp('2.6%'),
               }}>
               <Image source={Images.gotWarning} style={styles.iconic} />
             </View>
@@ -293,7 +295,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
             <Text
               style={
                 styles.headerText
-              }>{`${currentDate.currMonth}/${totalWorkData?.nam}`}</Text>
+              }>{`${currentDate.currMonth}/${currentDate?.currentYear}`}</Text>
           </View>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {currentDate.dayOfWeek.map((item, index) => {
@@ -404,8 +406,8 @@ const styles = StyleSheet.create({
   },
 
   iconic: {
-    width: 25,
-    height: 25,
+    width: 22,
+    height: 22,
   },
 
   title: {

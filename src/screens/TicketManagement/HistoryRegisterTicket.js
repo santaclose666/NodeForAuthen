@@ -141,6 +141,7 @@ const HistoryRegisterTicket = ({navigation, route}) => {
 
   const handlePickOption = useCallback(
     index => {
+      bottomSheetModalRef.current?.dismiss();
       setIndexPicker(index);
     },
     [indexPicker],
@@ -215,13 +216,13 @@ const HistoryRegisterTicket = ({navigation, route}) => {
     const date = changeFormatDate(filterDateTime[0]);
     const time = filterDateTime[1];
 
-    const checktStatus = () => {
-      return (
-        (item.status !== 0 &&
-          (user?.id_ht === 1 || user?.id_ht === 20 || user?.id_ht === 28)) ||
-        (user?.id_ht !== 1 && user?.id_ht !== 20 && user?.id_ht !== 28)
-      );
-    };
+    // const checktStatus = () => {
+    //   return (
+    //     (item.status !== 0 &&
+    //       (user?.id_ht === 1 || user?.id_ht === 20 || user?.id_ht === 28)) ||
+    //     (user?.id_ht !== 1 && user?.id_ht !== 20 && user?.id_ht !== 28)
+    //   );
+    // };
 
     const checkRole = () => {
       return (

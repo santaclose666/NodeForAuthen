@@ -507,7 +507,10 @@ const HistoryRegisterVehicleScreen = ({navigation, route}) => {
           {approveArr?.map((item, index) => {
             return (
               <TouchableOpacity
-                onPress={() => handlePickOption(index)}
+                onPress={() => {
+                  handlePickOption(index);
+                  bottomSheetModalRef.current?.dismiss();
+                }}
                 key={index}
                 style={{
                   alignItems: 'center',

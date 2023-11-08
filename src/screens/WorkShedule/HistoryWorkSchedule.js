@@ -263,6 +263,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
   };
 
   const handleToggleFinish = item => {
+    bottomSheetModalRef.current?.dismiss();
     setSelectedItem(item);
     setToggleFinishModal(true);
   };
@@ -270,6 +271,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
   const handlePickOption = useCallback(
     index => {
       setIndexPicker(index);
+      bottomSheetModalRef.current?.dismiss();
     },
     [indexPicker],
   );

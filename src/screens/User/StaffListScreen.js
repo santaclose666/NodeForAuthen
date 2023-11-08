@@ -141,7 +141,7 @@ const StaffListScreen = ({navigation, route}) => {
             backgroundColor: Colors.WHITE,
             paddingHorizontal: Dimension.setWidth(1),
             paddingVertical: Dimension.setWidth(2),
-            marginVertical: Dimension.setWidth(1),
+            marginVertical: Dimension.setWidth(1.2),
             marginHorizontal: Dimension.setWidth(2),
             ...shadowIOS,
           }}>

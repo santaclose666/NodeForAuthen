@@ -565,11 +565,11 @@ export const WarningModal = ({
           }}>
           <Image
             src={mainURL + item?.path}
-            style={{height: 55, width: 55, borderRadius: 50}}
+            style={{height: 60, width: 60, borderRadius: 50}}
           />
           <Text
             style={{
-              fontSize: Dimension.fontSize(17),
+              fontSize: wp('3.8%'),
               fontFamily: Fonts.SF_MEDIUM,
               ...fontDefault,
               marginBottom: Dimension.setHeight(0.6),
@@ -578,9 +578,10 @@ export const WarningModal = ({
           </Text>
           <Text
             style={{
-              fontSize: Dimension.fontSize(16),
+              fontSize: wp('4%'),
               fontFamily: Fonts.SF_MEDIUM,
               ...fontDefault,
+              textAlign: 'center',
             }}>
             {item?.noidung}
           </Text>

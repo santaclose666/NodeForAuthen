@@ -22,7 +22,7 @@ import {DisplayNotificationModal} from '../../components/Modal';
 import Images from '../../contants/Images';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
-import { screen } from '../AllScreen/allScreen';
+import {screen} from '../AllScreen/allScreen';
 
 const NotifiScreen = ({navigation, route}) => {
   const receiveNotifi = route.params?.notifi;
@@ -215,7 +215,7 @@ const NotifiScreen = ({navigation, route}) => {
                 fontFamily: Fonts.SF_MEDIUM,
                 color: Colors.INACTIVE_GREY,
               }}>
-              Không có thông báo nào
+              Không có thông báo
             </Text>
           )}
         </View>

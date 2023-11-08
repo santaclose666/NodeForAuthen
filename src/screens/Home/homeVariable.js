@@ -146,14 +146,14 @@ export const IFEEInternal = [
     icon: Images.busy,
   },
   {
-    featureName: 'HPBD',
-    component: screen.hpbdList,
-    icon: Images.happybd,
-  },
-  {
     featureName: 'Sửa chữa',
     component: screen.historyRepair,
     icon: Images.repair,
+  },
+  {
+    featureName: 'HPBD',
+    component: screen.hpbdList,
+    icon: Images.happybd,
   },
   {
     featureName: 'Gửi thông báo',
