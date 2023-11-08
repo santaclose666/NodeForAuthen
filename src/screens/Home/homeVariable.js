@@ -99,7 +99,7 @@ export const VNUF = [
   },
   {
     featureName: 'IFEE',
-    component: null,
+    component: screen.ifee,
     icon: Images.IFEELogo,
   },
   {

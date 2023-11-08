@@ -48,4 +48,5 @@ export const screen = {
   registerRepair: 'RegisterRepair',
   historyRepair: 'HistoryRepair',
   cpfes: 'CPFES',
+  ifee: 'IFEE',
 };
