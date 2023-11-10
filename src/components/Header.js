@@ -19,10 +19,6 @@ const Header = ({title, navigation, refreshData, logo, handleFilter, unit}) => {
   const showCreateButton =
     title.includes('Lịch sử') || title.includes('Theo dõi');
 
-  console.log(
-    title == 'Lịch sử đăng kí sửa chữa' || title == 'Theo dõi sửa chữa',
-  );
-
   const showFitlerButon =
     title === 'Định mức Kinh tế Kĩ thuật' ||
     title === 'Quỹ bảo vệ phát triển rừng' ||

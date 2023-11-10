@@ -79,7 +79,6 @@ const TrackRepair = ({navigation, unit}) => {
 
   const fetchListRepair = async () => {
     try {
-      console.log('fetch');
       const data = {
         tendonvi: unit,
       };
@@ -107,7 +106,6 @@ const TrackRepair = ({navigation, unit}) => {
   };
 
   useLayoutEffect(() => {
-    console.log('render');
     fetchListRepair();
   }, []);
 

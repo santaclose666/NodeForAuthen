@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useCallback, useRef} from 'react';
+import React, {useState, useLayoutEffect, useCallback, memo} from 'react';
 import {
   View,
   Text,
@@ -39,8 +39,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import Modal from 'react-native-modal';
 import {fontDefault} from '../../contants/Variable';
+import {useForm, useFieldArray, Controller} from 'react-hook-form';
 
 if (Platform.OS == 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -87,138 +87,40 @@ const RegisterRepair = ({navigation, route}) => {
     (subject || temp)?.filter(item => item.id === parseInt(user?.id_phong))[0]
       ?.id,
   );
-  const [toggleModal, setToggleModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [textTemp, setTextTemp] = useState('');
-  const [isDevice, setIsDevice] = useState(null);
-  const [errInputModal, setErrInputModal] = useState(false);
-  const inputModalRef = useRef(null);
+  const {register, control, handleSubmit} = useForm();
+  const {fields, append, remove, update} = useFieldArray({
+    control,
+    name: 'listDevices',
+  });
 
-  const handleAddRepairDevice = () => {
+  const startAnimation = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    const updatedArrRender = [...arrRender];
-
-    updatedArrRender.push({
-      listDevice: listDevice,
-      listValue: '',
-      status: '',
-      isOrther: false,
-    });
-    setArrRender(updatedArrRender);
   };
 
-  const handleDeleteRepairDevice = index => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    const updatedArrRender = [...arrRender];
-
-    if (updatedArrRender?.length == 1) {
-      return;
-    } else {
-      updatedArrRender.splice(index, 1);
-
-      setArrRender(updatedArrRender);
-    }
-  };
-
-  const handleRegister = async () => {
-    const devicePicker = arrRender.map(item => {
-      return item.listValue;
-    });
-
-    const status = arrRender.map(item => {
-      return item.status;
-    });
-
-    if (
-      subjectValue?.length != 0 &&
-      registerPerson?.length != 0 &&
-      devicePicker?.length != 0 &&
-      status?.length != 0
-    ) {
-      setLoading(true);
-      const data = {
-        id_user: idByUnit,
-        id_phong: subjectValue,
-        hoten: registerPerson,
-        arr_thietbi: devicePicker,
-        arr_tinhtrang: status,
-        tendonvi: unit,
-      };
-      try {
-        const res = await registerRepair(data);
-
-        if (res) {
-          const donvi = {
-            tendonvi: unit,
-          };
-          getRepairApproveList(dispatch, donvi);
-          ToastSuccess('Đăng kí thành công');
-          setLoading(false);
-
-          setTimeout(() => {
-            navigation.goBack();
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      ToastAlert('Chưa nhập đầy đủ thông tin!');
-    }
-  };
-
-  const handlePick = (status, data, index) => {
-    setSelectedItem({...data, index});
-    setToggleModal(true);
-    setIsDevice(status);
-
-    setTimeout(() => {
-      inputModalRef.current.focus();
-    });
+  const handleRegister = async data => {
+    console.log(data);
   };
 
   const handlePickType = (item, index) => {
-    const updatedArrRender = [...arrRender];
-
-    const checkExist = updatedArrRender.some(
-      filter => filter.listValue == item.thietbi,
-    );
+    const checkExist = fields.some(filter => filter.listValue == item.thietbi);
     if (checkExist) {
       ToastAlert('Thiết bị đã tồn tại!');
     } else {
       if (item.thietbi == 'Khác') {
-        updatedArrRender[index].isOrther = true;
-        updatedArrRender[index].listValue = '';
-        updatedArrRender[index].status = '';
-
-        setArrRender(updatedArrRender);
-        setTimeout(() => {
-          handlePick(true, item, index);
+        update(index, {
+          list: listDevice,
+          listValue: '',
+          status: '',
+          isOther: true,
         });
       } else {
-        updatedArrRender[index].listValue = item.thietbi;
-
-        setArrRender(updatedArrRender);
+        update(index, {
+          list: listDevice,
+          listValue: item.thietbi,
+          status: '',
+          isOther: false,
+        });
       }
-    }
-  };
-
-  const handleConfirmText = () => {
-    if (textTemp?.length != 0) {
-      let updatedArrRender = [...arrRender];
-
-      if (isDevice) {
-        updatedArrRender[selectedItem.index].listValue = textTemp;
-      } else {
-        updatedArrRender[selectedItem.index].status = textTemp;
-      }
-
-      setArrRender(updatedArrRender);
-      setToggleModal(false);
-      setErrInputModal(false);
-      setTextTemp('');
-    } else {
-      setErrInputModal(true);
     }
   };
 
@@ -228,19 +130,11 @@ const RegisterRepair = ({navigation, route}) => {
         tendonvi: unit,
       };
       const data = await getRepairList(donvi);
+      const list = [...data, {id: data?.length + 1, thietbi: 'Khác'}];
 
-      const listDevice = [...data, {id: data?.length + 1, thietbi: 'Khác'}];
-      const tempArr = [
-        {
-          listDevice: listDevice,
-          listValue: '',
-          status: '',
-          isOrther: false,
-        },
-      ];
+      update(0, {list: list, listValue: '', status: '', isOther: false});
 
-      setArrRender(tempArr);
-      setListDevice(listDevice);
+      setListDevice(list);
     } catch (error) {
       console.log(error);
     }
@@ -258,7 +152,8 @@ const RegisterRepair = ({navigation, route}) => {
       <View style={styles.rightSwipeContainer}>
         <TouchableOpacity
           onPress={() => {
-            handleDeleteRepairDevice(index);
+            startAnimation();
+            remove(index);
           }}
           style={styles.btnRightSwipe}>
           <Image source={Images.delete} style={{width: 40, height: 40}} />
@@ -267,108 +162,102 @@ const RegisterRepair = ({navigation, route}) => {
     );
   };
 
-  const RenderOptionData = useCallback(
-    ({data, index}) => {
-      return (
-        <Swipeable
-          renderRightActions={() => {
-            return rightSwipe(index);
+  const RenderOptionData = memo(({data, index}) => {
+    console.log(data.isOrther);
+    return (
+      <Swipeable
+        renderRightActions={() => {
+          return rightSwipe(index);
+        }}>
+        <View
+          key={index}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}>
-          <View
-            key={index}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View style={[styles.containerEachLine, {width: '48.6%'}]}>
-              <View style={rowAlignCenter}>
-                <Text style={styles.title}>Loại thiết bị</Text>
-                <RedPoint />
-                {data.isOrther && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      const updatedArrRender = [...arrRender];
-                      updatedArrRender[index].listValue = '';
-                      updatedArrRender[index].status = '';
-                      updatedArrRender[index].isOrther = false;
-
-                      setArrRender(updatedArrRender);
-                    }}
-                    style={{marginLeft: '28%'}}>
-                    <Image
-                      source={Images.arrow}
-                      style={{
-                        width: 20,
-                        height: 20,
-                        tintColor: Colors.DEFAULT_GREEN,
-                      }}
-                    />
-                  </TouchableOpacity>
-                )}
-              </View>
-              {!data.isOrther ? (
-                <Dropdown
-                  style={styles.dropdown}
-                  placeholder="Chọn loại thiết bị"
-                  autoScroll={false}
-                  showsVerticalScrollIndicator={false}
-                  placeholderStyle={styles.placeholderStyle}
-                  selectedTextStyle={styles.selectedTextStyle}
-                  containerStyle={styles.containerOptionStyle}
-                  iconStyle={styles.iconStyle}
-                  itemContainerStyle={styles.itemContainer}
-                  itemTextStyle={styles.itemText}
-                  fontFamily={Fonts.SF_MEDIUM}
-                  activeColor="#eef2feff"
-                  data={data.listDevice}
-                  maxHeight={Dimension.setHeight(30)}
-                  labelField="thietbi"
-                  valueField="thietbi"
-                  value={data.listValue}
-                  onChange={item => {
-                    handlePickType(item, index);
-                  }}
-                />
-              ) : (
+          <View style={[styles.containerEachLine, {width: '48.6%'}]}>
+            <View style={rowAlignCenter}>
+              <Text style={styles.title}>Loại thiết bị</Text>
+              <RedPoint />
+              {data.isOrther && (
                 <TouchableOpacity
                   onPress={() => {
-                    handlePick(true, data, index);
-                  }}>
-                  <Text style={styles.textPicker}>{data.listValue}</Text>
+                    update(index, {
+                      list: listDevice,
+                      listValue: '',
+                      status: '',
+                      isOther: false,
+                    });
+                  }}
+                  style={{marginLeft: '28%'}}>
+                  <Image
+                    source={Images.arrow}
+                    style={{
+                      width: 20,
+                      height: 20,
+                      tintColor: Colors.DEFAULT_GREEN,
+                    }}
+                  />
                 </TouchableOpacity>
               )}
             </View>
-            <TouchableOpacity
-              disabled={data.listValue?.length > 0 ? false : true}
-              onPress={() => {
-                handlePick(false, data, index);
-              }}
-              style={[styles.containerEachLine, {width: '48.6%'}]}>
-              <View style={rowAlignCenter}>
-                <Text
-                  style={[
-                    styles.title,
-                    {
-                      color:
-                        data.listValue?.length > 0
-                          ? '#8bc7bc'
-                          : Colors.INACTIVE_GREY,
-                    },
-                  ]}>
-                  Tình trạng hoạt động
-                </Text>
-                <RedPoint />
-              </View>
-
-              <Text style={styles.textPicker}>{data.status}</Text>
-            </TouchableOpacity>
+            {!data.isOrther ? (
+              <Dropdown
+                style={styles.dropdown}
+                placeholder="Chọn loại thiết bị"
+                autoScroll={false}
+                showsVerticalScrollIndicator={false}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerOptionStyle}
+                iconStyle={styles.iconStyle}
+                itemContainerStyle={styles.itemContainer}
+                itemTextStyle={styles.itemText}
+                fontFamily={Fonts.SF_MEDIUM}
+                activeColor="#eef2feff"
+                data={data.list}
+                maxHeight={Dimension.setHeight(30)}
+                labelField="thietbi"
+                valueField="thietbi"
+                value={data.listValue}
+                onChange={item => {
+                  handlePickType(item, index);
+                }}
+              />
+            ) : (
+              <TextInput
+                {...register(`listDevices.${index}.listValue`, {
+                  required: true,
+                })}
+              />
+            )}
           </View>
-        </Swipeable>
-      );
-    },
-    [arrRender],
-  );
+          <View style={[styles.containerEachLine, {width: '48.6%'}]}>
+            <View style={rowAlignCenter}>
+              <Text
+                style={[
+                  styles.title,
+                  {
+                    color:
+                      data.listValue?.length > 0
+                        ? '#8bc7bc'
+                        : Colors.INACTIVE_GREY,
+                  },
+                ]}>
+                Tình trạng hoạt động
+              </Text>
+              <RedPoint />
+            </View>
+
+            <TextInput
+              {...register(`listDevices.${index}.status`, {required: true})}
+            />
+          </View>
+        </View>
+      </Swipeable>
+    );
+  });
 
   return (
     <LinearGradientUI>
@@ -433,8 +322,8 @@ const RegisterRepair = ({navigation, route}) => {
             <FlatList
               scrollEnabled={false}
               showsVerticalScrollIndicator={false}
-              data={arrRender}
-              keyExtractor={(_, index) => index.toString()}
+              data={fields}
+              keyExtractor={item => item.id}
               renderItem={({item, index}) => (
                 <RenderOptionData data={item} index={index} />
               )}
@@ -442,139 +331,24 @@ const RegisterRepair = ({navigation, route}) => {
               windowSize={6}
               removeClippedSubviews={true}
             />
-            <RegisterBtn nameBtn={'Đăng kí'} onEvent={handleRegister} />
+            <RegisterBtn
+              nameBtn={'Đăng kí'}
+              onEvent={handleSubmit(handleRegister)}
+            />
           </KeyboardAwareScrollView>
         </ScrollView>
-        <Modal
-          isVisible={toggleModal}
-          animationIn="fadeInUp"
-          animationInTiming={100}
-          animationOut="fadeOutDown"
-          animationOutTiming={100}
-          avoidKeyboard={true}>
-          <View
-            style={{
-              flex: 1,
-              position: 'absolute',
-              alignSelf: 'center',
-              width: Dimension.setWidth(85),
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 14,
-              paddingHorizontal: Dimension.setWidth(3),
-              backgroundColor: '#e6d2c0',
-            }}>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginVertical: Dimension.setHeight(1),
-                borderBottomWidth: 0.8,
-                borderBlockColor: Colors.INACTIVE_GREY,
-                width: '100%',
-                height: Dimension.setHeight(4.5),
-              }}>
-              <Text
-                style={{
-                  fontFamily: Fonts.SF_BOLD,
-                  fontSize: Dimension.fontSize(20),
-                  color: '#f0b263',
-                }}>
-                Tình trạng
-              </Text>
-            </View>
-
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingVertical: Dimension.setHeight(1.5),
-                paddingHorizontal: Dimension.setWidth(3),
-                width: '100%',
-              }}>
-              <Image
-                source={Images.brokenItem}
-                style={{height: 55, width: 55}}
-              />
-              <Text
-                style={{
-                  marginLeft: Dimension.setWidth(3),
-                  fontSize: Dimension.fontSize(17),
-                  fontFamily: Fonts.SF_MEDIUM,
-                  textAlign: 'center',
-                  ...fontDefault,
-                }}>
-                {`Thiết bị lỗi: ${selectedItem?.listValue}`}
-              </Text>
-              <View
-                style={{
-                  backgroundColor: '#ffffff',
-                  borderRadius: 12,
-                  width: '86%',
-                  paddingLeft: 6,
-                  borderWidth: 1,
-                  borderColor: !errInputModal ? Colors.INACTIVE_GREY : 'red',
-                }}>
-                <TextInput
-                  ref={inputModalRef}
-                  style={{
-                    width: '100%',
-                    height: Platform.OS == 'ios' ? hp('4%') : 'auto',
-                  }}
-                  placeholder={
-                    isDevice ? 'Nhập thiết bị khác' : 'Mô tả tình trạng lỗi'
-                  }
-                  value={textTemp}
-                  onChangeText={e => {
-                    setTextTemp(e);
-                  }}
-                />
-              </View>
-            </View>
-
-            <View
-              style={[
-                styles.containerEachLineModal,
-                {
-                  width: Dimension.setWidth(56),
-                  justifyContent: 'space-between',
-                },
-              ]}>
-              <TouchableOpacity
-                onPress={handleConfirmText}
-                style={[
-                  styles.confirmBtn,
-                  {
-                    borderColor: '#57b85d',
-                  },
-                ]}>
-                <Text style={[styles.textConfirm, {color: '#57b85d'}]}>
-                  Xác nhận
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setToggleModal(false);
-                  setErrInputModal(false);
-                }}
-                style={[styles.confirmBtn, {borderColor: '#f0b263'}]}>
-                <Text style={[styles.textConfirm, {color: '#f0b263'}]}>
-                  Hủy bỏ
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity
-              onPress={() => {
-                setToggleModal(false);
-                setErrInputModal(false);
-              }}
-              style={{position: 'absolute', right: 8, top: 8}}>
-              <Image source={Images.minusclose} style={styles.btnModal} />
-            </TouchableOpacity>
-          </View>
-        </Modal>
-        <AddBtn event={handleAddRepairDevice} />
+        <AddBtn
+          event={() => {
+            console.log(fields);
+            startAnimation();
+            append({
+              list: listDevice,
+              listValue: '',
+              status: '',
+              isOther: false,
+            });
+          }}
+        />
         {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>
