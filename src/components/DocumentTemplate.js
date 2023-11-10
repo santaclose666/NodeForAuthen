@@ -354,20 +354,22 @@ const DocumentTemplate = ({
                 </View>
               </View>
 
-              <TouchableOpacity
-                onPress={() => {
-                  handleCheckDownload(item.id, item.path);
-                }}
-                style={{width: 40, height: 40}}>
-                <Image
-                  source={Images.download}
-                  style={{
-                    width: 30,
-                    height: 30,
-                    marginRight: Dimension.setWidth(3),
+              {item.allow_download !== 0 && (
+                <TouchableOpacity
+                  onPress={() => {
+                    handleCheckDownload(item.id, item.path);
                   }}
-                />
-              </TouchableOpacity>
+                  style={{width: 40, height: 40}}>
+                  <Image
+                    source={Images.download}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginRight: Dimension.setWidth(3),
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
 
             <TouchableOpacity
@@ -1029,7 +1031,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.SF_REGULAR,
     fontSize: Dimension.fontSize(14),
     marginLeft: Dimension.setWidth(1),
-    textAlign: 'justify',
+    textAlign: 'auto',
   },
   searchInput: {
     alignSelf: 'center',
