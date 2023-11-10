@@ -37,6 +37,7 @@
     "postinstall-postinstall": "^2.1.0",
     "proj4": "^2.9.0",
     "react": "18.2.0",
+    "react-hook-form": "^7.48.2",
     "react-native": "0.72.3",
     "react-native-asset": "^2.1.1",
     "react-native-blob-util": "^0.19.1",

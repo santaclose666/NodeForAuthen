@@ -46,9 +46,7 @@ const approveArr = [
   },
 ];
 
-const HistoryRepair = ({navigation, unit}) => {
-  const user = useSelector(state => state.auth.login?.currentUser);
-  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
+const TrackRepair = ({navigation, unit}) => {
   const repairData = useSelector(state => state.repair.repair?.data);
   const [loading, setLoading] = useState(true);
   const [indexPicker, setIndexPicker] = useState(0);
@@ -202,7 +200,11 @@ const HistoryRepair = ({navigation, unit}) => {
   return (
     <LinearGradientUI>
       <SafeAreaView style={styles.container}>
-        <Header title={`Theo dõi sửa chữa`} navigation={navigation} />
+        <Header
+          title={`Theo dõi sửa chữa`}
+          navigation={navigation}
+          unit={unit}
+        />
 
         <View
           style={{
@@ -577,4 +579,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HistoryRepair;
+export default TrackRepair;

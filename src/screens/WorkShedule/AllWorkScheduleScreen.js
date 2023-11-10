@@ -165,18 +165,16 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
               user?.vitri_ifee == 1 ||
               (user?.vitri_ifee == 3 &&
                 filterUser?.vitri_ifee > 3 &&
-                user?.tenphong == filterUser?.tenphong &&
-                user.tendonvi === unit))
+                user?.tenphong == filterUser?.tenphong ))
           );
         } else {
           return (
             item.canhbao == 0 &&
             (user?.quyentruycap === 1 ||
               user?.vitri_ifee == 1 ||
-              (user?.vitri_ifee == 3 &&
-                filterUser.info_phong[0]?.vitri_ifee > 3 &&
-                user?.tenphong == filterUser.info_phong[0]?.tenphong &&
-                user.tendonvi === unit))
+              (user?.truongbophan == 1 &&
+                filterUser?.info_phong[0]?.vitri_ifee > 3 &&
+                user?.tenphong == filterUser.info_phong[0]?.tenphong))
           );
         }
       };

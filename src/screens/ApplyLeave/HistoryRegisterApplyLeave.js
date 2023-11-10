@@ -69,6 +69,7 @@ const HistoryApplyLeave = ({navigation, route}) => {
 
   useEffect(() => {
     handleGetAllLeaveData();
+    console.log(user);
   }, []);
 
   const handleGetAllLeaveData = async () => {
@@ -285,7 +286,7 @@ const HistoryApplyLeave = ({navigation, route}) => {
     const checkRole = () => {
       return (
         (item.status == 0 || item.yc_update == 1) &&
-        (user?.quyentruycap <= 2 || unitRole(item))
+        (user?.quyentruycap <= 2 || user?.truongbophan === 1 || unitRole(item))
       );
     };
 

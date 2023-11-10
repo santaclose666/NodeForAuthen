@@ -82,10 +82,10 @@ const RegisterRepair = ({navigation, route}) => {
   const [listDevice, setListDevice] = useState([]);
   const [arrRender, setArrRender] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [registerPerson, setRegisterPerson] = useState(user.hoten);
+  const [registerPerson, setRegisterPerson] = useState(user?.hoten);
   const [subjectValue, setSubjectValue] = useState(
     (subject || temp)?.filter(item => item.id === parseInt(user?.id_phong))[0]
-      .id,
+      ?.id,
   );
   const [toggleModal, setToggleModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);

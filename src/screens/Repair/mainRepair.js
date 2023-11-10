@@ -10,6 +10,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const MainRepair = ({navigation, route}) => {
   const unit = route.params;
+  console.log(unit);
   const safeDimension = useSafeAreaInsets();
   const menuArr = [
     {

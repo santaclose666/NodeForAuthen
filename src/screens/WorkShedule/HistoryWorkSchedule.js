@@ -412,7 +412,7 @@ const HistoryWorkShedule = ({navigation, route}) => {
     const checkRole = () => {
       return (
         (item?.status == 0 || item?.kt_congtac == 1) &&
-        (user?.quyentruycap <= 2 || unitRole(item))
+        (user?.quyentruycap <= 2 || user?.truongbophan === 1 || unitRole(item))
       );
     };
 
