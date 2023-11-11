@@ -80,18 +80,23 @@ const RegisterRepair = ({navigation, route}) => {
   const subject = useSelector(state => state.subject?.subject?.data);
   const dispatch = useDispatch();
   const [listDevice, setListDevice] = useState([]);
-  const [arrRender, setArrRender] = useState([]);
   const [loading, setLoading] = useState(false);
   const [registerPerson, setRegisterPerson] = useState(user?.hoten);
   const [subjectValue, setSubjectValue] = useState(
     (subject || temp)?.filter(item => item.id === parseInt(user?.id_phong))[0]
       ?.id,
   );
-  const {register, control, handleSubmit} = useForm();
+  const {register, control, handleSubmit, setValue, trigger} = useForm();
   const {fields, append, remove, update} = useFieldArray({
     control,
     name: 'listDevices',
   });
+  const defaultVal = {
+    list: listDevice,
+    listValue: '',
+    status: '',
+    isOther: false,
+  };
 
   const startAnimation = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -102,24 +107,16 @@ const RegisterRepair = ({navigation, route}) => {
   };
 
   const handlePickType = (item, index) => {
+    console.log(item.thietbi == 'Khác');
     const checkExist = fields.some(filter => filter.listValue == item.thietbi);
     if (checkExist) {
       ToastAlert('Thiết bị đã tồn tại!');
     } else {
       if (item.thietbi == 'Khác') {
-        update(index, {
-          list: listDevice,
-          listValue: '',
-          status: '',
-          isOther: true,
-        });
+        setValue(`listDevices.${index}.isOther`, true);
+        trigger();
       } else {
-        update(index, {
-          list: listDevice,
-          listValue: item.thietbi,
-          status: '',
-          isOther: false,
-        });
+        setValue(`listDevices.${index}.listValue`, item.thietbi);
       }
     }
   };
@@ -145,6 +142,7 @@ const RegisterRepair = ({navigation, route}) => {
       getSubject(dispatch);
     }
     fetchAllDevices();
+    console.log('rerender');
   }, []);
 
   const rightSwipe = index => {
@@ -183,12 +181,7 @@ const RegisterRepair = ({navigation, route}) => {
               {data.isOrther && (
                 <TouchableOpacity
                   onPress={() => {
-                    update(index, {
-                      list: listDevice,
-                      listValue: '',
-                      status: '',
-                      isOther: false,
-                    });
+                    setValue(`listDevices.${index}`, defaultVal);
                   }}
                   style={{marginLeft: '28%'}}>
                   <Image
@@ -202,7 +195,25 @@ const RegisterRepair = ({navigation, route}) => {
                 </TouchableOpacity>
               )}
             </View>
-            {!data.isOrther ? (
+            {data.isOrther ? (
+              <Controller
+                control={control}
+                render={({field}) => (
+                  <TextInput
+                    {...field}
+                    placeholder={`Item ${index + 1}`}
+                    style={{
+                      borderBottomWidth: 1,
+                      borderBottomColor: Colors.INACTIVE_GREY,
+                    }}
+                    onChangeText={e => {
+                      setValue(`listDevices.${index}.listValue`, e);
+                    }}
+                  />
+                )}
+                name={`listDevices.${index}.listValue`}
+              />
+            ) : (
               <Dropdown
                 style={styles.dropdown}
                 placeholder="Chọn loại thiết bị"
@@ -225,12 +236,6 @@ const RegisterRepair = ({navigation, route}) => {
                   handlePickType(item, index);
                 }}
               />
-            ) : (
-              <TextInput
-                {...register(`listDevices.${index}.listValue`, {
-                  required: true,
-                })}
-              />
             )}
           </View>
           <View style={[styles.containerEachLine, {width: '48.6%'}]}>
@@ -250,8 +255,22 @@ const RegisterRepair = ({navigation, route}) => {
               <RedPoint />
             </View>
 
-            <TextInput
-              {...register(`listDevices.${index}.status`, {required: true})}
+            <Controller
+              control={control}
+              render={({field}) => (
+                <TextInput
+                  {...field}
+                  placeholder={`Item ${index + 1}`}
+                  style={{
+                    borderBottomWidth: 1,
+                    borderBottomColor: Colors.INACTIVE_GREY,
+                  }}
+                  onChangeText={e => {
+                    setValue(`listDevices.${index}.status`, e);
+                  }}
+                />
+              )}
+              name={`listDevices.${index}.status`}
             />
           </View>
         </View>
