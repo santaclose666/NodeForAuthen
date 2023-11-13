@@ -219,15 +219,11 @@ const DocumentTemplate = ({
       if (identifi == 'year') {
         yearCondition =
           thenRemoveExist.length == 0 ||
-          thenRemoveExist.some(
-            year => parseInt(item?.nam?.split('/')[2]) == year.item,
-          );
+          thenRemoveExist.some(year => item?.nam.includes(year.item));
       } else {
         yearCondition =
           yearValue.length == 0 ||
-          yearValue.some(
-            year => parseInt(item?.nam?.split('/')[2]) == year.item,
-          );
+          yearValue.some(year => item?.nam.includes(year.item));
       }
 
       let stateCondition;
@@ -449,12 +445,33 @@ const DocumentTemplate = ({
                     </View>
                   </>
                 )}
+                {item?.tacgia && (
+                  <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
+                    <Image source={Images.dot} style={styles.dot} />
+                    <Text style={styles.title}>Tác giả: </Text>
+                    <Text style={styles.content}>{item?.tacgia}</Text>
+                  </View>
+                )}
+                {item?.dongtacgia && (
+                  <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
+                    <Image source={Images.dot} style={styles.dot} />
+                    <Text style={styles.title}>Đồng tác giả: </Text>
+                    <Text style={styles.content}>{item?.dongtacgia}</Text>
+                  </View>
+                )}
+                {item?.ngonngu && (
+                  <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
+                    <Image source={Images.dot} style={styles.dot} />
+                    <Text style={styles.title}>Ngôn ngữ: </Text>
+                    <Text style={styles.content}>{item?.ngonngu}</Text>
+                  </View>
+                )}
                 <View style={styles.subItem}>
                   <Image source={Images.dot} style={styles.dot} />
                   <Text style={styles.title}>Năm: </Text>
                   <Text style={styles.content}>{item?.nam}</Text>
                 </View>
-                {item?.id_donvi != 99 && (
+                {item?.id_donvi && (
                   <View style={[styles.subItem, {flexWrap: 'wrap'}]}>
                     <Image source={Images.dot} style={styles.dot} />
                     <Text style={styles.title}>Nguồn: </Text>

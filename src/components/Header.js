@@ -30,7 +30,7 @@ const Header = ({title, navigation, refreshData, logo, handleFilter, unit}) => {
     title === 'Giống Lâm nghiệp' ||
     title === 'Văn phòng 809' ||
     title === 'CPFES' ||
-    title === 'Viện Sinh thái rừng và Môi trường' ||
+    // title === 'Viện Sinh thái rừng và Môi trường' ||
     title.includes('VQG');
 
   return (
