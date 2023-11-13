@@ -12,6 +12,7 @@ import {
   TextInput,
   SafeAreaView,
   SwitchComponent,
+  ScrollView,
 } from 'react-native';
 import {Button, Center, Fab} from 'native-base';
 import MapView, {
@@ -33,6 +34,13 @@ import {
   compareDate,
   compareDateFomated,
 } from '../../utils/serviceFunction';
+import {
+  listDisplayLabel,
+  listDisplayLabelFull,
+  listDisplayLabelExplant,
+  listDisplayLabelExplantFull,
+  getCodeText,
+} from '../../utils/DBR_Rule';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {ToastAlert, ToastSuccess} from '../../components/Toast';
 import Moment from 'moment';
@@ -46,37 +54,6 @@ const LATITUDE = 21.1147;
 const LONGITUDE = 105.546;
 const LATITUDE_DELTA = 1;
 const LONGITUDE_DELTA = ASPECT_RATIO * LATITUDE_DELTA;
-
-const listDisplayLabel = [
-  'matinh',
-  'mahuyen',
-  'maxa',
-  'huyen',
-  'xa',
-  'churung',
-  'tk',
-  'khoanh',
-  'lo',
-  'ldlr',
-  'maldlr',
-  'sldlr',
-  'malr3',
-];
-const listDisplayLabelExplant = [
-  'Mã tỉnh',
-  'Mã huyện',
-  'Mã xã',
-  'Huyện',
-  'Xã',
-  'Chủ rừng',
-  'Tiểu khu',
-  'Khoảnh',
-  'Lô',
-  'Trạng thái',
-  'Mã trạng thái',
-  'Loài cây',
-  'Quy hoạch',
-];
 
 const listOptionPoint = [
   {label: 'Điểm cháy trong 24h qua', value: 1},
@@ -116,6 +93,10 @@ const MapScreen = ({navigation}) => {
   const [checkPick, setCheckPick] = useState(null);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);
   const [listFirePoint, setListFirePoint] = useState([]);
+  const [modalInfoVisible, setModalInfoVisible] = useState(false);
+  const [plotInfo, setPlotInfo] = useState({});
+  const [plotInfoFull, setPlotInfoFull] = useState({});
+  const [plotInfoShow, setPlotInfoShow] = useState({});
 
   const listProject = dataProjection.map(item => {
     return {label: `${item.province} - ${item.zone}`, value: item.epsg_code};
@@ -165,62 +146,57 @@ const MapScreen = ({navigation}) => {
       setViewFullInfo(false);
       const ApiCall = await fetch(linkAPIGetInfoFull);
       const regionFeatureInfo = await ApiCall.json();
-      let disPlayData = `Vị trí chọn: \n Latitude: ${roundNumber(
-        x,
-        5,
-      )} \n Longitude: ${roundNumber(y, 5)} \n`;
+
+      let disPlayData = {};
+      let disPlayDataFull = {};
+      let content = [];
+      let contentFull = [];
       // Dat vung to mau
-      setSelectRegion(regionFeatureInfo.features[0].geometry.coordinates[0][0]);
+      setSelectRegion(regionFeatureInfo.features[0].geometry.coordinates[0]);
       // lay tt thuoc tinh
       for (let [key, value] of Object.entries(
         regionFeatureInfo.features[0].properties,
       )) {
         for (var i = 0; i < listDisplayLabel.length; i++) {
           if (key.toLowerCase() === listDisplayLabel[i].toLowerCase()) {
-            disPlayData =
-              disPlayData + listDisplayLabelExplant[i] + ': ' + value + '\n';
+            content.push({
+              label: listDisplayLabelExplant[i],
+              value: getCodeText(key, value),
+            });
+          }
+        }
+        for (var i = 0; i < listDisplayLabelFull.length; i++) {
+          if (key.toLowerCase() === listDisplayLabelFull[i].toLowerCase()) {
+            contentFull.push({
+              label: listDisplayLabelExplantFull[i],
+              value: getCodeText(key, value),
+            });
           }
         }
       }
 
-      let disPlayDataFull = `Vị trí chọn: \n Latitude: ${roundNumber(
-        x,
-        5,
-      )} \n Longitude: ${roundNumber(y, 5)} \n`;
-      for (let [key, value] of Object.entries(
-        regionFeatureInfo.features[0].properties,
-      )) {
-        disPlayDataFull = disPlayDataFull + key + ': ' + value + '\n';
-      }
+      disPlayData = {
+        point: {
+          latitude: roundNumber(x, 5),
+          longitude: roundNumber(y, 5),
+        },
+        content: content,
+      };
+
+      disPlayDataFull = {
+        point: {
+          latitude: roundNumber(x, 5),
+          longitude: roundNumber(y, 5),
+        },
+        content: contentFull,
+      };
+
       setRegionFeatureInfo(regionFeatureInfo.features[0].properties);
       setLoadingWMSGetInfo(false);
-
-      Alert.alert(
-        'Thông tin đối tượng',
-        disPlayData,
-        [
-          {
-            text: 'Xem thông tin đầy đủ',
-            onPress: () =>
-              Alert.alert(
-                'Thông tin đối tượng',
-                disPlayDataFull,
-                [
-                  {
-                    text: 'Ok',
-                    onPress: () => setLoadingWMSGetInfo(false),
-                  },
-                ],
-                {cancelable: false},
-              ),
-          },
-          {
-            text: 'Ok',
-            onPress: () => setLoadingWMSGetInfo(false),
-          },
-        ],
-        {cancelable: false},
-      );
+      setPlotInfo(disPlayData);
+      setPlotInfoFull(disPlayDataFull);
+      setPlotInfoShow(disPlayData);
+      setModalInfoVisible(true);
     } catch (err) {
       console.log('222', err);
       setSelectRegion([]);
@@ -926,6 +902,157 @@ const MapScreen = ({navigation}) => {
       <Modal
         animationType="fade"
         transparent={true}
+        visible={modalInfoVisible}
+        onRequestClose={() => {
+          setModalInfoVisible(false);
+        }}>
+        {/* <Pressable style={[Platform.OS === "ios" ? styles.iOSBackdrop : styles.androidBackdrop, styles.backdrop]} onPress={() => this.setState({ setModalVisible: false })} /> */}
+        <View
+          style={{
+            backgroundColor: 'white',
+            width: '95%',
+            height: 'auto',
+            justifyContent: 'center',
+            alignItems: 'baseline',
+            alignSelf: 'center',
+            marginTop: '30%',
+            paddingHorizontal: 10,
+            borderRadius: 8,
+            maxHeight: '75%',
+          }}>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              color: 'rgba(32, 73, 68, 1)',
+              padding: 8,
+              alignSelf: 'center',
+            }}>
+            THÔNG TIN LÔ
+          </Text>
+          <ScrollView style={{width: '100%', height: 'auto'}}>
+            <Text style={[styles.title, {paddingHorizontal: 10}]}>
+              Toạ độ đã chọn
+            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flex: 2}}>
+                <Text
+                  style={[
+                    styles.itemText,
+                    {paddingHorizontal: 10, paddingVertical: 1},
+                  ]}>
+                  Kinh độ:
+                </Text>
+              </View>
+              <View style={{flex: 3}}>
+                <Text
+                  style={[
+                    styles.itemText,
+                    {paddingHorizontal: 10, paddingVertical: 1},
+                  ]}>
+                  {plotInfoShow.point?.latitude}
+                </Text>
+              </View>
+            </View>
+
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flex: 2}}>
+                <Text
+                  style={[
+                    styles.itemText,
+                    {paddingHorizontal: 10, paddingVertical: 1},
+                  ]}>
+                  Vĩ độ:
+                </Text>
+              </View>
+              <View style={{flex: 3}}>
+                <Text
+                  style={[
+                    styles.itemText,
+                    {paddingHorizontal: 10, paddingVertical: 1},
+                  ]}>
+                  {plotInfoShow.point?.longitude}
+                </Text>
+              </View>
+            </View>
+            <Text style={[styles.title, {paddingHorizontal: 10}]}>
+              Thông tin
+            </Text>
+            {plotInfoShow.content &&
+              plotInfoShow.content.map(item => {
+                return (
+                  <View style={{flexDirection: 'row', borderWidth: 0.25}}>
+                    <View style={{flex: 2.5, borderWidth: 0.25}}>
+                      <Text
+                        style={[
+                          styles.itemText,
+                          {
+                            paddingHorizontal: 10,
+                            paddingVertical: 1,
+                            padding: 2,
+                            fontWeight: 'bold',
+                          },
+                        ]}>
+                        {item.label}
+                      </Text>
+                    </View>
+                    <View style={{flex: 3, borderWidth: 0.25}}>
+                      <Text
+                        style={[
+                          styles.itemText,
+                          {
+                            paddingHorizontal: 10,
+                            paddingVertical: 1,
+                            padding: 2,
+                          },
+                        ]}>
+                        {item.value}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
+          </ScrollView>
+          <View
+            style={{
+              width: '100%',
+              paddingVertical: 10,
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+            }}>
+            <Button
+              style={{
+                borderRadius: 8,
+                backgroundColor: 'green',
+                width: '40%',
+                marginHorizontal: '5%',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                setPlotInfoShow(plotInfoFull);
+              }}>
+              <Text style={{fontSize: 14, fontWeight: 'bold'}}>Chi tiết</Text>
+            </Button>
+            <Button
+              style={{
+                borderRadius: 8,
+                backgroundColor: 'red',
+                width: '40%',
+                marginHorizontal: '5%',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                setModalInfoVisible(false);
+              }}>
+              <Text style={{fontSize: 14, fontWeight: 'bold'}}>Đóng</Text>
+            </Button>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
         visible={modalFirePoint}
         onRequestClose={() => {
           setModalVisible(false);
@@ -1209,6 +1336,7 @@ const styles = StyleSheet.create({
     fontSize: Dimension.fontSize(15),
     color: '#8bc7bc',
     marginBottom: Dimension.setHeight(1),
+    fontWeight: 'bold',
   },
 
   dropdown: {
@@ -1227,7 +1355,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   itemText: {
-    fontSize: 13,
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: Fonts.SF_BOLD,
   },
 
   containerNode: {
@@ -1271,9 +1401,9 @@ const styles = StyleSheet.create({
 
   title: {
     fontFamily: Fonts.SF_MEDIUM,
-    fontSize: Dimension.fontSize(15),
+    fontSize: Dimension.fontSize(17),
     color: '#8bc7bc',
-    marginBottom: Dimension.setHeight(1),
+    padding: 5,
   },
 
   dateTimePickerContainer: {

@@ -257,7 +257,7 @@ const DocumentTemplate = ({
       );
     });
 
-    setResults(allDoc.length);
+    setResults(allDoc?.length);
     if (allDoc?.length != 0) {
       setDocument(allDoc);
       setPickOptionIndex({item: null, index: null});
