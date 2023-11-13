@@ -86,17 +86,11 @@ const RegisterRepair = ({navigation, route}) => {
     (subject || temp)?.filter(item => item.id === parseInt(user?.id_phong))[0]
       ?.id,
   );
-  const {register, control, handleSubmit, setValue, trigger} = useForm();
+  const {register, control, handleSubmit, setValue, watch} = useForm();
   const {fields, append, remove, update} = useFieldArray({
     control,
     name: 'listDevices',
   });
-  const defaultVal = {
-    list: listDevice,
-    listValue: '',
-    status: '',
-    isOther: false,
-  };
 
   const startAnimation = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -106,15 +100,14 @@ const RegisterRepair = ({navigation, route}) => {
     console.log(data);
   };
 
-  const handlePickType = (item, index) => {
-    console.log(item.thietbi == 'Khác');
+  const handlePickType = async (item, index) => {
     const checkExist = fields.some(filter => filter.listValue == item.thietbi);
     if (checkExist) {
       ToastAlert('Thiết bị đã tồn tại!');
     } else {
       if (item.thietbi == 'Khác') {
         setValue(`listDevices.${index}.isOther`, true);
-        trigger();
+        setValue(`listDevices.${index}.listValue`, '');
       } else {
         setValue(`listDevices.${index}.listValue`, item.thietbi);
       }
@@ -161,7 +154,7 @@ const RegisterRepair = ({navigation, route}) => {
   };
 
   const RenderOptionData = memo(({data, index}) => {
-    console.log(data.isOrther);
+    const watchOrther = watch(`listDevices.${index}.isOther`, true);
     return (
       <Swipeable
         renderRightActions={() => {
@@ -178,10 +171,11 @@ const RegisterRepair = ({navigation, route}) => {
             <View style={rowAlignCenter}>
               <Text style={styles.title}>Loại thiết bị</Text>
               <RedPoint />
-              {data.isOrther && (
+              {watchOrther && (
                 <TouchableOpacity
                   onPress={() => {
-                    setValue(`listDevices.${index}`, defaultVal);
+                    setValue(`listDevices.${index}.isOther`, false);
+                    setValue(`listDevices.${index}.listValue`, '');
                   }}
                   style={{marginLeft: '28%'}}>
                   <Image
@@ -195,7 +189,7 @@ const RegisterRepair = ({navigation, route}) => {
                 </TouchableOpacity>
               )}
             </View>
-            {data.isOrther ? (
+            {watchOrther ? (
               <Controller
                 control={control}
                 render={({field}) => (
@@ -358,7 +352,6 @@ const RegisterRepair = ({navigation, route}) => {
         </ScrollView>
         <AddBtn
           event={() => {
-            console.log(fields);
             startAnimation();
             append({
               list: listDevice,
