@@ -1,4 +1,10 @@
-import React, {useState, useLayoutEffect, useCallback, memo} from 'react';
+import React, {
+  useState,
+  useLayoutEffect,
+  useCallback,
+  memo,
+  useRef,
+} from 'react';
 import {
   View,
   Text,
@@ -39,7 +45,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {fontDefault} from '../../contants/Variable';
 import {useForm, useFieldArray, Controller} from 'react-hook-form';
 
 if (Platform.OS == 'android') {
@@ -86,7 +91,7 @@ const RegisterRepair = ({navigation, route}) => {
     (subject || temp)?.filter(item => item.id === parseInt(user?.id_phong))[0]
       ?.id,
   );
-  const {register, control, handleSubmit, setValue, watch} = useForm();
+  const {control, handleSubmit, setValue, watch} = useForm();
   const {fields, append, remove, update} = useFieldArray({
     control,
     name: 'listDevices',
@@ -96,8 +101,53 @@ const RegisterRepair = ({navigation, route}) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
 
+  handleAddItem = () => {
+    startAnimation();
+    append(
+      {
+        list: listDevice,
+        listValue: '',
+        status: '',
+        isOther: false,
+      },
+      {shouldFocus: false},
+    );
+  };
+
   const handleRegister = async data => {
-    console.log(data);
+    const list = data.listDevices;
+    const arrDevice = list.map(item => {
+      return item.listValue;
+    });
+    const arrStatus = list.map(item => {
+      return item.status;
+    });
+    const allData = {
+      id_user: idByUnit,
+      id_phong: subjectValue,
+      hoten: registerPerson,
+      arr_thietbi: arrDevice,
+      arr_tinhtrang: arrStatus,
+      tendonvi: unit,
+    };
+
+    setLoading(true);
+    try {
+      const res = await registerRepair(allData);
+
+      if (res) {
+        const donvi = {
+          tendonvi: unit,
+        };
+        await getRepairApproveList(dispatch, donvi);
+        setLoading(true);
+        setTimeout(() => {
+          navigation.goBack();
+        });
+      }
+    } catch (error) {
+      setLoading(true);
+    }
   };
 
   const handlePickType = async (item, index) => {
@@ -105,9 +155,8 @@ const RegisterRepair = ({navigation, route}) => {
     if (checkExist) {
       ToastAlert('Thiết bị đã tồn tại!');
     } else {
-      if (item.thietbi == 'Khác') {
+      if (item.thietbi === 'Khác') {
         setValue(`listDevices.${index}.isOther`, true);
-        setValue(`listDevices.${index}.listValue`, '');
       } else {
         setValue(`listDevices.${index}.listValue`, item.thietbi);
       }
@@ -175,7 +224,6 @@ const RegisterRepair = ({navigation, route}) => {
                 <TouchableOpacity
                   onPress={() => {
                     setValue(`listDevices.${index}.isOther`, false);
-                    setValue(`listDevices.${index}.listValue`, '');
                   }}
                   style={{marginLeft: '28%'}}>
                   <Image
@@ -192,12 +240,13 @@ const RegisterRepair = ({navigation, route}) => {
             {watchOrther ? (
               <Controller
                 control={control}
+                rules={{required: true}}
                 render={({field}) => (
                   <TextInput
                     {...field}
-                    placeholder={`Item ${index + 1}`}
+                    placeholder={`Tên thiết bị ${index + 1}`}
                     style={{
-                      borderBottomWidth: 1,
+                      borderBottomWidth: 0.6,
                       borderBottomColor: Colors.INACTIVE_GREY,
                     }}
                     onChangeText={e => {
@@ -238,10 +287,7 @@ const RegisterRepair = ({navigation, route}) => {
                 style={[
                   styles.title,
                   {
-                    color:
-                      data.listValue?.length > 0
-                        ? '#8bc7bc'
-                        : Colors.INACTIVE_GREY,
+                    color: '#8bc7bc',
                   },
                 ]}>
                 Tình trạng hoạt động
@@ -251,12 +297,13 @@ const RegisterRepair = ({navigation, route}) => {
 
             <Controller
               control={control}
+              rules={{required: true, minLength: 3}}
               render={({field}) => (
                 <TextInput
                   {...field}
-                  placeholder={`Item ${index + 1}`}
+                  placeholder={`Mô tả thiết bị ${index + 1}`}
                   style={{
-                    borderBottomWidth: 1,
+                    borderBottomWidth: 0.6,
                     borderBottomColor: Colors.INACTIVE_GREY,
                   }}
                   onChangeText={e => {
@@ -350,17 +397,7 @@ const RegisterRepair = ({navigation, route}) => {
             />
           </KeyboardAwareScrollView>
         </ScrollView>
-        <AddBtn
-          event={() => {
-            startAnimation();
-            append({
-              list: listDevice,
-              listValue: '',
-              status: '',
-              isOther: false,
-            });
-          }}
-        />
+        <AddBtn event={handleAddItem} />
         {loading === true && <Loading bg={true} />}
       </SafeAreaView>
     </LinearGradientUI>

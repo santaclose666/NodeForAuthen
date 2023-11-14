@@ -104,7 +104,7 @@ const HistoryRepair = ({navigation, unit}) => {
   const handleCancel = useCallback(item => {
     const data = {
       tendonvi: unit,
-      id_nguoidk: item?.id_nguoidk,
+      id_user: item?.id_nguoidk,
     };
     cancelRepair(data);
     setToggleModal(false);

@@ -818,12 +818,21 @@ export const getDocument = async (dispatch, name) => {
     const filterYear = data => {
       let year = [];
 
-      data.forEach(item => {
-        let filterYear = parseInt(item?.nam?.split('-')[2]);
-        if (filterYear && !year.includes(filterYear)) {
-          year.push(filterYear);
-        }
-      });
+      if (name === 'ifee') {
+        data.forEach(item => {
+          if (filterYear && !year.includes(item?.nam)) {
+            year.push(item?.nam);
+          }
+        });
+      } else {
+        data.forEach(item => {
+          let filterYear = parseInt(item?.nam?.split('-')[2]);
+          if (filterYear && !year.includes(filterYear)) {
+            year.push(filterYear);
+          }
+        });
+      }
+
       return year.sort((a, b) => {
         return b - a;
       });
@@ -838,6 +847,7 @@ export const getDocument = async (dispatch, name) => {
           }
         }
       });
+
       return hieuluc;
     };
     const filterUnit = data => {
@@ -845,9 +855,12 @@ export const getDocument = async (dispatch, name) => {
 
       data.forEach(item => {
         if (!unit.includes(item.donvi)) {
-          unit.push(item.donvi);
+          if (item.donvi != null) {
+            unit.push(item.donvi);
+          }
         }
       });
+
       return unit;
     };
 

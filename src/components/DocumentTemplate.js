@@ -81,6 +81,7 @@ const DocumentTemplate = ({
   const [stateHieuLuc, setStateHieuLuc] = useState([]);
   const [unitValue, setUnitValue] = useState([]);
   const [results, setResults] = useState(0);
+  const isIFEE = screenName === 'Viện Sinh thái rừng và Môi trường';
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -219,11 +220,15 @@ const DocumentTemplate = ({
       if (identifi == 'year') {
         yearCondition =
           thenRemoveExist.length == 0 ||
-          thenRemoveExist.some(year => item?.nam.includes(year.item));
+          (isIFEE
+            ? thenRemoveExist.some(year => item?.nam === year?.item)
+            : thenRemoveExist.some(year => item?.nam?.includes(year?.item)));
       } else {
         yearCondition =
           yearValue.length == 0 ||
-          yearValue.some(year => item?.nam.includes(year.item));
+          (isIFEE
+            ? yearValue.some(year => item?.nam === year?.item)
+            : yearValue.some(year => item?.nam?.includes(year?.item)));
       }
 
       let stateCondition;
