@@ -203,8 +203,8 @@ const DocumentTemplate = ({
     [categoryValue, yearValue, stateHieuLuc, unitValue],
   );
 
-  const handleMultiFilter = (thenRemoveExist, identifi) => {
-    const allDoc = data?.filter(item => {
+  const handleMultiFilter = async (thenRemoveExist, identifi) => {
+    const allDoc = await data?.filter(item => {
       let categoryCondition;
       if (identifi == 'category') {
         categoryCondition =
@@ -258,11 +258,13 @@ const DocumentTemplate = ({
       );
     });
 
-    setResults(allDoc?.length);
-    if (allDoc?.length != 0) {
-      setDocument(allDoc);
-      setPickOptionIndex({item: null, index: null});
-    }
+    setTimeout(() => {
+      setResults(allDoc?.length);
+      if (allDoc?.length != 0) {
+        setDocument(allDoc);
+        setPickOptionIndex({item: null, index: null});
+      }
+    });
   };
 
   const handleShowResult = useCallback(() => {

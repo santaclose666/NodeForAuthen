@@ -880,54 +880,6 @@ export const getDocument = async (dispatch, name) => {
   }
 };
 
-export const getIFEEDocument = async () => {
-  try {
-    const res = await axios.get(`https://forestry.ifee.edu.vn/api/vanban/ifee`);
-
-    const filterCategory = data => {
-      let categoryFilter = ['Tất cả'];
-      data.forEach(item => {
-        if (!categoryFilter.includes(item.loaianpham)) {
-          categoryFilter.push(item.loaianpham);
-        }
-      });
-
-      return categoryFilter.filter(item => item != 'Khác');
-    };
-    const filterYear = data => {
-      let year = [];
-
-      data.forEach(item => {
-        if (filterYear && !year.includes(item?.nam)) {
-          year.push(item?.nam);
-        }
-      });
-      return year.sort((a, b) => {
-        return b - a;
-      });
-    };
-    const data = res.data.map(item => {
-      const obj = {
-        tenvanban: item.tenanpham,
-        loaivanban: item.loaianpham,
-        ...item,
-      };
-
-      return obj;
-    });
-
-    const allData = {
-      category: filterCategory(res.data),
-      year: filterYear(res.data),
-      data: data,
-    };
-
-    return allData;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getAllDocumentMv = async dispatch => {
   dispatch(getDocumentMvStart());
   try {

@@ -248,6 +248,7 @@ const RegisterRepair = ({navigation, route}) => {
                     style={{
                       borderBottomWidth: 0.6,
                       borderBottomColor: Colors.INACTIVE_GREY,
+                      height: hp('4.5%'),
                     }}
                     onChangeText={e => {
                       setValue(`listDevices.${index}.listValue`, e);
@@ -305,6 +306,7 @@ const RegisterRepair = ({navigation, route}) => {
                   style={{
                     borderBottomWidth: 0.6,
                     borderBottomColor: Colors.INACTIVE_GREY,
+                    height: hp('4.5%'),
                   }}
                   onChangeText={e => {
                     setValue(`listDevices.${index}.status`, e);
