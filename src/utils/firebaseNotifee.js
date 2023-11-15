@@ -12,8 +12,8 @@ export const getToken = async () => {
   }
 };
 
-export const clearBadgeCount = () => {
-  notifee.setBadgeCount(0);
+export const clearBadgeCount = async () => {
+  await notifee.setBadgeCount(0);
 };
 
 export const DisplayNotification = async remoteMessage => {
