@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   tabBarContainer: {
     flex: 1,
     flexDirection: 'row',
-    height: hp('6.8%'),
+    height: hp('7%'),
     position: 'absolute',
     alignSelf: 'center',
     backgroundColor: 'rgba(142, 226, 151, 1)',

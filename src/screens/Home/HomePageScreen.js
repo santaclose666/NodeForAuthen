@@ -30,8 +30,6 @@ import {
   getallNews,
   sendFeedback,
 } from '../../redux/apiRequest';
-import {fcmService} from '../../services/FCMService';
-import {localNotificationService} from '../../services/LocalNotificationService';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import {shadowIOS} from '../../contants/propsIOS';
@@ -51,6 +49,11 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import messaging from '@react-native-firebase/messaging';
+import {
+  DisplayNotification,
+  clearBadgeCount,
+} from '../../utils/firebaseNotifee';
 
 const defaultW = wp('100%');
 const defaultH = hp('22%');
@@ -74,7 +77,6 @@ const HomePageScreen = ({navigation}) => {
     try {
       await requestPermissions();
       await getWeatherData(dispatch);
-      topicForAll();
     } catch (error) {
       console.log(error);
     }
@@ -155,11 +157,6 @@ const HomePageScreen = ({navigation}) => {
   };
 
   useLayoutEffect(() => {
-    console.log(user);
-    fcmService.registerAppWithFCM();
-    fcmService.register(onRegister, onNotification, onOpenNotification);
-    localNotificationService.configure(onOpenNotification);
-
     if (weather) {
       setInTerVal(
         setInterval(() => {
@@ -169,34 +166,19 @@ const HomePageScreen = ({navigation}) => {
     } else {
       fetchImportantData();
     }
+    topicForAll();
+    clearBadgeCount();
+    const unSubscribed = messaging().onMessage(async remoteMessage => {
+      DisplayNotification(remoteMessage);
+    });
 
     fetchAllNews();
 
-    return () => clearInterval(interval);
-  }, []);
-
-  const onRegister = token => {
-    console.log('[App] onRegister: ', token);
-  };
-
-  const onNotification = notify => {
-    const options = {
-      soundName: 'default',
-      playSound: true,
+    return () => {
+      clearInterval(interval);
+      unSubscribed();
     };
-
-    localNotificationService.showNotification(
-      0,
-      notify.notification.title,
-      notify.notification.body,
-      notify,
-      options,
-    );
-  };
-
-  const onOpenNotification = async notify => {
-    navigation.navigate(notify.screen, {item: notify});
-  };
+  }, []);
 
   return (
     <View

@@ -44,12 +44,8 @@ import {
 } from './totalWorkScheduleSlice';
 import {saveSuccess} from './credentialSlice';
 import {getNewFailed, getNewStart, getNewSuccess} from './newSlice';
-import {getToken} from '../utils/firebaseNotifi';
-import {
-  getDocumentFailed,
-  getDocumentStart,
-  getDocumentSuccess,
-} from './documentSlice';
+import {getToken} from '../utils/firebaseNotifee';
+import {getDocumentStart, getDocumentSuccess} from './documentSlice';
 import {
   getSpecieFailed,
   getSpecieStart,
@@ -703,8 +699,6 @@ export const postToken = async id_ht => {
         `https://forestry.ifee.edu.vn/api/device_token/${id_ht}?device_token=${token}`,
       );
     }
-
-    console.log('OK Token', token);
   } catch (error) {
     console.log('Loi tocken', error);
   }
