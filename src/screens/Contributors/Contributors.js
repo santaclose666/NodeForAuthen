@@ -86,17 +86,21 @@ const ContributorScreen = ({navigation}) => {
             <View style={styles.paragrap}>
               <Text style={styles.h1}>Chuyên gia tư vấn:</Text>
               {consultant.map((item, index) => {
-                <Text key={index} style={styles.h2}>
-                  {item}
-                </Text>;
+                return (
+                  <Text key={index} style={styles.h2}>
+                    {`${index + 1}. ${item}`}
+                  </Text>
+                );
               })}
             </View>
             <View style={styles.paragrap}>
               <Text style={styles.h1}>Thành viên phát triển:</Text>
               {developer.map((item, index) => {
-                <Text key={index} style={styles.h2}>
-                  {item}
-                </Text>;
+                return (
+                  <Text key={index} style={styles.h2}>
+                    {`${index + 1}. ${item}`}
+                  </Text>
+                );
               })}
             </View>
             <View style={styles.paragrap}>

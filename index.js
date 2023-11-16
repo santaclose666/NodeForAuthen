@@ -7,13 +7,11 @@ import App from './App';
 import {name as appName} from './app.json';
 import notifee, {EventType} from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
+import {incrementBagde} from './src/utils/firebaseNotifee';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   await notifee.displayNotification(remoteMessage);
-  await notifee
-    .setBadgeCount(16)
-    .then(() => notifee.getBadgeCount())
-    .then(count => console.log(count));
+  incrementBagde();
   console.log(remoteMessage);
 });
 
@@ -24,7 +22,6 @@ notifee.onBackgroundEvent(async ({type, detail}) => {
 
   if (type === EventType.ACTION_PRESS && pressAction.id === 'mark-as-read') {
     await notifee.decrementBadgeCount();
-
     await notifee.cancelNotification(notification.id);
   }
 });

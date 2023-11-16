@@ -12,6 +12,11 @@ export const getToken = async () => {
   }
 };
 
+export const incrementBagde = async () => {
+  await notifee.setBadgeCount((await notifee.getBadgeCount()) + 1);
+  console.log('increment success');
+};
+
 export const clearBadgeCount = async () => {
   await notifee.setBadgeCount(0);
 };

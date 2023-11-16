@@ -341,10 +341,12 @@ export const registerWorkSchedule = async data => {
 
 export const getAllWorkSchedule = async (dispatch, user) => {
   dispatch(getWorkScheduleStart());
+  console.log(user);
   try {
     const apiIFEE = `https://management.ifee.edu.vn/api/lichcongtac/danhsach`;
     const apiXMG = `https://management.xuanmaijsc.vn/api/lichcongtac/danhsach`;
     const api = user.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+    console.log(api);
 
     const res = await axios.get(api, {
       params: {
@@ -696,6 +698,8 @@ export const postToken = async id_ht => {
     const token = await getToken();
     const macID = await DeviceInfo.getMacAddress();
 
+    console.log('mac', macID);
+
     if (token) {
       await axios.post(
         `https://forestry.ifee.edu.vn/api/device_token/${id_ht}`,
@@ -924,9 +928,14 @@ export const getListSpecies = async (data, dispatch) => {
 };
 
 /////////////////////  BIRTHDAY LIST  ////////////////////
-export const getBirthdayList = async () => {
+export const getBirthdayList = async data => {
   try {
-    const res = await axios.get(`https://forestry.ifee.edu.vn/api/birthday`);
+    const apiIFEE = `https://forestry.ifee.edu.vn/api/birthday`;
+    const apiXMG = `https://forestry.ifee.edu.vn/api/xmg/birthday`;
+    const api = data.tendonvi === 'IFEE' ? apiIFEE : apiXMG;
+    console.log(api);
+
+    const res = await axios.get(api);
 
     return res.data;
   } catch (error) {

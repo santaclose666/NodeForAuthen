@@ -23,6 +23,7 @@ import Images from '../../contants/Images';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
 import {screen} from '../AllScreen/allScreen';
+import {clearBadgeCount} from '../../utils/firebaseNotifee';
 
 const NotifiScreen = ({navigation, route}) => {
   const receiveNotifi = route.params?.notifi;
@@ -78,9 +79,9 @@ const NotifiScreen = ({navigation, route}) => {
 
     if (receiveNotifi) {
       setSelectedItem(receiveNotifi);
-
       setToggleNotifiModal(true);
     }
+    clearBadgeCount();
   }, []);
 
   return (

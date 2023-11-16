@@ -51,9 +51,9 @@ const workData = [
   },
 ];
 
-const CreateWorkSchedule = ({navigation, route}) => {
+const CreateWorkSchedule = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params.unit;
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const workNameData = useSelector(state => state.work.works?.data);
   const [optionValue, setOptionValue] = useState(optionData[0].value);

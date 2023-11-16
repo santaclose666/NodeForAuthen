@@ -39,9 +39,9 @@ const numberOfDayOff = [
   {label: 'Nhiều ngày', value: 'Nhiều ngày'},
 ];
 
-const CreateApplyLeave = ({navigation, route}) => {
+const CreateApplyLeave = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params.unit;
+  const unit = useSelector(state => state.unit?.unitOption.data);
   const [valueNumberOfDay, setValueNumberOfDay] = useState(null);
   const [offNumber, setOffNumber] = useState(2);
   const [toggleDatePicker, setToggleDatePicker] = useState(false);

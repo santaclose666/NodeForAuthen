@@ -52,10 +52,9 @@ const retunOption = [
   {label: 'Không trả', value: 1},
 ];
 
-const RegisterDevices = ({navigation, route}) => {
+const RegisterDevices = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params.unit;
-  console.log(unit);
+  const unit = useSelector(state => state.unit?.unitOption.data);
   const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const [allDevice, setAllDevice] = useState([]);
   const [arrRender, setArrRender] = useState([]);

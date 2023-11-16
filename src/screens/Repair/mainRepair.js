@@ -7,10 +7,10 @@ import Colors from '../../contants/Colors';
 import HistoryRepair from './HistoryRepair';
 import TrackRepair from './TrackRepair';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSelector} from 'react-redux';
 
-const MainRepair = ({navigation, route}) => {
-  const unit = route.params;
-  console.log(unit);
+const MainRepair = ({navigation}) => {
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const safeDimension = useSafeAreaInsets();
   const menuArr = [
     {

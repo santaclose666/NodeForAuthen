@@ -26,8 +26,8 @@ import {Swipeable} from 'react-native-gesture-handler';
 import Images from '../../contants/Images';
 import {ToastAlert} from '../../components/Toast';
 
-const StaffListScreen = ({navigation, route}) => {
-  const unit = route.params;
+const StaffListScreen = ({navigation}) => {
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const dispatch = useDispatch();
   const [selectId, setSelectId] = useState(0);
   const staffs =

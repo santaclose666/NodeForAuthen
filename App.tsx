@@ -8,7 +8,7 @@ import 'react-native-gesture-handler';
 import BootSplash from 'react-native-bootsplash';
 import codePush from 'react-native-code-push';
 import { topicForAll } from './src/utils/AllTopic';
-import { clearBadgeCount, DisplayNotification } from './src/utils/firebaseNotifee';
+import { DisplayNotification, incrementBagde } from './src/utils/firebaseNotifee';
 import messaging from '@react-native-firebase/messaging';
 
 const App = () => {
@@ -18,8 +18,9 @@ const App = () => {
     }, 1606);
 
     topicForAll();
-    clearBadgeCount();
     const unSubscribed = messaging().onMessage(async remoteMessage => {
+      console.log(remoteMessage);
+      await incrementBagde()
       DisplayNotification(remoteMessage);
     });
 

@@ -1,10 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import {PermissionsAndroid} from 'react-native';
-import {
-  PERMISSIONS,
-  request,
-  requestNotifications,
-} from 'react-native-permissions';
+import {PERMISSIONS, request} from 'react-native-permissions';
 
 export const requestPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -15,7 +11,13 @@ export const requestPermissions = async () => {
     ]);
   } else {
     await request(PERMISSIONS.IOS.LOCATION_ALWAYS);
-    await requestNotifications(['alert', 'sound', 'badge', 'criticalAlert']);
-    await messaging().requestPermission();
+    await messaging().requestPermission({
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: false,
+      provisional: false,
+      sound: true,
+    });
   }
 };

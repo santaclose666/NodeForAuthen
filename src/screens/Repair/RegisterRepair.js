@@ -78,9 +78,9 @@ const temp = [
   },
 ];
 
-const RegisterRepair = ({navigation, route}) => {
+const RegisterRepair = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params.unit;
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const subject = useSelector(state => state.subject?.subject?.data);
   const dispatch = useDispatch();

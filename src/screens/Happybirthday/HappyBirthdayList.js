@@ -14,13 +14,18 @@ import Fonts from '../../contants/Fonts';
 import {getBirthdayList} from '../../redux/apiRequest';
 import {mainURL, imgDefault} from '../../contants/Variable';
 import {screen} from '../AllScreen/allScreen';
+import {useSelector} from 'react-redux';
 
 const HappyBirthdayList = ({navigation}) => {
+  const unit = useSelector(state => state.unit?.unitOption?.data);
   const [birthdayList, setBirthdayList] = useState([]);
 
   const fetchBirthdayList = async () => {
     try {
-      const res = await getBirthdayList();
+      const data = {
+        tendonvi: unit,
+      };
+      const res = await getBirthdayList(data);
 
       setBirthdayList(res);
     } catch (error) {

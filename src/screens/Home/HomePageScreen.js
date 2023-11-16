@@ -37,7 +37,6 @@ import {mainURL, newsURL, fontDefault} from '../../contants/Variable';
 import Modal from 'react-native-modal';
 import {ToastAlert, ToastSuccess, ToastWarning} from '../../components/Toast';
 import {requestPermissions} from '../../utils/permissionFunc';
-import {topicForAll} from '../../utils/AllTopic';
 import {
   VNUF,
   forestryDepartment,
@@ -54,6 +53,7 @@ import {
   DisplayNotification,
   clearBadgeCount,
 } from '../../utils/firebaseNotifee';
+import {setUnitOption} from '../../redux/unitOptionSlice';
 
 const defaultW = wp('100%');
 const defaultH = hp('22%');
@@ -378,15 +378,16 @@ const HomePageScreen = ({navigation}) => {
                       style={styles.buttonFuc}
                       onPress={() => {
                         const unit = 'IFEE';
+                        dispatch(setUnitOption(unit));
                         if (item.isAdmin && user?.quyentruycap == 1) {
                           item.component
-                            ? handleNavigate(item.component, unit)
+                            ? handleNavigate(item.component)
                             : handleAlert();
                         } else if (item.isAdmin && user?.quyentruycap != 1) {
                           ToastWarning('Tính năng chỉ dành cho quản trị viên!');
                         } else {
                           item.component
-                            ? handleNavigate(item.component, unit)
+                            ? handleNavigate(item.component)
                             : handleAlert();
                         }
                       }}>
@@ -427,15 +428,16 @@ const HomePageScreen = ({navigation}) => {
                       style={styles.buttonFuc}
                       onPress={() => {
                         const unit = 'XMG';
+                        dispatch(setUnitOption(unit));
                         if (item.isAdmin && user?.quyentruycap == 1) {
                           item.component
-                            ? handleNavigate(item.component, unit)
+                            ? handleNavigate(item.component)
                             : handleAlert();
                         } else if (item.isAdmin && user?.quyentruycap != 1) {
                           ToastWarning('Tính năng chỉ dành cho quản trị viên!');
                         } else {
                           item.component
-                            ? handleNavigate(item.component, unit)
+                            ? handleNavigate(item.component)
                             : handleAlert();
                         }
                       }}>

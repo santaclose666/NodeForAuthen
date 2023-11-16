@@ -90,9 +90,9 @@ const approveArr = [
   },
 ];
 
-const HistoryWorkShedule = ({navigation, route}) => {
+const HistoryWorkShedule = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params;
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const dispatch = useDispatch();
   const staffs =

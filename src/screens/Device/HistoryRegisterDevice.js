@@ -56,9 +56,9 @@ import {InternalSkeleton} from '../../components/Skeleton';
 
 const deviceState = [{state: 'BT'}, {state: 'Hỏng'}, {state: 'Lỗi'}];
 
-const HistoryRegisterDevice = ({navigation, route}) => {
+const HistoryRegisterDevice = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params;
+  const unit = useSelector(state => state.unit?.unitOption.data);
   const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const deviceData = useSelector(state => state.device.deviceSlice?.data);
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);

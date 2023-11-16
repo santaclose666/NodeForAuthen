@@ -31,9 +31,9 @@ import {
 } from 'react-native-responsive-screen';
 import Colors from '../../contants/Colors';
 
-const AllWorkScheduleScreen = ({navigation, route}) => {
+const AllWorkScheduleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params.unit;
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const dispatch = useDispatch();
   const totalWorkData = useSelector(
     state => state.totalWork.totalWorkSchedule?.data,
@@ -165,7 +165,7 @@ const AllWorkScheduleScreen = ({navigation, route}) => {
               user?.vitri_ifee == 1 ||
               (user?.vitri_ifee == 3 &&
                 filterUser?.vitri_ifee > 3 &&
-                user?.tenphong == filterUser?.tenphong ))
+                user?.tenphong == filterUser?.tenphong))
           );
         } else {
           return (

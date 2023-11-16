@@ -20,6 +20,7 @@ import deviceReducer from './deviceSlice';
 import nationalParkReducer from './nationalPark';
 import subjectReducer from './subjectSlice';
 import repairReducer from './repairSlice';
+import unitOptionReducer from './unitOptionSlice';
 import logger from 'redux-logger';
 import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -51,6 +52,7 @@ const rootReducer = combineReducers({
   nationalPark: nationalParkReducer,
   subject: subjectReducer,
   repair: repairReducer,
+  unit: unitOptionReducer,
 });
 const persistedReducer = persistReducer(
   persistConfig,

@@ -43,9 +43,9 @@ import {InternalSkeleton} from '../../components/Skeleton';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
 
-const HistoryRegisterTicket = ({navigation, route}) => {
+const HistoryRegisterTicket = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params;
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const ticketPlaneData = useSelector(
     state => state.ticketPlane.ticketPlane?.data,
   );

@@ -49,9 +49,9 @@ const workData = [
   },
 ];
 
-const RegisterPlane = ({navigation, route}) => {
+const RegisterPlane = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params.unit;
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const workNameData = useSelector(state => state.work.works?.data);
   const allStaffs = useSelector(state => state.ticketPlane.ticketPlane?.users);

@@ -42,9 +42,10 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
 
-const HistoryApplyLeave = ({navigation, route}) => {
+const HistoryApplyLeave = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params;
+  const unit = useSelector(state => state.unit.unitOption?.data);
+  console.log(unit);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
   const [selectedItem, setSelectedItem] = useState(null);
   const [commnetInput, setCommentInput] = useState(null);

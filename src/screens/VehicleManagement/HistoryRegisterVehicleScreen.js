@@ -86,9 +86,9 @@ export const approveArr = [
   },
 ];
 
-const HistoryRegisterVehicleScreen = ({navigation, route}) => {
+const HistoryRegisterVehicleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params;
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const staffs =
     unit === 'IFEE'

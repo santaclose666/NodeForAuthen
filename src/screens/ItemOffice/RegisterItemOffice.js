@@ -52,9 +52,9 @@ if (Platform.OS == 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const RegisterItemOffice = ({navigation, route}) => {
+const RegisterItemOffice = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params?.unit;
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
   const dispatch = useDispatch();
   const [allItem, setAllItem] = useState([]);

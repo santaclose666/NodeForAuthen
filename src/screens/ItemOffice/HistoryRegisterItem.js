@@ -41,10 +41,9 @@ import {fontDefault, mainURL} from '../../contants/Variable';
 import {EmptyList} from '../../components/FlatlistComponent';
 import {InternalSkeleton} from '../../components/Skeleton';
 
-const HistoryRegisterItem = ({navigation, route}) => {
+const HistoryRegisterItem = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
-  const unit = route.params;
-  const idByUnit = unit === 'IFEE' ? user?.id_ifee : user?.id_xmg;
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const officeItemData = useSelector(
     state => state.officeItem.officeItemSlice?.data,
   );
