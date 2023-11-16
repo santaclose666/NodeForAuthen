@@ -15,6 +15,40 @@ import Fonts from '../../contants/Fonts';
 import {imgDefault, fontDefault} from '../../contants/Variable';
 import Dimension from '../../contants/Dimension';
 
+const consultant = [
+  'GS.TS. Vương Văn Quỳnh',
+  'GS.TS. Phạm Văn Điển',
+  'PGS.TS. Trần Quang Bảo',
+];
+
+const developer = [
+  'Lê Sỹ Doanh',
+  'Phạm Văn Duẩn',
+  'Nguyễn Văn Thị',
+  'Lã Nguyên Khang',
+  'Phạm Quang Dương',
+  'Trần Văn Hải',
+  'Bùi Trung Hiếu',
+  'Nguyễn Khả Đăng',
+  'Lê Hữu Cường',
+  'Vũ Thị Kim Oanh',
+  'Phạm Văn Huân',
+  'Kiều Đăng Anh',
+  'Hoàng Văn Khiên',
+  'Nguyễn Hữu Văn',
+  'Nguyễn Thị Mai Dương',
+  'Vũ Thị Thìn',
+  'Nguyễn Văn Hiếu',
+  'Nguyễn Văn Tùng',
+  'Hồ Thu Phương',
+  'Nguyễn Sơn Hà',
+  'Phan Ngọc Sơn',
+  'Nguyễn Vĩnh Nam',
+  'Bàn Thị Thoa',
+  'Lê Sỹ Hòa',
+  'Nguyễn Song Anh',
+];
+
 const ContributorScreen = ({navigation}) => {
   return (
     <LinearGradientUI>
@@ -50,21 +84,21 @@ const ContributorScreen = ({navigation}) => {
             style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
             <Image style={styles.mainLogo} source={Images.logo} />
             <View style={styles.paragrap}>
-              <Text style={styles.h1}>Nhóm tác giả:</Text>
-              <Text style={styles.h2}>1. GS.TS. Vương Văn Quỳnh</Text>
-              <Text style={styles.h2}>2. NGƯT.GS.TS. Phạm Văn Điển</Text>
-              <Text style={styles.h2}>3. PGS.TS. Trần Quang Bảo</Text>
-              <Text style={styles.h2}>4. TS. Lê Sỹ Doanh</Text>
-              <Text style={styles.h2}>5. TS. Phạm Văn Duẩn</Text>
-              <Text style={styles.h2}>6. Ths. Nguyễn Văn Thị</Text>
-              <Text style={styles.h2}>7. TS. Lã Nguyên Khang</Text>
-              <Text style={styles.h2}>8. Ths. Phạm Quang Dương</Text>
-              <Text style={styles.h2}>9. Ths. Trần Văn Hải</Text>
-              <Text style={styles.h2}>10. Ths. Bùi Trung Hiếu</Text>
-              <Text style={styles.h2}>11. CN. Lê Hữu Cường</Text>
-              <Text style={styles.h2}>12. CN. Nguyễn Khả Đăng</Text>
+              <Text style={styles.h1}>Chuyên gia tư vấn:</Text>
+              {consultant.map((item, index) => {
+                <Text key={index} style={styles.h2}>
+                  {item}
+                </Text>;
+              })}
             </View>
-
+            <View style={styles.paragrap}>
+              <Text style={styles.h1}>Thành viên phát triển:</Text>
+              {developer.map((item, index) => {
+                <Text key={index} style={styles.h2}>
+                  {item}
+                </Text>;
+              })}
+            </View>
             <View style={styles.paragrap}>
               <Text style={styles.h1}>Đơn vị thực hiện:</Text>
               <View style={styles.rowView}>

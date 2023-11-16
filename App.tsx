@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useLayoutEffect} from 'react';
 import {NativeBaseProvider} from 'native-base';
 import RootNavigator from './src/navigation/RootNavigation';
 import {Provider} from 'react-redux';
@@ -7,13 +7,25 @@ import {PersistGate} from 'redux-persist/integration/react';
 import 'react-native-gesture-handler';
 import BootSplash from 'react-native-bootsplash';
 import codePush from 'react-native-code-push';
-import Test from './src/screens/test/test';
+import { topicForAll } from './src/utils/AllTopic';
+import { clearBadgeCount, DisplayNotification } from './src/utils/firebaseNotifee';
+import messaging from '@react-native-firebase/messaging';
 
 const App = () => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     setTimeout(() => {
       BootSplash.hide({fade: true});
     }, 1606);
+
+    topicForAll();
+    clearBadgeCount();
+    const unSubscribed = messaging().onMessage(async remoteMessage => {
+      DisplayNotification(remoteMessage);
+    });
+
+    return () =>{
+      unSubscribed()
+    }
   }, []);
 
   return (
@@ -24,7 +36,6 @@ const App = () => {
         </NativeBaseProvider>
       </PersistGate>
     </Provider>
-    // <Test />
   );
 };
 

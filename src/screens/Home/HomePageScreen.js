@@ -166,17 +166,17 @@ const HomePageScreen = ({navigation}) => {
     } else {
       fetchImportantData();
     }
-    topicForAll();
-    clearBadgeCount();
-    const unSubscribed = messaging().onMessage(async remoteMessage => {
-      DisplayNotification(remoteMessage);
-    });
+    // topicForAll();
+    // clearBadgeCount();
+    // const unSubscribed = messaging().onMessage(async remoteMessage => {
+    //   DisplayNotification(remoteMessage);
+    // });
 
     fetchAllNews();
 
     return () => {
       clearInterval(interval);
-      unSubscribed();
+      // unSubscribed();
     };
   }, []);
 

@@ -30,6 +30,15 @@ export const DisplayNotification = async remoteMessage => {
       channelId,
       smallIcon: 'ic_launcher',
     },
+    ios: {
+      badgeCount: 1,
+      sound: 'default',
+      foregroundPresentationOptions: {
+        alert: true,
+        badge: true,
+        sound: true,
+      },
+    },
   });
 };
 

@@ -80,6 +80,7 @@ import {
   getListRepairFailed,
 } from './repairSlice';
 import config from '../../config';
+import DeviceInfo from 'react-native-device-info';
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -97,7 +98,6 @@ export const loginUser = async (user, dispatch, navigation, save) => {
 
     const data = res.data;
     dispatch(loginSuccess(data));
-    console.log(data);
 
     if (data === 0) {
       const mess = 'Thông tin đăng nhập chưa chính xác!';
@@ -694,9 +694,15 @@ export const getAllNewsMV = async dispatch => {
 export const postToken = async id_ht => {
   try {
     const token = await getToken();
+    const macID = await DeviceInfo.getMacAddress();
+
     if (token) {
       await axios.post(
-        `https://forestry.ifee.edu.vn/api/device_token/${id_ht}?device_token=${token}`,
+        `https://forestry.ifee.edu.vn/api/device_token/${id_ht}`,
+        {
+          mac: macID,
+          device_token: token,
+        },
       );
     }
   } catch (error) {
