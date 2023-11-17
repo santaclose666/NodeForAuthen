@@ -44,7 +44,7 @@ import {
 } from './totalWorkScheduleSlice';
 import {saveSuccess} from './credentialSlice';
 import {getNewFailed, getNewStart, getNewSuccess} from './newSlice';
-import {getToken} from '../utils/firebaseNotifee';
+import {getToken} from '../utils/firebase';
 import {getDocumentStart, getDocumentSuccess} from './documentSlice';
 import {
   getSpecieFailed,

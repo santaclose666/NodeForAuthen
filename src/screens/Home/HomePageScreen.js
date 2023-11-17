@@ -49,10 +49,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import messaging from '@react-native-firebase/messaging';
-import {
-  DisplayNotification,
-  clearBadgeCount,
-} from '../../utils/firebaseNotifee';
 import {setUnitOption} from '../../redux/unitOptionSlice';
 
 const defaultW = wp('100%');
@@ -166,11 +162,27 @@ const HomePageScreen = ({navigation}) => {
     } else {
       fetchImportantData();
     }
-    // topicForAll();
-    // clearBadgeCount();
-    // const unSubscribed = messaging().onMessage(async remoteMessage => {
-    //   DisplayNotification(remoteMessage);
-    // });
+
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      // navigation.navigate(remoteMessage.data.type);
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+        }
+      });
 
     fetchAllNews();
 

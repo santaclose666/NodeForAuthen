@@ -23,7 +23,7 @@ import Images from '../../contants/Images';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
 import {screen} from '../AllScreen/allScreen';
-import {clearBadgeCount} from '../../utils/firebaseNotifee';
+import {clearBadgeCount} from '../../utils/firebase';
 
 const NotifiScreen = ({navigation, route}) => {
   const receiveNotifi = route.params?.notifi;
