@@ -17,7 +17,7 @@ import LinearGradientUI from '../../components/LinearGradientUI';
 import Header from '../../components/Header';
 import {getAllNotifi} from '../../redux/apiRequest';
 import Loading from '../../components/LoadingUI';
-import {mainURL, fontDefault} from '../../contants/Variable';
+import {mainURL} from '../../contants/Variable';
 import {DisplayNotificationModal} from '../../components/Modal';
 import Images from '../../contants/Images';
 import {changeFormatDate} from '../../utils/serviceFunction';

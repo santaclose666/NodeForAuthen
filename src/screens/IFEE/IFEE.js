@@ -1,7 +1,7 @@
 import React, {useLayoutEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import DocumentTemplate from '../../components/DocumentTemplate';
-import {getDocument, getIFEEDocument} from '../../redux/apiRequest';
+import {getDocument} from '../../redux/apiRequest';
 
 const IFEE = ({navigation}) => {
   const [loading, setLoading] = useState(true);

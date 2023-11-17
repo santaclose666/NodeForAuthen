@@ -45,7 +45,6 @@ import {InternalSkeleton} from '../../components/Skeleton';
 const HistoryApplyLeave = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const unit = useSelector(state => state.unit.unitOption?.data);
-  console.log(unit);
   const leaveData = useSelector(state => state.onLeave.onLeaves?.data);
   const [selectedItem, setSelectedItem] = useState(null);
   const [commnetInput, setCommentInput] = useState(null);
