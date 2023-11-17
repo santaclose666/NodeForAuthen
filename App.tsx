@@ -8,7 +8,6 @@ import 'react-native-gesture-handler';
 import BootSplash from 'react-native-bootsplash';
 import codePush from 'react-native-code-push';
 import { topicForAll } from './src/utils/AllTopic';
-import messaging from '@react-native-firebase/messaging';
 
 const App = () => {
   useLayoutEffect(() => {
@@ -16,14 +15,7 @@ const App = () => {
       BootSplash.hide({fade: true});
     }, 1606);
 
-    topicForAll();
-    const unSubscribed = messaging().onMessage(async remoteMessage => {
-      console.log(remoteMessage);
-    });
-
-    return () =>{
-      unSubscribed()
-    }
+    topicForAll()
   }, []);
 
   return (

@@ -23,7 +23,6 @@ import Images from '../../contants/Images';
 import {changeFormatDate} from '../../utils/serviceFunction';
 import Separation from '../../components/Separation';
 import {screen} from '../AllScreen/allScreen';
-import {clearBadgeCount} from '../../utils/firebase';
 
 const NotifiScreen = ({navigation, route}) => {
   const receiveNotifi = route.params?.notifi;
@@ -51,11 +50,15 @@ const NotifiScreen = ({navigation, route}) => {
     if (user) {
       switch (notifiMenuId) {
         case 0:
-          return allNotifi?.noibo;
+          return user?.tendonvi === 'IFEE'
+            ? allNotifi?.noibo
+            : allNotifi.noibo_xmg;
         case 1:
           return allNotifi?.sukien;
         case 2:
-          return allNotifi?.sinhnhat;
+          return user?.tendonvi === 'IFEE'
+            ? allNotifi?.sinhnhat
+            : allNotifi.sinhnhat_xmg;
       }
     } else {
       return allNotifi?.sukien;
@@ -81,7 +84,6 @@ const NotifiScreen = ({navigation, route}) => {
       setSelectedItem(receiveNotifi);
       setToggleNotifiModal(true);
     }
-    clearBadgeCount();
   }, []);
 
   return (

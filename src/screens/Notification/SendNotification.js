@@ -68,6 +68,7 @@ const IFEEFull = [
 
 const SendNotification = ({navigation}) => {
   const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
+  const unit = useSelector(state => state.unit.unitOption?.data);
   const allStaffs = IFEEstaffs?.map(item => {
     return {name: item.hoten, ortherName: item.id_ht};
   });

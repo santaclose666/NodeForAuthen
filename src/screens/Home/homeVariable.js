@@ -220,10 +220,9 @@ export const XMGInternal = [
     icon: Images.happybd,
   },
   {
-    featureName: 'Gửi thông báo',
-    component: screen.sendNotification,
-    icon: Images.sendnotification,
-    isAdmin: true,
+    featureName: null,
+    component: null,
+    icon: null,
   },
   {
     featureName: null,

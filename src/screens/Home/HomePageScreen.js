@@ -48,8 +48,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import messaging from '@react-native-firebase/messaging';
 import {setUnitOption} from '../../redux/unitOptionSlice';
+import {localNotificationService} from '../../services/LocalNotificationService';
+import {fcmService} from '../../services/FCMService';
+import {topicForAll} from '../../utils/AllTopic';
 
 const defaultW = wp('100%');
 const defaultH = hp('22%');
@@ -73,6 +75,7 @@ const HomePageScreen = ({navigation}) => {
     try {
       await requestPermissions();
       await getWeatherData(dispatch);
+      topicForAll();
     } catch (error) {
       console.log(error);
     }
@@ -153,6 +156,10 @@ const HomePageScreen = ({navigation}) => {
   };
 
   useLayoutEffect(() => {
+    fcmService.registerAppWithFCM();
+    fcmService.register(onRegister, onNotification, onOpenNotification);
+    localNotificationService.configure(onOpenNotification);
+
     if (weather) {
       setInTerVal(
         setInterval(() => {
@@ -163,34 +170,37 @@ const HomePageScreen = ({navigation}) => {
       fetchImportantData();
     }
 
-    messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log(
-        'Notification caused app to open from background state:',
-        remoteMessage.notification,
-      );
-      // navigation.navigate(remoteMessage.data.type);
-    });
-
-    // Check whether an initial notification is available
-    messaging()
-      .getInitialNotification()
-      .then(remoteMessage => {
-        if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.notification,
-          );
-          // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
-        }
-      });
-
     fetchAllNews();
 
     return () => {
       clearInterval(interval);
-      // unSubscribed();
     };
   }, []);
+
+  const onRegister = token => {
+    console.log('[App] onRegister: ', token);
+    console.log('onToken');
+  };
+
+  const onNotification = notify => {
+    const options = {
+      soundName: 'default',
+      playSound: true,
+    };
+
+    localNotificationService.showNotification(
+      0,
+      notify.notification.title,
+      notify.notification.body,
+      notify,
+      options,
+    );
+  };
+
+  const onOpenNotification = async notify => {
+    dispatch(setUnitOption(notify.donvi));
+    navigation.navigate(notify.screen, {item: notify});
+  };
 
   return (
     <View
