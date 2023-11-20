@@ -44,10 +44,14 @@ import {InternalSkeleton} from '../../components/Skeleton';
 const HistoryRegisterItem = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const unit = useSelector(state => state.unit.unitOption?.data);
+  const staffs =
+    unit === 'IFEE'
+      ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
+      : useSelector(state => state.staffs?.staffs?.XMGStaff);
+  console.log(staffs);
   const officeItemData = useSelector(
     state => state.officeItem.officeItemSlice?.data,
   );
-  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const dispatch = useDispatch();
   const [selectedItem, setSelectedItem] = useState(null);
   const [toggleModal, setToggleModal] = useState(false);
@@ -140,7 +144,10 @@ const HistoryRegisterItem = ({navigation}) => {
     const status = 'Chờ phê duyệt';
     const icon = Images.pending;
 
-    const filterUser = IFEEstaffs.filter(user => user.id == item.id_user)[0];
+    const filterUser =
+      unit === 'IFEE'
+        ? staffs.filter(user => user.id_ifee == item.id_user)[0]
+        : staffs.filter(user => user.id_xmg == item.id_user)[0];
 
     return (
       <TouchableOpacity

@@ -16,11 +16,12 @@ import {WMSTile, MAP_TYPES, Polygon, Marker, Callout} from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import Colors from '../../contants/Colors';
 import Images from '../../contants/Images';
-import Dimension from '../../contants/Dimension';
-import {Dropdown} from 'react-native-element-dropdown';
-import Fonts from '../../contants/Fonts';
 import {Button, Center, Fab} from 'native-base';
 import unidecode from 'unidecode';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -364,16 +365,30 @@ const DVMTRMapScreen = ({navigation}) => {
                 return (
                   <TouchableOpacity
                     key={index}
-                    style={{flexDirection: 'row'}}
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      paddingBottom: hp('0.6%'),
+                      paddingTop: hp('0.8%'),
+                      borderBottomWidth: 1,
+                    }}
                     onPress={() => selectUnit(item)}>
-                    <View style={{flex: 1}}>
-                      {item.hinhanh != '' ? (
+                    <View
+                      style={{
+                        width: '40%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      {item.hinhanh.length != 0 ? (
                         <Image src={item.hinhanh} style={styles.imgDonVi_s} />
                       ) : (
                         <Image source={Images.logo} style={styles.imgDonVi_s} />
                       )}
                     </View>
-                    <View style={{flex: 2, justifyContent: 'center'}}>
+                    <View
+                      style={{
+                        width: '60%',
+                      }}>
                       <Text style={[styles.h3, {fontWeight: 'bold'}]}>
                         {item.tendonvi}
                       </Text>
@@ -594,7 +609,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 5,
   },
-  imgDonVi_s: {width: 100, height: 60, borderRadius: 8, marginBottom: 5},
+  imgDonVi_s: {
+    width: '96%',
+    height: hp('8%'),
+    borderRadius: 8,
+    marginBottom: 5,
+  },
+
   backLevel: {
     width: 45,
     height: 45,

@@ -715,6 +715,8 @@ export const postToken = async id_ht => {
 };
 
 export const postNotifcation = async data => {
+  console.log('post');
+  console.log(data);
   try {
     const res = await axios.post(
       `https://forestry.ifee.edu.vn/api/notification/send`,
@@ -722,13 +724,21 @@ export const postNotifcation = async data => {
     );
 
     return res.data;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const postNotifiForAll = async data => {
+  console.log('postall');
   try {
     const res = await axios.post(
-      `https://forestry.ifee.edu.vn/api/service/postEvent?title=${data.title}&content=${data.content}`,
+      `https://forestry.ifee.edu.vn/api/service/postEvent`,
+      {
+        title: data.title,
+        content: data.content,
+        donvi: data.donvi,
+      },
     );
 
     return res.data;
@@ -738,10 +748,17 @@ export const postNotifiForAll = async data => {
 };
 
 export const postNotifiForAllUnit = async data => {
+  console.log('postallunit');
   try {
     console.log(data);
     const res = await axios.post(
-      `https://forestry.ifee.edu.vn/api/service/postNoiBo?title=${data.title}&content=${data.content}&id_user=${data.id}`,
+      `https://forestry.ifee.edu.vn/api/service/postNoiBo`,
+      {
+        title: data.title,
+        content: data.content,
+        donvi: data.donvi,
+        id_user: data.id,
+      },
     );
 
     return res.data;

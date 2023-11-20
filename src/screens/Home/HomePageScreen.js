@@ -115,8 +115,8 @@ const HomePageScreen = ({navigation}) => {
     try {
       const result = await Share.share({
         message: `Ứng dụng Forestry4.0 - Hệ thống thông tin ngành Lâm nghiệp
-        Tải xuống Android: https://play.google.com/store/apps/details?id=com.forestry_4_v7 
-        Tải xuống IOS: https://apps.apple.com/vn/app/forestry-4-0/id6452552409?l=vi`,
+        Tải xuống IOS: https://apps.apple.com/vn/app/forestry-4-0/id6452552409?l=vi
+        Tải xuống Android: https://play.google.com/store/apps/details?id=com.forestry_4_v7`,
       });
 
       if (result.action === Share.sharedAction) {

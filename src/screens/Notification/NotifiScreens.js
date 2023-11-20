@@ -29,8 +29,31 @@ const NotifiScreen = ({navigation, route}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
   const dispatch = useDispatch();
   const allNotifi = useSelector(state => state.notifi.notifications?.allNotifi);
-  const notifiMenu = ['Nội bộ', 'Sự kiện', 'Sinh nhật'];
-  const [notifiMenuId, setNotifiMenuId] = useState(0);
+  const notifiMenu = [
+    {
+      name: 'IFEE',
+      isVisiable: user?.ifee_xmg === 1 || user?.tendonvi === 'IFEE',
+    },
+    {
+      name: 'HPBD-IFEE',
+      isVisiable: user?.ifee_xmg === 1 || user?.tendonvi === 'IFEE',
+    },
+    {
+      name: 'XMG',
+      isVisiable: user?.ifee_xmg === 1 || user?.tendonvi === 'XMG',
+    },
+    {
+      name: 'HPBD-XMG',
+      isVisiable: user?.ifee_xmg === 1 || user?.tendonvi === 'XMG',
+    },
+    {
+      name: 'Sự kiện',
+      isVisiable: true,
+    },
+  ];
+  const [notifiMenuId, setNotifiMenuId] = useState(
+    user?.ifee_xmg === 1 || user?.tendonvi === 'IFEE' ? 0 : 2,
+  );
   const [loading, setLoading] = useState(false);
   const [toggleNotifiModal, setToggleNotifiModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -50,15 +73,15 @@ const NotifiScreen = ({navigation, route}) => {
     if (user) {
       switch (notifiMenuId) {
         case 0:
-          return user?.tendonvi === 'IFEE'
-            ? allNotifi?.noibo
-            : allNotifi.noibo_xmg;
+          return allNotifi?.noibo;
         case 1:
-          return allNotifi?.sukien;
+          return allNotifi?.sinhnhat;
         case 2:
-          return user?.tendonvi === 'IFEE'
-            ? allNotifi?.sinhnhat
-            : allNotifi.sinhnhat_xmg;
+          return allNotifi?.noibo_xmg;
+        case 3:
+          return allNotifi?.sinhnhat_xmg;
+        case 4:
+          return allNotifi?.sukien;
       }
     } else {
       return allNotifi?.sukien;
@@ -101,34 +124,39 @@ const NotifiScreen = ({navigation, route}) => {
                   notifiMenuId === index ? Colors.DEFAULT_GREEN : Colors.WHITE;
                 const bdWidth = notifiMenuId === index ? 2 : 0;
                 return (
-                  <View
-                    key={index}
-                    style={{
-                      marginLeft: Dimension.setWidth(4.4),
-                      borderBottomWidth: bdWidth,
-                      borderColor: colorBorder,
-                      marginBottom: 0,
-                      flex: 1,
-                      justifyContent: 'space-between',
-                    }}>
-                    <TouchableOpacity onPress={() => setNotifiMenuId(index)}>
-                      <Text
+                  <>
+                    {item.isVisiable && (
+                      <View
+                        key={index}
                         style={{
-                          fontFamily:
-                            notifiMenuId === index
-                              ? Fonts.SF_SEMIBOLD
-                              : Fonts.SF_REGULAR,
-                          fontSize: Dimension.fontSize(16.6),
-                          opacity: 0.8,
-                          color:
-                            notifiMenuId === index
-                              ? Colors.DEFAULT_GREEN
-                              : Colors.DEFAULT_BLACK,
+                          marginLeft: Dimension.setWidth(4.4),
+                          borderBottomWidth: bdWidth,
+                          borderColor: colorBorder,
+                          marginBottom: 0,
+                          flex: 1,
+                          justifyContent: 'space-between',
                         }}>
-                        {item}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+                        <TouchableOpacity
+                          onPress={() => setNotifiMenuId(index)}>
+                          <Text
+                            style={{
+                              fontFamily:
+                                notifiMenuId === index
+                                  ? Fonts.SF_SEMIBOLD
+                                  : Fonts.SF_REGULAR,
+                              fontSize: Dimension.fontSize(16.6),
+                              opacity: 0.8,
+                              color:
+                                notifiMenuId === index
+                                  ? Colors.DEFAULT_GREEN
+                                  : Colors.DEFAULT_BLACK,
+                            }}>
+                            {item.name}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </>
                 );
               }}
             />

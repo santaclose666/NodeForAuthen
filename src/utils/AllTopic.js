@@ -2,8 +2,8 @@ import messaging from '@react-native-firebase/messaging';
 
 export const topicForAll = () => {
   messaging()
-    .subscribeToTopic('testNotifi')
-    .then(() => console.log('Subscribed to testNotifi topic!'));
+    .subscribeToTopic('allEvent')
+    .then(() => console.log('Subscribed to allEvent topic!'));
 };
 
 export const subcribeWorkUnitTopic = name => {

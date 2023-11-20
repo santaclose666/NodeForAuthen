@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -20,41 +20,10 @@ import RegisterBtn from '../../components/RegisterBtn';
 import {shadowIOS} from '../../contants/propsIOS';
 import {mainURL} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
-import {
-  postNotifcation,
-  postNotifiForAll,
-  postNotifiForAllUnit,
-} from '../../redux/apiRequest';
+import {postNotifcation} from '../../redux/apiRequest';
 import LinearGradientUI from '../../components/LinearGradientUI';
 
-const group = [
-  {
-    title: 'Tất cả mọi người',
-    id: 0,
-  },
-  {
-    title: 'Tất cả nhân sự IFEE',
-    id: 1,
-  },
-  {
-    title: 'Trưởng bộ phận',
-    id: 2,
-  },
-  {
-    title: 'Trưởng/phó bộ phận',
-    id: 3,
-  },
-  {
-    title: 'Phòng/bộ môn/trung tâm',
-    id: 4,
-  },
-  {
-    title: 'Người cụ thể',
-    id: 5,
-  },
-];
-
-const IFEEFull = [
+const IFEEPosition = [
   {name: 'Phòng Tổng hợp', ortherName: 'Tổng hợp'},
   {name: 'Bộ môn Công nghệ môi trường', ortherName: 'CNMT'},
   {name: 'Phòng Nghiên cứu và Phát triển', ortherName: 'RnD'},
@@ -66,48 +35,109 @@ const IFEEFull = [
   },
 ];
 
+const XMGPosition = [
+  {name: 'Phòng Tổng hợp', ortherName: 'Tổng hợp'},
+  {name: 'Phòng Kỹ thuật', ortherName: 'Kỹ thuật'},
+  {name: 'Phòng Nghiên cứu và Phát triển', ortherName: 'RnD'},
+  {name: 'Phòng Kinh doanh', ortherName: 'Kinh doanh'},
+  {name: 'Phòng Đào tạo', ortherName: 'Đào tạo'},
+];
+
 const SendNotification = ({navigation}) => {
-  const IFEEstaffs = useSelector(state => state.staffs?.staffs?.IFEEStaff);
   const unit = useSelector(state => state.unit.unitOption?.data);
-  const allStaffs = IFEEstaffs?.map(item => {
+  const staffs =
+    unit === 'IFEE'
+      ? useSelector(state => state.staffs?.staffs?.IFEEStaff)
+      : useSelector(state => state.staffs?.staffs?.XMGStaff);
+  const allStaffs = staffs?.map(item => {
     return {name: item.hoten, ortherName: item.id_ht};
   });
   const user = useSelector(state => state.auth.login?.currentUser);
+  const subject = unit === 'IFEE' ? IFEEPosition : XMGPosition;
   const [filterDataValue, setFilterDataValue] = useState([]);
-  const [groupValue, setGroupValue] = useState(group[0].title);
   const [loading, setLoading] = useState(false);
   const [dataPicker, setDataPicker] = useState([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const group = [
+    {
+      title: `Tất cả nhân sự ${unit === 'IFEE' ? 'IFEE' : 'XMG'}`,
+      id: 1,
+    },
+    {
+      title: 'Trưởng bộ phận',
+      id: 2,
+    },
+    {
+      title: 'Trưởng/phó bộ phận',
+      id: 3,
+    },
+    {
+      title: 'Phòng/bộ môn/trung tâm',
+      id: 4,
+    },
+    {
+      title: 'Người cụ thể',
+      id: 5,
+    },
+  ];
+  const [groupValue, setGroupValue] = useState(group[0].title);
 
   const handlePickGroup = id => {
     let received;
     switch (id) {
-      case 0:
-        break;
       case 1:
-        setDataPicker(user?.id_ht);
-        break;
-      case 2:
-        received = IFEEstaffs.filter(item => item.vitri_ifee <= 3).map(item => {
+        received = staffs.map(item => {
           return item.id_ht;
         });
         setDataPicker(received);
         break;
+      case 2:
+        received =
+          unit === 'IFEE'
+            ? staffs
+                .filter(item => item.vitri_ifee <= 3)
+                .map(item => {
+                  return item.id_ht;
+                })
+            : staffs
+                .filter(item => item.info_phong[0].vitri_ifee <= 3)
+                .map(item => {
+                  return item.id_ht;
+                });
+        console.log(received);
+        setDataPicker(received);
+        break;
       case 3:
-        received = IFEEstaffs.filter(item => item.vitri_ifee <= 4).map(item => {
-          return item.id_ht;
-        });
+        received =
+          unit === 'IFEE'
+            ? staffs
+                .filter(item => item.vitri_ifee <= 4)
+                .map(item => {
+                  return item.id_ht;
+                })
+            : staffs
+                .filter(item => item.info_phong[0].vitri_ifee <= 4)
+                .map(item => {
+                  return item.id_ht;
+                });
         setDataPicker(received);
     }
   };
 
-  const handlePickSubject = subject => {
-    const dataFilter = IFEEstaffs.filter(item =>
-      subject.includes(item.tenphong),
-    ).map(item => {
-      return item.id_ht;
-    });
+  const handlePickSubject = subj => {
+    const dataFilter =
+      unit === 'IFEE'
+        ? staffs
+            .filter(item => subj.includes(item.tenphong))
+            .map(item => {
+              return item.id_ht;
+            })
+        : staffs
+            .filter(item => subj.includes(item.info_phong[0].tenphong))
+            .map(item => {
+              return item.id_ht;
+            });
     setDataPicker(dataFilter);
   };
 
@@ -122,22 +152,12 @@ const SendNotification = ({navigation}) => {
         id: dataPicker,
         title: title,
         content: content,
+        donvi: unit,
       };
 
       setLoading(true);
       try {
-        let res;
-
-        switch (groupValue) {
-          case 0:
-            res = await postNotifiForAll(data);
-            break;
-          case 1:
-            res = await postNotifiForAllUnit(data);
-            break;
-          default:
-            res = await postNotifcation(data);
-        }
+        const res = await postNotifcation(data);
 
         if (res) {
           ToastSuccess('Gửi thông báo thành công');
@@ -150,14 +170,6 @@ const SendNotification = ({navigation}) => {
       ToastAlert('Thiếu thông tin!');
     }
   };
-
-  useLayoutEffect(() => {
-    if (groupValue == 4) {
-      handlePickSubject(filterDataValue);
-    } else if (groupValue == 5) {
-      handlePickPerson(filterDataValue);
-    }
-  }, []);
 
   return (
     <LinearGradientUI>
@@ -216,6 +228,7 @@ const SendNotification = ({navigation}) => {
                 onChange={item => {
                   setGroupValue(item.id);
                   handlePickGroup(item.id);
+                  setFilterDataValue([]);
                 }}
               />
             </View>
@@ -235,7 +248,7 @@ const SendNotification = ({navigation}) => {
                   itemTextStyle={styles.itemText}
                   fontFamily={Fonts.SF_MEDIUM}
                   activeColor="#eef2feff"
-                  data={groupValue == 4 ? IFEEFull : allStaffs}
+                  data={groupValue == 4 ? subject : allStaffs}
                   maxHeight={Dimension.setHeight(30)}
                   labelField="name"
                   valueField="ortherName"
@@ -253,7 +266,7 @@ const SendNotification = ({navigation}) => {
                       />
                     );
                   }}
-                  onChange={async item => {
+                  onChange={item => {
                     setFilterDataValue(item);
 
                     groupValue == 4
