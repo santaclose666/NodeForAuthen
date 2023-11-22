@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -22,6 +22,8 @@ import {ToastAlert} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
 import {fontDefault} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -52,7 +54,30 @@ const LoginScreen = ({navigation}) => {
     }
   };
 
+  const signInGG = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+
+      console.log(userInfo);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
+
   useLayoutEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '484044523003-tu5oq5roldk96ill85ebj339vcibr3cf.apps.googleusercontent.com',
+    });
     if (credential) {
       setEmail(credential.email);
       setPassword(credential.password);
@@ -219,6 +244,29 @@ const LoginScreen = ({navigation}) => {
               Truy cập
             </Text>
           </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+          }}>
+          <Text>Đăng nhập với</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: hp('2%'),
+            }}>
+            <TouchableOpacity
+              onPress={signInGG}
+              style={{
+                borderRadius: 50,
+                padding: 10,
+                backgroundColor: '#dbdbdb',
+              }}>
+              <Image style={{width: 25, height: 25}} source={Images.google} />
+            </TouchableOpacity>
+          </View>
         </View>
       </KeyboardAwareScrollView>
       {loading && <Loading bg={true} />}
