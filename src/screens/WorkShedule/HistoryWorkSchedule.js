@@ -702,12 +702,11 @@ const HistoryWorkShedule = ({navigation}) => {
                   <View style={styles.containerEachLine}>
                     <Image source={Images.worklocation} style={styles.Iconic} />
                     <View style={styles.containerLine}>
-                      <Text style={styles.title}>Địa điểm:</Text>
-                      <Text
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                        style={styles.content}>
-                        {selectedItem.diadiem}
+                      <Text ellipsizeMode="tail" style={styles.title}>
+                        Địa điểm:{' '}
+                        <Text style={styles.content}>
+                          {selectedItem.diadiem}
+                        </Text>
                       </Text>
                     </View>
                   </View>

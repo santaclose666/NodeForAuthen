@@ -90,6 +90,7 @@ const SendNotification = ({navigation}) => {
         received = staffs.map(item => {
           return item.id_ht;
         });
+        console.log(received);
         setDataPicker(received);
         break;
       case 2:
@@ -121,6 +122,7 @@ const SendNotification = ({navigation}) => {
                 .map(item => {
                   return item.id_ht;
                 });
+        console.log(received);
         setDataPicker(received);
     }
   };
@@ -138,10 +140,12 @@ const SendNotification = ({navigation}) => {
             .map(item => {
               return item.id_ht;
             });
+    console.log(dataFilter);
     setDataPicker(dataFilter);
   };
 
   const handlePickPerson = idArr => {
+    console.log(idArr);
     setDataPicker(idArr);
   };
 

@@ -183,6 +183,7 @@ const HomePageScreen = ({navigation}) => {
   };
 
   const onNotification = notify => {
+    dispatch(setUnitOption(notify.data.donvi));
     const options = {
       soundName: 'default',
       playSound: true,
@@ -198,7 +199,6 @@ const HomePageScreen = ({navigation}) => {
   };
 
   const onOpenNotification = async notify => {
-    dispatch(setUnitOption(notify.donvi));
     navigation.navigate(notify.screen, {item: notify});
   };
 

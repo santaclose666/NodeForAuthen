@@ -62,6 +62,7 @@ const ListBioScreen = ({navigation, route}) => {
   const fetchAllData = async () => {
     setLoading(true);
     try {
+      console.log(api);
       const data = await getAllEcosystem(api);
       if (data) {
         setSpeciesArr(data);

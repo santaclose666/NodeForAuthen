@@ -30,6 +30,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Colors from '../../contants/Colors';
+import FastImage from 'react-native-fast-image';
 
 const AllWorkScheduleScreen = ({navigation}) => {
   const user = useSelector(state => state.auth.login?.currentUser);
@@ -242,8 +243,9 @@ const AllWorkScheduleScreen = ({navigation}) => {
                 justifyContent: 'center',
               }}>
               <Text style={styles.nameText}>{item.ten}</Text>
-              <Image
-                src={mainURL + avt}
+              <FastImage
+                resizeMode={FastImage.resizeMode.cover}
+                source={{uri: mainURL + avt, priority: 'high'}}
                 style={{width: 32, height: 32, borderRadius: 50, marginLeft: 4}}
               />
             </View>

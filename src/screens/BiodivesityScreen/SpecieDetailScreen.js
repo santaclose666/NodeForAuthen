@@ -260,6 +260,16 @@ const SpecieDetailScreen = ({navigation, route}) => {
 
         {toggleCommonInfo && (
           <View style={{marginLeft: wp('1.8%')}}>
+            {data?.sachdo && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Sách đỏ :</Text>
+                <Text
+                  style={[
+                    styles.content,
+                    {color: '#ad2b2b'},
+                  ]}>{`  ${data.sachdo}`}</Text>
+              </View>
+            )}
             <View style={styles.containerCommonInfo}>
               <Text style={styles.lable}>Tên Ngành La Tinh:</Text>
               <Text style={styles.content}>{`  ${data.nganhlatin}`}</Text>

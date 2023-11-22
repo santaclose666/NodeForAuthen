@@ -305,13 +305,7 @@ const HistoryRegisterDevice = ({navigation}) => {
               top: '7%',
               zIndex: 9999,
             }}>
-            <StatusUI
-              status={status}
-              colorStatus={colorStatus}
-              bgColorStatus={bgColorStatus}
-              icon={icon}
-            />
-            {checkRole() && (
+            {checkRole() ? (
               <View
                 style={{
                   flexDirection: 'row',
@@ -339,6 +333,13 @@ const HistoryRegisterDevice = ({navigation}) => {
                   />
                 </TouchableOpacity>
               </View>
+            ) : (
+              <StatusUI
+                status={status}
+                colorStatus={colorStatus}
+                bgColorStatus={bgColorStatus}
+                icon={icon}
+              />
             )}
 
             {checkRoleUser() && checkReturn() && (
