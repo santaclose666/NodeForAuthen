@@ -22,8 +22,15 @@ import {ToastAlert} from '../../components/Toast';
 import {shadowIOS} from '../../contants/propsIOS';
 import {fontDefault} from '../../contants/Variable';
 import Loading from '../../components/LoadingUI';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {rowAlignCenter} from '../../contants/CssFE';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -76,6 +83,8 @@ const LoginScreen = ({navigation}) => {
   useLayoutEffect(() => {
     GoogleSignin.configure({
       webClientId:
+        '484044523003-tu5oq5roldk96ill85ebj339vcibr3cf.apps.googleusercontent.com',
+      iosClientId:
         '484044523003-esc9d3sse9oahimsugi7eujjasjt50p8.apps.googleusercontent.com',
     });
     if (credential) {
@@ -251,7 +260,18 @@ const LoginScreen = ({navigation}) => {
             justifyContent: 'center',
             width: '100%',
           }}>
-          <Text>Đăng nhập với</Text>
+          <View style={rowAlignCenter}>
+            <View style={styles.line} />
+            <Text
+              style={{
+                fontSize: wp('3.6%'),
+                fontFamily: Fonts.SF_SEMIBOLD,
+                marginHorizontal: wp('2.5%'),
+              }}>
+              Đăng nhập với
+            </Text>
+            <View style={styles.line} />
+          </View>
           <View
             style={{
               flexDirection: 'row',
@@ -262,7 +282,7 @@ const LoginScreen = ({navigation}) => {
               style={{
                 borderRadius: 50,
                 padding: 10,
-                backgroundColor: '#dbdbdb',
+                backgroundColor: 'rgba(109, 173, 96, 0.3)',
               }}>
               <Image style={{width: 25, height: 25}} source={Images.google} />
             </TouchableOpacity>
@@ -324,6 +344,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: 15,
     marginVertical: Dimension.setHeight(2),
+  },
+  line: {
+    width: '30%',
+    borderBottomWidth: 0.6,
+    borderBottomColor: Colors.INACTIVE_GREY,
   },
 });
 
