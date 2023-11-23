@@ -14,7 +14,7 @@ import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import {loginUser} from '../../redux/apiRequest';
+import {getUserDataFromGG, loginUser} from '../../redux/apiRequest';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -31,6 +31,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {rowAlignCenter} from '../../contants/CssFE';
+import config from '../../../config';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -65,8 +66,13 @@ const LoginScreen = ({navigation}) => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-
       console.log(userInfo);
+
+      if (userInfo) {
+        const {accessToken} = await GoogleSignin.getTokens();
+
+        getUserDataFromGG(userInfo.user.id, accessToken);
+      }
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -82,10 +88,14 @@ const LoginScreen = ({navigation}) => {
 
   useLayoutEffect(() => {
     GoogleSignin.configure({
-      webClientId:
-        '484044523003-tu5oq5roldk96ill85ebj339vcibr3cf.apps.googleusercontent.com',
-      iosClientId:
-        '484044523003-esc9d3sse9oahimsugi7eujjasjt50p8.apps.googleusercontent.com',
+      webClientId: config.WEB_API_GG_SIGNIN,
+      iosClientId: config.IOS_API_GG_SIGNIN,
+      scopes: [
+        'email',
+        'profile',
+        // 'https://www.googleapis.com/auth/user.phonenumbers.read',
+        'https://www.googleapis.com/auth/user.birthday.read',
+      ],
     });
     if (credential) {
       setEmail(credential.email);

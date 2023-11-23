@@ -1,3 +1,13 @@
-import {CUC_LAM_NGHIEP_TOKEN, WEATHER_TOKEN} from '@env';
+import {
+  CUC_LAM_NGHIEP_TOKEN,
+  WEATHER_TOKEN,
+  WEB_API_GG_SIGNIN,
+  IOS_API_GG_SIGNIN,
+} from '@env';
 
-export default {CUC_LAM_NGHIEP_TOKEN, WEATHER_TOKEN};
+export default {
+  CUC_LAM_NGHIEP_TOKEN,
+  WEATHER_TOKEN,
+  WEB_API_GG_SIGNIN,
+  IOS_API_GG_SIGNIN,
+};

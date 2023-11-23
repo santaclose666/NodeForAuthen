@@ -696,21 +696,17 @@ export const getAllNewsMV = async dispatch => {
 export const postToken = async id_ht => {
   try {
     const token = await getToken();
-    const macID = await DeviceInfo.getMacAddress();
-
-    console.log('mac', macID);
 
     if (token) {
       await axios.post(
         `https://forestry.ifee.edu.vn/api/device_token/${id_ht}`,
         {
-          mac: macID,
           device_token: token,
         },
       );
     }
   } catch (error) {
-    console.log('Loi tocken', error);
+    console.log('Loi token', error);
   }
 };
 
@@ -1311,6 +1307,25 @@ export const getDetailNew = async id_tintuc => {
     );
 
     return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  GOOGLE SIGN IN  ////////////////////
+
+export const getUserDataFromGG = async (userId, accessToken) => {
+  console.log(accessToken);
+  try {
+    const userData = await axios.get(
+      `https://people.googleapis.com/v1/people/${userId}?personFields=genders,birthdays,phoneNumbers`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    console.log('user', userData.data);
   } catch (error) {
     console.log(error);
   }
