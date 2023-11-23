@@ -90,12 +90,7 @@ const LoginScreen = ({navigation}) => {
     GoogleSignin.configure({
       webClientId: config.WEB_API_GG_SIGNIN,
       iosClientId: config.IOS_API_GG_SIGNIN,
-      scopes: [
-        'email',
-        'profile',
-        // 'https://www.googleapis.com/auth/user.phonenumbers.read',
-        'https://www.googleapis.com/auth/user.birthday.read',
-      ],
+      scopes: ['email', 'profile'],
     });
     if (credential) {
       setEmail(credential.email);

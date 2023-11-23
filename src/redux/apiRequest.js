@@ -1315,7 +1315,6 @@ export const getDetailNew = async id_tintuc => {
 /////////////////////  GOOGLE SIGN IN  ////////////////////
 
 export const getUserDataFromGG = async (userId, accessToken) => {
-  console.log(accessToken);
   try {
     const userData = await axios.get(
       `https://people.googleapis.com/v1/people/${userId}?personFields=genders,birthdays,phoneNumbers`,
