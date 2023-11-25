@@ -1314,17 +1314,50 @@ export const getDetailNew = async id_tintuc => {
 
 /////////////////////  GOOGLE SIGN IN  ////////////////////
 
-export const getUserDataFromGG = async (userId, accessToken) => {
+export const sendTokenToServer = async token => {
+  console.log(token);
   try {
-    const userData = await axios.get(
-      `https://people.googleapis.com/v1/people/${userId}?personFields=genders,birthdays,phoneNumbers`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
+    await axios.post(`http://localhost:4000/verifyGGToken`, {
+      tokenId: token,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  MAP DATA  ////////////////////
+
+export const getVnRegionMap = async () => {
+  try {
+    const res = await axios.get(
+      'https://4forestry.ifee.edu.vn/api/get_vnregionmap',
     );
-    console.log('user', userData.data);
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getVN2000Projection = async () => {
+  try {
+    const res = await axios.get(
+      'https://4forestry.ifee.edu.vn/api/get_vn2000projection',
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getListLayerWmsGeopfes = async () => {
+  try {
+    const res = await axios.get(
+      'https://4forestry.ifee.edu.vn/api/get_listlayerwmsgeopfes',
+    );
+
+    return res.data;
   } catch (error) {
     console.log(error);
   }

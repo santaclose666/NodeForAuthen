@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useLayoutEffect, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -11,10 +11,9 @@ import {
   Text,
   TextInput,
   SafeAreaView,
-  SwitchComponent,
   ScrollView,
 } from 'react-native';
-import {Button, Center, Fab} from 'native-base';
+import {Button} from 'native-base';
 import MapView, {
   WMSTile,
   Polygon,
@@ -26,14 +25,10 @@ import {useRoute} from '@react-navigation/native';
 import Colors from '../../contants/Colors';
 import Images from '../../contants/Images';
 import Dimension from '../../contants/Dimension';
-import dataProjection from '../../utils/Vn2000Projection.json';
+// import dataProjection from '../../utils/Vn2000Projection.json';
 import {Dropdown} from 'react-native-element-dropdown';
 import Fonts from '../../contants/Fonts';
-import {
-  formatDate,
-  compareDate,
-  compareDateFomated,
-} from '../../utils/serviceFunction';
+import {compareDate} from '../../utils/serviceFunction';
 import {
   listDisplayLabel,
   listDisplayLabelFull,
@@ -42,8 +37,9 @@ import {
   getCodeText,
 } from '../../utils/DBR_Rule';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {ToastAlert, ToastSuccess} from '../../components/Toast';
+import {ToastAlert} from '../../components/Toast';
 import Moment from 'moment';
+import {getVN2000Projection} from '../../redux/apiRequest';
 
 var epsg = require('epsg-to-proj');
 var proj = require('proj4');
@@ -85,7 +81,6 @@ const MapScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [latFindPoint, setLatFindPoint] = useState('');
   const [longFindPoint, setLongFindPoint] = useState('');
-  const [pointPress, setPointPress] = useState({});
   const [modalFirePoint, setModalFirePoint] = useState(false);
   const [modeFindFirePoint, setModeFindFirePoint] = useState(1);
   const [startDay, setStartDay] = useState(null);
@@ -97,7 +92,7 @@ const MapScreen = ({navigation}) => {
   const [plotInfo, setPlotInfo] = useState({});
   const [plotInfoFull, setPlotInfoFull] = useState({});
   const [plotInfoShow, setPlotInfoShow] = useState({});
-
+  const [dataProjection, setDataProjection] = useState([]);
   const listProject = dataProjection.map(item => {
     return {label: `${item.province} - ${item.zone}`, value: item.epsg_code};
   });
@@ -123,6 +118,20 @@ const MapScreen = ({navigation}) => {
     {type: MAP_TYPES.SATELLITE, image: Images.baseSatellite},
     {type: MAP_TYPES.TERRAIN, image: Images.baseTerrain},
   ];
+
+  const orderApiCall = async () => {
+    try {
+      const data = await getVN2000Projection();
+
+      setDataProjection(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useLayoutEffect(() => {
+    orderApiCall();
+  }, []);
 
   // ham lay link api quyery data tu WMS
   const _getWMSInfoAPILink = (x, y) => {

@@ -14,7 +14,11 @@ import Images from '../../contants/Images';
 import Fonts from '../../contants/Fonts';
 import Colors from '../../contants/Colors';
 import Dimension from '../../contants/Dimension';
-import {getUserDataFromGG, loginUser} from '../../redux/apiRequest';
+import {
+  getUserDataFromGG,
+  loginUser,
+  sendTokenToServer,
+} from '../../redux/apiRequest';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -69,9 +73,7 @@ const LoginScreen = ({navigation}) => {
       console.log(userInfo);
 
       if (userInfo) {
-        const {accessToken} = await GoogleSignin.getTokens();
-
-        getUserDataFromGG(userInfo.user.id, accessToken);
+        await sendTokenToServer(userInfo.idToken);
       }
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
