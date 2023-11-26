@@ -199,6 +199,8 @@ const HomePageScreen = ({navigation}) => {
   };
 
   const onOpenNotification = async notify => {
+    console.log(notify);
+    dispatch(setUnitOption(notify.donvi));
     navigation.navigate(notify.screen, {item: notify});
   };
 
