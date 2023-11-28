@@ -25,7 +25,6 @@ import {useRoute} from '@react-navigation/native';
 import Colors from '../../contants/Colors';
 import Images from '../../contants/Images';
 import Dimension from '../../contants/Dimension';
-// import dataProjection from '../../utils/Vn2000Projection.json';
 import {Dropdown} from 'react-native-element-dropdown';
 import Fonts from '../../contants/Fonts';
 import {compareDate} from '../../utils/serviceFunction';
@@ -92,10 +91,7 @@ const MapScreen = ({navigation}) => {
   const [plotInfo, setPlotInfo] = useState({});
   const [plotInfoFull, setPlotInfoFull] = useState({});
   const [plotInfoShow, setPlotInfoShow] = useState({});
-  const [dataProjection, setDataProjection] = useState([]);
-  const listProject = dataProjection.map(item => {
-    return {label: `${item.province} - ${item.zone}`, value: item.epsg_code};
-  });
+  const [listProject, setListProject] = useState([]);
 
   const [mapType, setMapType] = useState(MAP_TYPES.HYBRID);
   const [initialRegion, setInitialRegion] = useState({
@@ -123,7 +119,14 @@ const MapScreen = ({navigation}) => {
     try {
       const data = await getVN2000Projection();
 
-      setDataProjection(data);
+      const mapData = data.map(item => {
+        return {
+          label: `${item.province} - ${item.zone}`,
+          value: item.epsg_code,
+        };
+      });
+
+      setListProject(mapData);
     } catch (error) {
       console.log(error);
     }

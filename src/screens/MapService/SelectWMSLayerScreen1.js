@@ -60,9 +60,9 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
       await setListLayerWMS(listLayerData);
 
       setTimeout(() => {
-        getListMap(data?.modeView);
         setLoading(false);
-      }, 6666);
+        getListMap(listLayerData);
+      });
     } catch (error) {
       setLoading(false);
     }
@@ -70,17 +70,17 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
 
   useLayoutEffect(() => {
     orderApiCall();
+    // getListMap(data?.modeView);
   }, []);
 
-  const getListMap = modeView => {
+  const getListMap = listLayerData => {
     let listLayerRaw = [];
-    console.log(modeView);
-    for (var i = 0; i < listLayerWMS.length; i++) {
+    for (var i = 0; i < listLayerData.length; i++) {
       let layer = {
-        nameLayer: listLayerWMS[i].nameMapGroup,
-        value: listLayerWMS[i].codeMapGroup,
+        nameLayer: listLayerData[i].nameMapGroup,
+        value: listLayerData[i].codeMapGroup,
       };
-      if (modeView == 'RVB') {
+      if (data?.modeView == 'RVB') {
         if (layer.value == '2' || layer.value == '3') {
           if (!listLayerRaw.some(obj => obj.value === layer.value)) {
             listLayerRaw.push(layer);

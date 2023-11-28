@@ -58,9 +58,9 @@ const SelectProvinceFFWScreen = ({navigation}) => {
       await setListLayerWMS(listLayerData);
 
       setTimeout(() => {
-        getListProvince();
         setLoading(false);
-      }, 6666);
+        getListProvince(vnRegionData);
+      });
     } catch (error) {
       setLoading(false);
     }
@@ -70,16 +70,16 @@ const SelectProvinceFFWScreen = ({navigation}) => {
     orderApiCall();
   }, []);
 
-  const getListProvince = () => {
+  const getListProvince = vnRegionData => {
     let listProvinces = [];
     try {
-      for (var i = 0; i < vnRegionMapData.length; i++) {
-        if (availableProvinces.includes(vnRegionMapData[i].MATINH)) {
+      for (var i = 0; i < vnRegionData.length; i++) {
+        if (availableProvinces.includes(vnRegionData[i].MATINH)) {
           var province = {
-            label: vnRegionMapData[i].TINH,
-            value: vnRegionMapData[i].MATINH,
-            provinX: vnRegionMapData[i].X_TINH,
-            provinY: vnRegionMapData[i].Y_TINH,
+            label: vnRegionData[i].TINH,
+            value: vnRegionData[i].MATINH,
+            provinX: vnRegionData[i].X_TINH,
+            provinY: vnRegionData[i].Y_TINH,
           };
           //check if exsit?
           if (!listProvinces.some(obj => obj.value === province.value)) {
