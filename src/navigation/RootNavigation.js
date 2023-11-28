@@ -49,6 +49,7 @@ import HistoryRegisterTicket from '../screens/TicketManagement/HistoryRegisterTi
 import RegisterPlane from '../screens/TicketManagement/RegisterPlanTicket';
 import CPFESScreen from '../screens/CPFES/CPFES';
 import IFEE from '../screens/IFEE/IFEE';
+import MedicinalPlantsList from '../screens/MedicinalPlants/MedicinalPlantsList';
 
 const Stack = createStackNavigator();
 
@@ -104,6 +105,10 @@ const RootNavigator = () => {
     {name: screen.historyRepair, component: MainRepair},
     {name: screen.cpfes, component: CPFESScreen},
     {name: screen.ifee, component: IFEE},
+    {
+      name: screen.herbList,
+      component: MedicinalPlantsList,
+    },
   ];
 
   return (

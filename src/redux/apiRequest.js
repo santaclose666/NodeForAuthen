@@ -804,6 +804,7 @@ export const getAllManageData = async dispatch => {
 };
 
 export const getAllEcosystem = async api => {
+  console.log(api);
   try {
     const res = await axios.get(api);
 
@@ -1358,6 +1359,39 @@ export const getListLayerWmsGeopfes = async () => {
     );
 
     return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/////////////////////  MEDICINAL PLANTS  ////////////////////
+
+export const getMedicinalPlants = async () => {
+  try {
+    const res = await axios.get(
+      `https://caythuochanoi.ifee.edu.vn/api/getData`,
+    );
+
+    const filterData = res.data.map(item => {
+      const obj = {
+        nganhlatin: item.nganhkhoahoc,
+        loplatin: item.lopkhoahoc,
+        bolatin: item.bokhoahoc,
+        holatin: item.hokhoahoc,
+        loailatin: item.ten_latinh,
+        loaitv: item.ten_tv,
+        dacdiem: item.mota,
+        sachdo: item.baoton,
+        hinh1: item?.anh[0],
+        hinh2: item?.anh[1],
+        hinh3: item?.anh[2],
+        ...item,
+      };
+
+      return obj;
+    });
+
+    return filterData;
   } catch (error) {
     console.log(error);
   }

@@ -220,6 +220,7 @@ const Images = {
   working: require('../assets/images/working.png'),
   leaveNoColor: require('../assets/images/leaveNoColor.png'),
   gotWarning: require('../assets/images/gotWarning.png'),
+  herbs: require('../assets/images/herbs.png'),
 };
 
 export default Images;

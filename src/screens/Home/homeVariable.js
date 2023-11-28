@@ -80,9 +80,9 @@ export const forestryDepartment = [
     icon: Images.map,
   },
   {
-    featureName: null,
-    component: null,
-    icon: null,
+    featureName: 'Cây thuốc',
+    component: screen.herbList,
+    icon: Images.herbs,
   },
 ];
 

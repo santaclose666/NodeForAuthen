@@ -35,10 +35,11 @@ if (Platform.OS == 'android') {
 
 const SpecieDetailScreen = ({navigation, route}) => {
   const data = route.params.data;
+  const isHerbs = data.name === 'Các loại thảo dược';
   const imgData = [
-    {uri: data.hinh1 && data.link + data.hinh1},
-    {uri: data.hinh2 && data.link + data.hinh2},
-    {uri: data.hinh3 && data.link + data.hinh3},
+    {uri: data.hinh1 && (isHerbs ? data.hinh1 : data.link + data.hinh1)},
+    {uri: data.hinh2 && (isHerbs ? data.hinh2 : data.link + data.hinh2)},
+    {uri: data.hinh3 && (isHerbs ? data.hinh3 : data.link + data.hinh3)},
   ].filter(
     item => item.uri !== '' && item.uri !== null && item.uri !== undefined,
   );
@@ -100,6 +101,7 @@ const SpecieDetailScreen = ({navigation, route}) => {
           renderItem={({item, index}) => {
             return (
               <TouchableOpacity
+                key={index}
                 onPress={() => {
                   setImgPicker(index);
                   setShowImg(true);
@@ -236,6 +238,7 @@ const SpecieDetailScreen = ({navigation, route}) => {
         {imgData.map((item, index) => {
           return (
             <View
+              key={index}
               style={{
                 width: currentIndex == index ? 30 : 8,
                 height: currentIndex == index ? 10 : 8,
@@ -270,80 +273,120 @@ const SpecieDetailScreen = ({navigation, route}) => {
                   ]}>{`  ${data.sachdo}`}</Text>
               </View>
             )}
-            <View style={styles.containerCommonInfo}>
-              <Text style={styles.lable}>Tên Ngành La Tinh:</Text>
-              <Text style={styles.content}>{`  ${data.nganhlatin}`}</Text>
-            </View>
-            <View style={styles.containerCommonInfo}>
-              <Text style={styles.lable}>Tên Ngành Việt Nam:</Text>
-              <Text style={styles.content}>{`  ${data.nganhtv}`}</Text>
-            </View>
-            <View style={styles.containerCommonInfo}>
-              <Text style={styles.lable}>Tên Lớp La Tinh:</Text>
-              <Text style={styles.content}>{`  ${data.loplatin}`}</Text>
-            </View>
-            <View style={styles.containerCommonInfo}>
-              <Text style={styles.lable}>Tên Lớp Việt Nam:</Text>
-              <Text style={styles.content}>{`  ${data.loptv}`}</Text>
-            </View>
-            <View style={styles.containerCommonInfo}>
-              <Text style={styles.lable}>Tên Bộ La Tinh:</Text>
-              <Text style={styles.content}>{`  ${data.bolatin}`}</Text>
-            </View>
-            <View style={styles.containerCommonInfo}>
-              <Text style={styles.lable}>Tên Bộ Việt Nam:</Text>
-              <Text style={styles.content}>{`  ${data.botv}`}</Text>
-            </View>
-            <View style={styles.containerCommonInfo}>
-              <Text style={styles.lable}>Tên Họ La Tinh:</Text>
-              <Text style={styles.content}>{`  ${data.holatin}`}</Text>
-            </View>
-            <View style={styles.containerCommonInfo}>
-              <Text style={styles.lable}>Tên Họ Việt Nam:</Text>
-              <Text style={styles.content}>{` ${data.hotv}`}</Text>
-            </View>
-            <View style={styles.containerCommonInfo}>
-              <Text style={styles.lable}>Tên Chi La Tinh:</Text>
-              <Text style={styles.content}>{`  ${data.chilatin}`}</Text>
-            </View>
-            <View style={styles.containerCommonInfo}>
-              <Text style={styles.lable}>Tên Chi Việt Nam:</Text>
-              <Text style={styles.content}>{`  ${data.chitv}`}</Text>
-            </View>
+            {data.nganhlatin && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Tên Ngành La Tinh:</Text>
+                <Text style={styles.content}>{`  ${data.nganhlatin}`}</Text>
+              </View>
+            )}
+            {data.nganhtv && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Tên Ngành Việt Nam:</Text>
+                <Text style={styles.content}>{`  ${data.nganhtv}`}</Text>
+              </View>
+            )}
+            {data.loplatin && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Tên Lớp La Tinh:</Text>
+                <Text style={styles.content}>{`  ${data.loplatin}`}</Text>
+              </View>
+            )}
+            {data.loptv && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Tên Lớp Việt Nam:</Text>
+                <Text style={styles.content}>{`  ${data.loptv}`}</Text>
+              </View>
+            )}
+            {data.bolatin && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Tên Bộ La Tinh:</Text>
+                <Text style={styles.content}>{`  ${data.bolatin}`}</Text>
+              </View>
+            )}
+            {data.botv && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Tên Bộ Việt Nam:</Text>
+                <Text style={styles.content}>{`  ${data.botv}`}</Text>
+              </View>
+            )}
+            {data.holatin && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Tên Họ La Tinh:</Text>
+                <Text style={styles.content}>{`  ${data.holatin}`}</Text>
+              </View>
+            )}
+            {data.hotv && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Tên Họ Việt Nam:</Text>
+                <Text style={styles.content}>{` ${data.hotv}`}</Text>
+              </View>
+            )}
+            {data.chilatin && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Tên Chi La Tinh:</Text>
+                <Text style={styles.content}>{`  ${data.chilatin}`}</Text>
+              </View>
+            )}
+            {data.chitv && (
+              <View style={styles.containerCommonInfo}>
+                <Text style={styles.lable}>Tên Chi Việt Nam:</Text>
+                <Text style={styles.content}>{`  ${data.chitv}`}</Text>
+              </View>
+            )}
           </View>
         )}
       </View>
-      <View style={styles.containerEachLine}>
-        <Text style={styles.title}>Đặc điểm</Text>
-
-        {data.dacdiem && (
+      {data.dacdiem && (
+        <View style={styles.containerEachLine}>
+          <Text style={styles.title}>Đặc điểm</Text>
           <View style={styles.containerContent}>
             <Text style={styles.lable}>{data.dacdiem}</Text>
           </View>
-        )}
-      </View>
-      <View style={styles.containerEachLine}>
-        <Text style={styles.title}>Giá trị</Text>
-
-        {data.giatri && (
+        </View>
+      )}
+      {data.sudung && (
+        <View style={styles.containerEachLine}>
+          <Text style={styles.title}>Đặc điểm</Text>
+          <View style={styles.containerContent}>
+            <Text style={styles.lable}>{data.sudung}</Text>
+          </View>
+        </View>
+      )}
+      {data.congdung && (
+        <View style={styles.containerEachLine}>
+          <Text style={styles.title}>Đặc điểm</Text>
+          <View style={styles.containerContent}>
+            <Text style={styles.lable}>{data.congdung}</Text>
+          </View>
+        </View>
+      )}
+      {data.nhangiong && (
+        <View style={styles.containerEachLine}>
+          <Text style={styles.title}>Đặc điểm</Text>
+          <View style={styles.containerContent}>
+            <Text style={styles.lable}>{data.nhangiong}</Text>
+          </View>
+        </View>
+      )}
+      {data.giatri && (
+        <View style={styles.containerEachLine}>
+          <Text style={styles.title}>Giá trị</Text>
           <View style={styles.containerContent}>
             <Text style={styles.lable}>{data.giatri}</Text>
           </View>
-        )}
-      </View>
-      <View style={styles.containerEachLine}>
-        <Text style={styles.title}>Phân bố</Text>
-
-        {data.phanbo && (
+        </View>
+      )}
+      {data.phanbo && (
+        <View style={styles.containerEachLine}>
+          <Text style={styles.title}>Phân bố</Text>
           <View style={styles.containerContent}>
             <Text style={styles.lable}>{data.phanbo}</Text>
           </View>
-        )}
-      </View>
-      <View style={styles.containerEachLine}>
-        <Text style={styles.title}>Nguồn</Text>
-
-        {data.nguon && (
+        </View>
+      )}
+      {data.nguon && (
+        <View style={styles.containerEachLine}>
+          <Text style={styles.title}>Nguồn</Text>
           <TouchableOpacity
             onPress={() => {
               OpenURL(data.nguon);
@@ -357,8 +400,8 @@ const SpecieDetailScreen = ({navigation, route}) => {
               {data.nguon}
             </Text>
           </TouchableOpacity>
-        )}
-      </View>
+        </View>
+      )}
       {imgData.length > 0 && (
         <ImageView
           images={imgData}

@@ -49,4 +49,5 @@ export const screen = {
   historyRepair: 'HistoryRepair',
   cpfes: 'CPFES',
   ifee: 'IFEE',
+  herbList: 'HerbsList',
 };
