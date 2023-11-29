@@ -346,7 +346,7 @@ const SpecieDetailScreen = ({navigation, route}) => {
       )}
       {data.sudung && (
         <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Đặc điểm</Text>
+          <Text style={styles.title}>Sử dụng</Text>
           <View style={styles.containerContent}>
             <Text style={styles.lable}>{data.sudung}</Text>
           </View>
@@ -354,7 +354,7 @@ const SpecieDetailScreen = ({navigation, route}) => {
       )}
       {data.congdung && (
         <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Đặc điểm</Text>
+          <Text style={styles.title}>Công dụng</Text>
           <View style={styles.containerContent}>
             <Text style={styles.lable}>{data.congdung}</Text>
           </View>
@@ -362,7 +362,7 @@ const SpecieDetailScreen = ({navigation, route}) => {
       )}
       {data.nhangiong && (
         <View style={styles.containerEachLine}>
-          <Text style={styles.title}>Đặc điểm</Text>
+          <Text style={styles.title}>Nhân giống</Text>
           <View style={styles.containerContent}>
             <Text style={styles.lable}>{data.nhangiong}</Text>
           </View>

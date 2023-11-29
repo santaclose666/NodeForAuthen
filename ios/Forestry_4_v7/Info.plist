@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>3.2</string>
 	<key>CodePushDeploymentKey</key>
 	<string>SfF68fsOvS4-ZVScV07m_YRcV0-a7DzyAuYHV</string>
 	<key>LSApplicationQueriesSchemes</key>

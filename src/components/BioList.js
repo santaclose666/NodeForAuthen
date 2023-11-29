@@ -51,10 +51,9 @@ const BioList = ({
   setLogo,
 }) => {
   const isHerbs = name === 'Các loại thảo dược';
-  const dataVQG = useSelector(
-    state => state.nationalPark.nationalParkSlice?.data,
-  );
-  const [VQGValue, setVQGValue] = useState(dataVQG[0]);
+  const dataVQG =
+    useSelector(state => state.nationalPark.nationalParkSlice?.data) || '';
+  const [VQGValue, setVQGValue] = useState(dataVQG[0] || '');
   const [input, setInput] = useState('');
   const [speciesFilled, setSpeciesFilled] = useState(null);
   const [isSelectLocation, setIsSelectLocation] = useState(false);
@@ -113,7 +112,6 @@ const BioList = ({
     if (api == null) {
       ToastAlert('Chưa chọn loại dữ liệu!');
     } else {
-      fetchAllData();
       setRerender(!rerender);
       setLogo(VQGValue.logo);
       setNameVQG(VQGValue.tendonvi);
