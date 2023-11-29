@@ -10,10 +10,11 @@ const ListBioScreen = ({navigation, route}) => {
   const [link, setLink] = useState(item?.link);
   const [nameVQG, setNameVQG] = useState(item?.name);
   const [logo, setLogo] = useState(item?.logo);
+  const [rerender, setRerender] = useState(false);
 
   useLayoutEffect(() => {
     fetchAllData();
-  }, []);
+  }, [rerender]);
 
   const fetchAllData = async () => {
     setLoading(true);
@@ -41,6 +42,8 @@ const ListBioScreen = ({navigation, route}) => {
       setNameVQG={setNameVQG}
       logo={logo}
       setLogo={setLogo}
+      rerender={rerender}
+      setRerender={setRerender}
     />
   );
 };

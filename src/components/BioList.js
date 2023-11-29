@@ -49,6 +49,8 @@ const BioList = ({
   setNameVQG,
   logo,
   setLogo,
+  rerender,
+  setRerender,
 }) => {
   const isHerbs = name === 'Các loại thảo dược';
   const dataVQG =
@@ -58,7 +60,6 @@ const BioList = ({
   const [speciesFilled, setSpeciesFilled] = useState(null);
   const [isSelectLocation, setIsSelectLocation] = useState(false);
   const [heightBtn, setHeightBtn] = useState(0);
-  const [rerender, setRerender] = useState(false);
 
   const handleSearch = text => {
     setInput(text);
@@ -123,6 +124,7 @@ const BioList = ({
     ({item, index}) => {
       return (
         <TouchableOpacity
+          key={index}
           onPress={() => {
             navigation.navigate(screen.bioDetail, {
               data: {...item, link: link, name},

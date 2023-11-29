@@ -16,22 +16,33 @@ import {fontDefault, imgDefault} from '../contants/Variable';
 import {screen} from '../screens/AllScreen/allScreen';
 
 const Header = ({title, navigation, refreshData, logo, handleFilter, unit}) => {
+  const allowFilterList = [
+    'Định mức Kinh tế Kĩ thuật',
+    'Quỹ bảo vệ phát triển rừng',
+    'Khung giá rừng',
+    'Ngành Lâm học',
+    'Kiểm kê rừng',
+    'Quản lý rừng bền vững',
+    'Tiêu chuẩn Việt Nam',
+    'Giống Lâm nghiệp',
+    'Văn phòng 809',
+    'CPFES',
+    'Viện Sinh thái rừng và Môi trường',
+    'VQG',
+    'Khu Bảo tồn',
+    'Đa Dạng Sinh Học',
+  ];
+
   const showCreateButton =
     title.includes('Lịch sử') || title.includes('Theo dõi');
 
-  const showFitlerButon =
-    title === 'Định mức Kinh tế Kĩ thuật' ||
-    title === 'Quỹ bảo vệ phát triển rừng' ||
-    title === 'Khung giá rừng' ||
-    title === 'Ngành Lâm học' ||
-    title === 'Kiểm kê rừng' ||
-    title === 'Quản lý rừng bền vững' ||
-    title === 'Tiêu chuẩn Việt Nam' ||
-    title === 'Giống Lâm nghiệp' ||
-    title === 'Văn phòng 809' ||
-    title === 'CPFES' ||
-    title === 'Viện Sinh thái rừng và Môi trường';
-  // || title.includes('VQG');
+  const showFitlerButon = allowFilterList.some(item => {
+    if (title.includes(item)) {
+      return true;
+    } else {
+      return false;
+    }
+  });
 
   return (
     <View
