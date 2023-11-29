@@ -56,6 +56,8 @@ const SelectWMSLayerScreen1 = ({navigation}) => {
       const vnRegionData = await getVnRegionMap();
       const listLayerData = await getListLayerWmsGeopfes();
 
+      console.log(listLayerData);
+
       await setVnRegionMapData(vnRegionData);
       await setListLayerWMS(listLayerData);
 

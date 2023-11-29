@@ -10,7 +10,7 @@ import {
 } from 'react-native-responsive-screen';
 
 const width = Dimensions.get('window').width / 2 - 22;
-const renderTemp = new Array(6);
+const arrRender = new Array(6);
 
 export const BioSkeleton = () => {
   return (
@@ -22,7 +22,7 @@ export const BioSkeleton = () => {
         paddingBottom: 50,
       }}
       numColumns={2}
-      data={renderTemp}
+      data={arrRender}
       renderItem={({item, index}) => {
         return (
           <View style={styles.card} key={index}>
@@ -37,9 +37,10 @@ export const BioSkeleton = () => {
               }}
               _light={{
                 borderColor: 'coolGray.200',
-              }}>
+              }}
+              alignItems={'center'}>
               <Skeleton h="40" />
-              <Skeleton.Text lines={2} px="4" mb={1} />
+              <Skeleton.Text lines={2} px="4" mb={1} alignItems={'center'} />
               <Skeleton.Text w={'66%'} lines={1} px="4" mb={3} />
             </VStack>
           </View>
@@ -53,7 +54,7 @@ export const NewsSkeleton = () => {
   return (
     <FlatList
       showsVerticalScrollIndicator={false}
-      data={renderTemp}
+      data={arrRender}
       renderItem={({item, index}) => {
         return (
           <View
@@ -101,7 +102,7 @@ export const InternalSkeleton = () => {
         flex: 1,
         paddingTop: Dimension.setHeight(3),
       }}
-      data={renderTemp}
+      data={arrRender}
       keyExtractor={(_, index) => index.toString()}
       renderItem={({item}) => {
         return (
@@ -186,7 +187,7 @@ export const DocumentSkeleton = () => {
         marginTop: Dimension.setHeight(1),
         marginHorizontal: Dimension.setWidth(0.6),
       }}
-      data={renderTemp}
+      data={arrRender}
       keyExtractor={(_, index) => index.toString()}
       renderItem={({item}) => {
         return (
@@ -232,7 +233,7 @@ export const StaffSkeleton = () => {
         marginTop: Dimension.setHeight(1),
         marginHorizontal: Dimension.setWidth(0.6),
       }}
-      data={renderTemp.concat(renderTemp)}
+      data={arrRender.concat(arrRender)}
       keyExtractor={(_, index) => index.toString()}
       renderItem={({item}) => {
         return (
@@ -273,7 +274,7 @@ export const NationalParkSkeleton = () => {
       style={{
         marginTop: hp('2%'),
       }}
-      data={renderTemp}
+      data={arrRender}
       keyExtractor={(_, index) => index.toString()}
       renderItem={({item}) => {
         return (

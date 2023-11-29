@@ -88,17 +88,17 @@ const LoginScreen = ({navigation}) => {
     }
   };
 
-  // useLayoutEffect(() => {
-  //   GoogleSignin.configure({
-  //     webClientId: config.WEB_API_GG_SIGNIN,
-  //     iosClientId: config.IOS_API_GG_SIGNIN,
-  //     scopes: ['email', 'profile'],
-  //   });
-  //   if (credential) {
-  //     setEmail(credential.email);
-  //     setPassword(credential.password);
-  //   }
-  // }, []);
+  useLayoutEffect(() => {
+    GoogleSignin.configure({
+      webClientId: config.WEB_API_GG_SIGNIN,
+      iosClientId: config.IOS_API_GG_SIGNIN,
+      scopes: ['email', 'profile'],
+    });
+    if (credential) {
+      setEmail(credential.email);
+      setPassword(credential.password);
+    }
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1, padding: 3}}>
@@ -261,7 +261,7 @@ const LoginScreen = ({navigation}) => {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* <View
+        <View
           style={{
             alignItems: 'center',
             justifyContent: 'center',
@@ -294,7 +294,7 @@ const LoginScreen = ({navigation}) => {
               <Image style={{width: 25, height: 25}} source={Images.google} />
             </TouchableOpacity>
           </View>
-        </View> */}
+        </View>
       </KeyboardAwareScrollView>
       {loading && <Loading bg={true} />}
     </SafeAreaView>
