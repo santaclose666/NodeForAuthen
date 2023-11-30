@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 
 const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 const client = new OAuth2Client();
 
 app.get("/", (req, res) => {
@@ -19,6 +20,8 @@ app.post("/verifyGGToken", async (req, res) => {
       audience: [
         "484044523003-tu5oq5roldk96ill85ebj339vcibr3cf.apps.googleusercontent.com",
         "484044523003-esc9d3sse9oahimsugi7eujjasjt50p8.apps.googleusercontent.com",
+        "484044523003-236sj9al7o41o1ojmou1bv4f0blrojoi.apps.googleusercontent.com",
+        "484044523003-89fglg9jgp3dgvkds9dttnloctldgrt9.apps.googleusercontent.com",
       ],
     });
 
